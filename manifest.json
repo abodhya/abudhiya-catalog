@@ -1,0 +1,19 @@
+{
+  "name": "كتالوج أبوضياء للتوزيع والتجارة",
+  "short_name": "أبوضياء",
+  "description": "كتالوج الطلب السريع — مؤسسة أبوضياء للتوزيع والتجارة — سيئون",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

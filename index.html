@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>أبوضياء للتوزيع — تطبيق كتالوج الطلب السريع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Cairo', 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    margin: 0;
+    padding: 0 0 88px;
+    background: #E2E8F0;
+    color: #0F172A;
+  }
+
+  /* الترويسة فوق الصفحة فقط (غير ثابتة أثناء التمرير لإعطاء كامل الشاشة للمنتجات) */
+  .top-header {
+    background: linear-gradient(135deg, #050A15 0%, #0F172A 60%, #1E293B 100%);
+    border-bottom: 3px solid #D4AF37;
+    padding: 10px 10px 9px;
+    color: #FFFFFF;
+  }
+  .top-in { max-width: 1020px; margin: 0 auto; }
+  .brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-title {
+    font-size: 19px;
+    font-weight: 900;
+    color: #FFE875;
+    margin: 0;
+    line-height: 1.25;
+  }
+  .brand-sub {
+    font-size: 12px;
+    color: #CBD5E1;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .top-actions { display: flex; gap: 6px; align-items: center; }
+  .pill-btn {
+    background: #1E293B;
+    color: #FFE875;
+    border: 1.5px solid #D4AF37;
+    border-radius: 9px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .pill-btn.gold {
+    background: linear-gradient(135deg, #D4AF37, #F59E0B);
+    color: #050A15;
+    border-color: #FEF08A;
+    font-weight: 900;
+  }
+
+  .search-row { display: flex; gap: 6px; margin-top: 8px; }
+  .search-inp {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #334155;
+    background: #FFFFFF;
+    color: #0F172A;
+    font-size: 14px;
+    font-weight: 800;
+    outline: none;
+  }
+  .search-inp:focus { border-color: #D4AF37; }
+  .filter-btn {
+    background: #172542;
+    color: #E2E8F0;
+    border: 1.5px solid #475569;
+    border-radius: 10px;
+    padding: 0 11px;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .filter-btn.active { background: #16A34A; border-color: #86EFAC; color: #FFFFFF; }
+
+  .tabs-bar {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    padding: 7px 0 1px;
+    scrollbar-width: none;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-chip {
+    background: #1E293B;
+    color: #CBD5E1;
+    border: 1px solid #334155;
+    border-radius: 99px;
+    padding: 3px 11px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tab-chip.active {
+    background: #D4AF37;
+    color: #050A15;
+    border-color: #FEF08A;
+    font-weight: 900;
+  }
+
+  /* شبكة المنتجات بدون أي فراغات — بطاقات متلاصقة ونظيفة */
+  .grid {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 4px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+  @media (min-width: 680px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 6px; } }
+  @media (min-width: 960px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 8px; } }
+
+  .card {
+    background: #FFFFFF;
+    border-radius: 11px;
+    border: 1.5px solid #CBD5E1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.1s ease, border-color 0.15s ease;
+    user-select: none;
+  }
+  .card:active { transform: scale(0.985); }
+  .card.selected {
+    border: 2.5px solid #16A34A;
+    box-shadow: 0 3px 12px rgba(22, 163, 74, 0.24);
+  }
+
+  /* صورة تملأ المربع 100% من الحافة للحافة بدون أي هوامش */
+  .img-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #F8FAFC;
+    overflow: hidden;
+  }
+  .img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+  }
+  .no-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    color: #94A3B8;
+  }
+  .promo-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #DC2626;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 2px 8px;
+    border-radius: 99px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .qty-corner {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #16A34A;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 2px 9px;
+    border-radius: 99px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    display: none;
+  }
+  .card.selected .qty-corner { display: block; }
+
+  /* جسم البطاقة: اسم الصنف كبير وواضح + سعر ضخم بارز */
+  .card-body {
+    padding: 6px 7px 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    justify-content: space-between;
+  }
+  .p-name {
+    font-size: 15.5px;
+    font-weight: 900;
+    color: #0F172A;
+    line-height: 1.28;
+    text-align: right;
+  }
+  .price-bar {
+    background: #0F172A;
+    border: 1.5px solid #D4AF37;
+    border-radius: 9px;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .p-price {
+    font-size: 20px;
+    font-weight: 900;
+    color: #FFE875;
+    line-height: 1.15;
+    letter-spacing: -0.2px;
+  }
+  .p-cur {
+    font-size: 12px;
+    font-weight: 800;
+    color: #FDE047;
+  }
+  .p-unit {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #E2E8F0;
+    white-space: nowrap;
+  }
+
+  /* شريط الكمية المطلوبة يظهر مباشرة تحت الصنف بمجرد إدخال الكمية */
+  .selected-strip {
+    display: none;
+    background: linear-gradient(135deg, #16A34A, #15803D);
+    color: #FFFFFF;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.3;
+    border-top: 1.5px solid #86EFAC;
+  }
+  .card.selected .selected-strip { display: block; }
+  .selected-strip .sub-tot {
+    display: block;
+    font-size: 12px;
+    color: #FEF08A;
+    font-weight: 800;
+  }
+
+  /* الشريط السفلي الثابت لزر الإرسال وتأكيد الطلب */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: linear-gradient(135deg, #050A15, #0F172A);
+    border-top: 3px solid #D4AF37;
+    padding: 9px 11px;
+    color: #FFFFFF;
+    box-shadow: 0 -6px 22px rgba(2,6,23,0.42);
+  }
+  .bottom-in {
+    max-width: 1020px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .b-sum-top { font-size: 12px; color: #CBD5E1; font-weight: 800; }
+  .b-sum-val { font-size: 20px; color: #FFE875; font-weight: 900; line-height: 1.15; }
+  .send-main-btn {
+    background: linear-gradient(135deg, #16A34A, #15803D);
+    color: #FFFFFF;
+    border: 2px solid #86EFAC;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .send-main-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* نافذة الأرقام والاختصارات عند الضغط على الصنف */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: rgba(2, 6, 23, 0.78);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-bg.open { display: flex; }
+  .sheet-box {
+    width: 100%;
+    max-width: 560px;
+    max-height: 94vh;
+    overflow-y: auto;
+    background: #FFFFFF;
+    border-radius: 20px 20px 0 0;
+    border-top: 4px solid #D4AF37;
+    padding: 13px 13px 18px;
+  }
+  .qp-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .qp-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 11px;
+    object-fit: cover;
+    border: 2px solid #D4AF37;
+    flex-shrink: 0;
+    cursor: zoom-in;
+    background: #F8FAFC;
+  }
+  .qp-info { flex: 1; min-width: 0; }
+  .qp-name { font-size: 17px; font-weight: 900; color: #0F172A; line-height: 1.25; }
+  .qp-price { font-size: 16px; font-weight: 900; color: #15803D; margin-top: 2px; }
+  .close-x {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: none;
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* شاشة عرض الكمية والإجمالي المباشر داخل النافذة */
+  .display-box {
+    background: #0F172A;
+    border: 2px solid #D4AF37;
+    border-radius: 13px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .step-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: none;
+    font-size: 24px;
+    font-weight: 900;
+    cursor: pointer;
+    background: #1E293B;
+    color: #FFE875;
+    border: 1.5px solid #D4AF37;
+  }
+  .step-btn.minus { background: #7F1D1D; color: #FECACA; border-color: #F87171; }
+  .disp-center { text-align: center; flex: 1; }
+  .disp-qty {
+    font-size: 32px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1.05;
+  }
+  .disp-sub {
+    font-size: 13px;
+    font-weight: 800;
+    color: #86EFAC;
+    margin-top: 2px;
+  }
+
+  /* أزرار الاختصارات السريعة */
+  .sec-lbl {
+    font-size: 12px;
+    font-weight: 900;
+    color: #475569;
+    margin: 0 0 5px;
+  }
+  .shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin-bottom: 9px;
+  }
+  .sc-btn {
+    background: #F1F5F9;
+    color: #0F172A;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 10px;
+    padding: 8px 0;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .sc-btn:active, .sc-btn.hi {
+    background: #16A34A;
+    color: #FFFFFF;
+    border-color: #15803D;
+  }
+
+  /* لوحة الأرقام الكاملة 0-9 */
+  .numpad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    direction: ltr;
+    margin-bottom: 10px;
+  }
+  .np-btn {
+    background: #F8FAFC;
+    color: #0F172A;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 11px;
+    height: 48px;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .np-btn:active { background: #E2E8F0; transform: scale(0.97); }
+  .np-btn.clr { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; font-size: 15px; }
+  .np-btn.del { background: #FEFCE8; color: #854D0E; border-color: #FDE047; font-size: 20px; }
+
+  .qp-footer { display: flex; gap: 7px; }
+  .btn-save-qty {
+    flex: 1;
+    background: linear-gradient(135deg, #16A34A, #15803D);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .btn-rem-qty {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1.5px solid #FCA5A5;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  /* نافذة مراجعة وتأكيد الطلب */
+  .inv-tbl { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px; }
+  .inv-tbl th { background: #0F172A; color: #FFE875; padding: 7px 4px; font-weight: 900; }
+  .inv-tbl td { border-bottom: 1px solid #E2E8F0; padding: 7px 4px; text-align: center; font-weight: 800; }
+  .inv-tbl td:first-child { text-align: right; }
+  .pay-pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+  .pay-pill {
+    border: 1.5px solid #CBD5E1; background: #F8FAFC; color: #0F172A; border-radius: 10px;
+    padding: 7px 4px; font-size: 12.5px; font-weight: 900; cursor: pointer; text-align: center;
+  }
+  .pay-pill.active { background: #0F172A; color: #FFE875; border-color: #D4AF37; }
+  .inp-field {
+    width: 100%; padding: 9px 12px; border-radius: 10px; border: 1.5px solid #CBD5E1;
+    font-size: 14px; font-weight: 800; margin-bottom: 7px; outline: none;
+  }
+  .inp-field:focus { border-color: #16A34A; }
+  .gps-btn {
+    width: 100%; border: 1.5px dashed #0284C7; background: #F0F9FF; color: #0369A1;
+    border-radius: 10px; padding: 8px; font-size: 13px; font-weight: 900; cursor: pointer; margin-bottom: 8px;
+  }
+  .gps-btn.ok { border-style: solid; border-color: #16A34A; background: #DCFCE7; color: #15803D; }
+  .act-btn {
+    width: 100%; border: none; border-radius: 12px; padding: 13px;
+    font-size: 15.5px; font-weight: 900; cursor: pointer; margin-top: 6px;
+  }
+  .btn-wa { background: linear-gradient(135deg, #16A34A, #15803D); color: #FFFFFF; }
+  .btn-direct { background: linear-gradient(135deg, #0F172A, #1E293B); color: #FFE875; border: 1.5px solid #D4AF37; }
+
+  .toast {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+    background: #064E3B; color: #FFFFFF; border: 2px solid #4ADE80; padding: 7px 16px;
+    border-radius: 99px; font-size: 13px; font-weight: 900; display: none; z-index: 99;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  }
+  .zoom-bg {
+    position: fixed; inset: 0; z-index: 95; background: rgba(0,0,0,0.92);
+    display: none; align-items: center; justify-content: center; padding: 12px;
+  }
+  .zoom-bg.open { display: flex; }
+  .zoom-bg img { max-width: 100%; max-height: 88vh; border-radius: 12px; border: 2px solid #D4AF37; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0F172A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="كتالوج أبوضياء">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+</head>
+<body>
+
+<div class="toast" id="toastEl"></div>
+
+<!-- الترويسة في أعلى الصفحة فقط -->
+<header class="top-header">
+  <div class="top-in">
+    <div class="brand-row">
+      <div>
+        <h1 class="brand-title">أبوضياء للتوزيع والتجارة — سيئون</h1>
+        <div class="brand-sub">تطبيق كتالوج الطلب السريع • اضغط على أي صنف لكتابة الكمية</div>
+      </div>
+      <div class="top-actions">
+        <button id="repeatBtn" class="pill-btn gold" style="display:none;" onclick="repeatLastOrder()">🔁 آخر طلب</button>
+        <button class="pill-btn" onclick="clearAllCart()">🗑️ تفريغ</button>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input type="text" id="searchInp" class="search-inp" placeholder="🔎 ابحث باسم الصنف (ريلاكس، رنجو، غوار...)" oninput="renderCatalog()">
+      <button id="onlySelBtn" class="filter-btn" onclick="toggleOnlySelected()">المختار (0)</button>
+    </div>
+
+    <div class="tabs-bar" id="tabsBar"></div>
+  </div>
+</header>
+
+<!-- شبكة المنتجات الملاصقة بدون فراغات -->
+<main class="grid" id="prodGrid"></main>
+
+<!-- شريط الإرسال وتأكيد الطلب الثابت في الأسفل -->
+<div class="bottom-bar">
+  <div class="bottom-in">
+    <div>
+      <div class="b-sum-top" id="barMeta">اضغط على أي صنف لاختيار الكمية</div>
+      <div class="b-sum-val" id="barTotal">0 ر.ي</div>
+    </div>
+    <button id="openInvBtn" class="send-main-btn" onclick="openInvoiceModal()" disabled>✅ تأكيد وإرسال الطلب</button>
+  </div>
+</div>
+
+<!-- نافذة الأرقام والاختصارات عند الضغط على أي صنف -->
+<div class="modal-bg" id="qtyModal" onclick="if(event.target===this)closeQtyModal()">
+  <div class="sheet-box">
+    <div class="qp-head">
+      <img id="qpImg" class="qp-thumb" src="" alt="" onclick="if(this.src)zoomPhoto(this.src)">
+      <div class="qp-info">
+        <div class="qp-name" id="qpName"></div>
+        <div class="qp-price" id="qpPrice"></div>
+      </div>
+      <button type="button" class="close-x" onclick="closeQtyModal()">✕</button>
+    </div>
+
+    <div class="display-box">
+      <button type="button" class="step-btn" onclick="stepModalQty(1)">+</button>
+      <div class="disp-center">
+        <div class="disp-qty" id="qpDisplay">0</div>
+        <div class="disp-sub" id="qpSub">الإجمالي: 0 ر.ي</div>
+      </div>
+      <button type="button" class="step-btn minus" onclick="stepModalQty(-1)">−</button>
+    </div>
+
+    <div class="sec-lbl">⚡ اختصارات سريعة بلمسة واحدة:</div>
+    <div class="shortcuts-grid">
+      <button type="button" class="sc-btn" onclick="pickShortcut(5)">5</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(10)">10</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(15)">15</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(20)">20</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(25)">25</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(30)">30</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(50)">50</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(75)">75</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(100)">100</button>
+      <button type="button" class="sc-btn" onclick="pickShortcut(200)">200</button>
+    </div>
+
+    <div class="sec-lbl">🔢 أو اكتب أي رقم مباشرة:</div>
+    <div class="numpad-grid">
+      <button type="button" class="np-btn" onclick="pressDigit('1')">1</button>
+      <button type="button" class="np-btn" onclick="pressDigit('2')">2</button>
+      <button type="button" class="np-btn" onclick="pressDigit('3')">3</button>
+      <button type="button" class="np-btn" onclick="pressDigit('4')">4</button>
+      <button type="button" class="np-btn" onclick="pressDigit('5')">5</button>
+      <button type="button" class="np-btn" onclick="pressDigit('6')">6</button>
+      <button type="button" class="np-btn" onclick="pressDigit('7')">7</button>
+      <button type="button" class="np-btn" onclick="pressDigit('8')">8</button>
+      <button type="button" class="np-btn" onclick="pressDigit('9')">9</button>
+      <button type="button" class="np-btn clr" onclick="clearModalQty()">مسح</button>
+      <button type="button" class="np-btn" onclick="pressDigit('0')">0</button>
+      <button type="button" class="np-btn del" onclick="backspaceModalQty()">⌫</button>
+    </div>
+
+    <div class="qp-footer">
+      <button type="button" class="btn-save-qty" onclick="confirmModalQty()">✅ اعتماد الكمية</button>
+      <button type="button" id="qpRemBtn" class="btn-rem-qty" style="display:none;" onclick="removeCurrentModalItem()">🗑️ إزالة</button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة مراجعة وتأكيد وإرسال الطلب بالكامل -->
+<div class="modal-bg" id="invModal" onclick="if(event.target===this)closeInvoiceModal()">
+  <div class="sheet-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+      <h2 style="margin:0;font-size:17px;font-weight:900;">🧾 مراجعة وتأكيد الطلب</h2>
+      <button type="button" class="close-x" onclick="closeInvoiceModal()">✕</button>
+    </div>
+
+    <table class="inv-tbl">
+      <thead>
+        <tr>
+          <th>الصنف</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الإجمالي</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="invTbody"></tbody>
+    </table>
+
+    <div style="background:#F0FDF4;border:1.5px solid #22C55E;border-radius:11px;padding:9px 11px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;flex-wrap:wrap;gap:6px;">
+      <strong id="mQtySummary" style="font-size:13px;color:#14532D;"></strong>
+      <strong id="mTotalSummary" style="font-size:18px;color:#15803D;"></strong>
+    </div>
+
+    <div class="sec-lbl">💳 طريقة الدفع:</div>
+    <div class="pay-pills" id="payPills">
+      <button type="button" class="pay-pill active" onclick="setPaymentMethod('آجل على الحساب', this)">📒 آجل</button>
+      <button type="button" class="pay-pill" onclick="setPaymentMethod('نقد عند الاستلام', this)">💵 نقد</button>
+      <button type="button" class="pay-pill" onclick="setPaymentMethod('حوالة المشقاص للصرافة', this)">🏦 المشقاص</button>
+    </div>
+
+    <input type="text" id="custNameInp" class="inp-field" placeholder="اسم العميل أو البقالة (يُحفظ تلقائياً)">
+    <input type="tel" id="custPhoneInp" class="inp-field" placeholder="رقم الجوال (لتصلك رسالة تأكيد الطلبية فوراً)">
+    <input type="text" id="custNoteInp" class="inp-field" placeholder="ملاحظة أو عنوان التوصيل (اختياري)">
+    <button type="button" id="gpsBtn" class="gps-btn" onclick="attachMyGps()">📍 إرفاق موقع البقالة (GPS) — اختياري</button>
+
+    <div id="directSuccessBox" style="display:none;background:#DCFCE7;border:2px solid #16A34A;border-radius:12px;padding:12px;text-align:center;margin:8px 0;font-weight:900;color:#14532D;line-height:1.5;"></div>
+
+    
+    <button type="button" class="act-btn btn-wa" onclick="sendViaWhatsApp()">📲 إرسال وتأكيد الطلب عبر واتساب (771458609)</button>
+    <div style="text-align:center;font-size:12px;color:#64748B;margin-top:8px;font-weight:800;">🏦 المشقاص للصرافة : 254176581 — باسم : محمد كرامة علي حيمد</div>
+  </div>
+</div>
+
+<div class="zoom-bg" id="zoomModal" onclick="this.classList.remove('open')">
+  <img id="zoomImg" src="" alt="معاينة">
+</div>
+
+<script>
+var PRODUCTS = [{"id":1,"num":1,"name":"بفك رنجو صغير منوع 50 حبه","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_b4fb7d438e5f1f.jpg"},{"id":2,"num":2,"name":"جامبو رنجو برتقالي 30","unit":"كيس","price":5000,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_ce5557af06fce0.jpg"},{"id":4,"num":3,"name":"بطاطس رنجو منوع","unit":"كرتون","price":8000,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_2a746427684bbd.jpg"},{"id":5,"num":4,"name":"شطة هلابينو جامبو حبة 100","unit":"كرتون","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_f6e2aa4e890c01.jpg"},{"id":6,"num":5,"name":"شراب وطني 1*60","unit":"كرتون","price":5000,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_8b8092543d73d7.jpg"},{"id":7,"num":6,"name":"ريلاكس اخضر 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_6d8d706b974f6d.jpg"},{"id":8,"num":7,"name":"ريلاكس احمر 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_c939c131bf2ac1.jpg"},{"id":9,"num":8,"name":"جامبو المكلا 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_f47ccc2330e39a.jpg"},{"id":10,"num":9,"name":"رنجو برتقالي صغير1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_b685b13e31c031.jpg"},{"id":11,"num":10,"name":"مينو رنجو 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_9c18f48b30a97b.jpg"},{"id":12,"num":11,"name":"شبس نيوجلز 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_b101ede2191313.jpg"},{"id":13,"num":12,"name":"حبيبات رنجو طويل 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_84965ef9bde709.jpg"},{"id":14,"num":13,"name":"حار مولع احمر 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_6b54d637ed365e.jpg"},{"id":15,"num":14,"name":"حار مولع ازرق","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_d29507c936c16a.jpg"},{"id":16,"num":15,"name":"اصابع بسام","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_114d3c814b4fe2.jpg"},{"id":17,"num":16,"name":"ريلاكس اصفر 1*50","unit":"كيش","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_093455f202c13a.jpg"},{"id":18,"num":17,"name":"اصابع رنجو ليمون 1*50","unit":"كيس","price":4500,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":"img/p_52e4b186716b54.jpg"},{"id":19,"num":18,"name":"غوار آيس لولي 50","unit":"كرتون","price":4000,"stock":100,"bonusBuy":0,"bonusFree":0,"badge":"","img":""}];
+var IS_LIVE_WEB = false;
+var ADMIN_WA = "967771458609";
+var MODE_KEY = "pwa_retail";
+
+var DRAFT_KEY = "abudhiya_draft_" + MODE_KEY;
+var LAST_KEY  = "abudhiya_last_" + MODE_KEY;
+
+var CART = {};
+var ONLY_SELECTED = false;
+var ACTIVE_TAB = "ALL";
+var PAYMENT_METHOD = "آجل على الحساب";
+var GPS_LINK = "";
+var toastTimer = null;
+
+// حالة نافذة الأرقام المفتوحة حالياً
+var MODAL_PROD = null;
+var MODAL_STR = "0";
+var MODAL_FRESH = true;
+
+function showToast(msg) {
+  var el = document.getElementById("toastEl");
+  el.innerText = msg;
+  el.style.display = "block";
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.style.display = "none"; }, 2200);
+}
+
+function normAr(s) {
+  return String(s || "")
+    .replace(/[٠-٩]/g, function(d){ return "٠١٢٣٤٥٦٧٨٩".indexOf(d); })
+    .replace(/[\u064B-\u065F\u0640]/g, "")
+    .replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
+    .toLowerCase().trim();
+}
+
+function fmt(n) {
+  return Math.round(Number(n || 0)).toLocaleString("en-US");
+}
+
+function calcBonus(p, qty) {
+  if (!p || !qty || qty <= 0) return 0;
+  var bb = Number(p.bonusBuy || 0);
+  var bf = Number(p.bonusFree || 0);
+  if (bb > 0 && bf > 0 && qty >= bb) return Math.floor(qty / bb) * bf;
+  return 0;
+}
+
+function saveDraft() {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(CART)); } catch (e) {}
+}
+
+function loadSavedState() {
+  try {
+    var sn = localStorage.getItem("abudhiya_cust_name") || "";
+    var sp = localStorage.getItem("abudhiya_cust_phone") || "";
+    if (sn) document.getElementById("custNameInp").value = sn;
+    if (sp) document.getElementById("custPhoneInp").value = sp;
+
+    var dr = localStorage.getItem(DRAFT_KEY);
+    if (dr) {
+      var parsed = JSON.parse(dr);
+      if (parsed && typeof parsed === "object") CART = parsed;
+    }
+
+    var last = localStorage.getItem(LAST_KEY);
+    if (last) {
+      var lp = JSON.parse(last);
+      if (lp && Object.keys(lp).length > 0) {
+        document.getElementById("repeatBtn").style.display = "inline-block";
+      }
+    }
+  } catch (e) {}
+}
+
+function buildSmartTabs() {
+  var freq = {};
+  var stop = { "كرتون":1, "كيس":1, "علبة":1, "صغير":1, "كبير":1, "وسط":1, "حجم":1, "جديد":1, "اصلي":1, "من":1, "مع":1 };
+  var hasPromos = false;
+
+  for (var i = 0; i < PRODUCTS.length; i++) {
+    var p = PRODUCTS[i];
+    if (p.badge || (p.bonusBuy > 0 && p.bonusFree > 0)) hasPromos = true;
+    var words = normAr(p.name).split(/\s+/);
+    var seen = {};
+    for (var j = 0; j < words.length; j++) {
+      var w = words[j];
+      if (w.length < 3 || /^\d+$/.test(w) || stop[w] || seen[w]) continue;
+      seen[w] = true;
+      freq[w] = (freq[w] || 0) + 1;
+    }
+  }
+
+  var topWords = Object.keys(freq)
+    .filter(function(w){ return freq[w] >= 2; })
+    .sort(function(a, b){ return freq[b] - freq[a]; })
+    .slice(0, 7);
+
+  var tabs = [{ key: "ALL", label: "الكل (" + PRODUCTS.length + ")" }];
+  if (hasPromos) tabs.push({ key: "PROMO", label: "🎁 العروض" });
+  for (var k = 0; k < topWords.length; k++) {
+    tabs.push({ key: "W:" + topWords[k], label: topWords[k] });
+  }
+
+  document.getElementById("tabsBar").innerHTML = tabs.map(function(t) {
+    var cls = ACTIVE_TAB === t.key ? "tab-chip active" : "tab-chip";
+    return '<button type="button" class="' + cls + '" data-tab="' + t.key.replace(/"/g, "") + '" onclick="selectTab(this.dataset.tab)">' + t.label + '</button>';
+  }).join("");
+}
+
+function selectTab(key) {
+  ACTIVE_TAB = key || "ALL";
+  buildSmartTabs();
+  renderCatalog();
+}
+
+function toggleOnlySelected() {
+  ONLY_SELECTED = !ONLY_SELECTED;
+  var b = document.getElementById("onlySelBtn");
+  if (ONLY_SELECTED) b.classList.add("active");
+  else b.classList.remove("active");
+  renderCatalog();
+}
+
+function clearAllCart() {
+  CART = {};
+  saveDraft();
+  ONLY_SELECTED = false;
+  document.getElementById("onlySelBtn").classList.remove("active");
+  renderCatalog();
+  updateBottomBar();
+  showToast("🗑️ تم تفريغ الطلب");
+}
+
+function repeatLastOrder() {
+  try {
+    var raw = localStorage.getItem(LAST_KEY);
+    if (!raw) return;
+    var last = JSON.parse(raw);
+    if (!last || typeof last !== "object") return;
+    CART = Object.assign({}, last);
+    saveDraft();
+    renderCatalog();
+    updateBottomBar();
+    showToast("✅ تم تحميل أصناف آخر طلبية!");
+  } catch (e) {}
+}
+
+function zoomPhoto(src) {
+  if (!src) return;
+  document.getElementById("zoomImg").src = src;
+  document.getElementById("zoomModal").classList.add("open");
+}
+
+function renderCatalog() {
+  var q = normAr(document.getElementById("searchInp").value);
+  var list = PRODUCTS.filter(function(p) {
+    if (ONLY_SELECTED && !CART[p.id]) return false;
+    if (ACTIVE_TAB === "PROMO" && !(p.badge || (p.bonusBuy > 0 && p.bonusFree > 0))) return false;
+    if (ACTIVE_TAB.indexOf("W:") === 0) {
+      if (normAr(p.name).indexOf(ACTIVE_TAB.slice(2)) === -1) return false;
+    }
+    if (q && normAr(p.name).indexOf(q) === -1) return false;
+    return true;
+  });
+
+  var grid = document.getElementById("prodGrid");
+  if (list.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:34px;color:#475569;font-weight:900;">لا توجد أصناف مطابقة للبحث</div>';
+    return;
+  }
+
+  var html = "";
+  for (var i = 0; i < list.length; i++) {
+    var p = list[i];
+    var sid = String(p.id).replace(/[^a-zA-Z0-9_-]/g, "");
+    var qty = Number(CART[p.id] || 0);
+    var bon = calcBonus(p, qty);
+    var promo = p.badge || (p.bonusBuy > 0 && p.bonusFree > 0 ? ("عرض " + p.bonusBuy + "+" + p.bonusFree) : "");
+    var imgTag = p.img ? '<img loading="lazy" src="' + p.img + '" alt="">' : '<div class="no-img">📦</div>';
+    var stripText = "✅ المطلوب: " + qty + " " + p.unit + (bon > 0 ? (" (+" + bon + " 🎁)") : "");
+    var stripTot  = "الإجمالي: " + fmt(qty * p.price) + " ر.ي";
+
+    html +=
+      '<div class="card' + (qty > 0 ? ' selected' : '') + '" id="card_' + sid + '" onclick="openQtyModal(\'' + sid + '\')">' +
+        '<div class="img-box">' +
+          imgTag +
+          (promo ? '<div class="promo-badge">🎁 ' + promo + '</div>' : '') +
+          '<div class="qty-corner" id="corner_' + sid + '">× ' + qty + '</div>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="p-name">' + p.name + '</div>' +
+          '<div class="price-bar">' +
+            '<div><span class="p-price">' + fmt(p.price) + '</span> <span class="p-cur">ر.ي</span></div>' +
+            '<span class="p-unit">/ ' + p.unit + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="selected-strip" id="strip_' + sid + '">' +
+          '<span>' + stripText + '</span>' +
+          '<span class="sub-tot">' + stripTot + '</span>' +
+        '</div>' +
+      '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function updateCardOnly(prod) {
+  if (!prod) return;
+  var sid = String(prod.id).replace(/[^a-zA-Z0-9_-]/g, "");
+  var qty = Number(CART[prod.id] || 0);
+  var bon = calcBonus(prod, qty);
+  var card = document.getElementById("card_" + sid);
+  var corner = document.getElementById("corner_" + sid);
+  var strip = document.getElementById("strip_" + sid);
+  if (card) {
+    if (qty > 0) card.classList.add("selected");
+    else card.classList.remove("selected");
+  }
+  if (corner) corner.innerText = "× " + qty;
+  if (strip) {
+    strip.innerHTML =
+      '<span>✅ المطلوب: ' + qty + ' ' + prod.unit + (bon > 0 ? (' (+' + bon + ' 🎁)') : '') + '</span>' +
+      '<span class="sub-tot">الإجمالي: ' + fmt(qty * prod.price) + ' ر.ي</span>';
+  }
+}
+
+function updateBottomBar() {
+  var countItems = 0, totalQty = 0, totalBonus = 0, totalAmt = 0;
+  for (var i = 0; i < PRODUCTS.length; i++) {
+    var p = PRODUCTS[i];
+    var q = Number(CART[p.id] || 0);
+    if (q > 0) {
+      countItems++;
+      totalQty += q;
+      totalBonus += calcBonus(p, q);
+      totalAmt += q * Number(p.price || 0);
+    }
+  }
+  document.getElementById("onlySelBtn").innerText = "المختار (" + countItems + ")";
+  var meta = document.getElementById("barMeta");
+  var totEl = document.getElementById("barTotal");
+  var openBtn = document.getElementById("openInvBtn");
+
+  if (countItems === 0) {
+    meta.innerText = "اضغط على أي صنف لكتابة الكمية";
+    totEl.innerText = "0 ر.ي";
+    openBtn.disabled = true;
+  } else {
+    var bStr = totalBonus > 0 ? (" | 🎁 +" + totalBonus) : "";
+    meta.innerText = "أصناف: " + countItems + " | إجمالي الكمية: " + totalQty + bStr;
+    totEl.innerText = fmt(totalAmt) + " ر.ي";
+    openBtn.disabled = false;
+  }
+}
+
+/* ===== نافذة الأرقام والاختصارات عند الضغط على الصنف ===== */
+function openQtyModal(id) {
+  var prod = PRODUCTS.find(function(x){ return String(x.id) === String(id); });
+  if (!prod) return;
+  MODAL_PROD = prod;
+  var cur = Number(CART[prod.id] || 0);
+  MODAL_STR = cur > 0 ? String(cur) : "0";
+  MODAL_FRESH = true;
+
+  var imgEl = document.getElementById("qpImg");
+  if (prod.img) { imgEl.src = prod.img; imgEl.style.display = "block"; }
+  else { imgEl.src = ""; imgEl.style.display = "none"; }
+
+  document.getElementById("qpName").innerText = prod.name;
+  document.getElementById("qpPrice").innerText = fmt(prod.price) + " ر.ي / " + prod.unit;
+  document.getElementById("qpRemBtn").style.display = cur > 0 ? "block" : "none";
+
+  refreshModalDisplay();
+  document.getElementById("qtyModal").classList.add("open");
+}
+
+function closeQtyModal() {
+  document.getElementById("qtyModal").classList.remove("open");
+  MODAL_PROD = null;
+}
+
+function refreshModalDisplay() {
+  if (!MODAL_PROD) return;
+  var q = parseInt(MODAL_STR, 10) || 0;
+  var bon = calcBonus(MODAL_PROD, q);
+  document.getElementById("qpDisplay").innerText = String(q);
+  document.getElementById("qpSub").innerText =
+    "الإجمالي: " + fmt(q * MODAL_PROD.price) + " ر.ي" +
+    (bon > 0 ? ("  |  🎁 +" + bon + " مجاني") : (" (" + MODAL_PROD.unit + ")"));
+}
+
+function pickShortcut(num) {
+  MODAL_STR = String(num);
+  MODAL_FRESH = true;
+  refreshModalDisplay();
+}
+
+function pressDigit(d) {
+  if (MODAL_FRESH || MODAL_STR === "0") {
+    MODAL_STR = d === "0" ? "0" : d;
+    MODAL_FRESH = false;
+  } else if (MODAL_STR.length < 5) {
+    MODAL_STR += d;
+  }
+  refreshModalDisplay();
+}
+
+function backspaceModalQty() {
+  MODAL_FRESH = false;
+  if (MODAL_STR.length <= 1) MODAL_STR = "0";
+  else MODAL_STR = MODAL_STR.slice(0, -1);
+  refreshModalDisplay();
+}
+
+function clearModalQty() {
+  MODAL_STR = "0";
+  MODAL_FRESH = true;
+  refreshModalDisplay();
+}
+
+function stepModalQty(delta) {
+  var q = Math.max(0, (parseInt(MODAL_STR, 10) || 0) + delta);
+  MODAL_STR = String(q);
+  MODAL_FRESH = false;
+  refreshModalDisplay();
+}
+
+function confirmModalQty() {
+  if (!MODAL_PROD) return;
+  var q = parseInt(MODAL_STR, 10) || 0;
+  if (q <= 0) delete CART[MODAL_PROD.id];
+  else CART[MODAL_PROD.id] = Math.min(99999, q);
+
+  saveDraft();
+  updateCardOnly(MODAL_PROD);
+  updateBottomBar();
+  var savedName = MODAL_PROD.name;
+  closeQtyModal();
+  if (q > 0) showToast("✅ " + savedName + " : " + q);
+  if (ONLY_SELECTED) renderCatalog();
+}
+
+function removeCurrentModalItem() {
+  if (!MODAL_PROD) return;
+  delete CART[MODAL_PROD.id];
+  saveDraft();
+  updateCardOnly(MODAL_PROD);
+  updateBottomBar();
+  closeQtyModal();
+  if (ONLY_SELECTED) renderCatalog();
+}
+
+/* ===== نافذة مراجعة وتأكيد وإرسال الطلب ===== */
+function getSelectedItems() {
+  var items = [];
+  for (var i = 0; i < PRODUCTS.length; i++) {
+    var p = PRODUCTS[i];
+    var q = Number(CART[p.id] || 0);
+    if (q > 0) {
+      items.push({ id: p.id, name: p.name, unit: p.unit, qty: q, bonusQty: calcBonus(p, q), price: p.price, total: q * p.price });
+    }
+  }
+  return items;
+}
+
+function openInvoiceModal() {
+  var items = getSelectedItems();
+  if (items.length === 0) return;
+  document.getElementById("directSuccessBox").style.display = "none";
+  var tb = document.getElementById("invTbody");
+  var totalQty = 0, totalBonus = 0, totalAmt = 0, rows = "";
+
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    var sid = String(it.id).replace(/[^a-zA-Z0-9_-]/g, "");
+    totalQty += it.qty;
+    totalBonus += it.bonusQty;
+    totalAmt += it.total;
+    var bonusHtml = it.bonusQty > 0 ? '<div style="font-size:11px;color:#B45309;">🎁 +' + it.bonusQty + ' مجاني</div>' : '';
+    rows += '<tr>' +
+      '<td>' + it.name + bonusHtml + '</td>' +
+      '<td style="color:#15803D;font-size:15px;cursor:pointer;" onclick="closeInvoiceModal();openQtyModal(\'' + sid + '\')">' + it.qty + ' ✏️</td>' +
+      '<td>' + fmt(it.price) + '</td>' +
+      '<td style="color:#0F172A;">' + fmt(it.total) + '</td>' +
+      '<td><button type="button" class="close-x" style="width:28px;height:28px;font-size:13px;" onclick="removeFromInvoice(\'' + sid + '\')">✕</button></td>' +
+    '</tr>';
+  }
+  tb.innerHTML = rows;
+  document.getElementById("mQtySummary").innerText = "إجمالي الكمية: " + totalQty + " (" + items.length + " صنف)" + (totalBonus > 0 ? (" | 🎁 +" + totalBonus) : "");
+  document.getElementById("mTotalSummary").innerText = fmt(totalAmt) + " ر.ي";
+  document.getElementById("invModal").classList.add("open");
+}
+
+function removeFromInvoice(id) {
+  delete CART[id];
+  saveDraft();
+  var prod = PRODUCTS.find(function(x){ return String(x.id) === String(id); });
+  if (prod) updateCardOnly(prod);
+  updateBottomBar();
+  if (getSelectedItems().length === 0) closeInvoiceModal();
+  else openInvoiceModal();
+}
+
+function closeInvoiceModal() {
+  document.getElementById("invModal").classList.remove("open");
+}
+
+function setPaymentMethod(method, btnEl) {
+  PAYMENT_METHOD = method;
+  var all = document.querySelectorAll("#payPills .pay-pill");
+  for (var i = 0; i < all.length; i++) all[i].classList.remove("active");
+  if (btnEl) btnEl.classList.add("active");
+}
+
+function attachMyGps() {
+  var btn = document.getElementById("gpsBtn");
+  if (!navigator.geolocation) { showToast("⚠️ جهازك لا يدعم تحديد الموقع"); return; }
+  btn.innerText = "⏳ جاري تحديد موقع البقالة (GPS)...";
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      GPS_LINK = "https://maps.google.com/?q=" + pos.coords.latitude.toFixed(6) + "," + pos.coords.longitude.toFixed(6);
+      btn.classList.add("ok");
+      btn.innerText = "✅ تم إرفاق موقع البقالة بنجاح (GPS)";
+    },
+    function() { btn.innerText = "⚠️ تعذر تحديد الموقع — يمكنك الإرسال بدونه"; },
+    { timeout: 6000 }
+  );
+}
+
+function saveCustomerAndLastOrder() {
+  try {
+    localStorage.setItem("abudhiya_cust_name", (document.getElementById("custNameInp").value || "").trim());
+    localStorage.setItem("abudhiya_cust_phone", (document.getElementById("custPhoneInp").value || "").trim());
+    localStorage.setItem(LAST_KEY, JSON.stringify(CART));
+    document.getElementById("repeatBtn").style.display = "inline-block";
+  } catch (e) {}
+}
+
+function sendViaWhatsApp() {
+  var items = getSelectedItems();
+  if (items.length === 0) return;
+  saveCustomerAndLastOrder();
+  var cname = (document.getElementById("custNameInp").value || "").trim();
+  var cnote = (document.getElementById("custNoteInp").value || "").trim();
+  var totalAmt = 0, totalQty = 0, totalBonus = 0;
+
+  var lines = ["طلبية جديدة — أبوضياء للتوزيع"];
+  if (cname) lines.push("العميل : " + cname);
+  lines.push("طريقة الدفع : " + PAYMENT_METHOD);
+  lines.push("━━━━━━━━━━━━━━━━━━━━");
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    totalQty += it.qty;
+    totalBonus += it.bonusQty;
+    totalAmt += it.total;
+    var bTxt = it.bonusQty > 0 ? (" (+" + it.bonusQty + " بونص مجاني)") : "";
+    lines.push(it.qty + " " + it.name + bTxt + " = " + fmt(it.total) + " ر.ي");
+  }
+  lines.push("━━━━━━━━━━━━━━━━━━━━");
+  lines.push("إجمالي الكمية : " + totalQty + (totalBonus > 0 ? (" + " + totalBonus + " مجاني") : ""));
+  lines.push("الإجمالي : " + fmt(totalAmt) + " ر.ي");
+  if (cnote) lines.push("ملاحظات : " + cnote);
+  if (GPS_LINK) lines.push("الموقع : " + GPS_LINK);
+
+  window.location.href = "https://wa.me/" + ADMIN_WA + "?text=" + encodeURIComponent(lines.join("\n"));
+}
+
+function sendDirectToBot() {
+  var items = getSelectedItems();
+  if (items.length === 0) return;
+  saveCustomerAndLastOrder();
+
+  var btn = document.getElementById("directSendBtn");
+  btn.disabled = true;
+  btn.innerText = "⏳ جاري تأكيد وإرسال الطلب...";
+
+  fetch("/api/fast-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      customerName: (document.getElementById("custNameInp").value || "").trim() || "عميل الكتالوج السريع",
+      phone: (document.getElementById("custPhoneInp").value || "").trim(),
+      notes: (document.getElementById("custNoteInp").value || "").trim(),
+      paymentMethod: PAYMENT_METHOD,
+      gpsLink: GPS_LINK,
+      items: items
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(res){
+    btn.disabled = false;
+    btn.innerText = "✅ تأكيد وإرسال الطلب مباشرة الآن";
+    if (res && res.ok) {
+      var box = document.getElementById("directSuccessBox");
+      box.innerHTML = "✅ تم تأكيد وإرسال طلبك بنجاح برقم (#" + res.orderNo + ")<br>💰 الإجمالي: " + fmt(res.totalAmount) + " ر.ي" +
+        (res.sentToCustomerWa ? "<br>📲 تم إرسال نسخة تأكيد إلى رقمك في واتساب!" : "");
+      box.style.display = "block";
+      CART = {};
+      saveDraft();
+      renderCatalog();
+      updateBottomBar();
+      showToast("✅ تم تأكيد الطلب #" + res.orderNo);
+    } else {
+      sendViaWhatsApp();
+    }
+  })
+  .catch(function(){
+    btn.disabled = false;
+    btn.innerText = "✅ تأكيد وإرسال الطلب مباشرة الآن";
+    sendViaWhatsApp();
+  });
+}
+
+document.addEventListener("keydown", function(ev) {
+  if (!MODAL_PROD) return;
+  if (ev.key >= "0" && ev.key <= "9") pressDigit(ev.key);
+  else if (ev.key === "Backspace") backspaceModalQty();
+  else if (ev.key === "Enter") confirmModalQty();
+  else if (ev.key === "Escape") closeQtyModal();
+});
+
+loadSavedState();
+buildSmartTabs();
+renderCatalog();
+updateBottomBar();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+var deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  var bar = document.querySelector(".top-actions");
+  if (bar && !document.getElementById("pwaInstBtn")) {
+    var b = document.createElement("button");
+    b.id = "pwaInstBtn";
+    b.className = "pill-btn gold";
+    b.innerText = "📲 تثبيت التطبيق";
+    b.onclick = function() {
+      if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; b.style.display = "none"; }
+    };
+    bar.prepend(b);
+  }
+});
+</script>
+</body>
+</html>
