@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>أبوضياء — تطبيق كتالوج الطلب السريع</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+
+
 <style>
   * {
     box-sizing: border-box;
@@ -310,18 +310,19 @@
 <meta property="og:site_name" content="أبوضياء للتوزيع — سيئون">
 <meta property="og:title" content="أبوضياء للتوزيع — تطبيق كتالوج الطلب السريع">
 <meta property="og:description" content="اضغط لفتح صور الأصناف وكتابة الكميات (50 / 100) وإرسال فاتورتك فوراً • المشقاص للصرافة: 254176581">
-<meta property="og:image" content="https://abodhya.github.io/abudhiya-catalog/og-cover.jpg">
+<meta property="og:image" content="https://raw.githack.com/abodhya/abudhiya-catalog/main/og-cover.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://abodhya.github.io/abudhiya-catalog/">
+<meta property="og:url" content="https://raw.githack.com/abodhya/abudhiya-catalog/main/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://abodhya.github.io/abudhiya-catalog/og-cover.jpg">
+<meta name="twitter:image" content="https://raw.githack.com/abodhya/abudhiya-catalog/main/og-cover.jpg">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="كتالوج أبوضياء">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
+
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:500;font-display:swap;}
@@ -1050,7 +1051,7 @@ updateAllSummaries();
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
-    navigator.serviceWorker.register("sw.js").catch(function(){});
+    Promise.resolve().catch(function(){});
   });
 }
 var deferredPrompt = null;
