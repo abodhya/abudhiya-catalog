@@ -1,4 +1,4 @@
-const CACHE = 'abudhiya-pwa-1795094652046';
+const CACHE = 'abudhiya-pwa-1795245500936';
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
