@@ -2722,5 +2722,324 @@ window.addEventListener("beforeinstallprompt", function(e) {
 })();
 </script>
 <!-- ABUDHIYA_SILENT_V3_END -->
+
+<!-- ABUDHIYA_OFFLINE_ENGINE_START -->
+<style id="abOfflineEngStyle">
+  #abOfflineBanner {
+    display: none;
+    margin: 8px 0 0;
+    padding: 9px 11px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    direction: rtl;
+    text-align: center;
+    line-height: 1.6;
+  }
+  #abOfflineBanner.is-offline {
+    display: block;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+  }
+  #abOfflineBanner.has-pending {
+    display: block;
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+  }
+  .ab-off-flush-btn {
+    margin-top: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #1d4ed8;
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #abTopOfflinePill {
+    position: fixed;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(17, 24, 39, 0.92);
+    color: #fde68a;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 99999;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    direction: rtl;
+    white-space: nowrap;
+  }
+</style>
+<script data-ab-offline-engine="1">
+(function () {
+  if (window.__abOfflineEngineV1) return;
+  window.__abOfflineEngineV1 = true;
+
+  var QUEUE_KEY = "ab_pending_orders_v1";
+  var flushing = false;
+  var origFetch = window.fetch ? window.fetch.bind(window) : null;
+
+  // 1) تسجيل Service Worker وتخزين كل صور المنتجات للعمل بدون نت
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./sw.js").then(function (reg) {
+        try { reg.update(); } catch (e) {}
+        setTimeout(function () {
+          try {
+            var imgs = [];
+            if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) {
+              for (var i = 0; i < PRODUCTS.length; i++) {
+                var im = PRODUCTS[i] && (PRODUCTS[i].image || PRODUCTS[i].img);
+                if (im && typeof im === "string" && im.indexOf("data:") !== 0) imgs.push(im);
+              }
+            }
+            var domImgs = document.querySelectorAll("img[src]");
+            for (var j = 0; j < domImgs.length; j++) {
+              var s = domImgs[j].getAttribute("src");
+              if (s && s.indexOf("data:") !== 0 && imgs.indexOf(s) === -1) imgs.push(s);
+            }
+            var sw = reg.active || reg.waiting || navigator.serviceWorker.controller;
+            if (sw && imgs.length) sw.postMessage({ type: "CACHE_URLS", urls: imgs });
+          } catch (e) {}
+        }, 2500);
+      }).catch(function () {});
+    });
+  }
+
+  function loadQueue() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]");
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  function saveQueue(arr) {
+    try { localStorage.setItem(QUEUE_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  function enqueueOrder(bodyStr, fallbackUrl) {
+    var parsed = null;
+    try { parsed = JSON.parse(bodyStr); } catch (e) {}
+    if (!parsed || !parsed.orderId) return null;
+    var q = loadQueue();
+    var exists = false;
+    for (var i = 0; i < q.length; i++) {
+      if (q[i].orderId === parsed.orderId) { exists = true; break; }
+    }
+    if (!exists) {
+      q.push({
+        orderId: parsed.orderId,
+        bodyStr: bodyStr,
+        fallbackUrl: fallbackUrl || "",
+        savedAt: Date.now()
+      });
+      saveQueue(q);
+    }
+    window.__abLastOfflineOrderId = parsed.orderId;
+    updateOfflineUI();
+    return parsed.orderId;
+  }
+
+  function fetchTimeout(url, init, ms) {
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var t = setTimeout(function () {
+        if (!done) { done = true; reject(new Error("net_timeout")); }
+      }, ms);
+      origFetch(url, init).then(function (res) {
+        if (!done) { done = true; clearTimeout(t); resolve(res); }
+      }).catch(function (err) {
+        if (!done) { done = true; clearTimeout(t); reject(err); }
+      });
+    });
+  }
+
+  // 2) اعتراض الإرسال عند انقطاع النت فقط لحفظ الطلب وإرساله تلقائياً لاحقاً
+  if (origFetch) {
+    window.fetch = function (input, init) {
+      var url = (typeof input === "string") ? input : (input && input.url ? input.url : "");
+      var method = (init && init.method) ? String(init.method).toUpperCase() : "GET";
+
+      if (init && init.__abBypassQueue) {
+        return origFetch(input, init);
+      }
+
+      if (method === "POST" && url.indexOf("/api/order") !== -1) {
+        if (!navigator.onLine) {
+          return Promise.reject(new Error("offline_fast"));
+        }
+        return fetchTimeout(input, init, 7000);
+      }
+
+      if (method === "POST" && url.indexOf("ntfy.sh/") !== -1) {
+        var bodyStr = init && typeof init.body === "string" ? init.body : "";
+        var resolveQueued = function () {
+          enqueueOrder(bodyStr, url);
+          return Promise.resolve(new Response(JSON.stringify({ ok: true, queued: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        };
+        if (!navigator.onLine) return resolveQueued();
+        return fetchTimeout(input, init, 7000).then(function (res) {
+          if (res && res.ok) return res;
+          return resolveQueued();
+        }).catch(function () {
+          return resolveQueued();
+        });
+      }
+
+      return origFetch(input, init);
+    };
+  }
+
+  // 3) إرسال الطلبات المعلّقة تلقائياً فور عودة الإنترنت
+  function flushPendingOrders(manual) {
+    if (flushing || !origFetch) return;
+    var q = loadQueue();
+    if (!q.length) { updateOfflineUI(); return; }
+    if (!navigator.onLine) {
+      if (manual && typeof showToast === "function") showToast("📴 لا يوجد إنترنت حالياً — الطلبات محفوظة بأمان");
+      return;
+    }
+
+    flushing = true;
+    var remaining = [];
+    var sentCount = 0;
+
+    function sendNext(idx) {
+      if (idx >= q.length) {
+        saveQueue(remaining);
+        flushing = false;
+        updateOfflineUI();
+        if (sentCount > 0 && typeof showToast === "function") {
+          showToast("✅ تم إرسال " + sentCount + " طلب معلّق للمستودع تلقائياً");
+        }
+        return;
+      }
+      var item = q[idx];
+      fetchTimeout("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: item.bodyStr,
+        __abBypassQueue: true
+      }, 8000).then(function (r) {
+        if (!r || !r.ok) throw new Error("api_err");
+        sentCount++;
+        sendNext(idx + 1);
+      }).catch(function () {
+        if (item.fallbackUrl) {
+          fetchTimeout(item.fallbackUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+            body: item.bodyStr,
+            __abBypassQueue: true
+          }, 8000).then(function (r2) {
+            if (!r2 || !r2.ok) throw new Error("ntfy_err");
+            sentCount++;
+            sendNext(idx + 1);
+          }).catch(function () {
+            remaining.push(item);
+            sendNext(idx + 1);
+          });
+        } else {
+          remaining.push(item);
+          sendNext(idx + 1);
+        }
+      });
+    }
+    sendNext(0);
+  }
+
+  // 4) تحديث واجهة حالة الاتصال والطلبات المعلّقة ورسالة التأكيد
+  function updateOfflineUI() {
+    var q = loadQueue();
+    var offline = !navigator.onLine;
+
+    var pill = document.getElementById("abTopOfflinePill");
+    if (!pill && document.body) {
+      pill = document.createElement("div");
+      pill.id = "abTopOfflinePill";
+      document.body.appendChild(pill);
+    }
+    if (pill) {
+      if (offline) {
+        pill.textContent = "📴 وضع بدون إنترنت (التصفح والطلب يعملان)";
+        pill.style.display = "block";
+      } else if (q.length > 0) {
+        pill.textContent = "⏳ جاري إرسال " + q.length + " طلب معلّق...";
+        pill.style.display = "block";
+      } else {
+        pill.style.display = "none";
+      }
+    }
+
+    var box = document.getElementById("abSilentOrderBox");
+    if (box) {
+      var banner = document.getElementById("abOfflineBanner");
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "abOfflineBanner";
+        box.appendChild(banner);
+      }
+      if (q.length > 0) {
+        banner.className = "has-pending";
+        banner.innerHTML =
+          '<div>⏳ لديك <b>' + q.length + '</b> طلب محفوظ بانتظار الإنترنت (سيُرسل تلقائياً فور توفر الشبكة)</div>' +
+          '<button type="button" id="abOffFlushBtn" class="ab-off-flush-btn">📤 إرسال الطلبات المعلّقة الآن</button>';
+        var fb = document.getElementById("abOffFlushBtn");
+        if (fb) fb.onclick = function () { flushPendingOrders(true); };
+      } else if (offline) {
+        banner.className = "is-offline";
+        banner.textContent = "📴 أنت في وضع بدون إنترنت — يمكنك الطلب الآن وسيُحفظ ويُرسل تلقائياً فور عودة الشبكة";
+      } else {
+        banner.className = "";
+        banner.innerHTML = "";
+      }
+    }
+
+    // تعديل نص نافذة النجاح إذا كان الطلب قد حُفظ بدون إنترنت
+    if (window.__abLastOfflineOrderId) {
+      var modal = document.getElementById("abSv3ModalBg");
+      if (modal && !modal.getAttribute("data-offline-patched")) {
+        modal.setAttribute("data-offline-patched", "1");
+        var t = modal.querySelector(".ab-sv3-title");
+        var sub = modal.querySelector(".ab-sv3-sub");
+        if (t) t.textContent = "📴 تم حفظ الطلب بدون إنترنت";
+        if (sub) sub.innerHTML = "تم حفظ طلبك في الجهاز بنجاح، وسيتم إرساله تلقائياً إلى <b>ابوضياء للتوزيع</b> فور توفر الإنترنت.";
+        window.__abLastOfflineOrderId = null;
+      }
+    }
+  }
+
+  window.addEventListener("online", function () {
+    updateOfflineUI();
+    setTimeout(function () { flushPendingOrders(false); }, 1200);
+  });
+  window.addEventListener("offline", updateOfflineUI);
+
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(updateOfflineUI);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(function () {
+    updateOfflineUI();
+    if (navigator.onLine && loadQueue().length > 0) flushPendingOrders(false);
+  }, 15000);
+  setTimeout(function () {
+    updateOfflineUI();
+    if (navigator.onLine && loadQueue().length > 0) flushPendingOrders(false);
+  }, 2000);
+})();
+</script>
+<!-- ABUDHIYA_OFFLINE_ENGINE_END -->
 </body>
 </html>
