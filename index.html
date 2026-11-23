@@ -2085,6 +2085,8 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
 <!-- ABUDHIYA_SILENT_V3_START -->
 <style id="abSilentV3Style">
   #abWhBox { display: none !important; }
@@ -2410,7 +2412,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
         lines.push("   الكمية: *" + it.qty + "* " + it.unit + bonTxt + " × " + fmtNum(it.price) + " = *" + fmtNum(it.sub) + " ر.ي*");
       }
       lines.push("━━━━━━━━━━━━━━");
-      lines.push("📊 إجمالي الوحدات: *" + data.totalQty + "*");
+      lines.push("📊 عدد الأكياس: *" + data.totalQty + "*");
       lines.push("💰 الإجمالي: *" + fmtNum(data.grandTotal) + " ر.ي*");
     } else {
       lines.push("📦 *طلب تجهيز أصناف فقط (بدون سعر)*");
@@ -2426,7 +2428,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
         lines.push(m.qty + " " + m.name + bTxt);
       }
       lines.push("━━━━━━━━━━━━━━");
-      lines.push("📊 إجمالي الوحدات: *" + data.totalQty + "*");
+      lines.push("📊 عدد الأكياس: *" + data.totalQty + "*");
     }
 
     return {
@@ -2457,7 +2459,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
         '<div class="ab-sv3-sub">تم استلام طلبك وتحويله مباشرة للتجهيز. شكراً لتعاملك مع <b>ابوضياء للتوزيع</b>.</div>' +
         '<div class="ab-sv3-meta">' +
           '<div>رقم الطلب: <b>#' + order.orderId + '</b></div>' +
-          '<div>إجمالي الوحدات: <b>' + order.totalQty + '</b></div>' +
+          '<div>عدد الأكياس: <b>' + order.totalQty + '</b></div>' +
           priceLine +
         '</div>' +
         '<div class="ab-sv3-actions">' +
