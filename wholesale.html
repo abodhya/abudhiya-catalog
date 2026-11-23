@@ -2083,6 +2083,8 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
 <!-- ABUDHIYA_SILENT_V3_START -->
 <style id="abSilentV3Style">
   #abWhBox { display: none !important; }
@@ -2421,7 +2423,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       for (var k = 0; k < data.items.length; k++) {
         var m = data.items[k];
         var bTxt = m.bon > 0 ? (" (+" + m.bon + " 🎁)") : "";
-        lines.push("• " + m.name + " : *" + m.qty + "* " + m.unit + bTxt);
+        lines.push(m.qty + " " + m.name + bTxt);
       }
       lines.push("━━━━━━━━━━━━━━");
       lines.push("📊 إجمالي الوحدات: *" + data.totalQty + "*");

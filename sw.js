@@ -1,2 +1,2 @@
-// SILENT_CACHE_STAMP: 1795434126
+// SILENT_CACHE_STAMP: 1795434695
 self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
