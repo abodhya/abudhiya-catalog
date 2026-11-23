@@ -1757,129 +1757,325 @@ window.addEventListener("beforeinstallprompt", function(e) {
   });
 })();
 
-/* === ABUDHIYA HIDDEN WAREHOUSE BUTTON V1 === */
-(function(){
-  if (window.__abWhHiddenInit) return;
-  window.__abWhHiddenInit = true;
-  var HIDDEN_PHONE = '967772777609';
-  var BTN_TEXT = '✅ لاعتماد طلبك وإرساله اضغط هنا';
 
-  function findWhBox(inp) {
-    var el = inp.parentElement;
-    var best = null;
-    for (var i = 0; i < 6 && el && el !== document.body; i++) {
-      var btns = el.querySelectorAll('button');
-      if (btns.length >= 1 && btns.length <= 4) {
-        best = el;
-        if (btns.length >= 2) break;
-      }
-      el = el.parentElement;
-    }
-    return best || inp.parentElement;
+
+/* === ABUDHIYA SILENT ORDER V2 === */
+(function () {
+  if (window.__abSilentOrderV2) return;
+  window.__abSilentOrderV2 = true;
+
+  var BRIDGE_TOPIC = "abudhiya_ord_78beff624ce0cb117eba";
+  var BRIDGE_TOKEN = "20d8e5892f231c53cba7735a";
+  var DEFAULT_WH_PHONE = "967772777609";
+  var NL = String.fromCharCode(10);
+  var audioCtx = null;
+  var sending = false;
+
+  function unlockAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    } catch (e) { return null; }
   }
 
-  function applyHiddenMode() {
-    var inp = document.getElementById('abWhPhoneInp');
-    if (!inp) return;
+  function playSweetChime() {
+    try {
+      var ctx = unlockAudio();
+      if (!ctx) return;
+      var now = ctx.currentTime + 0.02;
+      var notes = [
+        { f: 523.25, t: 0.00, d: 0.24, g: 0.16 },
+        { f: 659.25, t: 0.11, d: 0.26, g: 0.17 },
+        { f: 783.99, t: 0.22, d: 0.30, g: 0.18 },
+        { f: 1046.50, t: 0.34, d: 0.55, g: 0.20 }
+      ];
+      for (var i = 0; i < notes.length; i++) {
+        var n = notes[i];
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = i === 3 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(n.f, now + n.t);
+        gain.gain.setValueAtTime(0.0001, now + n.t);
+        gain.gain.linearRampToValueAtTime(n.g, now + n.t + 0.025);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + n.t);
+        osc.stop(now + n.t + n.d + 0.04);
+      }
+      if (navigator.vibrate) navigator.vibrate([45, 55, 90]);
+    } catch (e) {}
+  }
 
-    if (!inp.value || inp.value.replace(/D/g, '').length < 7) {
-      inp.value = HIDDEN_PHONE;
-    }
+  function injectModalStyles() {
+    if (document.getElementById('abSilentStyles')) return;
+    var st = document.createElement('style');
+    st.id = 'abSilentStyles';
+    st.textContent =
+      '#abWhBox.ab-silent-mode { position: relative !important; padding: 12px !important; }' +
+      '#abWhBox.ab-silent-mode .ab-wh-head, #abWhBox.ab-silent-mode #abWhPhoneRow, #abWhBox.ab-silent-mode .ab-wh-btns { display: none !important; }' +
+      '#abWhBox.ab-silent-mode.ab-admin-open .ab-wh-head, #abWhBox.ab-silent-mode.ab-admin-open .ab-wh-btns { display: flex !important; }' +
+      '#abWhBox.ab-silent-mode.ab-admin-open #abWhPhoneRow.open { display: flex !important; }' +
+      '.ab-confirm-main-btn { width: 100%; border: none; border-radius: 12px; padding: 14px 16px; font-size: 16px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #0f9d58, #0b7a43); box-shadow: 0 6px 16px rgba(15,157,88,0.28); cursor: pointer; font-family: inherit; transition: transform 0.12s ease, opacity 0.2s ease; }' +
+      '.ab-confirm-main-btn:active { transform: scale(0.98); }' +
+      '.ab-confirm-main-btn:disabled { opacity: 0.72; cursor: wait; }' +
+      '.ab-admin-gear { position: absolute; top: 4px; left: 6px; font-size: 12px; opacity: 0.18; cursor: pointer; padding: 3px 6px; user-select: none; z-index: 6; }' +
+      '.ab-admin-gear.active { opacity: 0.85; }' +
+      '.ab-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.62); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 999999; padding: 18px; animation: abFadeIn 0.22s ease; }' +
+      '.ab-modal-card { background: #ffffff; color: #111111; width: 100%; max-width: 340px; border-radius: 18px; padding: 24px 20px; text-align: center; box-shadow: 0 18px 40px rgba(0,0,0,0.32); animation: abPopIn 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15); }' +
+      '.ab-modal-icon { width: 66px; height: 66px; margin: 0 auto 12px; border-radius: 50%; background: #e6f7ee; color: #0f9d58; font-size: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; border: 2px solid #0f9d58; }' +
+      '.ab-modal-title { font-size: 19px; font-weight: 800; color: #0b7a43; margin-bottom: 8px; }' +
+      '.ab-modal-sub { font-size: 13.5px; color: #444; line-height: 1.6; margin-bottom: 14px; }' +
+      '.ab-modal-meta { background: #f6f8fa; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px; font-size: 13px; color: #111; margin-bottom: 16px; line-height: 1.7; }' +
+      '.ab-modal-actions { display: flex; gap: 8px; }' +
+      '.ab-modal-btn { flex: 1; padding: 11px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }' +
+      '.ab-modal-ok { background: #111111; color: #ffffff; }' +
+      '.ab-modal-new { background: #e6f7ee; color: #0b7a43; border: 1px solid #b7e4cc; }' +
+      '@keyframes abFadeIn { from { opacity: 0; } to { opacity: 1; } }' +
+      '@keyframes abPopIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }';
+    document.head.appendChild(st);
+  }
 
-    var box = findWhBox(inp);
-    if (!box || box.getAttribute('data-ab-wh-hidden') === '1') return;
-    box.setAttribute('data-ab-wh-hidden', '1');
-    box.style.position = 'relative';
+  function getTargetPhone() {
+    try {
+      var inp = document.getElementById('abWhPhoneInp');
+      var raw = (inp && inp.value) ? inp.value : localStorage.getItem('ab_warehouse_phone_v2');
+      var d = String(raw || '').replace(/[^0-9]/g, '');
+      if (d.indexOf('00') === 0) d = d.slice(2);
+      if (d.length === 9 && d.indexOf('7') === 0) d = '967' + d;
+      if (d.length >= 9) return d;
+    } catch (e) {}
+    return DEFAULT_WH_PHONE;
+  }
 
-    var adminEls = [];
-    var btns = box.querySelectorAll('button');
-    var mainBtn = null;
+  function buildOrderPayload(withPrice) {
+    var cartObj = (typeof CART !== 'undefined' && CART) ? CART : {};
+    var prods = (typeof PRODUCTS !== 'undefined' && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+    var items = [];
+    var grandTotal = 0;
+    var totalQty = 0;
 
-    for (var b = 0; b < btns.length; b++) {
-      var txt = (btns[b].textContent || '').trim();
-      if (txt.indexOf('مختصر') !== -1 || txt.indexOf('بدون سعر') !== -1 || txt.indexOf('حفظ') !== -1 || txt.indexOf('تعديل') !== -1) {
-        adminEls.push(btns[b]);
-      } else if (!mainBtn && (txt.indexOf('بالسعر') !== -1 || txt.indexOf('إرسال') !== -1 || txt.indexOf('ارسال') !== -1 || txt.indexOf('واتس') !== -1)) {
-        mainBtn = btns[b];
+    for (var i = 0; i < prods.length; i++) {
+      var p = prods[i];
+      var q = Number(cartObj[p.id] || 0);
+      if (q > 0) {
+        var bon = (typeof calcBonus === 'function') ? Number(calcBonus(p, q) || 0) : 0;
+        var sub = q * Number(p.price || 0);
+        grandTotal += sub;
+        totalQty += q;
+        items.push({ name: p.name, unit: p.unit || 'كرتون', qty: q, bon: bon, price: Number(p.price || 0), sub: sub });
       }
     }
-    if (!mainBtn) {
-      for (var b2 = 0; b2 < btns.length; b2++) {
-        if (adminEls.indexOf(btns[b2]) === -1) { mainBtn = btns[b2]; break; }
-      }
+
+    if (items.length === 0) return { error: 'الفاتورة فارغة — اختر أصنافاً أولاً' };
+
+    var nameEl = document.getElementById('custNameInp');
+    var phoneEl = document.getElementById('custPhoneInp');
+    var noteEl = document.getElementById('custNoteInp');
+    var cName = nameEl ? String(nameEl.value || '').trim() : '';
+    var cPhone = phoneEl ? String(phoneEl.value || '').trim() : '';
+    var cNote = noteEl ? String(noteEl.value || '').trim() : '';
+
+    if (nameEl && !cName && withPrice) {
+      try {
+        nameEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        nameEl.focus();
+      } catch (e) {}
+      return { error: 'الرجاء كتابة اسمك أو اسم المحل في الفاتورة أولاً' };
     }
 
-    var inpRow = inp.parentElement;
-    if (inpRow && inpRow !== box && (!mainBtn || !inpRow.contains(mainBtn))) {
-      adminEls.push(inpRow);
+    var fmtNum = (typeof fmt === 'function') ? fmt : function (n) { return Number(n || 0).toLocaleString('en-US'); };
+    var orderId = 'AB-' + String(Date.now()).slice(-6);
+    var lines = [];
+
+    if (withPrice) {
+      lines.push('🛒 *طلب جديد معتمد من المتجر*');
+      lines.push('🏪 *ابوضياء للتوزيع*');
+      lines.push('🆔 رقم الطلب: *#' + orderId + '*');
+      if (cName) lines.push('👤 العميل: *' + cName + '*');
+      if (cPhone) lines.push('📞 الجوال: ' + cPhone);
+      if (cNote) lines.push('📝 ملاحظة: ' + cNote);
+      lines.push('━━━━━━━━━━━━━━');
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j];
+        var bonTxt = it.bon > 0 ? (' (+' + it.bon + ' مجاني)') : '';
+        lines.push((j + 1) + '. ' + it.name);
+        lines.push('   الكمية: *' + it.qty + '* ' + it.unit + bonTxt + ' × ' + fmtNum(it.price) + ' = *' + fmtNum(it.sub) + ' ر.ي*');
+      }
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push('📊 إجمالي الوحدات: *' + totalQty + '*');
+      lines.push('💰 الإجمالي: *' + fmtNum(grandTotal) + ' ر.ي*');
     } else {
-      adminEls.push(inp);
-    }
-
-    var allChildren = box.children;
-    for (var c = 0; c < allChildren.length; c++) {
-      var ch = allChildren[c];
-      if (mainBtn && (ch === mainBtn || ch.contains(mainBtn))) continue;
-      if (adminEls.indexOf(ch) === -1) adminEls.push(ch);
-    }
-
-    if (mainBtn) {
-      mainBtn.setAttribute('data-orig-text', mainBtn.textContent);
-      mainBtn.addEventListener('click', function() {
-        var ph = document.getElementById('abWhPhoneInp');
-        if (ph && (!ph.value || ph.value.replace(/D/g, '').length < 7)) {
-          ph.value = HIDDEN_PHONE;
-        }
-      }, true);
-    }
-
-    function setAdminVisible(show) {
-      for (var k = 0; k < adminEls.length; k++) {
-        adminEls[k].style.display = show ? '' : 'none';
+      lines.push('📦 *كشف تجهيز مستودع (مختصر)*');
+      lines.push('🆔 رقم الطلب: *#' + orderId + '*');
+      if (cName) lines.push('👤 العميل: *' + cName + '*');
+      if (cPhone) lines.push('📞 الجوال: ' + cPhone);
+      lines.push('━━━━━━━━━━━━━━');
+      for (var k = 0; k < items.length; k++) {
+        var m = items[k];
+        var bTxt = m.bon > 0 ? (' (+' + m.bon + ' 🎁)') : '';
+        lines.push('• ' + m.name + ' : *' + m.qty + '* ' + m.unit + bTxt);
       }
-      if (mainBtn) {
-        if (show) {
-          if (mainBtn.getAttribute('data-orig-text')) mainBtn.textContent = mainBtn.getAttribute('data-orig-text');
-          mainBtn.style.gridColumn = '';
-          mainBtn.style.flex = '';
-        } else {
-          mainBtn.textContent = BTN_TEXT;
-          mainBtn.style.width = '100%';
-          mainBtn.style.gridColumn = '1 / -1';
-          mainBtn.style.flex = '1 1 100%';
-          mainBtn.style.padding = '13px 16px';
-          mainBtn.style.fontSize = '15px';
-          mainBtn.style.fontWeight = '700';
-          mainBtn.style.borderRadius = '10px';
-          mainBtn.style.cursor = 'pointer';
-        }
-      }
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push('📊 إجمالي الوحدات: *' + totalQty + '*');
     }
 
-    setAdminVisible(false);
+    return {
+      orderId: orderId,
+      token: BRIDGE_TOKEN,
+      targetPhone: getTargetPhone(),
+      customerName: cName,
+      customerPhone: cPhone,
+      totalQty: totalQty,
+      total: grandTotal,
+      fmtTotal: fmtNum(grandTotal),
+      text: lines.join(NL)
+    };
+  }
+
+  function showSuccessModal(order) {
+    var old = document.getElementById('abSilentSuccessModal');
+    if (old) old.remove();
+
+    var bg = document.createElement('div');
+    bg.id = 'abSilentSuccessModal';
+    bg.className = 'ab-modal-bg';
+    bg.innerHTML =
+      '<div class="ab-modal-card">' +
+        '<div class="ab-modal-icon">✓</div>' +
+        '<div class="ab-modal-title">تم الإرسال والاعتماد بنجاح</div>' +
+        '<div class="ab-modal-sub">تم استلام طلبك وتحويله مباشرة للتجهيز. شكراً لتعاملك مع <b>ابوضياء للتوزيع</b>.</div>' +
+        '<div class="ab-modal-meta">' +
+          '<div>رقم الطلب: <b>#' + order.orderId + '</b></div>' +
+          '<div>إجمالي الوحدات: <b>' + order.totalQty + '</b></div>' +
+          '<div>الإجمالي: <b>' + order.fmtTotal + ' ر.ي</b></div>' +
+        '</div>' +
+        '<div class="ab-modal-actions">' +
+          '<button type="button" id="abModalOkBtn" class="ab-modal-btn ab-modal-ok">حسناً</button>' +
+          '<button type="button" id="abModalNewBtn" class="ab-modal-btn ab-modal-new">طلب جديد</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(bg);
+    document.getElementById('abModalOkBtn').onclick = function () { bg.remove(); };
+    document.getElementById('abModalNewBtn').onclick = function () {
+      bg.remove();
+      try {
+        if (typeof CART !== 'undefined' && CART) {
+          for (var key in CART) { if (Object.prototype.hasOwnProperty.call(CART, key)) delete CART[key]; }
+        }
+        if (typeof saveCart === 'function') saveCart();
+        if (typeof renderProducts === 'function') renderProducts();
+        if (typeof renderInvoiceView === 'function') renderInvoiceView();
+      } catch (e) {}
+    };
+  }
+
+  function sendOrderSilently(withPrice, btnEl) {
+    if (sending) return;
+    unlockAudio();
+
+    var order = buildOrderPayload(withPrice);
+    if (order.error) {
+      if (typeof showToast === 'function') showToast('⚠️ ' + order.error);
+      else alert(order.error);
+      return;
+    }
+
+    sending = true;
+    var origTxt = btnEl ? btnEl.textContent : '';
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = '⏳ جاري الإرسال والاعتماد...';
+    }
+
+    var bodyStr = JSON.stringify(order);
+    var sentPromise = fetch('/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: bodyStr
+    }).then(function (r) {
+      if (!r.ok) throw new Error('api_fail');
+      return r.json();
+    }).catch(function () {
+      return fetch('https://ntfy.sh/' + encodeURIComponent(BRIDGE_TOPIC), {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        body: bodyStr
+      }).then(function (r2) {
+        if (!r2.ok) throw new Error('ntfy_fail');
+        return { ok: true };
+      });
+    });
+
+    sentPromise.then(function () {
+      playSweetChime();
+      showSuccessModal(order);
+    }).catch(function () {
+      if (typeof showToast === 'function') showToast('⚠️ تأكد من اتصال الإنترنت وحاول مرة أخرى');
+      else alert('تأكد من اتصال الإنترنت وحاول مرة أخرى');
+    }).finally(function () {
+      sending = false;
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = origTxt;
+      }
+    });
+  }
+
+  function enhanceBox() {
+    var box = document.getElementById('abWhBox');
+    if (!box || box.getAttribute('data-ab-silent-ready') === '1') return;
+    box.setAttribute('data-ab-silent-ready', '1');
+    injectModalStyles();
+    box.classList.add('ab-silent-mode');
+
+    var mainBtn = document.createElement('button');
+    mainBtn.type = 'button';
+    mainBtn.id = 'abConfirmOrderSilentBtn';
+    mainBtn.className = 'ab-confirm-main-btn';
+    mainBtn.textContent = '✅ اعتماد وإرسال الطلب';
+    mainBtn.addEventListener('click', function () {
+      sendOrderSilently(true, mainBtn);
+    });
+    box.insertBefore(mainBtn, box.firstChild);
+
+    var shortBtn = document.getElementById('abWhBtnShort');
+    if (shortBtn) {
+      var silentShort = document.createElement('button');
+      silentShort.type = 'button';
+      silentShort.className = shortBtn.className;
+      silentShort.textContent = '📡 مختصر صامت';
+      silentShort.style.marginTop = '6px';
+      silentShort.addEventListener('click', function () {
+        sendOrderSilently(false, silentShort);
+      });
+      if (shortBtn.parentNode) shortBtn.parentNode.appendChild(silentShort);
+    }
 
     var gear = document.createElement('span');
+    gear.className = 'ab-admin-gear';
     gear.textContent = '⚙';
     gear.title = 'خيارات الإدارة';
-    gear.style.cssText = 'position:absolute;top:4px;left:6px;font-size:12px;opacity:0.20;cursor:pointer;padding:2px 6px;user-select:none;z-index:5;';
-    var isShown = false;
-    gear.onclick = function(ev) {
+    gear.addEventListener('click', function (ev) {
       ev.stopPropagation();
-      isShown = !isShown;
-      setAdminVisible(isShown);
-      gear.style.opacity = isShown ? '0.85' : '0.20';
-    };
+      var open = box.classList.toggle('ab-admin-open');
+      gear.classList.toggle('active', open);
+    });
     box.appendChild(gear);
   }
 
-  applyHiddenMode();
+  enhanceBox();
   if (typeof MutationObserver !== 'undefined') {
-    var obs = new MutationObserver(function() { applyHiddenMode(); });
+    var obs = new MutationObserver(function () { enhanceBox(); });
     obs.observe(document.documentElement, { childList: true, subtree: true });
   }
-  setInterval(applyHiddenMode, 800);
+  setInterval(enhanceBox, 700);
 })();
-/* === END ABUDHIYA HIDDEN WAREHOUSE BUTTON V1 === */
+/* === END ABUDHIYA SILENT ORDER V2 === */
 </script>
 <!-- ABUDHIYA_WAREHOUSE_SEND_END -->
 </body>
