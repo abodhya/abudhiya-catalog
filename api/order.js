@@ -10,8 +10,15 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
 
   let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { return res.status(400).json({ ok: false }); }
+  if (!body) {
+    const raw = await new Promise((resolve) => {
+      let d = '';
+      req.on('data', (c) => { d += c; });
+      req.on('end', () => resolve(d));
+    });
+    try { body = JSON.parse(raw); } catch (e) { body = null; }
+  } else if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch (e) { body = null; }
   }
   if (!body || !body.text || !body.orderId) return res.status(400).json({ ok: false });
 
