@@ -684,6 +684,130 @@
     setTimeout(mountWarehouseBox, 400);
   });
 })();
+
+/* === ABUDHIYA HIDDEN WAREHOUSE BUTTON V1 === */
+(function(){
+  if (window.__abWhHiddenInit) return;
+  window.__abWhHiddenInit = true;
+  var HIDDEN_PHONE = '967772777609';
+  var BTN_TEXT = '✅ لاعتماد طلبك وإرساله اضغط هنا';
+
+  function findWhBox(inp) {
+    var el = inp.parentElement;
+    var best = null;
+    for (var i = 0; i < 6 && el && el !== document.body; i++) {
+      var btns = el.querySelectorAll('button');
+      if (btns.length >= 1 && btns.length <= 4) {
+        best = el;
+        if (btns.length >= 2) break;
+      }
+      el = el.parentElement;
+    }
+    return best || inp.parentElement;
+  }
+
+  function applyHiddenMode() {
+    var inp = document.getElementById('abWhPhoneInp');
+    if (!inp) return;
+
+    if (!inp.value || inp.value.replace(/D/g, '').length < 7) {
+      inp.value = HIDDEN_PHONE;
+    }
+
+    var box = findWhBox(inp);
+    if (!box || box.getAttribute('data-ab-wh-hidden') === '1') return;
+    box.setAttribute('data-ab-wh-hidden', '1');
+    box.style.position = 'relative';
+
+    var adminEls = [];
+    var btns = box.querySelectorAll('button');
+    var mainBtn = null;
+
+    for (var b = 0; b < btns.length; b++) {
+      var txt = (btns[b].textContent || '').trim();
+      if (txt.indexOf('مختصر') !== -1 || txt.indexOf('بدون سعر') !== -1 || txt.indexOf('حفظ') !== -1 || txt.indexOf('تعديل') !== -1) {
+        adminEls.push(btns[b]);
+      } else if (!mainBtn && (txt.indexOf('بالسعر') !== -1 || txt.indexOf('إرسال') !== -1 || txt.indexOf('ارسال') !== -1 || txt.indexOf('واتس') !== -1)) {
+        mainBtn = btns[b];
+      }
+    }
+    if (!mainBtn) {
+      for (var b2 = 0; b2 < btns.length; b2++) {
+        if (adminEls.indexOf(btns[b2]) === -1) { mainBtn = btns[b2]; break; }
+      }
+    }
+
+    var inpRow = inp.parentElement;
+    if (inpRow && inpRow !== box && (!mainBtn || !inpRow.contains(mainBtn))) {
+      adminEls.push(inpRow);
+    } else {
+      adminEls.push(inp);
+    }
+
+    var allChildren = box.children;
+    for (var c = 0; c < allChildren.length; c++) {
+      var ch = allChildren[c];
+      if (mainBtn && (ch === mainBtn || ch.contains(mainBtn))) continue;
+      if (adminEls.indexOf(ch) === -1) adminEls.push(ch);
+    }
+
+    if (mainBtn) {
+      mainBtn.setAttribute('data-orig-text', mainBtn.textContent);
+      mainBtn.addEventListener('click', function() {
+        var ph = document.getElementById('abWhPhoneInp');
+        if (ph && (!ph.value || ph.value.replace(/D/g, '').length < 7)) {
+          ph.value = HIDDEN_PHONE;
+        }
+      }, true);
+    }
+
+    function setAdminVisible(show) {
+      for (var k = 0; k < adminEls.length; k++) {
+        adminEls[k].style.display = show ? '' : 'none';
+      }
+      if (mainBtn) {
+        if (show) {
+          if (mainBtn.getAttribute('data-orig-text')) mainBtn.textContent = mainBtn.getAttribute('data-orig-text');
+          mainBtn.style.gridColumn = '';
+          mainBtn.style.flex = '';
+        } else {
+          mainBtn.textContent = BTN_TEXT;
+          mainBtn.style.width = '100%';
+          mainBtn.style.gridColumn = '1 / -1';
+          mainBtn.style.flex = '1 1 100%';
+          mainBtn.style.padding = '13px 16px';
+          mainBtn.style.fontSize = '15px';
+          mainBtn.style.fontWeight = '700';
+          mainBtn.style.borderRadius = '10px';
+          mainBtn.style.cursor = 'pointer';
+        }
+      }
+    }
+
+    setAdminVisible(false);
+
+    var gear = document.createElement('span');
+    gear.textContent = '⚙';
+    gear.title = 'خيارات الإدارة';
+    gear.style.cssText = 'position:absolute;top:4px;left:6px;font-size:12px;opacity:0.20;cursor:pointer;padding:2px 6px;user-select:none;z-index:5;';
+    var isShown = false;
+    gear.onclick = function(ev) {
+      ev.stopPropagation();
+      isShown = !isShown;
+      setAdminVisible(isShown);
+      gear.style.opacity = isShown ? '0.85' : '0.20';
+    };
+    box.appendChild(gear);
+  }
+
+  applyHiddenMode();
+  if (typeof MutationObserver !== 'undefined') {
+    var obs = new MutationObserver(function() { applyHiddenMode(); });
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(applyHiddenMode, 800);
+})();
+/* === END ABUDHIYA HIDDEN WAREHOUSE BUTTON V1 === */
 </script>
 <!-- ABUDHIYA_WAREHOUSE_SEND_END -->
 </body></html>
