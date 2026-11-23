@@ -1516,14 +1516,15 @@ window.addEventListener("beforeinstallprompt", function(e) {
 <!-- ABUDHIYA_WAREHOUSE_SEND_START -->
 <style id="abWarehouseSendCss">
   .ab-wh-box {
-    margin: 12px 0;
-    padding: 12px;
+    margin: 12px 0 !important;
+    padding: 12px !important;
     background: #FFFFFF !important;
     border: 2px solid #000000 !important;
     border-radius: 14px !important;
     direction: rtl !important;
     font-family: 'IBM Plex Sans Arabic', 'Tajawal', sans-serif !important;
     color: #000000 !important;
+    display: block !important;
   }
   .ab-wh-head {
     display: flex !important;
@@ -1548,7 +1549,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     cursor: pointer !important;
   }
   .ab-wh-phone-row {
-    display: none;
+    display: none !important;
     gap: 6px !important;
     margin-bottom: 10px !important;
   }
@@ -1600,10 +1601,10 @@ window.addEventListener("beforeinstallprompt", function(e) {
     color: #000000 !important;
   }
 </style>
-<script data-ab-wh-ver="1">
+<script data-ab-wh-ver="2">
 (function () {
-  if (window.__abWhSendInstalled) return;
-  window.__abWhSendInstalled = true;
+  if (window.__abWhSendV2) return;
+  window.__abWhSendV2 = true;
 
   var STORAGE_KEY = 'ab_warehouse_phone_v2';
   var DEFAULT_PHONE = '967772777609';
@@ -1620,7 +1621,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       var saved = localStorage.getItem(STORAGE_KEY);
       if (saved && cleanPhone(saved).length >= 9) return cleanPhone(saved);
     } catch (e) {}
-    return cleanPhone(DEFAULT_PHONE);
+    return DEFAULT_PHONE;
   }
 
   function savePhone(val) {
@@ -1693,8 +1694,11 @@ window.addEventListener("beforeinstallprompt", function(e) {
   }
 
   function mountWarehouseBox() {
-    var anchor = document.querySelector('.inv-totals-card');
-    if (!anchor || document.getElementById('abWhBox')) return;
+    if (document.getElementById('abWhBox')) return;
+    var anchor = document.querySelector('.inv-totals-card') ||
+                 document.getElementById('invoiceView') ||
+                 document.querySelector('[id*="invoice"], [class*="invoice"]');
+    if (!anchor) return;
 
     var curPhone = getPhone();
     var box = document.createElement('div');
@@ -1714,7 +1718,11 @@ window.addEventListener("beforeinstallprompt", function(e) {
         '<button type="button" id="abWhBtnShort" class="ab-wh-btn ab-wh-btn-short">📋 مختصر بدون سعر</button>' +
       '</div>';
 
-    anchor.parentNode.insertBefore(box, anchor.nextSibling);
+    if (anchor.classList && anchor.classList.contains('inv-totals-card') && anchor.parentNode) {
+      anchor.parentNode.insertBefore(box, anchor.nextSibling);
+    } else {
+      anchor.appendChild(box);
+    }
 
     document.getElementById('abWhEditBtn').addEventListener('click', function () {
       document.getElementById('abWhPhoneRow').classList.toggle('open');
@@ -1731,18 +1739,22 @@ window.addEventListener("beforeinstallprompt", function(e) {
     document.getElementById('abWhBtnShort').addEventListener('click', function () { sendToWarehouse(false); });
   }
 
-  if (typeof window.renderInvoiceView === 'function' && !window.renderInvoiceView.__abWrappedWh) {
+  if (typeof window.renderInvoiceView === 'function' && !window.renderInvoiceView.__abWrappedWhV2) {
     var origInv = window.renderInvoiceView;
     window.renderInvoiceView = function () {
       var res = origInv.apply(this, arguments);
-      try { mountWarehouseBox(); } catch (e) {}
+      setTimeout(mountWarehouseBox, 20);
       return res;
     };
-    window.renderInvoiceView.__abWrappedWh = true;
+    window.renderInvoiceView.__abWrappedWhV2 = true;
   }
 
+  document.addEventListener('click', function () { setTimeout(mountWarehouseBox, 120); }, true);
   document.addEventListener('DOMContentLoaded', mountWarehouseBox);
-  window.addEventListener('load', mountWarehouseBox);
+  window.addEventListener('load', function () {
+    mountWarehouseBox();
+    setTimeout(mountWarehouseBox, 400);
+  });
 })();
 </script>
 <!-- ABUDHIYA_WAREHOUSE_SEND_END -->
