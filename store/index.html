@@ -441,4 +441,237 @@
 })();
 </script>
 <!-- ABUDHIYA_POTATO_DROPDOWN_END -->
+<!-- ABUDHIYA_WAREHOUSE_SEND_START -->
+<style id="abWarehouseSendCss">
+  .ab-wh-box {
+    margin: 12px 0;
+    padding: 12px;
+    background: #FFFFFF !important;
+    border: 2px solid #000000 !important;
+    border-radius: 14px !important;
+    direction: rtl !important;
+    font-family: 'IBM Plex Sans Arabic', 'Tajawal', sans-serif !important;
+    color: #000000 !important;
+  }
+  .ab-wh-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-bottom: 10px !important;
+  }
+  .ab-wh-title {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+  }
+  .ab-wh-edit-btn {
+    background: #F1F5F9 !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+    border-radius: 8px !important;
+    padding: 4px 8px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+  }
+  .ab-wh-phone-row {
+    display: none;
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+  }
+  .ab-wh-phone-row.open {
+    display: flex !important;
+  }
+  .ab-wh-inp {
+    flex: 1 !important;
+    padding: 8px 10px !important;
+    border: 1.5px solid #000000 !important;
+    border-radius: 9px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    direction: ltr !important;
+    text-align: left !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .ab-wh-save {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 9px !important;
+    padding: 8px 14px !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+  }
+  .ab-wh-btns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .ab-wh-btn {
+    padding: 10px 8px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    border: 2px solid #000000 !important;
+  }
+  .ab-wh-btn-price {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+  }
+  .ab-wh-btn-short {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+</style>
+<script data-ab-wh-ver="1">
+(function () {
+  if (window.__abWhSendInstalled) return;
+  window.__abWhSendInstalled = true;
+
+  var STORAGE_KEY = 'ab_warehouse_phone_v2';
+  var DEFAULT_PHONE = '967772777609';
+
+  function cleanPhone(raw) {
+    var d = String(raw || '').replace(/[^0-9]/g, '');
+    if (d.indexOf('00') === 0) d = d.slice(2);
+    if (d.length === 9 && d.indexOf('7') === 0) d = '967' + d;
+    return d;
+  }
+
+  function getPhone() {
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && cleanPhone(saved).length >= 9) return cleanPhone(saved);
+    } catch (e) {}
+    return cleanPhone(DEFAULT_PHONE);
+  }
+
+  function savePhone(val) {
+    var p = cleanPhone(val);
+    if (p.length < 9) {
+      alert('الرجاء إدخال رقم واتساب صحيح (مثال: 967772777609)');
+      return false;
+    }
+    try { localStorage.setItem(STORAGE_KEY, p); } catch (e) {}
+    return p;
+  }
+
+  function sendToWarehouse(withPrice) {
+    var phone = getPhone();
+    var cartObj = (typeof CART !== 'undefined' && CART) ? CART : {};
+    var prods = (typeof PRODUCTS !== 'undefined' && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+    var items = [];
+    var grandTotal = 0;
+    var totalQty = 0;
+
+    for (var i = 0; i < prods.length; i++) {
+      var p = prods[i];
+      var q = Number(cartObj[p.id] || 0);
+      if (q > 0) {
+        var bon = (typeof calcBonus === 'function') ? Number(calcBonus(p, q) || 0) : 0;
+        var sub = q * Number(p.price || 0);
+        grandTotal += sub;
+        totalQty += q;
+        items.push({ name: p.name, unit: p.unit || 'كرتون', qty: q, bon: bon, price: Number(p.price || 0), sub: sub });
+      }
+    }
+
+    if (items.length === 0) {
+      if (typeof showToast === 'function') showToast('⚠️ الفاتورة فارغة — اختر أصنافاً أولاً');
+      else alert('الفاتورة فارغة — اختر أصنافاً أولاً');
+      return;
+    }
+
+    var fmtNum = (typeof fmt === 'function') ? fmt : function (n) { return Number(n || 0).toLocaleString('en-US'); };
+    var lines = [];
+
+    if (withPrice) {
+      lines.push('📦 *طلب تجهيز مستودع (بالسعر)*');
+      lines.push('🏪 *ابوضياء للتوزيع*');
+      lines.push('━━━━━━━━━━━━━━');
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j];
+        var bonTxt = it.bon > 0 ? (' (+' + it.bon + ' مجاني)') : '';
+        lines.push((j + 1) + '. ' + it.name);
+        lines.push('   الكمية: *' + it.qty + '* ' + it.unit + bonTxt + ' × ' + fmtNum(it.price) + ' = *' + fmtNum(it.sub) + ' ر.ي*');
+      }
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push('📊 إجمالي الوحدات: *' + totalQty + '*');
+      lines.push('💰 الإجمالي: *' + fmtNum(grandTotal) + ' ر.ي*');
+    } else {
+      lines.push('📦 *كشف تجهيز مستودع (مختصر)*');
+      lines.push('━━━━━━━━━━━━━━');
+      for (var k = 0; k < items.length; k++) {
+        var m = items[k];
+        var bTxt = m.bon > 0 ? (' (+' + m.bon + ' 🎁)') : '';
+        lines.push('• ' + m.name + ' : *' + m.qty + '* ' + m.unit + bTxt);
+      }
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push('📊 إجمالي الوحدات: *' + totalQty + '*');
+    }
+
+    var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(lines.join('
+'));
+    window.open(url, '_blank');
+  }
+
+  function mountWarehouseBox() {
+    var anchor = document.querySelector('.inv-totals-card');
+    if (!anchor || document.getElementById('abWhBox')) return;
+
+    var curPhone = getPhone();
+    var box = document.createElement('div');
+    box.id = 'abWhBox';
+    box.className = 'ab-wh-box';
+    box.innerHTML =
+      '<div class="ab-wh-head">' +
+        '<div class="ab-wh-title">📦 إرسال الطلب لإدارة المستودع</div>' +
+        '<button type="button" id="abWhEditBtn" class="ab-wh-edit-btn">⚙️ رقم المستودع</button>' +
+      '</div>' +
+      '<div id="abWhPhoneRow" class="ab-wh-phone-row">' +
+        '<input type="tel" id="abWhPhoneInp" class="ab-wh-inp" placeholder="967772777609" value="' + curPhone + '">' +
+        '<button type="button" id="abWhSaveBtn" class="ab-wh-save">حفظ</button>' +
+      '</div>' +
+      '<div class="ab-wh-btns">' +
+        '<button type="button" id="abWhBtnPrice" class="ab-wh-btn ab-wh-btn-price">💰 إرسال بالسعر</button>' +
+        '<button type="button" id="abWhBtnShort" class="ab-wh-btn ab-wh-btn-short">📋 مختصر بدون سعر</button>' +
+      '</div>';
+
+    anchor.parentNode.insertBefore(box, anchor.nextSibling);
+
+    document.getElementById('abWhEditBtn').addEventListener('click', function () {
+      document.getElementById('abWhPhoneRow').classList.toggle('open');
+    });
+    document.getElementById('abWhSaveBtn').addEventListener('click', function () {
+      var saved = savePhone(document.getElementById('abWhPhoneInp').value);
+      if (saved) {
+        document.getElementById('abWhPhoneInp').value = saved;
+        document.getElementById('abWhPhoneRow').classList.remove('open');
+        if (typeof showToast === 'function') showToast('✅ تم حفظ رقم إدارة المستودع');
+      }
+    });
+    document.getElementById('abWhBtnPrice').addEventListener('click', function () { sendToWarehouse(true); });
+    document.getElementById('abWhBtnShort').addEventListener('click', function () { sendToWarehouse(false); });
+  }
+
+  if (typeof window.renderInvoiceView === 'function' && !window.renderInvoiceView.__abWrappedWh) {
+    var origInv = window.renderInvoiceView;
+    window.renderInvoiceView = function () {
+      var res = origInv.apply(this, arguments);
+      try { mountWarehouseBox(); } catch (e) {}
+      return res;
+    };
+    window.renderInvoiceView.__abWrappedWh = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', mountWarehouseBox);
+  window.addEventListener('load', mountWarehouseBox);
+})();
+</script>
+<!-- ABUDHIYA_WAREHOUSE_SEND_END -->
 </body></html>
