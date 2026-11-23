@@ -160,138 +160,140 @@
 </script>
 <!-- ABUDHIYA_LIFT_BOTTOM_END -->
 <!-- ABUDHIYA_POTATO_DROPDOWN_START -->
-<style>
+<style id="abPotatoDropdownCss">
   .ab-pot-wrap {
     grid-column: 1 / -1 !important;
-    width: 100%;
-    margin: 6px 0 4px;
-    direction: rtl;
+    width: 100% !important;
+    margin: 6px 0 6px !important;
+    direction: rtl !important;
     font-family: 'IBM Plex Sans Arabic', 'Tajawal', sans-serif !important;
   }
   .ab-pot-toggle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
     background: #000000 !important;
+    background-image: none !important;
     color: #FFFFFF !important;
     border: 2px solid #000000 !important;
-    border-radius: 14px;
-    padding: 11px 12px;
-    cursor: pointer;
-    text-align: right;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-    transition: transform 0.15s ease;
+    border-radius: 14px !important;
+    padding: 11px 12px !important;
+    cursor: pointer !important;
+    text-align: right !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
   }
-  .ab-pot-toggle:active { transform: scale(0.99); }
   .ab-pot-toggle * { color: #FFFFFF !important; }
   .ab-pot-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 0 !important;
   }
   .ab-pot-thumb {
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    object-fit: cover;
-    background: #FFFFFF;
-    border: 1.5px solid #FFFFFF;
-    flex-shrink: 0;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 10px !important;
+    object-fit: cover !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #FFFFFF !important;
+    flex-shrink: 0 !important;
   }
-  .ab-pot-info { min-width: 0; }
+  .ab-pot-info { min-width: 0 !important; }
   .ab-pot-title {
-    font-size: 15px;
-    font-weight: 800;
-    line-height: 1.3;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
   }
   .ab-pot-cnt {
     background: #FFFFFF !important;
     color: #000000 !important;
-    font-size: 11px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 999px;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    padding: 2px 8px !important;
+    border-radius: 999px !important;
   }
   .ab-pot-sel-badge {
     background: #16A34A !important;
     color: #FFFFFF !important;
-    font-size: 11px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 999px;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    padding: 2px 8px !important;
+    border-radius: 999px !important;
   }
   .ab-pot-sub {
-    font-size: 11.5px;
-    opacity: 0.9;
-    margin-top: 3px;
-    font-weight: 600;
+    font-size: 11.5px !important;
+    opacity: 0.92 !important;
+    margin-top: 3px !important;
+    font-weight: 600 !important;
   }
   .ab-pot-arrow {
     background: #FFFFFF !important;
     color: #000000 !important;
-    border-radius: 10px;
-    padding: 6px 10px;
-    font-size: 12px;
-    font-weight: 800;
-    white-space: nowrap;
-    flex-shrink: 0;
+    border-radius: 10px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
   .ab-pot-panel {
-    display: none;
-    margin-top: 8px;
-    padding: 8px;
+    display: none !important;
+    margin-top: 8px !important;
+    padding: 8px !important;
     background: #F8FAFC !important;
     border: 2px solid #000000 !important;
-    border-radius: 14px;
+    border-radius: 14px !important;
   }
-  .ab-pot-panel.open { display: block; }
+  .ab-pot-panel.open {
+    display: block !important;
+  }
   .ab-pot-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    margin-bottom: 8px;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 5px !important;
+    margin-bottom: 8px !important;
   }
   .ab-pot-tab {
-    appearance: none;
+    appearance: none !important;
     background: #FFFFFF !important;
     color: #000000 !important;
     border: 1.5px solid #000000 !important;
-    border-radius: 9px;
-    padding: 7px 4px;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    text-align: center;
+    border-radius: 9px !important;
+    padding: 7px 4px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    text-align: center !important;
   }
   .ab-pot-tab.active {
     background: #000000 !important;
     color: #FFFFFF !important;
   }
   .ab-pot-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 5px !important;
   }
   @media (min-width: 680px) {
-    .ab-pot-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .ab-pot-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 7px !important; }
   }
   @media (min-width: 960px) {
-    .ab-pot-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .ab-pot-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
   }
 </style>
-<script>
+<script data-ab-potato-ver="2">
 (function () {
-  if (window.__abPotatoDropdownInstalled) return;
-  window.__abPotatoDropdownInstalled = true;
+  if (window.__abPotatoV2Installed) return;
+  window.__abPotatoV2Installed = true;
   window.__abPotatoOpen = false;
   window.__abPotatoSize = 'all';
+  var isApplying = false;
 
   function getSizeKey(text) {
     if (text.indexOf('صغير') !== -1) return 'small';
@@ -312,8 +314,7 @@
     }
     var tabs = document.querySelectorAll('.ab-pot-tab');
     for (var j = 0; j < tabs.length; j++) {
-      var active = tabs[j].getAttribute('data-size') === size;
-      tabs[j].classList.toggle('active', active);
+      tabs[j].classList.toggle('active', tabs[j].getAttribute('data-size') === size);
     }
   }
 
@@ -333,15 +334,15 @@
   function setPanelOpen(isOpen) {
     var panel = document.getElementById('abPotPanel');
     var arrow = document.getElementById('abPotArrow');
-    if (panel) panel.classList.toggle('open', isOpen);
+    if (panel) panel.classList.toggle('open', !!isOpen);
     if (arrow) arrow.textContent = isOpen ? '▲ إخفاء' : '▼ عرض';
   }
 
   function buildPotatoDropdown() {
+    if (isApplying) return;
     var prodGrid = document.getElementById('prodGrid');
     if (!prodGrid) return;
 
-    // إذا كان المجمع موجوداً بالفعل ولم تُعد renderCatalog بناء الشبكة، حدّث شارة المختار فقط
     if (prodGrid.querySelector('#abPotWrap')) {
       refreshSelectedBadge();
       return;
@@ -350,136 +351,158 @@
     var children = Array.prototype.slice.call(prodGrid.children);
     var potatoCards = [];
     var potatoHeaders = [];
+    var nonPotatoCount = 0;
     var insertBeforeNode = null;
 
     for (var i = 0; i < children.length; i++) {
       var el = children[i];
+      if (!el || el.id === 'abPotWrap') continue;
+      var tag = (el.tagName || '').toUpperCase();
+      if (tag === 'SCRIPT' || tag === 'STYLE') continue;
+
       var txt = (el.textContent || '').trim();
-      if (txt.indexOf('بطاطس') === -1) continue;
+      var isHdr = el.classList && (el.classList.contains('ab-sec-hdr') || el.classList.contains('ab-sub-hdr'));
 
-      if (el.classList && (el.classList.contains('ab-sec-hdr') || el.classList.contains('ab-sub-hdr'))) {
-        potatoHeaders.push(el);
-        continue;
-      }
-
-      if (el.classList && (el.classList.contains('card') || el.classList.contains('prod-card') || el.classList.contains('product-card'))) {
-        if (!insertBeforeNode) insertBeforeNode = el;
-        potatoCards.push(el);
+      if (txt.indexOf('بطاطس') !== -1) {
+        if (isHdr) {
+          potatoHeaders.push(el);
+        } else {
+          if (!insertBeforeNode) insertBeforeNode = el;
+          potatoCards.push(el);
+        }
+      } else if (!isHdr) {
+        nonPotatoCount++;
       }
     }
 
     if (potatoCards.length === 0) return;
 
-    // إخفاء أي عناوين قسم قديمة للبطاطس لمنع التكرار
-    for (var h = 0; h < potatoHeaders.length; h++) {
-      potatoHeaders[h].style.display = 'none';
-    }
-
-    var cntAll = potatoCards.length;
-    var cntSmall = 0, cntMed = 0, cntLarge = 0;
-    var thumbSrc = '';
-
-    for (var c = 0; c < potatoCards.length; c++) {
-      var card = potatoCards[c];
-      var sk = getSizeKey(card.textContent || '');
-      card.setAttribute('data-pot-size', sk);
-      if (sk === 'small') cntSmall++;
-      else if (sk === 'medium') cntMed++;
-      else if (sk === 'large') cntLarge++;
-      if (!thumbSrc) {
-        var img = card.querySelector('img');
-        if (img && img.getAttribute('src')) thumbSrc = img.getAttribute('src');
+    isApplying = true;
+    try {
+      for (var h = 0; h < potatoHeaders.length; h++) {
+        potatoHeaders[h].style.setProperty('display', 'none', 'important');
       }
-    }
 
-    var searchEl = document.getElementById('searchInp');
-    var isSearching = searchEl && (searchEl.value || '').trim().length > 0;
-    var shouldOpen = isSearching ? true : Boolean(window.__abPotatoOpen);
+      var cntAll = potatoCards.length;
+      var cntSmall = 0, cntMed = 0, cntLarge = 0;
+      var thumbSrc = '';
 
-    var wrap = document.createElement('div');
-    wrap.id = 'abPotWrap';
-    wrap.className = 'ab-pot-wrap';
+      for (var c = 0; c < potatoCards.length; c++) {
+        var card = potatoCards[c];
+        var sk = getSizeKey(card.textContent || '');
+        card.setAttribute('data-pot-size', sk);
+        if (sk === 'small') cntSmall++;
+        else if (sk === 'medium') cntMed++;
+        else if (sk === 'large') cntLarge++;
+        if (!thumbSrc) {
+          var img = card.querySelector('img');
+          if (img && img.getAttribute('src')) thumbSrc = img.getAttribute('src');
+        }
+      }
 
-    var thumbHtml = thumbSrc ? ('<img class="ab-pot-thumb" src="' + thumbSrc + '" alt="بطاطس طبيعي">') : '';
+      var searchEl = document.getElementById('searchInp');
+      var isSearching = searchEl && (searchEl.value || '').trim().length > 0;
+      var onlyPotatoesShown = (nonPotatoCount === 0);
+      var shouldOpen = (isSearching || onlyPotatoesShown) ? true : Boolean(window.__abPotatoOpen);
 
-    wrap.innerHTML =
-      '<button type="button" id="abPotToggleBtn" class="ab-pot-toggle">' +
-        '<div class="ab-pot-left">' +
-          thumbHtml +
-          '<div class="ab-pot-info">' +
-            '<div class="ab-pot-title">' +
-              '<span>🥔 بطاطس طبيعي رنجو</span>' +
-              '<span class="ab-pot-cnt">' + cntAll + ' صنف</span>' +
-              '<span id="abPotSelBadge" class="ab-pot-sel-badge" style="display:none;"></span>' +
+      var wrap = document.createElement('div');
+      wrap.id = 'abPotWrap';
+      wrap.className = 'ab-pot-wrap';
+
+      var thumbHtml = thumbSrc ? ('<img class="ab-pot-thumb" src="' + thumbSrc + '" alt="بطاطس طبيعي">') : '';
+
+      wrap.innerHTML =
+        '<button type="button" id="abPotToggleBtn" class="ab-pot-toggle">' +
+          '<div class="ab-pot-left">' +
+            thumbHtml +
+            '<div class="ab-pot-info">' +
+              '<div class="ab-pot-title">' +
+                '<span>🥔 بطاطس طبيعي رنجو</span>' +
+                '<span class="ab-pot-cnt">' + cntAll + ' صنف</span>' +
+                '<span id="abPotSelBadge" class="ab-pot-sel-badge" style="display:none;"></span>' +
+              '</div>' +
+              '<div class="ab-pot-sub">اضغط لعرض الأحجام والنكهات (صغير • وسط • كبير)</div>' +
             '</div>' +
-            '<div class="ab-pot-sub">اضغط لعرض الأحجام والنكهات (صغير • وسط • كبير)</div>' +
           '</div>' +
-        '</div>' +
-        '<span id="abPotArrow" class="ab-pot-arrow">' + (shouldOpen ? '▲ إخفاء' : '▼ عرض') + '</span>' +
-      '</button>' +
-      '<div id="abPotPanel" class="ab-pot-panel' + (shouldOpen ? ' open' : '') + '">' +
-        '<div class="ab-pot-tabs">' +
-          '<button type="button" class="ab-pot-tab" data-size="all">الكل (' + cntAll + ')</button>' +
-          '<button type="button" class="ab-pot-tab" data-size="small">صغير (' + cntSmall + ')</button>' +
-          '<button type="button" class="ab-pot-tab" data-size="medium">وسط (' + cntMed + ')</button>' +
-          '<button type="button" class="ab-pot-tab" data-size="large">كبير (' + cntLarge + ')</button>' +
-        '</div>' +
-        '<div id="abPotInnerGrid" class="ab-pot-grid"></div>' +
-      '</div>';
+          '<span id="abPotArrow" class="ab-pot-arrow">' + (shouldOpen ? '▲ إخفاء' : '▼ عرض') + '</span>' +
+        '</button>' +
+        '<div id="abPotPanel" class="ab-pot-panel' + (shouldOpen ? ' open' : '') + '">' +
+          '<div class="ab-pot-tabs">' +
+            '<button type="button" class="ab-pot-tab" data-size="all">الكل (' + cntAll + ')</button>' +
+            '<button type="button" class="ab-pot-tab" data-size="small">صغير (' + cntSmall + ')</button>' +
+            '<button type="button" class="ab-pot-tab" data-size="medium">وسط (' + cntMed + ')</button>' +
+            '<button type="button" class="ab-pot-tab" data-size="large">كبير (' + cntLarge + ')</button>' +
+          '</div>' +
+          '<div id="abPotInnerGrid" class="ab-pot-grid"></div>' +
+        '</div>';
 
-    prodGrid.insertBefore(wrap, insertBeforeNode);
+      prodGrid.insertBefore(wrap, insertBeforeNode);
 
-    var innerGrid = wrap.querySelector('#abPotInnerGrid');
-    for (var k = 0; k < potatoCards.length; k++) {
-      innerGrid.appendChild(potatoCards[k]);
-    }
+      var innerGrid = wrap.querySelector('#abPotInnerGrid');
+      for (var k = 0; k < potatoCards.length; k++) {
+        innerGrid.appendChild(potatoCards[k]);
+      }
 
-    var toggleBtn = wrap.querySelector('#abPotToggleBtn');
-    toggleBtn.addEventListener('click', function () {
-      window.__abPotatoOpen = !wrap.querySelector('#abPotPanel').classList.contains('open');
-      setPanelOpen(window.__abPotatoOpen);
-    });
-
-    var tabBtns = wrap.querySelectorAll('.ab-pot-tab');
-    for (var t = 0; t < tabBtns.length; t++) {
-      tabBtns[t].addEventListener('click', function () {
-        window.__abPotatoSize = this.getAttribute('data-size') || 'all';
-        applySizeFilter();
+      wrap.querySelector('#abPotToggleBtn').addEventListener('click', function () {
+        var panel = wrap.querySelector('#abPotPanel');
+        window.__abPotatoOpen = !panel.classList.contains('open');
+        setPanelOpen(window.__abPotatoOpen);
       });
-    }
 
-    if (isSearching) {
-      window.__abPotatoSize = 'all';
+      var tabBtns = wrap.querySelectorAll('.ab-pot-tab');
+      for (var t = 0; t < tabBtns.length; t++) {
+        tabBtns[t].addEventListener('click', function () {
+          window.__abPotatoSize = this.getAttribute('data-size') || 'all';
+          applySizeFilter();
+        });
+      }
+
+      if (isSearching || onlyPotatoesShown) {
+        window.__abPotatoSize = 'all';
+      }
+      applySizeFilter();
+      refreshSelectedBadge();
+    } finally {
+      isApplying = false;
     }
-    applySizeFilter();
-    refreshSelectedBadge();
   }
 
-  // ربط الدالة تلقائياً بعد كل استدعاء لـ renderCatalog
-  if (typeof window.renderCatalog === 'function' && !window.renderCatalog.__abWrappedPotato) {
+  function attachObserver() {
+    var prodGrid = document.getElementById('prodGrid');
+    if (!prodGrid || prodGrid.__abPotObs) return;
+    prodGrid.__abPotObs = true;
+    try {
+      var obs = new MutationObserver(function () {
+        if (!isApplying) buildPotatoDropdown();
+      });
+      obs.observe(prodGrid, { childList: true });
+    } catch (e) {}
+  }
+
+  if (typeof window.renderCatalog === 'function' && !window.renderCatalog.__abWrappedPotatoV2) {
     var origRender = window.renderCatalog;
     window.renderCatalog = function () {
       var res = origRender.apply(this, arguments);
       try { buildPotatoDropdown(); } catch (e) {}
       return res;
     };
-    window.renderCatalog.__abWrappedPotato = true;
+    window.renderCatalog.__abWrappedPotatoV2 = true;
   }
 
-  // تحديث شارة العدد المختار بعد أي ضغط على الأزرار أو النافذة
   document.addEventListener('click', function () {
     setTimeout(refreshSelectedBadge, 90);
   }, true);
 
-  // تشغيل فوري للحالة الأولية
-  try { buildPotatoDropdown(); } catch (e) {}
-  document.addEventListener('DOMContentLoaded', function () {
+  function initAll() {
+    attachObserver();
     try { buildPotatoDropdown(); } catch (e) {}
-  });
+  }
+
+  initAll();
+  document.addEventListener('DOMContentLoaded', initAll);
   window.addEventListener('load', function () {
-    setTimeout(function () {
-      try { buildPotatoDropdown(); } catch (e) {}
-    }, 120);
+    initAll();
+    setTimeout(initAll, 250);
   });
 })();
 </script>
