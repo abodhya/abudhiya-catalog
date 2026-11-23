@@ -2087,6 +2087,8 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
 <!-- ABUDHIYA_SILENT_V3_START -->
 <style id="abSilentV3Style">
   #abWhBox { display: none !important; }
@@ -2236,6 +2238,51 @@ window.addEventListener("beforeinstallprompt", function(e) {
   }
   .ab-sv3-ok { background: #111111; color: #ffffff; }
   .ab-sv3-new { background: #e6f7ee; color: #0b7a43; border: 1px solid #a7f3d0; }
+  .ab-sv3-btn-arch {
+    background: #ffffff;
+    color: #0b7a43;
+    border: 1.5px solid #86efac;
+    box-shadow: none;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .ab-sv3-arch-list {
+    max-height: 62vh;
+    overflow-y: auto;
+    text-align: right;
+    margin: 10px 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ab-sv3-arch-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 12.5px;
+    line-height: 1.65;
+  }
+  .ab-sv3-arch-head {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 800;
+    color: #0b7a43;
+    margin-bottom: 4px;
+    border-bottom: 1px dashed #cbd5e1;
+    padding-bottom: 4px;
+  }
+  .ab-sv3-arch-pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+    margin: 6px 0;
+    color: #111;
+    background: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-size: 12px;
+  }
   @keyframes abSv3Pop {
     from { transform: scale(0.84); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
@@ -2445,6 +2492,85 @@ window.addEventListener("beforeinstallprompt", function(e) {
     };
   }
 
+  var ARCHIVE_KEY = "ab_orders_archive_v1";
+
+  function saveOrderToLocalArchive(order) {
+    try {
+      var now = new Date();
+      var pad = function (n) { return String(n).padStart(2, "0"); };
+      var hh = now.getHours();
+      var ampm = hh >= 12 ? "م" : "ص";
+      var dateStr = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+      var timeStr = pad(hh % 12 || 12) + ":" + pad(now.getMinutes()) + ":" + pad(now.getSeconds()) + " " + ampm;
+      var arr = [];
+      try { arr = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || "[]"); } catch (e) { arr = []; }
+      if (!Array.isArray(arr)) arr = [];
+      arr.unshift({
+        orderId: order.orderId,
+        date: dateStr,
+        time: timeStr,
+        customerName: order.customerName || "غير محدد",
+        customerPhone: order.customerPhone || "",
+        totalQty: order.totalQty,
+        fmtTotal: order.fmtTotal,
+        withPrice: !!order.withPrice,
+        text: order.text
+      });
+      if (arr.length > 200) arr.length = 200;
+      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(arr));
+    } catch (e) {}
+  }
+
+  function openArchiveModal() {
+    var old = document.getElementById("abSv3ArchModalBg");
+    if (old) old.remove();
+    var arr = [];
+    try { arr = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || "[]"); } catch (e) { arr = []; }
+    if (!Array.isArray(arr)) arr = [];
+
+    var listHtml = "";
+    if (!arr.length) {
+      listHtml = '<div style="text-align:center;padding:24px;color:#666;">لا توجد طلبات محفوظة في الأرشيف بعد</div>';
+    } else {
+      for (var i = 0; i < arr.length; i++) {
+        var o = arr[i];
+        var safeText = String(o.text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        listHtml +=
+          '<div class="ab-sv3-arch-item">' +
+            '<div class="ab-sv3-arch-head"><span>#' + o.orderId + '</span><span>' + o.date + ' | ' + o.time + '</span></div>' +
+            '<div>👤 <b>' + (o.customerName || 'غير محدد') + '</b>' + (o.customerPhone ? (' — ' + o.customerPhone) : '') + '</div>' +
+            '<div>📦 عدد الأكياس: <b>' + o.totalQty + '</b>' + (o.withPrice ? (' | 💰 <b>' + o.fmtTotal + ' ر.ي</b>') : ' | <b>بدون سعر</b>') + '</div>' +
+            '<div class="ab-sv3-arch-pre">' + safeText + '</div>' +
+            '<button type="button" class="ab-sv3-smallbtn ab-sv3-copy-btn" data-idx="' + i + '">📋 نسخ التفاصيل</button>' +
+          '</div>';
+      }
+    }
+
+    var bg = document.createElement("div");
+    bg.id = "abSv3ArchModalBg";
+    bg.className = "ab-sv3-modal-bg";
+    bg.innerHTML =
+      '<div class="ab-sv3-modal" style="max-width:380px;">' +
+        '<div class="ab-sv3-title" style="margin-bottom:4px;">🗂️ أرشيف الطلبات (' + arr.length + ')</div>' +
+        '<div class="ab-sv3-arch-list">' + listHtml + '</div>' +
+        '<div class="ab-sv3-actions">' +
+          '<button type="button" id="abSv3ArchClose" class="ab-sv3-mbtn ab-sv3-ok">إغلاق</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(bg);
+    document.getElementById("abSv3ArchClose").onclick = function () { bg.remove(); };
+    var copyBtns = bg.querySelectorAll(".ab-sv3-copy-btn");
+    for (var c = 0; c < copyBtns.length; c++) {
+      copyBtns[c].onclick = function () {
+        var idx = Number(this.getAttribute("data-idx"));
+        var item = arr[idx];
+        if (item && navigator.clipboard) {
+          navigator.clipboard.writeText(item.text).then(function () { notify("✅ تم نسخ تفاصيل الطلب"); });
+        }
+      };
+    }
+  }
+
   function showSuccessModal(order) {
     var old = document.getElementById("abSv3ModalBg");
     if (old) old.remove();
@@ -2517,6 +2643,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
         return { ok: true };
       });
     }).then(function () {
+      saveOrderToLocalArchive(order);
       playSweetChime();
       showSuccessModal(order);
     }).catch(function () {
@@ -2545,6 +2672,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       '<div class="ab-sv3-btns">' +
         '<button type="button" id="abConfirmOrderSilentBtn" class="ab-sv3-btn">✅ اعتماد وإرسال الطلب (بالسعر)</button>' +
         '<button type="button" id="abConfirmNoPriceBtn" class="ab-sv3-btn ab-sv3-btn-noprice">📦 إرسال الأصناف فقط (بدون سعر)</button>' +
+        '<button type="button" id="abSv3ArchiveBtn" class="ab-sv3-btn ab-sv3-btn-arch">🗂️ أرشيف الطلبات (بالتاريخ والوقت)</button>' +
       '</div>' +
       '<div class="ab-sv3-note">إرسال فوري مباشر للتجهيز بدون فتح الواتساب</div>' +
       '<div id="abSv3Admin" class="ab-sv3-admin">' +
@@ -2565,6 +2693,9 @@ window.addEventListener("beforeinstallprompt", function(e) {
     });
     document.getElementById("abConfirmNoPriceBtn").addEventListener("click", function () {
       sendSilently(false, this);
+    });
+    document.getElementById("abSv3ArchiveBtn").addEventListener("click", function () {
+      openArchiveModal();
     });
     document.getElementById("abSv3Gear").addEventListener("click", function (ev) {
       ev.stopPropagation();
