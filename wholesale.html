@@ -310,13 +310,13 @@
 <meta property="og:site_name" content="أبوضياء للتوزيع — سيئون">
 <meta property="og:title" content="أبوضياء للتوزيع — كتالوج أسعار الجملة">
 <meta property="og:description" content="اضغط لفتح صور الأصناف وكتابة الكميات (50 / 100) وإرسال فاتورتك فوراً • المشقاص للصرافة: 254176581">
-<meta property="og:image" content="https://helpful-zuccutto-17432a.netlify.app/og-cover.jpg">
+<meta property="og:image" content="https://abodhya.github.io/abudhiya-catalog/og-cover.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://helpful-zuccutto-17432a.netlify.app/wholesale.html">
+<meta property="og:url" content="https://abodhya.github.io/abudhiya-catalog/wholesale.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://helpful-zuccutto-17432a.netlify.app/og-cover.jpg">
+<meta name="twitter:image" content="https://abodhya.github.io/abudhiya-catalog/og-cover.jpg">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1165,72 +1165,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
   }
 });
 </script>
-<!-- ABUDHIYA_LIFT_BOTTOM_START -->
-<style>
-  body { padding-bottom: 155px !important; }
-</style>
-<script>
-(function(){
-  function liftBottomControls() {
-    var vh = window.innerHeight || document.documentElement.clientHeight || 800;
-    var vw = window.innerWidth || document.documentElement.clientWidth || 360;
-    var nodes = document.body ? document.body.querySelectorAll('*') : [];
-
-    for (var i = 0; i < nodes.length; i++) {
-      var el = nodes[i];
-      if (!el || el.dataset.abLifted === '1') continue;
-      if (el.closest && el.closest('[data-ab-lifted="1"]')) continue;
-
-      var tag = (el.tagName || '').toUpperCase();
-      if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'IFRAME' || tag === 'LINK' || tag === 'META') continue;
-      if (el.id === 'abPinModal' || (el.classList && el.classList.contains('ab-pin-overlay'))) continue;
-
-      var meta = ((el.id || '') + ' ' + (typeof el.className === 'string' ? el.className : '') + ' ' + (el.getAttribute('aria-label') || '')).toLowerCase();
-      if (meta.indexOf('netlify') !== -1) continue;
-
-      var cs = window.getComputedStyle(el);
-      if (cs.display === 'none' || cs.visibility === 'hidden') continue;
-      if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;
-
-      var rect = el.getBoundingClientRect();
-      if (rect.height < 20 || rect.height > 170) continue;
-      if (rect.top < vh * 0.45) continue;
-      if ((vh - rect.bottom) > 42) continue;
-
-      var txt = (el.textContent || '').toLowerCase();
-      if (txt.indexOf('powered by netlify') !== -1) continue;
-
-      el.dataset.abLifted = '1';
-      if (rect.width >= vw * 0.78) {
-        el.style.setProperty('bottom', '64px', 'important');
-        el.style.setProperty('left', '8px', 'important');
-        el.style.setProperty('right', '8px', 'important');
-        el.style.setProperty('width', 'auto', 'important');
-        el.style.setProperty('max-width', '900px', 'important');
-        el.style.setProperty('margin', '0 auto', 'important');
-        el.style.setProperty('border-radius', '14px', 'important');
-        el.style.setProperty('box-shadow', '0 8px 24px rgba(0,0,0,0.45)', 'important');
-        el.style.setProperty('z-index', '9990', 'important');
-      } else {
-        var curBottom = parseFloat(cs.bottom);
-        if (isNaN(curBottom) || curBottom < 0) curBottom = 0;
-        el.style.setProperty('bottom', (curBottom + 66) + 'px', 'important');
-        el.style.setProperty('z-index', '9991', 'important');
-      }
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', liftBottomControls);
-  window.addEventListener('load', function(){
-    liftBottomControls();
-    setTimeout(liftBottomControls, 350);
-    setTimeout(liftBottomControls, 1200);
-  });
-  window.addEventListener('resize', liftBottomControls);
-  document.addEventListener('click', function(){ setTimeout(liftBottomControls, 80); }, true);
-})();
-</script>
-<!-- ABUDHIYA_LIFT_BOTTOM_END -->
 <!-- ABUDHIYA_POTATO_DROPDOWN_START -->
 <style id="abPotatoDropdownCss">
   .ab-pot-wrap {
