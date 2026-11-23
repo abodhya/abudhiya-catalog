@@ -2081,6 +2081,8 @@ window.addEventListener("beforeinstallprompt", function(e) {
 </script>
 <!-- ABUDHIYA_WAREHOUSE_SEND_END -->
 
+
+
 <!-- ABUDHIYA_SILENT_V3_START -->
 <style id="abSilentV3Style">
   #abWhBox { display: none !important; }
@@ -2093,19 +2095,28 @@ window.addEventListener("beforeinstallprompt", function(e) {
     border: 1.5px solid #86efac;
     direction: rtl;
   }
+  .ab-sv3-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   .ab-sv3-btn {
     width: 100%;
     border: none;
     border-radius: 12px;
-    padding: 15px 16px;
-    font-size: 16px;
+    padding: 14px 16px;
+    font-size: 15.5px;
     font-weight: 800;
     color: #ffffff;
     background: linear-gradient(135deg, #0f9d58, #0b7a43);
-    box-shadow: 0 6px 16px rgba(15,157,88,0.28);
+    box-shadow: 0 5px 14px rgba(15,157,88,0.26);
     cursor: pointer;
     font-family: inherit;
     display: block;
+  }
+  .ab-sv3-btn-noprice {
+    background: linear-gradient(135deg, #1f2937, #111827);
+    box-shadow: 0 5px 14px rgba(17,24,39,0.22);
   }
   .ab-sv3-btn:active { transform: scale(0.98); }
   .ab-sv3-btn:disabled { opacity: 0.72; cursor: wait; }
@@ -2113,7 +2124,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     text-align: center;
     font-size: 12px;
     color: #166534;
-    margin-top: 6px;
+    margin-top: 7px;
     font-weight: 600;
   }
   .ab-sv3-gear {
@@ -2226,7 +2237,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     to { transform: scale(1); opacity: 1; }
   }
 </style>
-<script data-ab-silent-v3="1">
+<script data-ab-silent-v3="2">
 (function () {
   if (window.__abSilentOrderV3) return;
   window.__abSilentOrderV3 = true;
@@ -2382,7 +2393,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     var lines = [];
 
     if (withPrice) {
-      lines.push("🛒 *طلب جديد معتمد من المتجر*");
+      lines.push("🛒 *طلب جديد معتمد (بالسعر)*");
       lines.push("🏪 *ابوضياء للتوزيع*");
       lines.push("🆔 رقم الطلب: *#" + orderId + "*");
       if (cName) lines.push("👤 العميل: *" + cName + "*");
@@ -2400,10 +2411,12 @@ window.addEventListener("beforeinstallprompt", function(e) {
       lines.push("📊 إجمالي الوحدات: *" + data.totalQty + "*");
       lines.push("💰 الإجمالي: *" + fmtNum(data.grandTotal) + " ر.ي*");
     } else {
-      lines.push("📦 *كشف تجهيز مستودع (مختصر)*");
+      lines.push("📦 *طلب تجهيز أصناف فقط (بدون سعر)*");
+      lines.push("🏪 *ابوضياء للتوزيع*");
       lines.push("🆔 رقم الطلب: *#" + orderId + "*");
       if (cName) lines.push("👤 العميل: *" + cName + "*");
       if (cPhone) lines.push("📞 الجوال: " + cPhone);
+      if (cNote) lines.push("📝 ملاحظة: " + cNote);
       lines.push("━━━━━━━━━━━━━━");
       for (var k = 0; k < data.items.length; k++) {
         var m = data.items[k];
@@ -2417,6 +2430,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     return {
       orderId: orderId,
       token: BRIDGE_TOKEN,
+      withPrice: !!withPrice,
       targetPhone: getTargetPhone(),
       customerName: cName,
       customerPhone: cPhone,
@@ -2430,6 +2444,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   function showSuccessModal(order) {
     var old = document.getElementById("abSv3ModalBg");
     if (old) old.remove();
+    var priceLine = order.withPrice ? ('<div>الإجمالي: <b>' + order.fmtTotal + ' ر.ي</b></div>') : '<div>النوع: <b>كشف أصناف بدون سعر</b></div>';
     var bg = document.createElement("div");
     bg.id = "abSv3ModalBg";
     bg.className = "ab-sv3-modal-bg";
@@ -2441,7 +2456,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
         '<div class="ab-sv3-meta">' +
           '<div>رقم الطلب: <b>#' + order.orderId + '</b></div>' +
           '<div>إجمالي الوحدات: <b>' + order.totalQty + '</b></div>' +
-          '<div>الإجمالي: <b>' + order.fmtTotal + ' ر.ي</b></div>' +
+          priceLine +
         '</div>' +
         '<div class="ab-sv3-actions">' +
           '<button type="button" id="abSv3OkBtn" class="ab-sv3-mbtn ab-sv3-ok">حسناً</button>' +
@@ -2523,14 +2538,16 @@ window.addEventListener("beforeinstallprompt", function(e) {
     box.id = "abSilentOrderBox";
     box.innerHTML =
       '<span id="abSv3Gear" class="ab-sv3-gear" title="خيارات الإدارة">⚙</span>' +
-      '<button type="button" id="abConfirmOrderSilentBtn" class="ab-sv3-btn">✅ اعتماد وإرسال الطلب</button>' +
+      '<div class="ab-sv3-btns">' +
+        '<button type="button" id="abConfirmOrderSilentBtn" class="ab-sv3-btn">✅ اعتماد وإرسال الطلب (بالسعر)</button>' +
+        '<button type="button" id="abConfirmNoPriceBtn" class="ab-sv3-btn ab-sv3-btn-noprice">📦 إرسال الأصناف فقط (بدون سعر)</button>' +
+      '</div>' +
       '<div class="ab-sv3-note">إرسال فوري مباشر للتجهيز بدون فتح الواتساب</div>' +
       '<div id="abSv3Admin" class="ab-sv3-admin">' +
         '<div class="ab-sv3-row">' +
           '<input type="tel" id="abSv3PhoneInp" class="ab-sv3-inp" value="' + getTargetPhone() + '" placeholder="967772777609">' +
           '<button type="button" id="abSv3SavePh" class="ab-sv3-smallbtn">حفظ الرقم</button>' +
         '</div>' +
-        '<button type="button" id="abSv3ShortBtn" class="ab-sv3-smallbtn">📡 إرسال كشف مختصر بدون سعر</button>' +
       '</div>';
 
     if (anchor) {
@@ -2542,7 +2559,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     document.getElementById("abConfirmOrderSilentBtn").addEventListener("click", function () {
       sendSilently(true, this);
     });
-    document.getElementById("abSv3ShortBtn").addEventListener("click", function () {
+    document.getElementById("abConfirmNoPriceBtn").addEventListener("click", function () {
       sendSilently(false, this);
     });
     document.getElementById("abSv3Gear").addEventListener("click", function (ev) {
