@@ -28,7 +28,7 @@
   <div class="ab-pin-box">
     <h3 class="ab-pin-title">🔒 الدخول إلى أسعار الجملة</h3>
     <p class="ab-pin-sub">أدخل الرمز السري المعتمد لعملاء الجملة</p>
-    <input id="abPinInput" class="ab-pin-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" onkeydown="if(event.key==='Enter') abVerifyWholesalePin();">
+    <input id="abPinInput" class="ab-pin-input" type="password" inputmode="numeric" autocomplete="off" placeholder="•••" onkeydown="if(event.key==='Enter') abVerifyWholesalePin();">
     <div id="abPinErr" class="ab-pin-err"></div>
     <div class="ab-pin-actions">
       <button type="button" class="ab-pin-ok" onclick="abVerifyWholesalePin()">دخول للجملة</button>
@@ -39,7 +39,7 @@
 <script>
 (function(){
   var IS_WHOLESALE = false;
-  var REQ_PIN = '7714';
+  var REQ_PIN = '111';
   if (IS_WHOLESALE) {
     try { sessionStorage.setItem('ab_wh_unlocked', '1'); } catch(e) {}
   }
