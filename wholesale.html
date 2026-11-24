@@ -8462,6 +8462,128 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+<!-- ABUDHIYA_HIDE_WELCOME_START -->
+<style id="abHideWelcomeStyle" data-hide-welcome="1">
+  [data-ab-welcome-hidden="1"],
+  #abProWelcome,
+  #abWelcomeBar,
+  #abVipWelcome,
+  .ab-pro-welcome,
+  .ab-welcome-bar,
+  .ab-vip-banner {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+  }
+  #abProTickerTxt,
+  #abProWelcome,
+  #abProWelcomeTxt,
+  .ab-pro-welcome {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+</style>
+<script data-ab-hide-welcome="1">
+(function () {
+  if (window.__abHideWelcomeV1) return;
+  window.__abHideWelcomeV1 = true;
+
+  var WELCOME_RE = /(?:أهلا|اهلا|أهلاً|اهلاً|مرحبا|مرحباً)\s*بعودتك|عميل\s*مميز/;
+
+  function isProtectedContainer(el) {
+    if (!el || el === document.body || el === document.documentElement) return true;
+    if (el.closest("#abSaifLuxuryHeader, #abRoyalDock, #productsGrid, .products-grid, #invoiceView, #abSilentOrderBox, #abSv3ModalBg, #abSv3ArchModalBg, #abFallbackArchBg, #abRoyalQrModal, #abRoyalReceiptModal")) {
+      return true;
+    }
+    if (el.querySelector("#productsGrid, .products-grid, #abRoyalDock, #abSaifLuxuryHeader, #invoiceView, #abSilentOrderBox, form, input, select, textarea, img")) {
+      return true;
+    }
+    return false;
+  }
+
+  function hideWelcomeElements() {
+    try {
+      var nodes = document.querySelectorAll("div, section, header, p, span, aside");
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (!el || el.getAttribute("data-ab-welcome-hidden") === "1") continue;
+        if (isProtectedContainer(el)) continue;
+
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt || txt.length > 160) continue;
+        if (!WELCOME_RE.test(txt)) continue;
+
+        // نتأكد من إخفاء الصندوق الكامل الخاص بشريط الترحيب دون ترك إطار فارغ
+        var target = el;
+        while (target.parentElement && !isProtectedContainer(target.parentElement)) {
+          var p = target.parentElement;
+          var pTxt = (p.textContent || "").replace(/\s+/g, " ").trim();
+          if (pTxt.length <= 160 && WELCOME_RE.test(pTxt) && !p.querySelector("#abRepeatOrderChip, #abProChips")) {
+            target = p;
+          } else {
+            break;
+          }
+        }
+        target.setAttribute("data-ab-welcome-hidden", "1");
+      }
+    } catch (e) {}
+  }
+
+  // منع ظهور أي إشعار Toast يحتوي على رسالة الترحيب أو "عميل مميز"
+  function wrapToastSafe() {
+    if (typeof window.showToast === "function" && !window.showToast.__abNoWelcome) {
+      var origToast = window.showToast;
+      var wrapped = function (msg) {
+        if (msg && WELCOME_RE.test(String(msg))) return;
+        return origToast.apply(this, arguments);
+      };
+      wrapped.__abNoWelcome = true;
+      window.showToast = wrapped;
+    }
+  }
+
+  hideWelcomeElements();
+  wrapToastSafe();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      hideWelcomeElements();
+      wrapToastSafe();
+    });
+  }
+  setTimeout(function () { hideWelcomeElements(); wrapToastSafe(); }, 150);
+  setTimeout(function () { hideWelcomeElements(); wrapToastSafe(); }, 700);
+
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(function (muts) {
+      for (var k = 0; k < muts.length; k++) {
+        var an = muts[k].addedNodes;
+        if (!an || !an.length) continue;
+        for (var j = 0; j < an.length; j++) {
+          var nd = an[j];
+          if (!nd || nd.nodeType !== 1) continue;
+          if (WELCOME_RE.test(nd.textContent || "")) {
+            hideWelcomeElements();
+            return;
+          }
+        }
+      }
+    });
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+})();
+</script>
+<!-- ABUDHIYA_HIDE_WELCOME_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -8505,7 +8627,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-545248";
+  var TARGET_CACHE = "abudhiya-offline-v4-545759";
 
   function forceReleaseSplash() {
     try {
