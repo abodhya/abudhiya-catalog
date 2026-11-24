@@ -508,6 +508,15 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     .absf-hdr-inner { padding: 11px 10px 10px; gap: 7px; }
     .absf-phone-link { padding: 2px 6px; }
   }
+  .absf-dup-hidden {
+    display: none !important;
+  }
+  .absf-compact-toolbar {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    margin-top: 2px !important;
+    border-radius: 14px !important;
+  }
 </style>
 <div id="abSaifLuxuryHeader" class="absf-hdr-shell">
   <div class="absf-hdr-card">
@@ -536,9 +545,9 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     </div>
   </div>
 </div>
-<script data-ab-saif-store-brand="1">
+<script data-ab-saif-store-brand="2">
 (function () {
-  // مسح أي نص عروض قديم مخزن باسم أبوضياء ليظهر نص أبوسيف الجديد
+  // تنظيف أي نص عروض قديم مخزن باسم أبوضياء
   try {
     var oldPromo = localStorage.getItem("ab_promo_ticker_v1") || "";
     if (oldPromo.indexOf("أبوضياء") !== -1 || oldPromo.indexOf("ابوضياء") !== -1) {
@@ -546,56 +555,79 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     }
   } catch (e) {}
 
-  // إخفاء الترويسة القديمة المكررة فقط (مع الحفاظ التام على حقول البحث وأزرار التنقل)
-  function hideOldDuplicateHeader() {
+  function cleanDuplicateLowerHeader() {
     var lux = document.getElementById("abSaifLuxuryHeader");
     if (!lux) return;
-    var nodes = document.querySelectorAll(
-      "body > header, body > .header, body > .top-header, body > .store-header, body > .hero, #catalogView > header, #catalogView > .header, .app-header, .brand-header"
-    );
-    for (var i = 0; i < nodes.length; i++) {
-      var el = nodes[i];
-      if (!el || el.id === "abSaifLuxuryHeader" || el.contains(lux)) continue;
-      if (el.closest("#invoiceView, #invFilledWrap")) continue;
-      if (el.querySelector("input, select, textarea")) continue;
-      var controls = el.querySelectorAll("button, a");
-      var hasControls = false;
-      for (var c = 0; c < controls.length; c++) {
-        var t = (controls[c].textContent || "").trim();
+
+    // 1) تحديد حاوية الترويسة السفلية التي تضم شريط البحث
+    var searchInp = document.querySelector('input[placeholder*="ابحث"], input[type="search"]');
+    var oldHdr = null;
+    if (searchInp) {
+      var cur = searchInp.parentElement;
+      for (var d = 0; d < 6 && cur && cur !== document.body; d++) {
+        var t = (cur.textContent || "");
         if (
-          t.indexOf("إضافة") !== -1 || t.indexOf("الفاتورة") !== -1 ||
-          t.indexOf("الأصناف") !== -1 || t.indexOf("بحث") !== -1 ||
-          t.indexOf("جملة") !== -1 || t.indexOf("تجزئة") !== -1
+          cur.tagName === "HEADER" ||
+          t.indexOf("تطبيق كتالوج الطلب السريع") !== -1 ||
+          t.indexOf("اضغط على أي صورة") !== -1
         ) {
-          hasControls = true;
+          oldHdr = cur;
           break;
         }
+        cur = cur.parentElement;
       }
-      if (!hasControls) {
-        el.style.display = "none";
-      } else {
-        // إذا احتوت الترويسة القديمة على أزرار، نخفي فقط عنوان الاسم المكرر داخلها
-        var titles = el.querySelectorAll("h1, .brand-title, .store-title, .logo-title");
-        for (var j = 0; j < titles.length; j++) {
-          var tx = (titles[j].textContent || "").trim();
-          if (tx.indexOf("أبوسيف") !== -1 || tx.indexOf("أبوضياء") !== -1 || tx.indexOf("ابوضياء") !== -1) {
-            titles[j].style.display = "none";
-          }
+      if (!oldHdr) oldHdr = searchInp.closest("header, .header, .top-bar, .sticky-top");
+    }
+
+    var scope = oldHdr || document.body;
+
+    // 2) إخفاء العنوان المكرر والوصف المكرر داخل الترويسة السفلية فقط (مع الحفاظ على البحث والأزرار)
+    var allEls = scope.querySelectorAll("h1, h2, h3, p, div, span");
+    for (var i = 0; i < allEls.length; i++) {
+      var el = allEls[i];
+      if (!el || el.closest("#abSaifLuxuryHeader, #invoiceView, #invFilledWrap, #abProSplash, #abSv3ModalBg, #abSilentOrderBox, #abProTopHub")) continue;
+      if (el.querySelector("input, select, textarea, button, a")) continue;
+
+      var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (!txt) continue;
+
+      if (
+        txt.indexOf("تطبيق كتالوج الطلب السريع") !== -1 ||
+        txt.indexOf("اضغط على أي صورة لإضافتها للفاتورة") !== -1 ||
+        txt === "أبوسيف للتجارة العامة — سيئون" ||
+        txt === "أبوسيف للتجارة العامة - سيئون" ||
+        txt === "أبوسيف للتجارة العامة" ||
+        txt === "أبوضياء للتوزيع — سيئون" ||
+        txt === "ابوضياء للتوزيع — سيئون" ||
+        (oldHdr && oldHdr.contains(el) && (txt.indexOf("أبوسيف للتجارة العامة") !== -1 || txt.indexOf("أبوضياء للتوزيع") !== -1))
+      ) {
+        el.classList.add("absf-dup-hidden");
+        // إخفاء الحاوية المباشرة للعنوان والوصف إذا لم تحتوِ على أزرار أو خانات إدخال
+        var p = el.parentElement;
+        if (p && p !== oldHdr && p !== document.body && !p.querySelector("input, select, textarea, button, a")) {
+          p.classList.add("absf-dup-hidden");
         }
       }
+    }
+
+    // 3) ضغط ارتفاع شريط البحث والأزرار بعد إخفاء الترويسة المكررة
+    if (oldHdr && oldHdr !== document.body) {
+      oldHdr.classList.add("absf-compact-toolbar");
     }
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", hideOldDuplicateHeader);
+    document.addEventListener("DOMContentLoaded", cleanDuplicateLowerHeader);
   } else {
-    hideOldDuplicateHeader();
+    cleanDuplicateLowerHeader();
   }
-  setTimeout(hideOldDuplicateHeader, 350);
-  setTimeout(hideOldDuplicateHeader, 1100);
+  setTimeout(cleanDuplicateLowerHeader, 250);
+  setTimeout(cleanDuplicateLowerHeader, 900);
 })();
 </script>
 <!-- ABUSAIF_LUXURY_HEADER_END -->
+
+
 
 
 
