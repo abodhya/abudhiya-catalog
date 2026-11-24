@@ -5189,5 +5189,236 @@ window.addEventListener("beforeinstallprompt", function(e) {
   </div>
 </footer>
 <!-- ABUDHIYA_DEV_STAMP_END -->
+
+<!-- ABUDHIYA_NOPRICE_OFFICIAL_START -->
+<style id="abNoPriceOfficialStyle" data-noprice-v="1">
+  /* إخفاء زر الإرسال بالسعر افتراضياً دون حذفه من النظام */
+  .ab-priced-btn-hidden {
+    display: none !important;
+  }
+
+  /* إبراز زر الإرسال بدون سعر كالزر الرسمي الأساسي للعملاء */
+  .ab-official-noprice-btn {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 13px 16px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    border: 1.5px solid rgba(254, 240, 138, 0.58) !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    cursor: pointer !important;
+    margin-top: 4px !important;
+    transition: transform 0.14s ease, box-shadow 0.18s ease !important;
+  }
+  .ab-official-noprice-btn:active {
+    transform: scale(0.985) !important;
+  }
+
+  /* تنسيق واضح لزر الإرسال بالسعر عند إظهاره مؤقتاً من لوحة المدير ⚙ */
+  .ab-priced-btn-unlocked {
+    width: 100% !important;
+    margin-top: 8px !important;
+    border: 1.5px dashed #d4af37 !important;
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
+    color: #fef08a !important;
+  }
+
+  /* صف التحكم السري داخل لوحة الإعدادات ⚙ */
+  #abPricedAdminCtrl {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(212, 175, 55, 0.45);
+    width: 100%;
+  }
+  .ab-adm-priced-send {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 1px solid #d4af37;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 55%, #facc15 100%);
+    color: #09090b;
+    font-size: 12.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-priced-toggle {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid #64748b;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-priced-send:active,
+  .ab-adm-priced-toggle:active {
+    transform: scale(0.98);
+  }
+</style>
+<script data-ab-noprice-official="1">
+(function () {
+  if (window.__abNoPriceOfficialV1) return;
+  window.__abNoPriceOfficialV1 = true;
+
+  var SHOW_KEY = "ab_show_priced_btn_v1";
+
+  function isPricedUnlocked() {
+    try { return localStorage.getItem(SHOW_KEY) === "1"; } catch (e) { return false; }
+  }
+
+  function setPricedUnlocked(flag) {
+    try {
+      if (flag) localStorage.setItem(SHOW_KEY, "1");
+      else localStorage.removeItem(SHOW_KEY);
+    } catch (e) {}
+  }
+
+  function tagSilentButtons(box) {
+    var noPriceBtn = box.querySelector('[data-ab-role="noprice"]');
+    var pricedBtn = box.querySelector('[data-ab-role="priced"]');
+    if (noPriceBtn && pricedBtn) {
+      return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
+    }
+
+    var btns = box.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || b.closest("#abSv3Admin, #abPricedAdminCtrl")) continue;
+      if (b.getAttribute("data-ab-role")) continue;
+      if (b.classList.contains("ab-sv3-smallbtn")) continue;
+
+      var t = (b.textContent || "").replace(/\s+/g, " ").trim();
+      if (!t || t === "⚙" || t === "⚙️") continue;
+      if (
+        t.indexOf("أرشيف") !== -1 || t.indexOf("الأرشيف") !== -1 ||
+        t.indexOf("نسخ") !== -1 || t.indexOf("حفظ") !== -1 ||
+        t.indexOf("إغلاق") !== -1 || t.indexOf("GPS") !== -1 ||
+        t.indexOf("موقع") !== -1
+      ) continue;
+
+      if (
+        t.indexOf("بدون سعر") !== -1 ||
+        t.indexOf("بدون أسعار") !== -1 ||
+        t.indexOf("كميات فقط") !== -1 ||
+        t.indexOf("أصناف فقط") !== -1
+      ) {
+        b.setAttribute("data-ab-role", "noprice");
+        b.setAttribute("data-ab-orig-txt", t);
+        noPriceBtn = b;
+      } else if (
+        t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1 ||
+        t.indexOf("اعتماد") !== -1 || t.indexOf("بالسعر") !== -1 ||
+        t.indexOf("تأكيد") !== -1 || t.indexOf("الطلب") !== -1
+      ) {
+        b.setAttribute("data-ab-role", "priced");
+        b.setAttribute("data-ab-orig-txt", t);
+        pricedBtn = b;
+      }
+    }
+
+    return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
+  }
+
+  function applyNoPricePolicy() {
+    var box = document.getElementById("abSilentOrderBox");
+    if (!box) return;
+
+    var found = tagSilentButtons(box);
+    var noPriceBtn = found.noPriceBtn;
+    var pricedBtn = found.pricedBtn;
+    var unlocked = isPricedUnlocked();
+
+    // 1) إبراز زر (بدون سعر) كالزر الرسمي الوحيد
+    if (noPriceBtn) {
+      noPriceBtn.classList.add("ab-official-noprice-btn");
+      noPriceBtn.classList.remove("ab-priced-btn-hidden");
+      if (!noPriceBtn.getAttribute("data-ab-renamed")) {
+        noPriceBtn.setAttribute("data-ab-renamed", "1");
+        noPriceBtn.textContent = "✅ اعتماد وإرسال الطلب الرسمي";
+      }
+    }
+
+    // 2) إخفاء زر (بالسعر) افتراضياً أو إظهاره عند تفعيله من ⚙
+    if (pricedBtn) {
+      if (unlocked) {
+        pricedBtn.classList.remove("ab-priced-btn-hidden");
+        pricedBtn.classList.add("ab-priced-btn-unlocked");
+        var origT = pricedBtn.getAttribute("data-ab-orig-txt") || pricedBtn.textContent || "";
+        if (origT.indexOf("بالسعر") === -1) {
+          pricedBtn.textContent = "💰 اعتماد وإرسال الطلب (بالسعر)";
+        }
+      } else {
+        pricedBtn.classList.add("ab-priced-btn-hidden");
+        pricedBtn.classList.remove("ab-priced-btn-unlocked");
+      }
+    }
+
+    // 3) إضافة أزرار التحكم السرية للمدير داخل لوحة ⚙ (#abSv3Admin)
+    var adm = document.getElementById("abSv3Admin");
+    if (adm && pricedBtn) {
+      var ctrl = document.getElementById("abPricedAdminCtrl");
+      if (!ctrl) {
+        ctrl = document.createElement("div");
+        ctrl.id = "abPricedAdminCtrl";
+        ctrl.innerHTML =
+          '<button type="button" id="abDirectSendPricedBtn" class="ab-adm-priced-send">💰 إرسال هذا الطلب بالسعر الآن</button>' +
+          '<button type="button" id="abTogglePricedBtn" class="ab-adm-priced-toggle"></button>';
+        adm.appendChild(ctrl);
+
+        document.getElementById("abDirectSendPricedBtn").addEventListener("click", function (ev) {
+          ev.preventDefault();
+          var targetBtn = box.querySelector('[data-ab-role="priced"]');
+          if (targetBtn) {
+            targetBtn.click();
+          }
+        });
+
+        document.getElementById("abTogglePricedBtn").addEventListener("click", function (ev) {
+          ev.preventDefault();
+          var nextState = !isPricedUnlocked();
+          setPricedUnlocked(nextState);
+          applyNoPricePolicy();
+          if (typeof showToast === "function") {
+            showToast(nextState ? "👁️ تم إظهار زر الإرسال بالسعر على جهازك" : "🔒 تم إخفاء زر الإرسال بالسعر");
+          }
+        });
+      }
+
+      var togBtn = document.getElementById("abTogglePricedBtn");
+      if (togBtn) {
+        togBtn.textContent = unlocked
+          ? "🔒 إخفاء زر الإرسال بالسعر من الفاتورة"
+          : "👁️ إظهار زر الإرسال بالسعر على جهازي";
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyNoPricePolicy);
+  } else {
+    applyNoPricePolicy();
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(applyNoPricePolicy);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(applyNoPricePolicy, 800);
+  setTimeout(applyNoPricePolicy, 300);
+})();
+</script>
+<!-- ABUDHIYA_NOPRICE_OFFICIAL_END -->
 </body>
 </html>
