@@ -4599,28 +4599,29 @@ window.addEventListener("beforeinstallprompt", function(e) {
 </footer>
 <!-- ABUDHIYA_DEV_STAMP_END -->
 
+
 <!-- ABUDHIYA_GOLD_CARDS_START -->
-<style id="abGoldCardsLuxuryStyle">
-  /* إطار ذهبي ملكي مزدوج حول بطاقات الأصناف */
+<style id="abGoldCardsLuxuryStyle" data-gold-v="2">
+  /* إطار ذهبي ملكي متوازن بدون ضغط أو قص للبطاقات */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card),
   .prod-card,
   .product-card,
   .item-card,
   [data-ab-pro-card="1"] {
     position: relative !important;
-    border-radius: 16px !important;
-    border: 2px solid #d4af37 !important;
+    box-sizing: border-box !important;
+    border-radius: 14px !important;
+    border: 1.5px solid #d4af37 !important;
     box-shadow:
-      0 0 0 1px rgba(254, 240, 138, 0.42),
-      0 9px 22px rgba(0, 0, 0, 0.52),
-      0 0 15px rgba(212, 175, 55, 0.24),
-      inset 0 1px 0 rgba(255, 250, 214, 0.85),
-      inset 0 0 0 1px rgba(212, 175, 55, 0.34) !important;
+      0 0 0 1px rgba(254, 240, 138, 0.35),
+      0 8px 20px rgba(0, 0, 0, 0.48),
+      0 0 12px rgba(212, 175, 55, 0.22),
+      inset 0 1px 0 rgba(255, 250, 214, 0.78) !important;
     overflow: hidden !important;
-    transition: transform 0.18s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+    transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
   }
 
-  /* شريط بريق ذهبي معدني على الحافة العلوية للبطاقة */
+  /* شريط بريق ذهبي رفيع أعلى البطاقة لا يغطي الصورة */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card)::before,
   .prod-card::before,
   .product-card::before,
@@ -4631,7 +4632,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    height: 3.5px !important;
+    height: 2px !important;
     background: linear-gradient(90deg, #855e12 0%, #d4af37 22%, #fff4b8 50%, #d4af37 78%, #855e12 100%) !important;
     z-index: 3 !important;
     pointer-events: none !important;
@@ -4646,44 +4647,50 @@ window.addEventListener("beforeinstallprompt", function(e) {
     content: "" !important;
     position: absolute !important;
     bottom: 0 !important;
-    left: 14% !important;
-    right: 14% !important;
-    height: 2px !important;
+    left: 16% !important;
+    right: 16% !important;
+    height: 1.5px !important;
     background: linear-gradient(90deg, transparent 0%, #d4af37 28%, #fef08a 50%, #d4af37 72%, transparent 100%) !important;
     z-index: 3 !important;
     pointer-events: none !important;
   }
 
-  /* توهج ذهبي أنيق عند لمس الصنف */
+  /* توهج ذهبي أنيق عند اللمس */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card):active,
   .prod-card:active,
   .product-card:active,
   .item-card:active,
   [data-ab-pro-card="1"]:active {
-    transform: translateY(-1px) scale(0.988) !important;
+    transform: scale(0.988) !important;
     border-color: #fef08a !important;
     box-shadow:
-      0 0 0 1.5px rgba(254, 240, 138, 0.72),
-      0 12px 26px rgba(0, 0, 0, 0.58),
-      0 0 22px rgba(250, 204, 21, 0.44),
-      inset 0 0 0 1px rgba(254, 240, 138, 0.65) !important;
+      0 0 0 1.5px rgba(254, 240, 138, 0.68),
+      0 10px 22px rgba(0, 0, 0, 0.54),
+      0 0 18px rgba(250, 204, 21, 0.4) !important;
   }
 
-  /* تلميع خفيف وحواف ناعمة لصور الأصناف داخل الإطار */
+  /* إظهار صورة الصنف كاملة 100% بدون أي قص من الحواف */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card) img,
   .prod-card img,
   .product-card img,
   .item-card img,
   [data-ab-pro-card="1"] img {
-    border-radius: 12px !important;
-    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08), inset 0 0 0 1px rgba(212, 175, 55, 0.25) !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #ffffff !important;
+    padding: 6px !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
-  /* تباعد متوازن بين البطاقات لإبراز الإطار الذهبي */
+  /* تباعد مريح للشبكة يمنع ضيق البطاقات على شاشات الجوال */
   .products-grid,
   #productsGrid,
   .grid {
-    gap: 13px !important;
+    gap: 10px !important;
+    box-sizing: border-box !important;
   }
 </style>
 <!-- ABUDHIYA_GOLD_CARDS_END -->
