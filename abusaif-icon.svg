@@ -1,23 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="512" height="512">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="46%" r="56%">
-      <stop offset="0%" stop-color="#251f13"/>
-      <stop offset="55%" stop-color="#101014"/>
-      <stop offset="100%" stop-color="#07080b"/>
+    <radialGradient id="bg" cx="50%" cy="46%" r="55%">
+      <stop offset="0%" stop-color="#261f12"/>
+      <stop offset="60%" stop-color="#101218"/>
+      <stop offset="100%" stop-color="#080a0f"/>
     </radialGradient>
-    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#b8860b"/>
-      <stop offset="38%" stop-color="#fef08a"/>
-      <stop offset="68%" stop-color="#d4af37"/>
+    <linearGradient id="bladeHi" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8d6"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#d4af37"/>
+    </linearGradient>
+    <linearGradient id="bladeLo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eab308"/>
       <stop offset="100%" stop-color="#926b10"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="226" fill="none" stroke="url(#gold)" stroke-width="10"/>
-  <circle cx="256" cy="256" r="208" fill="none" stroke="#fef08a" stroke-opacity="0.55" stroke-width="2.5"/>
-  <text x="256" y="138" text-anchor="middle" fill="#fef08a" font-size="28" font-family="sans-serif">★  ★  ★</text>
-  <text x="256" y="250" text-anchor="middle" fill="url(#gold)" font-size="96" font-weight="900" font-family="sans-serif">أبوسيف</text>
-  <line x1="130" y1="286" x2="382" y2="286" stroke="url(#gold)" stroke-width="4" stroke-linecap="round"/>
-  <text x="256" y="344" text-anchor="middle" fill="#f8fafc" font-size="40" font-weight="800" font-family="sans-serif">للتجارة العامة</text>
-  <text x="256" y="400" text-anchor="middle" fill="#d4af37" font-size="28" font-weight="700" font-family="sans-serif">سيئون</text>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="512" cy="512" r="434" fill="none" stroke="url(#bladeHi)" stroke-width="16"/>
+  <circle cx="512" cy="512" r="406" fill="none" stroke="#d4af37" stroke-opacity="0.65" stroke-width="4"/>
+  <path d="M656 388 C528 450 350 430 188 266 C356 472 538 492 665 416 Z" fill="url(#bladeLo)"/>
+  <path d="M648 360 C518 412 344 392 188 266 C350 430 528 450 656 388 Z" fill="url(#bladeHi)"/>
+  <path d="M682 379 C730 358 780 340 822 385 L805 415 C765 385 725 390 676 410 Z" fill="#1c1914" stroke="#facc15" stroke-width="6"/>
+  <polygon points="634,402 650,370 618,285 634,278 672,360 695,374 682,398 722,485 706,492 665,412" fill="url(#bladeHi)" stroke="#926b10" stroke-width="4"/>
+  <circle cx="822" cy="396" r="22" fill="url(#bladeHi)"/>
+  <text x="512" y="655" text-anchor="middle" fill="#fcd63a" font-size="178" font-weight="900" font-family="sans-serif">أبوسيف</text>
+  <line x1="270" y1="704" x2="754" y2="704" stroke="#d4af37" stroke-width="5"/>
+  <text x="512" y="786" text-anchor="middle" fill="#f8fafc" font-size="68" font-weight="800" font-family="sans-serif">للتجارة العامة</text>
 </svg>
