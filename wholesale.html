@@ -4600,9 +4600,10 @@ window.addEventListener("beforeinstallprompt", function(e) {
 <!-- ABUDHIYA_DEV_STAMP_END -->
 
 
+
 <!-- ABUDHIYA_GOLD_CARDS_START -->
-<style id="abGoldCardsLuxuryStyle" data-gold-v="2">
-  /* إطار ذهبي ملكي متوازن بدون ضغط أو قص للبطاقات */
+<style id="abGoldCardsLuxuryStyle" data-gold-v="3">
+  /* إطار ذهبي ملكي عالي اللمعان ومقاييس عرض متطابقة */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card),
   .prod-card,
   .product-card,
@@ -4610,18 +4611,18 @@ window.addEventListener("beforeinstallprompt", function(e) {
   [data-ab-pro-card="1"] {
     position: relative !important;
     box-sizing: border-box !important;
-    border-radius: 14px !important;
-    border: 1.5px solid #d4af37 !important;
+    border-radius: 15px !important;
+    border: 1.5px solid #e2be4b !important;
     box-shadow:
-      0 0 0 1px rgba(254, 240, 138, 0.35),
-      0 8px 20px rgba(0, 0, 0, 0.48),
-      0 0 12px rgba(212, 175, 55, 0.22),
-      inset 0 1px 0 rgba(255, 250, 214, 0.78) !important;
+      0 0 0 1px rgba(255, 248, 204, 0.45),
+      0 10px 24px rgba(0, 0, 0, 0.52),
+      0 0 16px rgba(212, 175, 55, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
     overflow: hidden !important;
-    transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+    transition: transform 0.16s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
   }
 
-  /* شريط بريق ذهبي رفيع أعلى البطاقة لا يغطي الصورة */
+  /* حافة بريق ذهبي سائل أعلى البطاقة */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card)::before,
   .prod-card::before,
   .product-card::before,
@@ -4632,9 +4633,9 @@ window.addEventListener("beforeinstallprompt", function(e) {
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    height: 2px !important;
-    background: linear-gradient(90deg, #855e12 0%, #d4af37 22%, #fff4b8 50%, #d4af37 78%, #855e12 100%) !important;
-    z-index: 3 !important;
+    height: 2.5px !important;
+    background: linear-gradient(90deg, #9a6f14 0%, #e5c158 22%, #fffbe0 50%, #e5c158 78%, #9a6f14 100%) !important;
+    z-index: 6 !important;
     pointer-events: none !important;
   }
 
@@ -4647,52 +4648,177 @@ window.addEventListener("beforeinstallprompt", function(e) {
     content: "" !important;
     position: absolute !important;
     bottom: 0 !important;
-    left: 16% !important;
-    right: 16% !important;
+    left: 14% !important;
+    right: 14% !important;
     height: 1.5px !important;
-    background: linear-gradient(90deg, transparent 0%, #d4af37 28%, #fef08a 50%, #d4af37 72%, transparent 100%) !important;
-    z-index: 3 !important;
+    background: linear-gradient(90deg, transparent 0%, #d4af37 28%, #fff7cc 50%, #d4af37 72%, transparent 100%) !important;
+    z-index: 6 !important;
     pointer-events: none !important;
   }
 
-  /* توهج ذهبي أنيق عند اللمس */
+  /* توهج كريستالي عند لمس البطاقة */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card):active,
   .prod-card:active,
   .product-card:active,
   .item-card:active,
   [data-ab-pro-card="1"]:active {
     transform: scale(0.988) !important;
-    border-color: #fef08a !important;
+    border-color: #fff7cc !important;
     box-shadow:
-      0 0 0 1.5px rgba(254, 240, 138, 0.68),
-      0 10px 22px rgba(0, 0, 0, 0.54),
-      0 0 18px rgba(250, 204, 21, 0.4) !important;
+      0 0 0 1.5px rgba(255, 247, 204, 0.78),
+      0 12px 26px rgba(0, 0, 0, 0.56),
+      0 0 22px rgba(250, 204, 21, 0.45) !important;
   }
 
-  /* إظهار صورة الصنف كاملة 100% بدون أي قص من الحواف */
+  /* فك قيود الارتفاع القديمة على حاوية الصورة لضمان مقاييس 1:1 متطابقة بدون قص */
+  .ab-hd-img-wrap {
+    position: relative !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    border-radius: 11px !important;
+  }
+
+  /* عرض صور الأصناف بوضوح فائق الجودة وألوان أصلية 100% ومقاييس موحدة */
   .card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card) img,
   .prod-card img,
   .product-card img,
   .item-card img,
   [data-ab-pro-card="1"] img {
-    object-fit: contain !important;
-    object-position: center center !important;
-    background: #ffffff !important;
-    padding: 6px !important;
-    box-sizing: border-box !important;
-    border-radius: 10px !important;
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: radial-gradient(circle at 50% 42%, #ffffff 74%, #f8fafc 100%) !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    border-radius: 11px !important;
+    border: 1px solid rgba(212, 175, 55, 0.30) !important;
+    box-shadow:
+      inset 0 2px 6px rgba(255, 255, 255, 0.98),
+      inset 0 -2px 5px rgba(15, 23, 42, 0.04),
+      0 3px 10px rgba(0, 0, 0, 0.14) !important;
+    /* حفظ ألوان المنتج الأصلية بالكامل دون أي تعديل */
+    filter: none !important;
+    -webkit-filter: none !important;
+    /* وضوح فائق الدقة ومنع التمويه */
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: high-quality !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    transform: translateZ(0) !important;
   }
 
-  /* تباعد مريح للشبكة يمنع ضيق البطاقات على شاشات الجوال */
+  /* حفظ نفس الوضوح والألوان الأصلية داخل نافذة التكبير HD */
+  .ab-zoom-img {
+    object-fit: contain !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: high-quality !important;
+    background: #ffffff !important;
+  }
+
+  /* طبقة اللمعان الزجاجي النقي (ضوء أبيض شفاف لا يغير لون المنتج) */
+  .ab-crystal-gloss {
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 4 !important;
+    overflow: hidden !important;
+    border-radius: inherit !important;
+  }
+  .ab-crystal-gloss::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+      142deg,
+      rgba(255, 255, 255, 0.44) 0%,
+      rgba(255, 255, 255, 0.14) 15%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(255, 255, 255, 0) 84%,
+      rgba(255, 255, 255, 0.16) 100%
+    ) !important;
+  }
+  .ab-crystal-gloss::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -35% !important;
+    left: -130% !important;
+    width: 58% !important;
+    height: 170% !important;
+    transform: rotate(22deg) !important;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.48) 50%,
+      rgba(255, 255, 255, 0) 100%
+    ) !important;
+    animation: abCrystalSweep 6.8s ease-in-out infinite !important;
+    animation-delay: var(--ab-gleam-delay, 0s) !important;
+  }
+
+  @keyframes abCrystalSweep {
+    0%, 76% { left: -130%; opacity: 0; }
+    82% { opacity: 1; }
+    96% { left: 165%; opacity: 0.9; }
+    100% { left: 165%; opacity: 0; }
+  }
+
+  /* تباعد منتظم للشبكة يبرز تناسق المقاييس */
   .products-grid,
   #productsGrid,
   .grid {
     gap: 10px !important;
+    align-items: stretch !important;
     box-sizing: border-box !important;
   }
 </style>
+<script data-ab-hd-gloss="3">
+(function () {
+  function applyHdGlossShowcase() {
+    var cards = document.querySelectorAll(
+      '.card:not(#abSaifLuxuryHeader):not(.absf-hdr-card):not(.abdev-card):not(.ab-zoom-card), .prod-card, .product-card, .item-card, [data-ab-pro-card="1"]'
+    );
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (!card || card.closest("#abProZoomModal, #abRcptPreviewModal, #abSv3ModalBg")) continue;
+
+      var img = card.querySelector("img");
+      if (img) {
+        var wrap = img.parentElement;
+        if (wrap && wrap !== card && !wrap.classList.contains("ab-hd-img-wrap")) {
+          wrap.classList.add("ab-hd-img-wrap");
+        }
+      }
+
+      if (!card.querySelector(".ab-crystal-gloss")) {
+        var gloss = document.createElement("span");
+        gloss.className = "ab-crystal-gloss";
+        gloss.setAttribute("aria-hidden", "true");
+        gloss.style.setProperty("--ab-gleam-delay", ((i % 6) * 0.85).toFixed(2) + "s");
+        card.appendChild(gloss);
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyHdGlossShowcase);
+  } else {
+    applyHdGlossShowcase();
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(applyHdGlossShowcase);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
+  setTimeout(applyHdGlossShowcase, 500);
+})();
+</script>
 <!-- ABUDHIYA_GOLD_CARDS_END -->
 </body>
 </html>
