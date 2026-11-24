@@ -321,7 +321,7 @@
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="أبوسيف للتجارة">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795511120">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795523587">
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:500;font-display:swap;}
@@ -340,8 +340,8 @@ button,.btn-primary,.add-btn,.send-btn,.qty-btn{background:#000000 !important;ba
 .cat-btn.active,.tab-btn.active,.pill.active,.chip.active{background:#000000 !important;color:#FFFFFF !important;}
 input,select,textarea{background:#FFFFFF !important;color:#000000 !important;border:1.5px solid #000000 !important;font-weight:600 !important;}
 </style>
-<link rel="icon" type="image/png" href="/favicon.png?v=1795511120">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795511120">
+<link rel="icon" type="image/png" href="/favicon.png?v=1795523587">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795523587">
 </head>
 <body>
 <!-- ABUSAIF_LUXURY_HEADER_START -->
@@ -5764,190 +5764,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_FINAL_POLISH_END -->
 
-<!-- ABUDHIYA_PRICE_VISIBILITY_START -->
-<style id="abPriceVisibilityStyle" data-price-vis="2">
-  /* إخفاء فوري وكامل للأسعار عن العملاء لمنع أي اهتزاز أو إزاحة (يُفتح بالرمز السري abodhya فقط) */
-  html.ab-prices-hidden [data-ab-price-el="1"],
-  html.ab-prices-hidden .price,
-  html.ab-prices-hidden .prod-price,
-  html.ab-prices-hidden .item-price,
-  html.ab-prices-hidden .card-price,
-  html.ab-prices-hidden .p-price,
-  html.ab-prices-hidden .price-tag,
-  html.ab-prices-hidden #cartTotal,
-  html.ab-prices-hidden #invTotal,
-  html.ab-prices-hidden #barTotal,
-  html.ab-prices-hidden #totalPrice {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .ab-adm-prices-toggle {
-    width: 100%;
-    margin-top: 6px;
-    padding: 8px 10px;
-    border-radius: 9px;
-    border: 1px solid rgba(212, 175, 55, 0.55);
-    background: #17171d;
-    color: #fef08a;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ab-adm-prices-toggle:active { opacity: 0.85; }
-</style>
-<script data-ab-price-vis="2">
-(function () {
-  if (window.__abPriceVisV2) return;
-  window.__abPriceVisV2 = true;
-
-  var SHOW_PRICES_KEY = "ab_show_prices_secret_v2";
-  var SECRET_CODE = "abodhya";
-
-  function isPricesVisible() {
-    try { return localStorage.getItem(SHOW_PRICES_KEY) === "1"; } catch (e) { return false; }
-  }
-  function setPricesVisible(flag) {
-    try {
-      if (flag) localStorage.setItem(SHOW_PRICES_KEY, "1");
-      else localStorage.removeItem(SHOW_PRICES_KEY);
-    } catch (e) {}
-    document.documentElement.classList.toggle("ab-prices-hidden", !flag);
-  }
-
-  // تطبيق الإخفاء فوراً قبل الرسم
-  document.documentElement.classList.toggle("ab-prices-hidden", !isPricesVisible());
-
-  function isProtected(el) {
-    if (!el) return true;
-    if (el.closest("#abSaifLuxuryHeader, #abDevStampFooter, #abSv3Admin, #abPricedAdminCtrl, #abMishqasCard, #abProSplash, #abPwaInstallBar, #abSv3ModalBg, #abSv3ArchModalBg")) {
-      return true;
-    }
-    if (el.querySelector("img, input, select, textarea, svg, .ab-qbar, #abSilentOrderBox")) {
-      return true;
-    }
-    return false;
-  }
-
-  function tagPriceElements() {
-    try {
-      var els = document.querySelectorAll("button, a, div, p, span");
-      for (var i = 0; i < els.length; i++) {
-        var el = els[i];
-        if (!el || el.getAttribute("data-ab-price-el") === "1" || isProtected(el)) continue;
-
-        var tag = el.tagName;
-        var hasSubInteractive = (tag !== "BUTTON" && tag !== "A") && !!el.querySelector("button, a");
-        if (hasSubInteractive) continue;
-
-        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
-        if (!txt || txt.length > 60) continue;
-
-        if (
-          txt.indexOf("سعر الجملة") !== -1 ||
-          txt.indexOf("سعر التجزئة") !== -1 ||
-          txt.indexOf("قائمة أسعار") !== -1
-        ) {
-          el.setAttribute("data-ab-price-el", "1");
-          var p = el.parentElement;
-          if (p && !isProtected(p) && p !== document.body) {
-            var pBtns = p.querySelectorAll("button, a");
-            if (pBtns.length === 2) {
-              var pTxt = (p.textContent || "");
-              if (pTxt.indexOf("سعر الجملة") !== -1 && pTxt.indexOf("سعر التجزئة") !== -1 && pTxt.length < 70) {
-                p.setAttribute("data-ab-price-el", "1");
-              }
-            }
-          }
-          continue;
-        }
-
-        if (
-          tag !== "BUTTON" &&
-          tag !== "A" &&
-          txt.length <= 40 &&
-          (/\d[\d,\.]*\s*ر\.?\s*ي/.test(txt) || /ر\.?\s*ي\s*[\d,\.]+/.test(txt))
-        ) {
-          el.setAttribute("data-ab-price-el", "1");
-        }
-      }
-
-      var adm = document.getElementById("abSv3Admin");
-      if (adm) {
-        var pBtn = document.getElementById("abTogglePricesUiBtn");
-        if (!pBtn) {
-          pBtn = document.createElement("button");
-          pBtn.type = "button";
-          pBtn.id = "abTogglePricesUiBtn";
-          pBtn.className = "ab-adm-prices-toggle";
-          pBtn.addEventListener("click", function (ev) {
-            ev.preventDefault();
-            if (isPricesVisible()) {
-              setPricesVisible(false);
-              syncToggleLabel();
-              if (typeof showToast === "function") showToast("🔒 تم إخفاء الأسعار من الواجهة");
-              return;
-            }
-            var entered = window.prompt("🔐 أدخل الرمز السري لإظهار الأسعار:");
-            if (entered === null) return;
-            if (String(entered).trim().toLowerCase() === SECRET_CODE) {
-              setPricesVisible(true);
-              syncToggleLabel();
-              if (typeof showToast === "function") showToast("✅ تم فتح وإظهار الأسعار على جهازك");
-            } else {
-              if (typeof showToast === "function") showToast("❌ الرمز السري غير صحيح");
-              else alert("❌ الرمز السري غير صحيح");
-            }
-          });
-          adm.appendChild(pBtn);
-        }
-        syncToggleLabel();
-      }
-    } catch (e) {}
-  }
-
-  function syncToggleLabel() {
-    var pBtn = document.getElementById("abTogglePricesUiBtn");
-    if (!pBtn) return;
-    var lbl = isPricesVisible()
-      ? "🙈 إخفاء الأسعار من الواجهة"
-      : "🔐 إظهار الأسعار (برمز سري)";
-    if (pBtn.textContent !== lbl) pBtn.textContent = lbl;
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 120); });
-  } else {
-    setTimeout(tagPriceElements, 120);
-  }
-  if (typeof MutationObserver !== "undefined") {
-    var _pObs = new MutationObserver(function (muts) {
-      for (var k = 0; k < muts.length; k++) {
-        var an = muts[k].addedNodes;
-        if (!an || !an.length) continue;
-        for (var j = 0; j < an.length; j++) {
-          var nd = an[j];
-          if (!nd || nd.nodeType !== 1) continue;
-          var cls = String(nd.className || "");
-          if (cls.indexOf("ab-") !== -1) continue;
-          if (nd.tagName === "IMG" || (nd.querySelector && nd.querySelector("img"))) {
-            tagPriceElements();
-            return;
-          }
-        }
-      }
-    });
-    _pObs.observe(document.body || document.documentElement, { childList: true, subtree: true });
-  }
-  setInterval(tagPriceElements, 2500);
-})();
-</script>
-<!-- ABUDHIYA_PRICE_VISIBILITY_END -->
 
 <!-- ABUDHIYA_ULTRA_SMOOTH_START -->
 <style id="abUltraSmoothZeroShakeStyle" data-smooth-v="4">
@@ -6899,8 +6715,205 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
+<!-- ABUDHIYA_PRICE_VISIBILITY_START -->
+<style id="abPriceVisibilityStyle" data-price-vis="3">
+  /* إخفاء فوري وكامل للأسعار عن العملاء لمنع أي اهتزاز أو إزاحة (يُفتح بالرمز السري abodhya فقط) */
+  html.ab-prices-hidden [data-ab-price-el="1"],
+  html.ab-prices-hidden .price,
+  html.ab-prices-hidden .prod-price,
+  html.ab-prices-hidden .item-price,
+  html.ab-prices-hidden .card-price,
+  html.ab-prices-hidden .p-price,
+  html.ab-prices-hidden .price-tag,
+  html.ab-prices-hidden #cartTotal,
+  html.ab-prices-hidden #invTotal,
+  html.ab-prices-hidden #barTotal,
+  html.ab-prices-hidden #totalPrice {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .ab-adm-prices-toggle {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #17171d;
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-prices-toggle:active { opacity: 0.85; }
+</style>
+<script data-ab-price-vis="3">
+(function () {
+  if (window.__abPriceVisV3) return;
+  window.__abPriceVisV3 = true;
+
+  var SHOW_PRICES_KEY = "ab_show_prices_secret_v2";
+  var SECRET_CODE = "abodhya";
+
+  function isPricesVisible() {
+    try { return localStorage.getItem(SHOW_PRICES_KEY) === "1"; } catch (e) { return false; }
+  }
+  function setPricesVisible(flag) {
+    try {
+      if (flag) localStorage.setItem(SHOW_PRICES_KEY, "1");
+      else localStorage.removeItem(SHOW_PRICES_KEY);
+    } catch (e) {}
+    document.documentElement.classList.toggle("ab-prices-hidden", !flag);
+  }
+
+  // تطبيق الإخفاء فوراً قبل الرسم
+  document.documentElement.classList.toggle("ab-prices-hidden", !isPricesVisible());
+
+  function isProtected(el) {
+    if (!el) return true;
+    if (el.closest("#abSaifLuxuryHeader, #abDevStampFooter, #abSv3Admin, #abPricedAdminCtrl, #abMishqasCard, #abProSplash, #abPwaInstallBar, #abSv3ModalBg, #abSv3ArchModalBg")) {
+      return true;
+    }
+    if (el.classList.contains("ab-numpad-prod-title") || el.classList.contains("ab-numpad-info-wrap") || el.classList.contains("ab-numpad-qty-readout")) return true;
+    if (el.querySelector("img, input, select, textarea, svg, .ab-qbar, #abSilentOrderBox, h1, h2, h3, h4, .ab-numpad-prod-title")) {
+      return true;
+    }
+    return false;
+  }
+
+  function tagPriceElements() {
+    try {
+      var els = document.querySelectorAll("button, a, div, p, span");
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        if (!el || el.getAttribute("data-ab-price-el") === "1" || isProtected(el)) continue;
+
+        var tag = el.tagName;
+        var hasSubInteractive = (tag !== "BUTTON" && tag !== "A") && !!el.querySelector("button, a");
+        if (hasSubInteractive) continue;
+
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt || txt.length > 60) continue;
+
+        if (
+          txt.indexOf("سعر الجملة") !== -1 ||
+          txt.indexOf("سعر التجزئة") !== -1 ||
+          txt.indexOf("قائمة أسعار") !== -1
+        ) {
+          el.setAttribute("data-ab-price-el", "1");
+          var p = el.parentElement;
+          if (p && !isProtected(p) && p !== document.body) {
+            var pBtns = p.querySelectorAll("button, a");
+            if (pBtns.length === 2) {
+              var pTxt = (p.textContent || "");
+              if (pTxt.indexOf("سعر الجملة") !== -1 && pTxt.indexOf("سعر التجزئة") !== -1 && pTxt.length < 70) {
+                p.setAttribute("data-ab-price-el", "1");
+              }
+            }
+          }
+          continue;
+        }
+
+        if (
+          tag !== "BUTTON" &&
+          tag !== "A" &&
+          !/^H[1-6]$/.test(tag) &&
+          txt.length <= 45 &&
+          (/\d[\d,\.]*\s*ر\.?\s*ي/.test(txt) || /ر\.?\s*ي\s*[\d,\.]+/.test(txt))
+        ) {
+          var idCls = ((el.id || "") + " " + (typeof el.className === "string" ? el.className : "")).toLowerCase();
+          if (/(?:^|[-_\s])(name|title|head)(?:$|[-_\s])/.test(idCls)) continue;
+          if (el.children && el.children.length > 0) {
+            var stripped = txt
+              .replace(/[\d,\.\s:\/\-•|()]+/g, "")
+              .replace(/ر\.?ي|ريال|سعر|السعر|الجملة|التجزئة|الإجمالي|الاجمالي|المجموع|للكرتون|للحبة|للبكت|للدرزن|كرتون|حبة|بكت|شدة/g, "");
+            if (stripped.length > 0) continue;
+          }
+          el.setAttribute("data-ab-price-el", "1");
+        }
+      }
+
+      var adm = document.getElementById("abSv3Admin");
+      if (adm) {
+        var pBtn = document.getElementById("abTogglePricesUiBtn");
+        if (!pBtn) {
+          pBtn = document.createElement("button");
+          pBtn.type = "button";
+          pBtn.id = "abTogglePricesUiBtn";
+          pBtn.className = "ab-adm-prices-toggle";
+          pBtn.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            if (isPricesVisible()) {
+              setPricesVisible(false);
+              syncToggleLabel();
+              if (typeof showToast === "function") showToast("🔒 تم إخفاء الأسعار من الواجهة");
+              return;
+            }
+            var entered = window.prompt("🔐 أدخل الرمز السري لإظهار الأسعار:");
+            if (entered === null) return;
+            if (String(entered).trim().toLowerCase() === SECRET_CODE) {
+              setPricesVisible(true);
+              syncToggleLabel();
+              if (typeof showToast === "function") showToast("✅ تم فتح وإظهار الأسعار على جهازك");
+            } else {
+              if (typeof showToast === "function") showToast("❌ الرمز السري غير صحيح");
+              else alert("❌ الرمز السري غير صحيح");
+            }
+          });
+          adm.appendChild(pBtn);
+        }
+        syncToggleLabel();
+      }
+    } catch (e) {}
+  }
+
+  function syncToggleLabel() {
+    var pBtn = document.getElementById("abTogglePricesUiBtn");
+    if (!pBtn) return;
+    var lbl = isPricesVisible()
+      ? "🙈 إخفاء الأسعار من الواجهة"
+      : "🔐 إظهار الأسعار (برمز سري)";
+    if (pBtn.textContent !== lbl) pBtn.textContent = lbl;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 120); });
+  } else {
+    setTimeout(tagPriceElements, 120);
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var _pObs = new MutationObserver(function (muts) {
+      for (var k = 0; k < muts.length; k++) {
+        var an = muts[k].addedNodes;
+        if (!an || !an.length) continue;
+        for (var j = 0; j < an.length; j++) {
+          var nd = an[j];
+          if (!nd || nd.nodeType !== 1) continue;
+          var cls = String(nd.className || "");
+          if (cls.indexOf("ab-") !== -1) continue;
+          if (nd.tagName === "IMG" || (nd.querySelector && nd.querySelector("img"))) {
+            tagPriceElements();
+            return;
+          }
+        }
+      }
+    });
+    _pObs.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(tagPriceElements, 2500);
+})();
+</script>
+<!-- ABUDHIYA_PRICE_VISIBILITY_END -->
+
 <!-- ABUDHIYA_NUMPAD_VISIBILITY_START -->
-<style id="abNumpadVisibilityStyle" data-numpad-vis="1">
+<style id="abNumpadVisibilityStyle" data-numpad-vis="2">
   /* 1) إظهار رقم الكمية بخط عريض وذهبي ساطع داخل الشريط الداكن بين - و + */
   .ab-numpad-fixed .ab-numpad-qty-readout,
   html.ab-prices-hidden .ab-numpad-fixed .ab-numpad-qty-readout,
@@ -6950,22 +6963,64 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-text-fill-color: rgba(254, 240, 138, 0.55) !important;
   }
 
-  /* 2) إظهار اسم الصنف بوضوح تام على خلفية النافذة البيضاء (دون تغيير لون أزرار الأرقام السوداء) */
-  .ab-numpad-fixed .ab-numpad-prod-title {
+  /* 2) فك الإخفاء وتنسيق ترويسة النافذة (الصورة + اسم الصنف بالوسط + زر الإغلاق يساراً) */
+  .ab-numpad-fixed .ab-numpad-header-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .ab-numpad-fixed .ab-numpad-info-wrap,
+  html.ab-prices-hidden .ab-numpad-fixed .ab-numpad-info-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    text-align: right !important;
+    margin: 0 !important;
+    padding: 0 2px !important;
+  }
+
+  .ab-numpad-fixed .ab-numpad-prod-title,
+  html.ab-prices-hidden .ab-numpad-fixed .ab-numpad-prod-title {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
     color: #0f172a !important;
     -webkit-text-fill-color: #0f172a !important;
     font-size: 14.5px !important;
     font-weight: 900 !important;
-    line-height: 1.35 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+    line-height: 1.4 !important;
+    text-align: right !important;
+    word-break: break-word !important;
     text-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 </style>
-<script data-ab-numpad-vis="1">
+<script data-ab-numpad-vis="2">
 (function () {
-  if (window.__abNumpadVisV1) return;
-  window.__abNumpadVisV1 = true;
+  if (window.__abNumpadVisV2) return;
+  window.__abNumpadVisV2 = true;
+
+  function isPriceOnlyText(txt) {
+    if (!txt) return false;
+    if (txt.indexOf("ر.ي") === -1 && txt.indexOf("ريال") === -1) return false;
+    var rest = txt
+      .replace(/[\d,\.\s:\/\-•|()]+/g, "")
+      .replace(/ر\.?ي|ريال|سعر|السعر|الجملة|التجزئة|الإجمالي|الاجمالي|المجموع|للكرتون|للحبة|للبكت|للدرزن|كرتون|حبة|بكت|شدة/g, "");
+    return rest.length === 0;
+  }
 
   function findNumpadBox() {
     var box = document.querySelector(".ab-sleek-numpad-box");
@@ -6988,23 +7043,24 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       if (!box) return;
       box.classList.add("ab-numpad-fixed");
 
-      // 1) تحديد خانة عرض الرقم الموجودة بين زري (-) و (+) أو أي حقل إدخال كمية
+      // 1) إظهار رقم الكمية بين (-) و (+)
       var allBtns = box.querySelectorAll("button");
       var minusBtn = null;
       var plusBtn = null;
+      var closeBtn = null;
       for (var i = 0; i < allBtns.length; i++) {
         var bt = (allBtns[i].textContent || "").replace(/\s+/g, "").trim();
         if (bt === "-" || bt === "−" || bt === "–") minusBtn = allBtns[i];
         else if (bt === "+") plusBtn = allBtns[i];
+        else if (!closeBtn && (bt === "×" || bt === "✕" || bt === "✖" || bt === "X" || bt === "x")) closeBtn = allBtns[i];
       }
 
-      if (minusBtn && plusBtn && minusBtn.parentElement === plusBtn.parentElement) {
-        var row = minusBtn.parentElement;
-        var children = row.children;
+      var qtyRow = (minusBtn && plusBtn && minusBtn.parentElement === plusBtn.parentElement) ? minusBtn.parentElement : null;
+      if (qtyRow) {
+        var children = qtyRow.children;
         for (var c = 0; c < children.length; c++) {
           var ch = children[c];
-          if (ch === minusBtn || ch === plusBtn) continue;
-          if (ch.tagName === "BUTTON") continue;
+          if (ch === minusBtn || ch === plusBtn || ch.tagName === "BUTTON") continue;
           ch.removeAttribute("data-ab-price-el");
           ch.classList.add("ab-numpad-qty-readout");
           var innerInp = ch.querySelector("input, span, div");
@@ -7022,35 +7078,71 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         inputs[k].classList.add("ab-numpad-qty-readout");
       }
 
-      // 2) إظهار اسم الصنف أعلى النافذة البيضاء (تجنب تلوين أي زر أو سعر بالريال)
+      // 2) تحديد صف الترويسة (الذي يضم الصورة وزر الإغلاق) وفك أي إخفاء عن اسم الصنف وحاويته
       var img = box.querySelector("img");
-      var headerScope = (img && img.parentElement && img.parentElement.parentElement && box.contains(img.parentElement.parentElement))
-        ? img.parentElement.parentElement
-        : box;
-      var textEls = headerScope.querySelectorAll("h1, h2, h3, h4, p, div, span");
-      for (var j = 0; j < textEls.length; j++) {
-        var el = textEls[j];
+      var headerRow = null;
+      if (img) {
+        var cur = img.parentElement;
+        while (cur && cur !== box && cur !== document.body) {
+          if (closeBtn && cur.contains(closeBtn) && (!qtyRow || !cur.contains(qtyRow))) {
+            headerRow = cur;
+            break;
+          }
+          cur = cur.parentElement;
+        }
+        if (!headerRow && img.parentElement && img.parentElement !== box) {
+          headerRow = img.parentElement;
+        }
+      }
+      var scope = headerRow || box;
+      if (headerRow) {
+        headerRow.removeAttribute("data-ab-price-el");
+        headerRow.classList.add("ab-numpad-header-row");
+      }
+
+      // فك data-ab-price-el عن أي عنصر في الترويسة ليس سعراً صافياً، وتمييز حاوية الاسم واسم الصنف
+      var nodes = scope.querySelectorAll("div, h1, h2, h3, h4, p, span");
+      for (var j = 0; j < nodes.length; j++) {
+        var el = nodes[j];
         if (!el || el.closest("button") || el.classList.contains("ab-numpad-qty-readout")) continue;
-        if (el.querySelector("button, img, input")) continue;
-        if (minusBtn && minusBtn.parentElement && minusBtn.parentElement.contains(el)) continue;
-        var txt = (el.textContent || "").trim();
-        if (!txt || txt.length < 2) continue;
-        if (txt.indexOf("ر.ي") !== -1 || txt.indexOf("اختصارات") !== -1 || txt.indexOf("اكتب الكمية") !== -1) continue;
-        if (/^[0-9+\-−×✕]+$/.test(txt)) continue;
-        el.classList.add("ab-numpad-prod-title");
+        if (qtyRow && qtyRow.contains(el)) continue;
+        if (el.querySelector("img, button, input")) continue;
+
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt) continue;
+        if (txt.indexOf("اختصارات") !== -1 || txt.indexOf("اكتب الكمية") !== -1) continue;
+        if (/^[0-9+\-−×✕✖]+$/.test(txt)) continue;
+
+        if (isPriceOnlyText(txt)) {
+          // إبقاء سطر السعر مخفياً بالنظام السري
+          continue;
+        }
+
+        // هذا العنصر إما حاوية تضم الاسم+السعر أو هو اسم الصنف نفسه
+        el.removeAttribute("data-ab-price-el");
+        if (el.children && el.children.length > 0) {
+          el.classList.add("ab-numpad-info-wrap");
+        } else {
+          el.classList.add("ab-numpad-prod-title");
+          if (el.parentElement && el.parentElement !== headerRow && el.parentElement !== box && !el.parentElement.querySelector("img, button")) {
+            el.parentElement.removeAttribute("data-ab-price-el");
+            el.parentElement.classList.add("ab-numpad-info-wrap");
+          }
+        }
       }
     } catch (e) {}
   }
 
   document.addEventListener("click", function () {
-    setTimeout(enhanceNumpadContrast, 40);
-    setTimeout(enhanceNumpadContrast, 220);
+    setTimeout(enhanceNumpadContrast, 20);
+    setTimeout(enhanceNumpadContrast, 100);
+    setTimeout(enhanceNumpadContrast, 260);
   }, true);
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(enhanceNumpadContrast, 300); });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(enhanceNumpadContrast, 250); });
   } else {
-    setTimeout(enhanceNumpadContrast, 300);
+    setTimeout(enhanceNumpadContrast, 250);
   }
 })();
 </script>
@@ -7099,7 +7191,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-523302";
+  var TARGET_CACHE = "abudhiya-offline-v4-523587";
 
   function forceReleaseSplash() {
     try {
