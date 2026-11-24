@@ -771,6 +771,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -4208,6 +4210,9 @@ window.addEventListener("beforeinstallprompt", function(e) {
 <!-- ABUDHIYA_PRICE_VISIBILITY_END -->
 
 
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -4488,7 +4493,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   .ab-clear-qty-btn.show { display: flex; }
   .ab-clear-qty-btn:active { transform: scale(0.86); }
 </style>
-<script data-ab-pro-ui="9">
+<script data-ab-pro-ui="10">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4961,8 +4966,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       try { if (typeof buildPotatoDropdown === "function") buildPotatoDropdown(); } catch (e) {}
       try { if (typeof saveCart === "function") saveCart(); } catch (e) {}
       try { if (typeof renderProducts === "function") renderProducts(); } catch (e) {}
-      try { if (typeof renderGrid === "function") renderGrid(); } catch (e) {}
-      try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) {}
+try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) {}
       try { if (typeof updateCartUI === "function") updateCartUI(); } catch (e) {}
       try { if (typeof updateSummary === "function") updateSummary(); } catch (e) {}
       try { if (typeof updateTotals === "function") updateTotals(); } catch (e) {}
@@ -5389,7 +5393,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   }
   function scheduleTick() {
     if (_abTickTmr) return;
-    _abTickTmr = setTimeout(function () { _abTickTmr = null; safeTick(); }, 220);
+    _abTickTmr = setTimeout(function () { _abTickTmr = null; safeTick(); }, 50);
   }
   if (typeof MutationObserver !== "undefined") {
     var obs = new MutationObserver(scheduleTick);
@@ -5402,7 +5406,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
 <!-- ABUDHIYA_PRO_UI_END -->
 
 <!-- ABUDHIYA_GOLD_CARDS_START -->
-<style id="abGoldCardsLuxuryStyle" data-gold-v="6">
+<style id="abGoldCardsLuxuryStyle" data-gold-v="7">
   /* 1) شبكة 3 أعمدة هندسية متطابقة الارتفاع ومريحة للعين */
   .ab-sleek-grid-3,
   #productsGrid,
@@ -5449,7 +5453,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       0 0 12px rgba(212, 175, 55, 0.14),
       inset 0 1px 0 rgba(255, 249, 214, 0.52) !important;
     overflow: hidden !important;
-    transition: transform 0.16s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease !important;
   }
 
   /* شريط بريق ذهبي معدني ناعم على الحافة العلوية */
@@ -5498,7 +5502,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   .product-card:active,
   .item-card:active,
   [data-ab-pro-card="1"]:active {
-    transform: translateY(-1px) scale(0.984) !important;
+    transform: none !important;
     border-color: #fef08a !important;
     box-shadow:
       0 0 0 1px rgba(254, 240, 138, 0.7),
@@ -5705,6 +5709,17 @@ window.addEventListener("beforeinstallprompt", function(e) {
     padding: 3px !important;
     filter: none !important;
   }
+
+  /* AB_ZERO_SHAKE_LOCK */
+  .ab-sleek-grid-3, #productsGrid, .products-grid,
+  .ab-sleek-grid-3 > .card, #productsGrid .card, .products-grid .card,
+  [data-ab-pro-card="1"], [data-ab-pro-card="1"] * {
+    overflow-anchor: none !important;
+  }
+  .ab-pro-pulse {
+    animation: none !important;
+    transform: none !important;
+  }
 </style>
 <script data-ab-hd-gloss="6">
 (function () {
@@ -5814,7 +5829,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     _abGoldTmr = setTimeout(function () {
       _abGoldTmr = null;
       try { applyUnifiedSheenShowcase(); } catch (e) {}
-    }, 240);
+    }, 45);
   }
 
   if (document.readyState === "loading") {
