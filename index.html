@@ -5904,17 +5904,26 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_PRICE_VISIBILITY_END -->
 
+
 <!-- ABUDHIYA_ULTRA_SMOOTH_START -->
-<style id="abUltraSmoothZeroShakeStyle" data-smooth-v="2">
-  /* 1) ثبات تام لبطاقات الأصناف بدون أي قفز أو اهتزاز مع ترك القوائم والنوافذ تعمل بطبيعتها 100% */
+<style id="abUltraSmoothZeroShakeStyle" data-smooth-v="3">
+  /* 1) منع أي إزاحة تمرير مجهرية في الصفحة أو الشبكة عند تحديث السلة أو الشارات */
+  html,
+  body,
+  #productsGrid,
+  .products-grid,
+  .ab-sleek-grid-3 {
+    overflow-anchor: none !important;
+  }
+
   #productsGrid,
   .products-grid,
   .ab-sleek-grid-3 {
     grid-auto-rows: auto !important;
     align-items: stretch !important;
-    overflow-anchor: none !important;
   }
 
+  /* 2) قفل مطلق لبطاقات الأصناف: صفر انتقالات (transition: none) وصفر حركة مجهرية */
   #productsGrid .card,
   .products-grid .card,
   .ab-sleek-grid-3 > .card,
@@ -5925,6 +5934,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   #productsGrid .card:hover,
   #productsGrid .card:active,
   #productsGrid .card:focus,
+  #productsGrid .card:focus-within,
   #productsGrid .card.selected,
   #productsGrid .card.active,
   #productsGrid .card.in-cart,
@@ -5932,21 +5942,28 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   [data-ab-pro-card="1"]:hover,
   [data-ab-pro-card="1"]:active,
   [data-ab-pro-card="1"]:focus,
+  [data-ab-pro-card="1"]:focus-within,
   [data-ab-pro-card="1"].selected,
   [data-ab-pro-card="1"].active,
   [data-ab-pro-card="1"].in-cart,
   [data-ab-pro-card="1"].has-qty {
     animation: none !important;
     -webkit-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
     transform: none !important;
     -webkit-transform: none !important;
+    scale: none !important;
+    translate: none !important;
+    rotate: none !important;
+    will-change: auto !important;
     border-width: 1.25px !important;
+    margin: 0 !important;
     outline: none !important;
-    transition: border-color 0.14s ease, box-shadow 0.14s ease !important;
     -webkit-tap-highlight-color: transparent !important;
   }
 
-  /* إلغاء الاهتزاز والارتداد داخل بطاقات الأصناف فقط */
+  /* منع أي انتقال أو حركة أو تغيّر طبقة رسومية على كل عناصر البطاقة الداخلية */
   #productsGrid .card *,
   .products-grid .card *,
   .ab-sleek-grid-3 > .card *,
@@ -5955,12 +5972,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   [data-ab-pro-card="1"] *::after {
     animation: none !important;
     -webkit-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
     transform: none !important;
     -webkit-transform: none !important;
+    scale: none !important;
+    translate: none !important;
+    rotate: none !important;
+    will-change: auto !important;
     -webkit-tap-highlight-color: transparent !important;
   }
 
-  /* 2) لمعان زجاجي كريستالي ثابت ناعم ومريح للعين بدون حركة مزعجة */
+  /* 3) لمعان زجاجي كريستالي ثابت وهادئ بدون أي حركة */
   .ab-crystal-gloss::before {
     content: "" !important;
     position: absolute !important;
@@ -5985,8 +6008,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     top: 0 !important;
     left: 0 !important;
     opacity: 1 !important;
-    animation: none !important;
-    transform: none !important;
     background: linear-gradient(
       132deg,
       rgba(255, 255, 255, 0.16) 0%,
@@ -5996,7 +6017,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     ) !important;
   }
 
-  /* 3) استجابة لمس لونية ناعمة لأزرار الكميات المختصرة وزر الحذف */
+  /* 4) أزرار الكميات المختصرة وزر الحذف: استجابة لونية فورية بدون أي إزاحة أو حركة */
   [data-ab-pro-card="1"] .ab-qbar {
     display: grid !important;
     direction: rtl !important;
@@ -6005,23 +6026,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     margin-top: auto !important;
     padding-top: 2px !important;
   }
-  [data-ab-pro-card="1"] .ab-qbtn,
-  .ab-clear-qty-btn {
-    transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease, opacity 0.12s ease !important;
-    transform: none !important;
-  }
   [data-ab-pro-card="1"] .ab-qbtn:active {
     background: linear-gradient(135deg, #d4af37, #facc15) !important;
     color: #09090b !important;
     border-color: #fef08a !important;
-    transform: none !important;
   }
   .ab-clear-qty-btn:active {
-    opacity: 0.75 !important;
-    transform: none !important;
+    opacity: 0.78 !important;
   }
 
-  /* 4) تثبيت شارات الكمية فوق الزاوية اليسرى بشكل مطلق حتى لا تدفع أي عنصر */
+  /* 5) تثبيت شارات الكمية بشكل مطلق فوق البطاقة حتى لا تحرك أي عنصر */
   [data-ab-pro-card="1"] .qty-badge,
   [data-ab-pro-card="1"] .q-badge,
   [data-ab-pro-card="1"] .cart-badge,
@@ -6036,20 +6050,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     z-index: 9 !important;
     margin: 0 !important;
     pointer-events: none !important;
-    animation: none !important;
-    transform: none !important;
   }
 
-  /* 5) إزالة النبض من الشريط السفلي فقط دون لمس النوافذ المنبثقة */
+  /* 6) إلغاء أي حركة نبض أو ارتداد على الشريط السفلي */
+  .bottom-nav,
   .bottom-nav *,
+  .bottom-bar,
   .bottom-bar *,
   #cartBadge,
   .ab-pro-pulse {
     animation: none !important;
+    transition: none !important;
     transform: none !important;
   }
 
-  /* 6) إخفاء فوري (0ms) لكلاسات السعر الدقيقة فقط */
+  /* 7) إخفاء فوري لكلاسات السعر الدقيقة فقط */
   html.ab-prices-hidden .p-price,
   html.ab-prices-hidden .qp-price {
     display: none !important;
