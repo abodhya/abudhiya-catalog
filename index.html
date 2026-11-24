@@ -777,6 +777,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -3480,6 +3482,10 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3735,8 +3741,32 @@ window.addEventListener("beforeinstallprompt", function(e) {
     border: 1px solid rgba(255,255,255,0.45);
     pointer-events: none;
   }
+  .ab-clear-qty-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 10;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.88);
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    transition: transform 0.12s ease;
+  }
+  .ab-clear-qty-btn.show { display: flex; }
+  .ab-clear-qty-btn:active { transform: scale(0.86); }
 </style>
-<script data-ab-pro-ui="4">
+<script data-ab-pro-ui="5">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4156,8 +4186,16 @@ window.addEventListener("beforeinstallprompt", function(e) {
       existingFallback.classList.remove("ab-pro-pulse");
       void existingFallback.offsetWidth;
       existingFallback.classList.add("ab-pro-pulse");
-    } else if (existingFallback) {
-      existingFallback.remove();
+    } else {
+      if (existingFallback) existingFallback.remove();
+      var zEls = liveCard.querySelectorAll("span, div");
+      for (var z = 0; z < zEls.length; z++) {
+        if (zEls[z].classList.contains("ab-clear-qty-btn")) continue;
+        var zt = (zEls[z].textContent || "").replace(/\s+/g, " ").trim();
+        if (/^\d+\s*[×x]$/i.test(zt) || /^[×x]\s*\d+$/i.test(zt)) {
+          zEls[z].style.display = "none";
+        }
+      }
     }
   }
 
@@ -4191,6 +4229,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       // ضمان ظهور وتحديث الشارة فوق الصنف لحظياً أمام عينك
       setTimeout(function () {
         syncCardBadgeVisual(prod.id, next, cardEl);
+        syncAllQuickClearButtons();
       }, 0);
 
       // نبض السلة
@@ -4426,6 +4465,30 @@ window.addEventListener("beforeinstallprompt", function(e) {
       }
 
       // أزرار الكميات السريعة للجملة
+      // زر حذف كمية الصنف مباشرة بضغطة واحدة (يظهر فقط عند وجود كمية > 0)
+      if (!card.querySelector(".ab-clear-qty-btn")) {
+        var clrBtn = document.createElement("button");
+        clrBtn.type = "button";
+        clrBtn.className = "ab-clear-qty-btn";
+        clrBtn.title = "حذف الكمية";
+        clrBtn.setAttribute("aria-label", "حذف الكمية");
+        clrBtn.textContent = "✕";
+        try {
+          var _cObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+          if (_cObj && Number(_cObj[matched.id] || 0) > 0) clrBtn.classList.add("show");
+        } catch (e) {}
+        (function (pObj, cEl, bEl) {
+          bEl.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            addQuickQty(pObj, -999999999, cEl);
+            if (navigator.vibrate) { try { navigator.vibrate(25); } catch (e) {} }
+            if (typeof showToast === "function") showToast("🗑️ تم حذف كمية " + pObj.name);
+          });
+        })(matched, card, clrBtn);
+        card.appendChild(clrBtn);
+      }
+
       if (!card.querySelector(".ab-qbar")) {
         var qbar = document.createElement("div");
         qbar.className = "ab-qbar";
@@ -4541,10 +4604,31 @@ window.addEventListener("beforeinstallprompt", function(e) {
     }
   }
 
+    function syncAllQuickClearButtons() {
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+      if (!cartObj) return;
+      var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+      for (var i = 0; i < cards.length; i++) {
+        var c = cards[i];
+        var pid = c.getAttribute("data-ab-prod-id");
+        if (!pid) continue;
+        var q = Number(cartObj[pid] || 0);
+        var btn = c.querySelector(".ab-clear-qty-btn");
+        if (btn) btn.classList.toggle("show", q > 0);
+        if (q <= 0) {
+          var fb = c.querySelector(".ab-instant-qty-badge");
+          if (fb) fb.remove();
+        }
+      }
+    } catch (e) {}
+  }
+
   function tick() {
     mountTopHub();
     enhanceProductCards();
     enhanceInvoiceAndModals();
+    syncAllQuickClearButtons();
   }
 
   if (typeof MutationObserver !== "undefined") {
