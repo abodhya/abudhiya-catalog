@@ -321,7 +321,7 @@
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="أبوسيف للتجارة">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795497299">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795497942">
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:500;font-display:swap;}
@@ -340,8 +340,8 @@ button,.btn-primary,.add-btn,.send-btn,.qty-btn{background:#000000 !important;ba
 .cat-btn.active,.tab-btn.active,.pill.active,.chip.active{background:#000000 !important;color:#FFFFFF !important;}
 input,select,textarea{background:#FFFFFF !important;color:#000000 !important;border:1.5px solid #000000 !important;font-weight:600 !important;}
 </style>
-<link rel="icon" type="image/png" href="/favicon.png?v=1795497299">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795497299">
+<link rel="icon" type="image/png" href="/favicon.png?v=1795497942">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795497942">
 </head>
 <body>
 <!-- ABUSAIF_LUXURY_HEADER_START -->
@@ -5749,10 +5749,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_FINAL_POLISH_END -->
 
+
+
+
+
 <!-- ABUDHIYA_PRICE_VISIBILITY_START -->
-<style id="abPriceVisibilityStyle" data-price-vis="1">
-  /* إخفاء الأسعار عن العملاء افتراضياً (بدون حذف أي كود، وتُفتح بلمسة من ⚙) */
+<style id="abPriceVisibilityStyle" data-price-vis="2">
+  /* إخفاء فوري وكامل للأسعار عن العملاء لمنع أي اهتزاز أو إزاحة (يُفتح بالرمز السري abodhya فقط) */
   html.ab-prices-hidden [data-ab-price-el="1"],
+  html.ab-prices-hidden .price,
   html.ab-prices-hidden .prod-price,
   html.ab-prices-hidden .item-price,
   html.ab-prices-hidden .card-price,
@@ -5763,6 +5768,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   html.ab-prices-hidden #barTotal,
   html.ab-prices-hidden #totalPrice {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
   }
 
   .ab-adm-prices-toggle {
@@ -5778,14 +5788,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     cursor: pointer;
     font-family: inherit;
   }
-  .ab-adm-prices-toggle:active { transform: scale(0.98); }
+  .ab-adm-prices-toggle:active { opacity: 0.85; }
 </style>
-<script data-ab-price-vis="1">
+<script data-ab-price-vis="2">
 (function () {
-  if (window.__abPriceVisV1) return;
-  window.__abPriceVisV1 = true;
+  if (window.__abPriceVisV2) return;
+  window.__abPriceVisV2 = true;
 
-  var SHOW_PRICES_KEY = "ab_show_prices_ui_v1";
+  var SHOW_PRICES_KEY = "ab_show_prices_secret_v2";
+  var SECRET_CODE = "abodhya";
 
   function isPricesVisible() {
     try { return localStorage.getItem(SHOW_PRICES_KEY) === "1"; } catch (e) { return false; }
@@ -5798,7 +5809,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     document.documentElement.classList.toggle("ab-prices-hidden", !flag);
   }
 
-  // تطبيق فوري قبل اكتمال الرسم لمنع أي وميض للأسعار
+  // تطبيق الإخفاء فوراً قبل الرسم
   document.documentElement.classList.toggle("ab-prices-hidden", !isPricesVisible());
 
   function isProtected(el) {
@@ -5814,10 +5825,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   function tagPriceElements() {
     try {
-      // 1) تمييز شريط وعناصر (سعر الجملة / سعر التجزئة / قائمة أسعار...)
-      var btns = document.querySelectorAll("button, a, div, p, span");
-      for (var i = 0; i < btns.length; i++) {
-        var el = btns[i];
+      var els = document.querySelectorAll("button, a, div, p, span");
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
         if (!el || el.getAttribute("data-ab-price-el") === "1" || isProtected(el)) continue;
 
         var tag = el.tagName;
@@ -5827,14 +5837,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
         if (!txt || txt.length > 60) continue;
 
-        // أزرار وعبارة وضع الأسعار (جملة / تجزئة)
         if (
           txt.indexOf("سعر الجملة") !== -1 ||
           txt.indexOf("سعر التجزئة") !== -1 ||
           txt.indexOf("قائمة أسعار") !== -1
         ) {
           el.setAttribute("data-ab-price-el", "1");
-          // إذا كان الأب يضم فقط زري الجملة والتجزئة نعلّمه أيضاً لإزالة الفراغ
           var p = el.parentElement;
           if (p && !isProtected(p) && p !== document.body) {
             var pBtns = p.querySelectorAll("button, a");
@@ -5848,7 +5856,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           continue;
         }
 
-        // نصوص الأسعار والإجماليات بالريال (ر.ي) داخل البطاقات والشريط السفلي والفاتورة
         if (
           tag !== "BUTTON" &&
           tag !== "A" &&
@@ -5859,7 +5866,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         }
       }
 
-      // 2) إضافة زر التحكم بظهور الأسعار داخل لوحة المدير ⚙ (#abSv3Admin)
       var adm = document.getElementById("abSv3Admin");
       if (adm) {
         var pBtn = document.getElementById("abTogglePricesUiBtn");
@@ -5870,11 +5876,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           pBtn.className = "ab-adm-prices-toggle";
           pBtn.addEventListener("click", function (ev) {
             ev.preventDefault();
-            var nextVis = !isPricesVisible();
-            setPricesVisible(nextVis);
-            syncToggleLabel();
-            if (typeof showToast === "function") {
-              showToast(nextVis ? "👁️ تم إظهار الأسعار في الواجهة على جهازك" : "🙈 تم إخفاء الأسعار من الواجهة");
+            if (isPricesVisible()) {
+              setPricesVisible(false);
+              syncToggleLabel();
+              if (typeof showToast === "function") showToast("🔒 تم إخفاء الأسعار من الواجهة");
+              return;
+            }
+            var entered = window.prompt("🔐 أدخل الرمز السري لإظهار الأسعار:");
+            if (entered === null) return;
+            if (String(entered).trim().toLowerCase() === SECRET_CODE) {
+              setPricesVisible(true);
+              syncToggleLabel();
+              if (typeof showToast === "function") showToast("✅ تم فتح وإظهار الأسعار على جهازك");
+            } else {
+              if (typeof showToast === "function") showToast("❌ الرمز السري غير صحيح");
+              else alert("❌ الرمز السري غير صحيح");
             }
           });
           adm.appendChild(pBtn);
@@ -5889,22 +5905,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     if (!pBtn) return;
     var lbl = isPricesVisible()
       ? "🙈 إخفاء الأسعار من الواجهة"
-      : "👁️ إظهار الأسعار في الواجهة على جهازي";
+      : "🔐 إظهار الأسعار (برمز سري)";
     if (pBtn.textContent !== lbl) pBtn.textContent = lbl;
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 250); });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 120); });
   } else {
-    setTimeout(tagPriceElements, 250);
+    setTimeout(tagPriceElements, 120);
   }
-  document.addEventListener("click", function () { setTimeout(tagPriceElements, 180); }, true);
-  setInterval(tagPriceElements, 2200);
+  setInterval(tagPriceElements, 2500);
 })();
 </script>
 <!-- ABUDHIYA_PRICE_VISIBILITY_END -->
-
-
 
 <!-- ABUDHIYA_ULTRA_SMOOTH_START -->
 <style id="abUltraSmoothZeroShakeStyle" data-smooth-v="3">
