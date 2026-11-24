@@ -775,6 +775,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -3472,6 +3474,12 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
+
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3710,30 +3718,25 @@ window.addEventListener("beforeinstallprompt", function(e) {
     border: 1px solid #34d399;
   }
   .ab-old-wa-hidden { display: none !important; }
-  .ab-zoom-mini-btn {
+  .ab-instant-qty-badge {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    z-index: 8;
-    width: 21px;
-    height: 21px;
-    border-radius: 50%;
-    border: 1px solid rgba(212, 175, 55, 0.72);
-    background: rgba(10, 12, 18, 0.78);
-    color: #fef08a;
-    font-size: 10px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    top: 5px;
+    left: 5px;
+    z-index: 9;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1.2;
+    padding: 2px 7px;
+    border-radius: 999px;
+    direction: ltr;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.38);
+    border: 1px solid rgba(255,255,255,0.45);
+    pointer-events: none;
   }
-  .ab-zoom-mini-btn:active { transform: scale(0.9); }
 </style>
-<script data-ab-pro-ui="3">
+<script data-ab-pro-ui="4">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4069,16 +4072,126 @@ window.addEventListener("beforeinstallprompt", function(e) {
     setTimeout(function () { if (el.parentNode) el.remove(); }, 3400);
   }
 
-  function addQuickQty(prod, delta) {
+  function findProductForCard(card, byName) {
     try {
-      if (typeof CART === "undefined" || !CART || !prod) return;
-      var cur = Number(CART[prod.id] || 0);
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) {
+        var idAttr = card.getAttribute("data-id") || card.getAttribute("data-pid") || card.getAttribute("data-prod-id");
+        if (!idAttr) {
+          var oc = card.getAttribute("onclick") || "";
+          if (!oc) {
+            var ocEl = card.querySelector("[onclick]");
+            if (ocEl) oc = ocEl.getAttribute("onclick") || "";
+          }
+          var m = oc.match(/\(\s*['"]?([^'",)\s]+)['"]?\s*[,)]/);
+          if (m) idAttr = m[1];
+        }
+        if (idAttr) {
+          for (var k = 0; k < PRODUCTS.length; k++) {
+            if (String(PRODUCTS[k].id) === String(idAttr)) return PRODUCTS[k];
+          }
+        }
+      }
+    } catch (e) {}
+    var cardTxt = (card.textContent || "").trim();
+    var matched = null;
+    for (var n in byName) {
+      if (Object.prototype.hasOwnProperty.call(byName, n) && cardTxt.indexOf(n) !== -1) {
+        if (!matched || n.length > matched.name.length) matched = byName[n];
+      }
+    }
+    return matched;
+  }
+
+  function syncCardBadgeVisual(prodId, qty, fallbackCard) {
+    var liveCard = document.querySelector('[data-ab-prod-id="' + String(prodId) + '"]') || fallbackCard;
+    if (!liveCard) return;
+
+    // 1) تحقق إن كانت الشارة الأصلية للمتجر ظهرت وتحدّثت فعلياً فوق الصنف
+    var existingFallback = liveCard.querySelector(".ab-instant-qty-badge");
+    var hasNativeUpdated = false;
+    var els = liveCard.querySelectorAll("span, div");
+    for (var i = 0; i < els.length; i++) {
+      if (els[i] === existingFallback) continue;
+      var t = (els[i].textContent || "").replace(/\s+/g, " ").trim();
+      if (
+        qty > 0 &&
+        (t === (qty + " ×") || t === (qty + "×") || t === (qty + " x") || t === (qty + "x") || t === ("× " + qty) || t === ("x " + qty))
+      ) {
+        hasNativeUpdated = true;
+        els[i].classList.remove("ab-pro-pulse");
+        void els[i].offsetWidth;
+        els[i].classList.add("ab-pro-pulse");
+        break;
+      }
+    }
+
+    if (hasNativeUpdated) {
+      if (existingFallback) existingFallback.remove();
+      return;
+    }
+
+    // 2) إن لم تكن الشارة الأصلية قد أعيد رسمها، نحدّثها أو نعرضها مباشرة فوق الصنف بنفس الشكل الأخضر
+    var nativeBadge = liveCard.querySelector(".qty-badge, .q-badge, .cart-badge, .badge-qty, .prod-qty, .count-badge, .card-badge");
+    if (nativeBadge) {
+      if (qty > 0) {
+        nativeBadge.textContent = qty + " ×";
+        nativeBadge.style.display = "";
+        nativeBadge.classList.remove("ab-pro-pulse");
+        void nativeBadge.offsetWidth;
+        nativeBadge.classList.add("ab-pro-pulse");
+      } else {
+        nativeBadge.style.display = "none";
+      }
+      if (existingFallback) existingFallback.remove();
+      return;
+    }
+
+    if (qty > 0) {
+      if (!existingFallback) {
+        existingFallback = document.createElement("span");
+        existingFallback.className = "ab-instant-qty-badge";
+        liveCard.appendChild(existingFallback);
+      }
+      existingFallback.textContent = qty + " ×";
+      existingFallback.classList.remove("ab-pro-pulse");
+      void existingFallback.offsetWidth;
+      existingFallback.classList.add("ab-pro-pulse");
+    } else if (existingFallback) {
+      existingFallback.remove();
+    }
+  }
+
+  function addQuickQty(prod, delta, cardEl) {
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+      if (!cartObj || !prod) return;
+      var cur = Number(cartObj[prod.id] || 0);
       var next = Math.max(0, cur + delta);
-      CART[prod.id] = next;
-      if (typeof saveCart === "function") saveCart();
-      if (typeof renderProducts === "function") renderProducts();
-      if (typeof renderInvoiceView === "function") renderInvoiceView();
-      if (typeof updateCartBadge === "function") updateCartBadge();
+      if (next > 0) cartObj[prod.id] = next;
+      else delete cartObj[prod.id];
+
+      // استدعاء دوال المتجر الأصلية فوراً لتحديث الشارة والعداد والشريط الأخضر والإجمالي والفاتورة
+      try { if (typeof saveDraft === "function") saveDraft(); } catch (e) {}
+      try { if (typeof renderCatalog === "function") renderCatalog(); } catch (e) {}
+      try { if (typeof updateAllSummaries === "function") updateAllSummaries(); } catch (e) {}
+      try { if (typeof renderInvoiceView === "function") renderInvoiceView(); } catch (e) {}
+      try { if (typeof refreshModalDisplay === "function") refreshModalDisplay(); } catch (e) {}
+      try { if (typeof saveCustomerAndLastOrder === "function") saveCustomerAndLastOrder(); } catch (e) {}
+      try { if (typeof refreshSelectedBadge === "function") refreshSelectedBadge(); } catch (e) {}
+      try { if (typeof buildPotatoDropdown === "function") buildPotatoDropdown(); } catch (e) {}
+      try { if (typeof saveCart === "function") saveCart(); } catch (e) {}
+      try { if (typeof renderProducts === "function") renderProducts(); } catch (e) {}
+      try { if (typeof renderGrid === "function") renderGrid(); } catch (e) {}
+      try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) {}
+      try { if (typeof updateCartUI === "function") updateCartUI(); } catch (e) {}
+      try { if (typeof updateSummary === "function") updateSummary(); } catch (e) {}
+      try { if (typeof updateTotals === "function") updateTotals(); } catch (e) {}
+      try { if (typeof updateBar === "function") updateBar(); } catch (e) {}
+
+      // ضمان ظهور وتحديث الشارة فوق الصنف لحظياً أمام عينك
+      setTimeout(function () {
+        syncCardBadgeVisual(prod.id, next, cardEl);
+      }, 0);
 
       // نبض السلة
       var navs = document.querySelectorAll(".bottom-nav button, .bottom-bar button, #cartBadge");
@@ -4288,35 +4401,14 @@ window.addEventListener("beforeinstallprompt", function(e) {
       var card = img.closest(".product-card, .prod-card, .card, .item-card") || img.parentElement;
       if (!card || card === document.body || card.getAttribute("data-ab-pro-card") === "1") continue;
 
-      var cardTxt = (card.textContent || "").trim();
-      var matched = null;
-      for (var n in byName) {
-        if (Object.prototype.hasOwnProperty.call(byName, n) && cardTxt.indexOf(n) !== -1) {
-          if (!matched || n.length > matched.name.length) matched = byName[n];
-        }
-      }
+      var matched = findProductForCard(card, byName);
       if (!matched) continue;
 
       card.setAttribute("data-ab-pro-card", "1");
       card.setAttribute("data-ab-prod-id", String(matched.id));
       card.setAttribute("data-ab-cat", getCategoryForProduct(matched));
 
-      // إبقاء الضغط على الصورة يفتح لوحة الأرقام الأصلية، ونقل التكبير لزر 🔍 صغير بالزاوية
-      if (!card.querySelector(".ab-zoom-mini-btn")) {
-        var zBtn = document.createElement("button");
-        zBtn.type = "button";
-        zBtn.className = "ab-zoom-mini-btn";
-        zBtn.title = "تكبير الصورة";
-        zBtn.textContent = "🔍";
-        (function (pObj, imEl, btnEl) {
-          btnEl.addEventListener("click", function (ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            openProductZoom(pObj, imEl.currentSrc || imEl.src);
-          });
-        })(matched, img, zBtn);
-        card.appendChild(zBtn);
-      }
+      // تم حذف زر التكبير حسب الطلب والإبقاء على لوحة الأرقام الأصلية عند الضغط على الصورة
 
       // شارة البونص إن وجد عرض مجاني على الصنف
       var hasBon = false;
@@ -4342,15 +4434,16 @@ window.addEventListener("beforeinstallprompt", function(e) {
           '<button type="button" class="ab-qbtn" data-d="10">+10</button>' +
           '<button type="button" class="ab-qbtn" data-d="25">+25</button>' +
           '<button type="button" class="ab-qbtn" data-d="50">+50</button>';
-        (function (pObj, bar) {
+        (function (pObj, bar, cEl) {
           var bs = bar.querySelectorAll(".ab-qbtn");
           for (var b = 0; b < bs.length; b++) {
             bs[b].addEventListener("click", function (ev) {
+              ev.preventDefault();
               ev.stopPropagation();
-              addQuickQty(pObj, Number(this.getAttribute("data-d")));
+              addQuickQty(pObj, Number(this.getAttribute("data-d")), cEl);
             });
           }
-        })(matched, qbar);
+        })(matched, qbar, card);
         card.appendChild(qbar);
       }
     }
@@ -4463,8 +4556,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
 })();
 </script>
 <!-- ABUDHIYA_PRO_UI_END -->
-
-
 
 <!-- ABUDHIYA_GOLD_CARDS_START -->
 <style id="abGoldCardsLuxuryStyle" data-gold-v="5">
@@ -4639,13 +4730,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
     padding: 2.5px 0 !important;
     border-radius: 5px !important;
     letter-spacing: -0.2px !important;
-  }
-  [data-ab-pro-card="1"] .ab-zoom-mini-btn {
-    top: 3px !important;
-    right: 3px !important;
-    width: 19px !important;
-    height: 19px !important;
-    font-size: 9px !important;
   }
 
   /* طبقة اللمعان الزجاجي النقي بدون أي تغيير في لون المنتج */
