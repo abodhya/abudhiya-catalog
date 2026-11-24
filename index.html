@@ -5979,322 +5979,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
-<!-- ABUDHIYA_ORDER_CONFIRM_WA_START -->
-<style id="abOrderConfirmWaStyle" data-confirm-wa="1">
-  /* بطاقة اكتمال تسجيل الطلب وزر التأكيد المميز */
-  .ab-wa-confirm-card {
-    direction: rtl;
-    margin-top: 10px;
-    padding: 12px 12px 11px;
-    border-radius: 14px;
-    background: linear-gradient(155deg, rgba(12, 22, 36, 0.97) 0%, rgba(10, 15, 24, 0.98) 100%);
-    border: 1.5px solid rgba(56, 189, 248, 0.72);
-    box-shadow: 0 10px 26px rgba(2, 132, 199, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-    text-align: center;
-    box-sizing: border-box;
-    position: relative;
-  }
-  .ab-wa-confirm-head {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 900;
-    color: #fef08a;
-    margin-bottom: 4px;
-  }
-  .ab-wa-confirm-sub {
-    font-size: 11px;
-    font-weight: 700;
-    color: #cbd5e1;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-  .ab-wa-confirm-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 13px 14px;
-    border-radius: 12px;
-    border: 1.5px solid #fde047;
-    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 48%, #14b8a6 100%);
-    color: #ffffff !important;
-    text-decoration: none !important;
-    font-size: 14.5px;
-    font-weight: 900;
-    font-family: inherit;
-    cursor: pointer;
-    box-sizing: border-box;
-    box-shadow:
-      0 8px 22px rgba(14, 165, 233, 0.42),
-      0 0 14px rgba(250, 204, 21, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.42);
-  }
-  .ab-wa-confirm-btn:active {
-    filter: brightness(1.08);
-  }
-  .ab-wa-confirm-note {
-    margin-top: 7px;
-    font-size: 10.5px;
-    font-weight: 700;
-    color: #7dd3fc;
-  }
-  .ab-wa-confirm-close {
-    position: absolute;
-    top: 7px;
-    left: 7px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    background: rgba(15, 23, 42, 0.85);
-    color: #cbd5e1;
-    font-size: 11px;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-</style>
-<script data-ab-confirm-wa="1">
-(function () {
-  if (window.__abOrderConfirmWaV1) return;
-  window.__abOrderConfirmWaV1 = true;
-
-  var WA_TARGET_PHONE = "967771458609";
-  var STORE_TITLE = "أبوسيف للتجارة العامة";
-  var SNAP_KEY = "ab_last_confirm_order_v1";
-
-  function readCartSnapshot() {
-    var items = [];
-    var totalQty = 0;
-
-    try {
-      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
-      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
-      var byId = {};
-      for (var p = 0; p < prods.length; p++) {
-        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
-      }
-      if (cartObj) {
-        var keys = Object.keys(cartObj);
-        for (var i = 0; i < keys.length; i++) {
-          var pid = keys[i];
-          var qty = Number(cartObj[pid] || 0);
-          if (qty <= 0) continue;
-          var pr = byId[String(pid)];
-          var name = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
-          var bonus = 0;
-          try {
-            if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, qty) || 0);
-          } catch (e) {}
-          items.push({ name: name, qty: qty, bonus: bonus });
-          totalQty += qty;
-        }
-      }
-    } catch (e) {}
-
-    // احتياط: قراءة الأصناف من البطاقات الظاهرة إذا كانت السلة في نطاق مغلق
-    if (!items.length) {
-      try {
-        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
-        for (var c = 0; c < cards.length; c++) {
-          var q = Number(cards[c].getAttribute("data-ab-last-q") || 0);
-          if (q <= 0) continue;
-          var titleEl = cards[c].querySelector(".ab-uni-title, .prod-name, .name, h3, h4");
-          var nm = titleEl ? (titleEl.textContent || "").trim() : ("صنف " + (c + 1));
-          items.push({ name: nm, qty: q, bonus: 0 });
-          totalQty += q;
-        }
-      } catch (e) {}
-    }
-
-    // قراءة بيانات العميل (الاسم، الجوال، طريقة الدفع، الملاحظات)
-    var custName = "";
-    var custPhone = "";
-    var payMethod = "";
-    var custNote = "";
-
-    try {
-      var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView") || document;
-      var inputs = box.querySelectorAll("input, textarea, select");
-      for (var k = 0; k < inputs.length; k++) {
-        var el = inputs[k];
-        if (!el || el.type === "hidden" || el.type === "checkbox" || el.type === "radio") continue;
-        var val = (el.value || "").trim();
-        if (!val) continue;
-        var hint = ((el.id || "") + " " + (el.name || "") + " " + (el.placeholder || "")).toLowerCase();
-        if (!custName && (hint.indexOf("name") !== -1 || hint.indexOf("اسم") !== -1 || hint.indexOf("عميل") !== -1 || hint.indexOf("محل") !== -1 || hint.indexOf("بقال") !== -1)) {
-          custName = val;
-        } else if (!custPhone && (hint.indexOf("phone") !== -1 || hint.indexOf("tel") !== -1 || hint.indexOf("جوال") !== -1 || hint.indexOf("رقم") !== -1 || hint.indexOf("واتس") !== -1)) {
-          custPhone = val;
-        } else if (!payMethod && (el.tagName === "SELECT" || hint.indexOf("pay") !== -1 || hint.indexOf("دفع") !== -1)) {
-          payMethod = el.tagName === "SELECT" && el.options && el.selectedIndex >= 0
-            ? (el.options[el.selectedIndex].text || val).trim()
-            : val;
-        } else if (!custNote && (el.tagName === "TEXTAREA" || hint.indexOf("note") !== -1 || hint.indexOf("ملاحظ") !== -1 || hint.indexOf("عنوان") !== -1)) {
-          custNote = val;
-        }
-      }
-      if (!custName) {
-        custName = (localStorage.getItem("ab_cust_name") || localStorage.getItem("ab_sv3_name") || localStorage.getItem("customerName") || "").trim();
-      }
-      // فحص أزرار اختيار طريقة الدفع النشطة (المشقاص / نقداً)
-      if (!payMethod) {
-        var activePay = document.querySelector(".ab-pay-btn.active, [data-pay].active, .pay-opt.active");
-        if (activePay) payMethod = (activePay.textContent || "").trim();
-      }
-    } catch (e) {}
-
-    var now = new Date();
-    var timeStr = now.toLocaleString("ar-YE", { hour12: true });
-
-    return {
-      items: items,
-      totalQty: totalQty,
-      custName: custName,
-      custPhone: custPhone,
-      payMethod: payMethod,
-      custNote: custNote,
-      timeStr: timeStr,
-      ts: Date.now()
-    };
-  }
-
-  function buildWhatsAppUrl(snap) {
-    var lines = [];
-    lines.push("✅ *تأكيد طلب رسمي — " + STORE_TITLE + "*");
-    lines.push("━━━━━━━━━━━━━━━━━━");
-    if (snap.custName) lines.push("👤 *العميل / المحل:* " + snap.custName);
-    if (snap.custPhone) lines.push("📱 *الرقم المسجل:* " + snap.custPhone);
-    if (snap.payMethod) lines.push("💳 *طريقة الدفع:* " + snap.payMethod);
-    if (snap.custNote) lines.push("📝 *ملاحظة:* " + snap.custNote);
-    lines.push("🕒 *الوقت:* " + (snap.timeStr || ""));
-    lines.push("━━━━━━━━━━━━━━━━━━");
-
-    if (snap.items && snap.items.length) {
-      lines.push("📦 *الأصناف والكميات المطلوبة:*");
-      for (var i = 0; i < snap.items.length; i++) {
-        var it = snap.items[i];
-        var row = (i + 1) + ". " + it.name + "  ⬅️  الكمية: *" + it.qty + "*";
-        if (it.bonus && it.bonus > 0) row += " (🎁 +" + it.bonus + " مجاني)";
-        lines.push(row);
-      }
-      lines.push("━━━━━━━━━━━━━━━━━━");
-      lines.push("📊 *عدد الأصناف:* " + snap.items.length + " | *إجمالي الكميات:* " + snap.totalQty);
-    } else {
-      lines.push("📦 تم تسجيل الطلب في المتجر السحابي وأؤكد اعتماده الآن.");
-    }
-
-    lines.push("✨ *تم التأكيد مباشرة من رقمي عبر متجر أبوسيف السحابي*");
-    return "https://wa.me/" + WA_TARGET_PHONE + "?text=" + encodeURIComponent(lines.join("\n"));
-  }
-
-  function createConfirmCardElement(snap, cardId) {
-    var wrap = document.createElement("div");
-    wrap.id = cardId;
-    wrap.className = "ab-wa-confirm-card";
-
-    var waUrl = buildWhatsAppUrl(snap);
-    var summaryTxt = (snap.items && snap.items.length)
-      ? ("تم تجهيز طلبك (" + snap.items.length + " صنف • إجمالي " + snap.totalQty + ") — اضغط بالأسفل لإرسال التأكيد مباشرة من رقمك:")
-      : "اكتمل تسجيل طلبك — اضغط بالأسفل لإرسال التأكيد مباشرة من رقمك على الواتساب:";
-
-    wrap.innerHTML =
-      '<button type="button" class="ab-wa-confirm-close" aria-label="إغلاق">✕</button>' +
-      '<div class="ab-wa-confirm-head">🎉 اكتمل تسجيل طلبك بنجاح!</div>' +
-      '<div class="ab-wa-confirm-sub">' + summaryTxt + '</div>' +
-      '<a class="ab-wa-confirm-btn" href="' + waUrl + '" target="_blank" rel="noopener noreferrer">✨ انقر هنا لتأكيد طلبك عبر الواتساب 📲</a>' +
-      '<div class="ab-wa-confirm-note">سيُفتح الواتساب في جوالك تلقائياً للإرسال من رقمك إلى مبيعات أبوسيف</div>';
-
-    var closeBtn = wrap.querySelector(".ab-wa-confirm-close");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        wrap.remove();
-      });
-    }
-    return wrap;
-  }
-
-  function mountConfirmButtons(snap) {
-    if (!snap) return;
-
-    // 1) حقن الزر داخل صندوق الاعتماد (#abSilentOrderBox) ليبقى واضحاً أمام العميل
-    var box = document.getElementById("abSilentOrderBox");
-    if (box) {
-      var oldBoxCard = document.getElementById("abWaConfirmBoxCard");
-      if (oldBoxCard) oldBoxCard.remove();
-      var boxCard = createConfirmCardElement(snap, "abWaConfirmBoxCard");
-      box.appendChild(boxCard);
-    }
-
-    // 2) حقن الزر داخل نافذة نجاح الطلب / الإيصال إذا كانت مفتوحة
-    var modalIds = ["abSv3ModalBg", "abRcptPreviewModal"];
-    for (var m = 0; m < modalIds.length; m++) {
-      var mod = document.getElementById(modalIds[m]);
-      if (!mod) continue;
-      var st = window.getComputedStyle(mod);
-      if (st.display === "none" || st.visibility === "hidden" || st.opacity === "0") continue;
-
-      var inner = mod.querySelector(".ab-sv3-modal, .modal-card, .modal-content, .ab-rcpt-box, > div") || mod;
-      var mid = "abWaConfirmIn_" + modalIds[m];
-      var oldModCard = document.getElementById(mid);
-      if (oldModCard) oldModCard.remove();
-      var modCard = createConfirmCardElement(snap, mid);
-      inner.appendChild(modCard);
-    }
-  }
-
-  function isOrderSubmitButton(btn) {
-    if (!btn) return false;
-    if (btn.closest("#abSv3Admin, #abPricedAdminCtrl, .ab-wa-confirm-card")) return false;
-    if (btn.classList.contains("ab-official-noprice-btn")) return true;
-    var role = btn.getAttribute("data-ab-role");
-    if (role === "noprice" || role === "priced") return true;
-    if (btn.closest("#abSilentOrderBox")) {
-      var t = (btn.textContent || "").trim();
-      if (t.indexOf("اعتماد") !== -1 || t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1) {
-        if (t.indexOf("أرشيف") === -1 && t.indexOf("نسخ") === -1 && t.indexOf("موقع") === -1) return true;
-      }
-    }
-    return false;
-  }
-
-  // التقاط لحظة الضغط على زر تسجيل الطلب قبل تفريغ السلة
-  document.addEventListener("click", function (ev) {
-    var btn = ev.target && ev.target.closest ? ev.target.closest("button") : null;
-    if (!isOrderSubmitButton(btn)) return;
-
-    var snap = readCartSnapshot();
-    if (!snap.items.length) {
-      try {
-        var saved = JSON.parse(localStorage.getItem(SNAP_KEY) || "null");
-        if (saved && saved.items && saved.items.length && (Date.now() - saved.ts) < 120000) {
-          snap = saved;
-        }
-      } catch (e) {}
-    }
-
-    if (!snap.items.length) return;
-
-    try { localStorage.setItem(SNAP_KEY, JSON.stringify(snap)); } catch (e) {}
-    window.__abLastConfirmOrder = snap;
-
-    // إظهار زر التأكيد المميز بعد اكتمال تسجيل الطلب وظهور النافذة
-    setTimeout(function () { mountConfirmButtons(snap); }, 450);
-    setTimeout(function () { mountConfirmButtons(snap); }, 1200);
-    setTimeout(function () { mountConfirmButtons(snap); }, 2200);
-  }, true);
-})();
-</script>
-<!-- ABUDHIYA_ORDER_CONFIRM_WA_END -->
 
 
 <!-- ABUDHIYA_ALWAYS_ARCHIVE_START -->
@@ -8584,6 +8268,638 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_HIDE_WELCOME_END -->
 
+
+<!-- ABUDHIYA_ORDER_CONFIRM_WA_START -->
+<style id="abOrderConfirmWaStyle" data-confirm-wa="2">
+  .ab-wa-confirm-card {
+    direction: rtl;
+    margin-top: 10px;
+    padding: 12px 12px 11px;
+    border-radius: 14px;
+    background: linear-gradient(155deg, rgba(12, 22, 36, 0.97) 0%, rgba(10, 15, 24, 0.98) 100%);
+    border: 1.5px solid rgba(56, 189, 248, 0.72);
+    box-shadow: 0 10px 26px rgba(2, 132, 199, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    text-align: center;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .ab-wa-confirm-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #fef08a;
+    margin-bottom: 4px;
+  }
+  .ab-wa-confirm-sub {
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .ab-wa-confirm-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: 1.5px solid #fde047;
+    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 48%, #14b8a6 100%);
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-size: 14.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow:
+      0 8px 22px rgba(14, 165, 233, 0.42),
+      0 0 14px rgba(250, 204, 21, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  }
+  .ab-wa-confirm-btn:active { filter: brightness(1.08); }
+  .ab-wa-confirm-note {
+    margin-top: 7px;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #7dd3fc;
+  }
+  .ab-wa-confirm-close {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(15, 23, 42, 0.85);
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+</style>
+<script data-ab-confirm-wa="2">
+(function () {
+  if (window.__abOrderConfirmWaV2) return;
+  window.__abOrderConfirmWaV2 = true;
+
+  var WA_TARGET_PHONE = "967771458609";
+  var STORE_TITLE = "أبوسيف للتجارة العامة";
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+
+  function classifyUnit(prod, fallbackName) {
+    var rawU = "";
+    if (prod) {
+      rawU = String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim();
+    }
+    var nameStr = String((prod && prod.name) || fallbackName || "");
+    var catStr = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
+
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nameStr) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(catStr)) {
+      return { key: "carton", label: "كرتون" };
+    }
+    if (/كيس|أكياس|اكياس|شوال|bag/i.test(nameStr)) {
+      return { key: "bag", label: "كيس" };
+    }
+    return { key: "bag", label: "كيس" };
+  }
+
+  function tallyUnits(items) {
+    var bags = 0;
+    var cartons = 0;
+    var others = {};
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var q = Number(it.qty || 0);
+      if (q <= 0) continue;
+      if (it.unitKey === "carton") cartons += q;
+      else if (it.unitKey === "bag") bags += q;
+      else {
+        var lbl = it.unitLabel || "وحدة";
+        others[lbl] = (others[lbl] || 0) + q;
+      }
+    }
+    return { bags: bags, cartons: cartons, others: others };
+  }
+
+  function formatTotalsInline(t) {
+    var parts = [];
+    if (t.bags > 0) parts.push(t.bags + " كيس");
+    if (t.cartons > 0) parts.push(t.cartons + " كرتون");
+    var oKeys = Object.keys(t.others || {});
+    for (var i = 0; i < oKeys.length; i++) {
+      if (t.others[oKeys[i]] > 0) parts.push(t.others[oKeys[i]] + " " + oKeys[i]);
+    }
+    return parts.join(" + ");
+  }
+
+  function readCartSnapshot() {
+    var items = [];
+    var totalQty = 0;
+
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+      var byId = {};
+      for (var p = 0; p < prods.length; p++) {
+        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      }
+      if (cartObj) {
+        var keys = Object.keys(cartObj);
+        for (var i = 0; i < keys.length; i++) {
+          var pid = keys[i];
+          var qty = Number(cartObj[pid] || 0);
+          if (qty <= 0) continue;
+          var pr = byId[String(pid)];
+          var name = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var u = classifyUnit(pr, name);
+          var bonus = 0;
+          try { if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, qty) || 0); } catch (e) {}
+          items.push({ name: name, qty: qty, bonus: bonus, unitKey: u.key, unitLabel: u.label });
+          totalQty += qty;
+        }
+      }
+    } catch (e) {}
+
+    if (!items.length) {
+      try {
+        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+        for (var c = 0; c < cards.length; c++) {
+          var q = Number(cards[c].getAttribute("data-ab-last-q") || 0);
+          if (q <= 0) continue;
+          var titleEl = cards[c].querySelector(".ab-clean-prod-title, .ab-uni-title, .prod-name, .name, h3, h4");
+          var nm = titleEl ? (titleEl.textContent || "").trim() : ("صنف " + (c + 1));
+          var u2 = classifyUnit(null, nm);
+          items.push({ name: nm, qty: q, bonus: 0, unitKey: u2.key, unitLabel: u2.label });
+          totalQty += q;
+        }
+      } catch (e) {}
+    }
+
+    var custName = "", custPhone = "", payMethod = "", custNote = "";
+    try {
+      var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView") || document;
+      var inputs = box.querySelectorAll("input, textarea, select");
+      for (var k = 0; k < inputs.length; k++) {
+        var el = inputs[k];
+        if (!el || el.type === "hidden" || el.type === "checkbox" || el.type === "radio") continue;
+        var val = (el.value || "").trim();
+        if (!val) continue;
+        var hint = ((el.id || "") + " " + (el.name || "") + " " + (el.placeholder || "")).toLowerCase();
+        if (!custName && (hint.indexOf("name") !== -1 || hint.indexOf("اسم") !== -1 || hint.indexOf("عميل") !== -1 || hint.indexOf("محل") !== -1 || hint.indexOf("بقال") !== -1)) {
+          custName = val;
+        } else if (!custPhone && (hint.indexOf("phone") !== -1 || hint.indexOf("tel") !== -1 || hint.indexOf("جوال") !== -1 || hint.indexOf("رقم") !== -1 || hint.indexOf("واتس") !== -1)) {
+          custPhone = val;
+        } else if (!payMethod && (el.tagName === "SELECT" || hint.indexOf("pay") !== -1 || hint.indexOf("دفع") !== -1)) {
+          payMethod = (el.tagName === "SELECT" && el.options && el.selectedIndex >= 0) ? (el.options[el.selectedIndex].text || val).trim() : val;
+        } else if (!custNote && (el.tagName === "TEXTAREA" || hint.indexOf("note") !== -1 || hint.indexOf("ملاحظ") !== -1 || hint.indexOf("عنوان") !== -1)) {
+          custNote = val;
+        }
+      }
+      if (!custName) custName = (localStorage.getItem("ab_cust_name") || localStorage.getItem("ab_sv3_name") || localStorage.getItem("customerName") || "").trim();
+      if (!payMethod) {
+        var activePay = document.querySelector(".ab-pay-btn.active, [data-pay].active, .pay-opt.active");
+        if (activePay) payMethod = (activePay.textContent || "").trim();
+      }
+    } catch (e) {}
+
+    var totals = tallyUnits(items);
+    return {
+      items: items,
+      totalQty: totalQty,
+      bagsTotal: totals.bags,
+      cartonsTotal: totals.cartons,
+      otherTotals: totals.others,
+      custName: custName,
+      custPhone: custPhone,
+      payMethod: payMethod,
+      custNote: custNote,
+      timeStr: new Date().toLocaleString("ar-YE", { hour12: true }),
+      ts: Date.now()
+    };
+  }
+
+  function buildWhatsAppUrl(snap) {
+    var t = {
+      bags: Number(snap.bagsTotal || 0),
+      cartons: Number(snap.cartonsTotal || 0),
+      others: snap.otherTotals || {}
+    };
+    if (!t.bags && !t.cartons && snap.items && snap.items.length) {
+      t = tallyUnits(snap.items);
+    }
+
+    var lines = [];
+    lines.push("✅ *تأكيد طلب رسمي — " + STORE_TITLE + "*");
+    lines.push("━━━━━━━━━━━━━━━━━━");
+    if (snap.custName) lines.push("👤 *العميل / المحل:* " + snap.custName);
+    if (snap.custPhone) lines.push("📱 *الرقم المسجل:* " + snap.custPhone);
+    if (snap.payMethod) lines.push("💳 *طريقة الدفع:* " + snap.payMethod);
+    if (snap.custNote) lines.push("📝 *ملاحظة:* " + snap.custNote);
+    lines.push("🕒 *الوقت:* " + (snap.timeStr || ""));
+    lines.push("━━━━━━━━━━━━━━━━━━");
+
+    if (snap.items && snap.items.length) {
+      lines.push("📦 *الأصناف والكميات المطلوبة:*");
+      for (var i = 0; i < snap.items.length; i++) {
+        var it = snap.items[i];
+        var uLbl = it.unitLabel || "كيس";
+        var row = (i + 1) + ". " + it.name + "  ⬅️  *" + it.qty + " " + uLbl + "*";
+        if (it.bonus && it.bonus > 0) row += " (🎁 +" + it.bonus + " مجاني)";
+        lines.push(row);
+      }
+      lines.push("━━━━━━━━━━━━━━━━━━");
+      lines.push("📊 *عدد الأصناف:* " + snap.items.length);
+      if (t.bags > 0) lines.push("🛍️ *إجمالي الأكياس:* " + t.bags + " كيس");
+      if (t.cartons > 0) lines.push("📦 *إجمالي الكراتين:* " + t.cartons + " كرتون");
+      var oKeys = Object.keys(t.others || {});
+      for (var oi = 0; oi < oKeys.length; oi++) {
+        if (t.others[oKeys[oi]] > 0) {
+          lines.push("📌 *إجمالي (" + oKeys[oi] + "):* " + t.others[oKeys[oi]] + " " + oKeys[oi]);
+        }
+      }
+    } else {
+      lines.push("📦 تم تسجيل الطلب في المتجر السحابي وأؤكد اعتماده الآن.");
+    }
+
+    lines.push("✨ *تم التأكيد مباشرة من رقمي عبر متجر أبوسيف السحابي*");
+    return "https://wa.me/" + WA_TARGET_PHONE + "?text=" + encodeURIComponent(lines.join("\n"));
+  }
+
+  function createConfirmCardElement(snap, cardId) {
+    var wrap = document.createElement("div");
+    wrap.id = cardId;
+    wrap.className = "ab-wa-confirm-card";
+
+    var waUrl = buildWhatsAppUrl(snap);
+    var t = { bags: snap.bagsTotal || 0, cartons: snap.cartonsTotal || 0, others: snap.otherTotals || {} };
+    var splitSummary = formatTotalsInline(t);
+    var summaryTxt = (snap.items && snap.items.length)
+      ? ("تم تجهيز طلبك (" + snap.items.length + " صنف • " + (splitSummary || snap.totalQty) + ") — اضغط بالأسفل لإرسال التأكيد من رقمك:")
+      : "اكتمل تسجيل طلبك — اضغط بالأسفل لإرسال التأكيد مباشرة من رقمك على الواتساب:";
+
+    wrap.innerHTML =
+      '<button type="button" class="ab-wa-confirm-close" aria-label="إغلاق">✕</button>' +
+      '<div class="ab-wa-confirm-head">🎉 اكتمل تسجيل طلبك بنجاح!</div>' +
+      '<div class="ab-wa-confirm-sub">' + summaryTxt + '</div>' +
+      '<a class="ab-wa-confirm-btn" href="' + waUrl + '" target="_blank" rel="noopener noreferrer">✨ انقر هنا لتأكيد طلبك عبر الواتساب 📲</a>' +
+      '<div class="ab-wa-confirm-note">سيُفتح الواتساب في جوالك تلقائياً للإرسال من رقمك إلى مبيعات أبوسيف</div>';
+
+    var closeBtn = wrap.querySelector(".ab-wa-confirm-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        wrap.remove();
+      });
+    }
+    return wrap;
+  }
+
+  function mountConfirmButtons(snap) {
+    if (!snap) return;
+    var box = document.getElementById("abSilentOrderBox");
+    if (box) {
+      var oldBoxCard = document.getElementById("abWaConfirmBoxCard");
+      if (oldBoxCard) oldBoxCard.remove();
+      box.appendChild(createConfirmCardElement(snap, "abWaConfirmBoxCard"));
+    }
+
+    var modalIds = ["abSv3ModalBg", "abRcptPreviewModal"];
+    for (var m = 0; m < modalIds.length; m++) {
+      var mod = document.getElementById(modalIds[m]);
+      if (!mod) continue;
+      var st = window.getComputedStyle(mod);
+      if (st.display === "none" || st.visibility === "hidden" || st.opacity === "0") continue;
+      var inner = mod.querySelector(".ab-sv3-modal, .modal-card, .modal-content, .ab-rcpt-box, > div") || mod;
+      var mid = "abWaConfirmIn_" + modalIds[m];
+      var oldModCard = document.getElementById(mid);
+      if (oldModCard) oldModCard.remove();
+      inner.appendChild(createConfirmCardElement(snap, mid));
+    }
+  }
+
+  function isOrderSubmitButton(btn) {
+    if (!btn) return false;
+    if (btn.closest("#abSv3Admin, #abPricedAdminCtrl, .ab-wa-confirm-card")) return false;
+    if (btn.classList.contains("ab-official-noprice-btn")) return true;
+    var role = btn.getAttribute("data-ab-role");
+    if (role === "noprice" || role === "priced") return true;
+    if (btn.closest("#abSilentOrderBox")) {
+      var t = (btn.textContent || "").trim();
+      if (t.indexOf("اعتماد") !== -1 || t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1) {
+        if (t.indexOf("أرشيف") === -1 && t.indexOf("نسخ") === -1 && t.indexOf("موقع") === -1) return true;
+      }
+    }
+    return false;
+  }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target && ev.target.closest ? ev.target.closest("button") : null;
+    if (!isOrderSubmitButton(btn)) return;
+
+    var snap = readCartSnapshot();
+    if (!snap.items.length) {
+      try {
+        var saved = JSON.parse(localStorage.getItem(SNAP_KEY) || "null");
+        if (saved && saved.items && saved.items.length && (Date.now() - saved.ts) < 120000) snap = saved;
+      } catch (e) {}
+    }
+    if (!snap.items.length) return;
+
+    try { localStorage.setItem(SNAP_KEY, JSON.stringify(snap)); } catch (e) {}
+    window.__abLastConfirmOrder = snap;
+
+    setTimeout(function () { mountConfirmButtons(snap); }, 450);
+    setTimeout(function () { mountConfirmButtons(snap); }, 1200);
+    setTimeout(function () { mountConfirmButtons(snap); }, 2200);
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_ORDER_CONFIRM_WA_END -->
+
+<!-- ABUDHIYA_SPLIT_UNITS_WA_START -->
+<script data-ab-split-units-wa="1">
+(function () {
+  if (window.__abSplitUnitsWaV1) return;
+  window.__abSplitUnitsWaV1 = true;
+
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+
+  function classifyUnit(prod, fallbackName, lineHint) {
+    var rawU = "";
+    if (prod) {
+      rawU = String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim();
+    }
+    var nameStr = String((prod && prod.name) || fallbackName || "");
+    var catStr = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
+    var lnStr = String(lineHint || "");
+
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nameStr) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(catStr)) {
+      return { key: "carton", label: "كرتون" };
+    }
+    if (/كيس|أكياس|اكياس|شوال|bag/i.test(nameStr)) {
+      return { key: "bag", label: "كيس" };
+    }
+    if (/كرتون|كراتين/i.test(lnStr)) return { key: "carton", label: "كرتون" };
+    if (/كيس|أكياس|اكياس/i.test(lnStr)) return { key: "bag", label: "كيس" };
+    return { key: "bag", label: "كيس" };
+  }
+
+  function snapshotCurrentCartItems() {
+    var items = [];
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+      var byId = {};
+      for (var p = 0; p < prods.length; p++) {
+        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      }
+      if (cartObj) {
+        var keys = Object.keys(cartObj);
+        for (var i = 0; i < keys.length; i++) {
+          var pid = keys[i];
+          var qty = Number(cartObj[pid] || 0);
+          if (qty <= 0) continue;
+          var pr = byId[String(pid)];
+          var nm = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var u = classifyUnit(pr, nm, "");
+          items.push({ name: nm, qty: qty, unitKey: u.key, unitLabel: u.label });
+        }
+      }
+    } catch (e) {}
+    return items;
+  }
+
+  // التقاط نسخة فورية من السلة قبل أي ضغط على زر إرسال/واتساب حتى لو تم تفريغ السلة
+  document.addEventListener("click", function () {
+    var live = snapshotCurrentCartItems();
+    if (live.length) {
+      window.__abUnitSplitSnap = { items: live, ts: Date.now() };
+    }
+  }, true);
+
+  function getActiveOrderItems(rawText) {
+    var live = snapshotCurrentCartItems();
+    if (live.length) return live;
+
+    if (window.__abUnitSplitSnap && window.__abUnitSplitSnap.items && window.__abUnitSplitSnap.items.length && (Date.now() - window.__abUnitSplitSnap.ts) < 180000) {
+      return window.__abUnitSplitSnap.items;
+    }
+
+    var last = window.__abLastConfirmOrder;
+    if (!last) {
+      try { last = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+    }
+    if (last && Array.isArray(last.items) && last.items.length && (Date.now() - (last.ts || 0)) < 180000) {
+      var normalized = [];
+      for (var i = 0; i < last.items.length; i++) {
+        var it = last.items[i];
+        var u = it.unitKey ? { key: it.unitKey, label: it.unitLabel || "كيس" } : classifyUnit(null, it.name, "");
+        normalized.push({ name: it.name, qty: Number(it.qty || 0), unitKey: u.key, unitLabel: u.label });
+      }
+      return normalized;
+    }
+
+    // احتياط: مطابقة أسماء الأصناف من نص الرسالة نفسها مع قائمة PRODUCTS
+    var matched = [];
+    try {
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+      var lines = String(rawText || "").split(/\r?\n/);
+      for (var li = 0; li < lines.length; li++) {
+        var ln = lines[li];
+        for (var pi = 0; pi < prods.length; pi++) {
+          var pr = prods[pi];
+          if (!pr || !pr.name) continue;
+          var pname = String(pr.name).trim();
+          if (pname.length < 3 || ln.indexOf(pname) === -1) continue;
+          var after = ln.slice(ln.indexOf(pname) + pname.length);
+          var qm = after.match(/(?:×|x|X|الكمية[:\s]*|⬅️|\*)\s*(\d+)/) || after.match(/(\d+)/);
+          var q = qm ? Number(qm[1]) : 0;
+          if (q > 0) {
+            var u3 = classifyUnit(pr, pname, ln);
+            matched.push({ name: pname, qty: q, unitKey: u3.key, unitLabel: u3.label });
+          }
+          break;
+        }
+      }
+    } catch (e) {}
+    return matched;
+  }
+
+  function rewriteOrderText(rawText) {
+    if (!rawText || typeof rawText !== "string") return rawText;
+    // لا نمس رسائل مشاركة رابط المتجر ولا الرسائل المفصولة مسبقاً
+    if (rawText.indexOf("رابط المتجر المباشر") !== -1) return rawText;
+    if (rawText.indexOf("🛍️ *إجمالي الأكياس:*") !== -1 || rawText.indexOf("📦 *إجمالي الكراتين:*") !== -1) {
+      return rawText;
+    }
+
+    var items = getActiveOrderItems(rawText);
+    if (!items.length) return rawText;
+
+    // التأكد أنها رسالة طلب فعلاً
+    var looksLikeOrder = /(?:طلب|فاتورة|الأصناف|الاصناف|الأكياس|الاكياس|الكميات|الكراتين)/.test(rawText);
+    if (!looksLikeOrder) {
+      for (var c = 0; c < items.length; c++) {
+        if (items[c].name && rawText.indexOf(items[c].name) !== -1) {
+          looksLikeOrder = true;
+          break;
+        }
+      }
+    }
+    if (!looksLikeOrder) return rawText;
+
+    var bags = 0;
+    var cartons = 0;
+    var others = {};
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var q = Number(it.qty || 0);
+      if (q <= 0) continue;
+      if (it.unitKey === "carton") cartons += q;
+      else if (it.unitKey === "bag") bags += q;
+      else {
+        var lbl = it.unitLabel || "وحدة";
+        others[lbl] = (others[lbl] || 0) + q;
+      }
+    }
+
+    var sumLines = [];
+    if (bags > 0) sumLines.push("🛍️ *إجمالي الأكياس:* " + bags + " كيس");
+    if (cartons > 0) sumLines.push("📦 *إجمالي الكراتين:* " + cartons + " كرتون");
+    var oKeys = Object.keys(others);
+    for (var oi = 0; oi < oKeys.length; oi++) {
+      if (others[oKeys[oi]] > 0) {
+        sumLines.push("📌 *إجمالي (" + oKeys[oi] + "):* " + others[oKeys[oi]] + " " + oKeys[oi]);
+      }
+    }
+    if (!sumLines.length) return rawText;
+
+    var lines = rawText.split(/\r?\n/);
+    var out = [];
+    var replacedTotal = false;
+
+    var MERGED_TOTAL_RE = /(?:عدد|إجمالي|اجمالي|مجموع)\s*(?:ال)?(?:أكياس|اكياس|كميات|الكميات|كمية|الكمية|كميه|الكميه|قطع|القطع|كراتين|الكراتين|عبوات|العبوات)/;
+
+    for (var li = 0; li < lines.length; li++) {
+      var line = lines[li];
+
+      // 1) تصحيح وحدة الصنف داخل سطر الصنف نفسه إذا كتب الكود الأصلي "كيس" لصنف وحدته "كرتون"
+      for (var j = 0; j < items.length; j++) {
+        var item = items[j];
+        if (!item.name || item.unitKey === "bag") continue;
+        if (line.indexOf(item.name) !== -1 && line.indexOf("كيس") !== -1 && line.indexOf(item.unitLabel) === -1) {
+          line = line.replace(/كيس/g, item.unitLabel);
+        }
+      }
+
+      // 2) استبدال سطر الإجمالي المدموج بسطور مفصولة (الأكياس لحالها والكراتين لحالها)
+      if (MERGED_TOTAL_RE.test(line)) {
+        if (!replacedTotal) {
+          // إذا كان نفس السطر يحتوي على "عدد الأصناف" نحتفظ به في سطر مستقل ثم نضع الأكياس والكراتين تحته
+          var prodCntMatch = line.match(/([^|•]*عدد\s*(?:ال)?(?:أصناف|اصناف)[^|•]*)/);
+          if (prodCntMatch) {
+            out.push(prodCntMatch[1].trim());
+          }
+          for (var s = 0; s < sumLines.length; s++) out.push(sumLines[s]);
+          replacedTotal = true;
+        }
+        continue;
+      }
+
+      out.push(line);
+    }
+
+    if (!replacedTotal) {
+      out.push("━━━━━━━━━━━━━━━━━━");
+      for (var s2 = 0; s2 < sumLines.length; s2++) out.push(sumLines[s2]);
+    }
+
+    return out.join("\n");
+  }
+
+  function rewriteWaUrl(rawUrl) {
+    if (!rawUrl || typeof rawUrl !== "string") return rawUrl;
+    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(rawUrl)) return rawUrl;
+    try {
+      var u = new URL(rawUrl, window.location.origin);
+      var txt = u.searchParams.get("text");
+      if (!txt) return rawUrl;
+      var fixed = rewriteOrderText(txt);
+      if (!fixed || fixed === txt) return rawUrl;
+      var parts = [];
+      u.searchParams.forEach(function (val, key) {
+        if (key === "text") parts.push("text=" + encodeURIComponent(fixed));
+        else parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(val));
+      });
+      return u.origin + u.pathname + "?" + parts.join("&");
+    } catch (e) {}
+    return rawUrl;
+  }
+
+  // أ) اعتراض window.open لأي زر يرسل الطلب للواتساب
+  if (typeof window.open === "function" && !window.open.__abSplitUnitsPatched) {
+    var origOpen = window.open;
+    var wrappedOpen = function (url) {
+      var args = Array.prototype.slice.call(arguments);
+      if (typeof url === "string") args[0] = rewriteWaUrl(url);
+      return origOpen.apply(this, args);
+    };
+    wrappedOpen.__abSplitUnitsPatched = true;
+    window.open = wrappedOpen;
+  }
+
+  // ب) اعتراض الروابط البرمجية (a.click())
+  if (typeof HTMLAnchorElement !== "undefined" && HTMLAnchorElement.prototype && HTMLAnchorElement.prototype.click && !HTMLAnchorElement.prototype.click.__abSplitUnitsPatched) {
+    var origAnchorClick = HTMLAnchorElement.prototype.click;
+    var wrappedAnchorClick = function () {
+      try {
+        var h = this.getAttribute && this.getAttribute("href");
+        if (h && /(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) {
+          var nh = rewriteWaUrl(h);
+          if (nh !== h) this.setAttribute("href", nh);
+        }
+      } catch (e) {}
+      return origAnchorClick.apply(this, arguments);
+    };
+    wrappedAnchorClick.__abSplitUnitsPatched = true;
+    HTMLAnchorElement.prototype.click = wrappedAnchorClick;
+  }
+
+  // ج) اعتراض الضغط المباشر على أي رابط <a> متجه للواتساب
+  document.addEventListener("click", function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
+    if (!a) return;
+    var h = a.getAttribute("href") || "";
+    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) return;
+    var nh = rewriteWaUrl(h);
+    if (nh !== h) a.setAttribute("href", nh);
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_SPLIT_UNITS_WA_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -8627,7 +8943,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-545759";
+  var TARGET_CACHE = "abudhiya-offline-v4-546277";
 
   function forceReleaseSplash() {
     try {
