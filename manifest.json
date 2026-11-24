@@ -2,7 +2,7 @@
   "name": "أبوسيف للتجارة العامة — المتجر السحابي",
   "short_name": "أبوسيف للتجارة",
   "description": "أبوسيف للتجارة العامة — لبيع المواد الغذائية والحلويات بالجملة • سيئون",
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0A0A0A",
   "theme_color": "#0A0A0A",
@@ -15,5 +15,6 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "scope": "/"
 }

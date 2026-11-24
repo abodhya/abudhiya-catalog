@@ -6157,8 +6157,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_ULTRA_SMOOTH_END -->
 
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
-<style id="abFullOfflineStyle" data-full-offline="2">
+<style id="abFullOfflineStyle" data-full-offline="3">
   #abOfflinePill {
     position: fixed;
     top: 8px;
@@ -6183,13 +6184,25 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   #abOfflinePill.show {
     display: inline-flex;
   }
+  .ab-adm-offline-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(34, 197, 94, 0.55);
+    background: #0d1f17;
+    color: #86efac;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
 </style>
-<script data-ab-full-offline="2">
+<script data-ab-full-offline="3">
 (function () {
-  if (window.__abFullOfflineV2) return;
-  window.__abFullOfflineV2 = true;
+  if (window.__abFullOfflineV3) return;
+  window.__abFullOfflineV3 = true;
 
-  // 1) حماية ضد تجميد شاشة البداية (Splash) عند انقطاع الإنترنت
   function forceReleaseSplash() {
     try {
       var sp = document.getElementById("abProSplash");
@@ -6199,14 +6212,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         sp.style.display = "none";
       }
       var loaders = document.querySelectorAll(".splash, #splash, #loadingOverlay, .loading-overlay");
-      for (var i = 0; i < loaders.length; i++) {
-        loaders[i].style.display = "none";
-      }
+      for (var i = 0; i < loaders.length; i++) loaders[i].style.display = "none";
     } catch (e) {}
   }
-  setTimeout(forceReleaseSplash, navigator.onLine === false ? 150 : 900);
+  setTimeout(forceReleaseSplash, navigator.onLine === false ? 120 : 850);
 
-  // 2) جمع كل صور الأصناف والروابط الخارجية لحفظها بالخلفية
+  function notify(msg) {
+    if (typeof showToast === "function") showToast(msg);
+  }
+
   function collectAllUrlsToCache() {
     var set = {};
     var out = [];
@@ -6233,31 +6247,60 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       for (var j = 0; j < imgs.length; j++) addUrl(imgs[j].getAttribute("src"));
       var links = document.querySelectorAll('link[rel="stylesheet"][href], link[rel="icon"][href], link[rel="apple-touch-icon"][href]');
       for (var l = 0; l < links.length; l++) addUrl(links[l].getAttribute("href"));
+      var scs = document.querySelectorAll("script[src]");
+      for (var s = 0; s < scs.length; s++) addUrl(scs[s].getAttribute("src"));
     } catch (e) {}
     return out;
   }
 
-  function sendWarmRequest(sw) {
-    if (!sw || typeof sw.postMessage !== "function" || navigator.onLine === false) return;
+  function sendWarmRequest(sw, manual) {
+    if (!sw || typeof sw.postMessage !== "function") return;
+    if (navigator.onLine === false) {
+      if (manual) notify("📡 شغّل الإنترنت أولاً لحفظ التحديث بدون نت");
+      return;
+    }
     try {
-      sw.postMessage({ type: "WARM_ALL", urls: collectAllUrlsToCache() });
+      sw.postMessage({ type: "WARM_ALL", urls: collectAllUrlsToCache(), manual: !!manual });
     } catch (e) {}
   }
 
-  // 3) تسجيل فوري لـ Service Worker (دون انتظار حدث load حتى لا يتأخر)
+  function mountAdminOfflineButton() {
+    var adm = document.getElementById("abSv3Admin");
+    if (!adm || document.getElementById("abManualOfflineSaveBtn")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "abManualOfflineSaveBtn";
+    btn.className = "ab-adm-offline-btn";
+    btn.textContent = "📥 حفظ المتجر للعمل بدون نت الآن";
+    btn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      if (!("serviceWorker" in navigator)) {
+        notify("⚠️ افتح الرابط في متصفح Chrome لتفعيل العمل بدون نت");
+        return;
+      }
+      notify("⏳ جاري حفظ المتجر والصور للعمل بدون نت...");
+      navigator.serviceWorker.ready.then(function (reg) {
+        sendWarmRequest(reg.active || navigator.serviceWorker.controller, true);
+      }).catch(function () {});
+    });
+    adm.appendChild(btn);
+  }
+
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.addEventListener("message", function (ev) {
       var d = ev.data || {};
-      if (d.type === "OFFLINE_READY" && d.cache) {
-        try {
-          var seenKey = "ab_offline_ready_notified";
-          if (localStorage.getItem(seenKey) !== d.cache) {
-            localStorage.setItem(seenKey, d.cache);
-            if (typeof showToast === "function") {
-              showToast("✅ تم حفظ المتجر والصور (" + (d.count || "") + ") — جاهز الآن بدون نت");
+      if (d.type === "OFFLINE_STATUS") {
+        if (d.verifiedHtml) {
+          try {
+            var k = "ab_offline_verified_v3";
+            if (d.manual || localStorage.getItem(k) !== d.cache) {
+              localStorage.setItem(k, d.cache);
+              notify("✅ تم حفظ المتجر بالكامل (" + (d.count || "") + " ملف) — جاهز الآن بدون نت");
             }
-          }
-        } catch (e) {}
+          } catch (e) {}
+        } else if (d.manual) {
+          notify("⚠️ لم يكتمل الحفظ بسبب ضعف الإنترنت، حاول مرة أخرى");
+        }
       }
     });
 
@@ -6274,19 +6317,22 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
             try { nw.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
           }
           if (nw.state === "activated") {
-            setTimeout(function () { sendWarmRequest(nw); }, 300);
+            setTimeout(function () { sendWarmRequest(nw, false); }, 250);
           }
         });
       });
+
       navigator.serviceWorker.ready.then(function (readyReg) {
-        setTimeout(function () {
-          sendWarmRequest(readyReg.active || navigator.serviceWorker.controller);
-        }, 500);
+        var activeSw = readyReg.active || navigator.serviceWorker.controller;
+        setTimeout(function () { sendWarmRequest(activeSw, false); }, 400);
       });
     }).catch(function () {});
+  } else if (navigator.onLine !== false) {
+    setTimeout(function () {
+      notify("⚠️ لتفعيل العمل بدون نت افتح الرابط في متصفح Chrome");
+    }, 1500);
   }
 
-  // 4) مؤشر هادئ أعلى الصفحة عند انقطاع النت
   function syncOfflinePill() {
     var pill = document.getElementById("abOfflinePill");
     if (!pill && document.body) {
@@ -6301,20 +6347,26 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   window.addEventListener("online", function () {
     syncOfflinePill();
-    if (typeof showToast === "function") showToast("🌐 عاد الاتصال بالإنترنت");
+    notify("🌐 عاد الاتصال بالإنترنت");
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.ready.then(function (r) { sendWarmRequest(r.active); }).catch(function () {});
+      navigator.serviceWorker.ready.then(function (r) { sendWarmRequest(r.active, false); }).catch(function () {});
     }
   });
   window.addEventListener("offline", function () {
     forceReleaseSplash();
     syncOfflinePill();
   });
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", syncOfflinePill);
+    document.addEventListener("DOMContentLoaded", function () {
+      syncOfflinePill();
+      setTimeout(mountAdminOfflineButton, 800);
+    });
   } else {
     syncOfflinePill();
+    setTimeout(mountAdminOfflineButton, 800);
   }
+  setInterval(mountAdminOfflineButton, 3000);
 })();
 </script>
 <!-- ABUDHIYA_FULL_OFFLINE_END -->
