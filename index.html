@@ -6158,8 +6158,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
-<style id="abFullOfflineStyle" data-full-offline="3">
+<style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
     position: fixed;
     top: 8px;
@@ -6181,9 +6182,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
     pointer-events: none;
   }
-  #abOfflinePill.show {
-    display: inline-flex;
-  }
+  #abOfflinePill.show { display: inline-flex; }
   .ab-adm-offline-btn {
     width: 100%;
     margin-top: 6px;
@@ -6198,24 +6197,22 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-family: inherit;
   }
 </style>
-<script data-ab-full-offline="3">
+<script data-ab-full-offline="4">
 (function () {
-  if (window.__abFullOfflineV3) return;
-  window.__abFullOfflineV3 = true;
+  if (window.__abFullOfflineV4) return;
+  window.__abFullOfflineV4 = true;
+
+  var TARGET_CACHE = "abudhiya-offline-v4-521692";
 
   function forceReleaseSplash() {
     try {
       var sp = document.getElementById("abProSplash");
-      if (sp) {
-        sp.style.opacity = "0";
-        sp.style.pointerEvents = "none";
-        sp.style.display = "none";
-      }
+      if (sp) { sp.style.opacity = "0"; sp.style.pointerEvents = "none"; sp.style.display = "none"; }
       var loaders = document.querySelectorAll(".splash, #splash, #loadingOverlay, .loading-overlay");
       for (var i = 0; i < loaders.length; i++) loaders[i].style.display = "none";
     } catch (e) {}
   }
-  setTimeout(forceReleaseSplash, navigator.onLine === false ? 120 : 850);
+  setTimeout(forceReleaseSplash, navigator.onLine === false ? 100 : 850);
 
   function notify(msg) {
     if (typeof showToast === "function") showToast(msg);
@@ -6228,10 +6225,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       if (!u || typeof u !== "string") return;
       u = u.trim();
       if (!u || u.indexOf("data:") === 0 || u.indexOf("blob:") === 0) return;
-      if (!set[u]) {
-        set[u] = 1;
-        out.push(u);
-      }
+      if (!set[u]) { set[u] = 1; out.push(u); }
     }
     try {
       if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) {
@@ -6253,15 +6247,44 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return out;
   }
 
+  /* حفظ احتياطي مباشر للصفحة النظيفة داخل CacheStorage من الصفحة نفسها */
+  function seedCleanHtmlDirect() {
+    if (!("caches" in window) || navigator.onLine === false) return Promise.resolve(false);
+    return caches.open(TARGET_CACHE).then(function (c) {
+      return c.match("/").then(function (hit) {
+        if (hit && !hit.redirected && !hit.headers.get("content-encoding")) {
+          return true;
+        }
+        return fetch("/?ab_cache_seed=" + Date.now(), { cache: "no-store" }).then(function (r) {
+          if (!r || !r.ok) return false;
+          return r.text().then(function (htmlTxt) {
+            if (!htmlTxt || htmlTxt.length < 800) return false;
+            var clean = new Response(htmlTxt, {
+              status: 200,
+              statusText: "OK",
+              headers: { "Content-Type": "text/html; charset=utf-8" }
+            });
+            return Promise.all([
+              c.put("/", clean.clone()),
+              c.put("/index.html", clean.clone())
+            ]).then(function () { return true; });
+          });
+        });
+      });
+    }).catch(function () { return false; });
+  }
+
   function sendWarmRequest(sw, manual) {
     if (!sw || typeof sw.postMessage !== "function") return;
     if (navigator.onLine === false) {
-      if (manual) notify("📡 شغّل الإنترنت أولاً لحفظ التحديث بدون نت");
+      if (manual) notify("📡 شغّل الإنترنت أولاً لحفظ المتجر بدون نت");
       return;
     }
-    try {
-      sw.postMessage({ type: "WARM_ALL", urls: collectAllUrlsToCache(), manual: !!manual });
-    } catch (e) {}
+    seedCleanHtmlDirect().then(function () {
+      try {
+        sw.postMessage({ type: "WARM_ALL", urls: collectAllUrlsToCache(), manual: !!manual });
+      } catch (e) {}
+    });
   }
 
   function mountAdminOfflineButton() {
@@ -6278,7 +6301,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         notify("⚠️ افتح الرابط في متصفح Chrome لتفعيل العمل بدون نت");
         return;
       }
-      notify("⏳ جاري حفظ المتجر والصور للعمل بدون نت...");
+      notify("⏳ جاري حفظ نسخة نظيفة للعمل بدون نت...");
       navigator.serviceWorker.ready.then(function (reg) {
         sendWarmRequest(reg.active || navigator.serviceWorker.controller, true);
       }).catch(function () {});
@@ -6289,17 +6312,17 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.addEventListener("message", function (ev) {
       var d = ev.data || {};
-      if (d.type === "OFFLINE_STATUS") {
+      if (d.type === "OFFLINE_STATUS_V4") {
         if (d.verifiedHtml) {
           try {
-            var k = "ab_offline_verified_v3";
+            var k = "ab_offline_verified_v4";
             if (d.manual || localStorage.getItem(k) !== d.cache) {
               localStorage.setItem(k, d.cache);
-              notify("✅ تم حفظ المتجر بالكامل (" + (d.count || "") + " ملف) — جاهز الآن بدون نت");
+              notify("✅ تم الحفظ النظيف (" + (d.htmlKb || "") + "KB + " + (d.count || "") + " ملف) — جاهز الآن بدون نت");
             }
           } catch (e) {}
         } else if (d.manual) {
-          notify("⚠️ لم يكتمل الحفظ بسبب ضعف الإنترنت، حاول مرة أخرى");
+          notify("⚠️ لم يكتمل الحفظ بسبب ضعف الإنترنت، اضغط مرة أخرى");
         }
       }
     });
@@ -6324,7 +6347,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
       navigator.serviceWorker.ready.then(function (readyReg) {
         var activeSw = readyReg.active || navigator.serviceWorker.controller;
-        setTimeout(function () { sendWarmRequest(activeSw, false); }, 400);
+        setTimeout(function () { sendWarmRequest(activeSw, false); }, 350);
       });
     }).catch(function () {});
   } else if (navigator.onLine !== false) {
