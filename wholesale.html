@@ -309,7 +309,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="أبوسيف للتجارة العامة — سيئون">
 <meta property="og:title" content="أبوسيف للتجارة العامة — كتالوج أسعار الجملة">
-<meta property="og:description" content="اضغط لفتح صور الأصناف وكتابة الكميات (50 / 100) وإرسال فاتورتك فوراً • المشقاص للصرافة: 254176581">
+<meta property="og:description" content="اضغط لفتح صور الأصناف وكتابة الكميات (50 / 100) وإرسال فاتورتك فوراً • المشقاص للصرافة: 254025903">
 <meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
@@ -625,7 +625,139 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
   setTimeout(cleanDuplicateLowerHeader, 900);
 })();
 </script>
+<!-- ABUSAIF_MISHQAS_BOX_START -->
+<style id="abMishqasCardStyle">
+  #abMishqasCard {
+    display: none;
+    direction: rtl;
+    margin: 8px 0 10px;
+    padding: 11px 13px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fffdf7 0%, #fef9e7 100%);
+    border: 1.5px solid rgba(196, 155, 65, 0.65);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+    text-align: right;
+  }
+  #abMishqasCard.show { display: block; }
+  .ab-msh-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #92400e;
+    margin-bottom: 4px;
+  }
+  .ab-msh-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+  .ab-msh-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px dashed #c89b3c;
+    border-radius: 9px;
+    padding: 6px 10px;
+  }
+  .ab-msh-num {
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    color: #0b1120;
+  }
+  .ab-msh-copy {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fde68a;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .ab-msh-copy:active { transform: scale(0.96); }
+</style>
+<script data-ab-mishqas-card="1">
+(function () {
+  var ACC_NUM = "254025903";
+  var ACC_NAME = "سالم عمر محمد هويدي باجابر";
+
+  function copyAccNumber() {
+    var done = function () {
+      if (typeof showToast === "function") showToast("✅ تم نسخ رقم حساب المشقاص: " + ACC_NUM);
+      else alert("تم نسخ رقم الحساب: " + ACC_NUM);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ACC_NUM).then(done).catch(function () {
+        var ta = document.createElement("textarea");
+        ta.value = ACC_NUM;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        ta.remove();
+        done();
+      });
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = ACC_NUM;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+      done();
+    }
+  }
+
+  function syncMishqasCard() {
+    var pills = document.getElementById("payPills");
+    if (!pills) return;
+
+    var card = document.getElementById("abMishqasCard");
+    if (!card) {
+      card = document.createElement("div");
+      card.id = "abMishqasCard";
+      card.innerHTML =
+        '<div class="ab-msh-title">🏦 حساب المشقاص للصرافة</div>' +
+        '<div class="ab-msh-name">باسم: ' + ACC_NAME + '</div>' +
+        '<div class="ab-msh-row">' +
+          '<span class="ab-msh-num">' + ACC_NUM + '</span>' +
+          '<button type="button" id="abMshCopyBtn" class="ab-msh-copy">📋 نسخ الرقم</button>' +
+        '</div>';
+      pills.insertAdjacentElement("afterend", card);
+      document.getElementById("abMshCopyBtn").addEventListener("click", copyAccNumber);
+    }
+
+    var active = pills.querySelector(".pay-pill.active, button.active");
+    var isMsh = !!(active && (active.textContent || "").indexOf("المشقاص") !== -1);
+    card.classList.toggle("show", isMsh);
+
+    if (!pills.getAttribute("data-msh-bound")) {
+      pills.setAttribute("data-msh-bound", "1");
+      pills.addEventListener("click", function () {
+        setTimeout(syncMishqasCard, 30);
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncMishqasCard);
+  } else {
+    syncMishqasCard();
+  }
+  setInterval(syncMishqasCard, 700);
+})();
+</script>
+<!-- ABUSAIF_MISHQAS_BOX_END -->
 <!-- ABUSAIF_LUXURY_HEADER_END -->
+
+
 
 
 
@@ -820,7 +952,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
           
           <button type="button" class="act-btn btn-wa" onclick="sendViaWhatsApp()">📲 إرسال وتأكيد الفاتورة عبر واتساب (771458609)</button>
           <button type="button" class="act-btn" style="background:#F1F5F9;color:#0F172A;border:1.5px solid #94A3B8;" onclick="copyPlainQtyOnly()">📋 نسخ الطلب (الكمية والصنف فقط بدون سعر)</button>
-          <div style="text-align:center;font-size:12px;color:#64748B;margin-top:9px;font-weight:800;">🏦 المشقاص للصرافة : 254176581 — باسم : محمد كرامة علي حيمد</div>
+          <div style="text-align:center;font-size:12px;color:#64748B;margin-top:9px;font-weight:800;">🏦 المشقاص للصرافة : 254025903 — باسم : سالم عمر محمد هويدي باجابر</div>
         </div>
       </div>
     </div>
