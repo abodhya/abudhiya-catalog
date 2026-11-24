@@ -8944,6 +8944,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_QUANTUM_V4_END -->
 
 
+
+
+
+
 <!-- ABUDHIYA_ORDER_CONFIRM_WA_START -->
 <style id="abOrderConfirmWaStyle" data-confirm-wa="2">
   .ab-wa-confirm-card {
@@ -10095,28 +10099,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     } catch (e) {}
 
-    var custName = "";
-    var payMethod = "";
-    try {
-      var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView") || document;
-      var inps = box.querySelectorAll("input, select");
-      for (var k = 0; k < inps.length; k++) {
-        var el = inps[k];
-        var val = (el.value || "").trim();
-        if (!val) continue;
-        var hint = ((el.id || "") + " " + (el.name || "") + " " + (el.placeholder || "")).toLowerCase();
-        if (!custName && (hint.indexOf("name") !== -1 || hint.indexOf("اسم") !== -1 || hint.indexOf("عميل") !== -1 || hint.indexOf("محل") !== -1)) {
-          custName = val;
-        } else if (!payMethod && (el.tagName === "SELECT" || hint.indexOf("pay") !== -1 || hint.indexOf("دفع") !== -1)) {
-          payMethod = (el.tagName === "SELECT" && el.options && el.selectedIndex >= 0) ? el.options[el.selectedIndex].text.trim() : val;
-        }
-      }
-      if (!custName) custName = (localStorage.getItem("ab_cust_name") || localStorage.getItem("ab_sv3_name") || "").trim();
-      if (!payMethod) {
-        var actP = document.querySelector(".ab-pay-btn.active, [data-pay].active, .pay-opt.active");
-        if (actP) payMethod = (actP.textContent || "").trim();
-      }
-    } catch (e) {}
+    var liveInfo = resolveRealCustomerInfo();
+    var custName = liveInfo.custName || "";
+    var payMethod = liveInfo.payMethod || "";
 
     if (!items.length) {
       var snap = window.__abLastConfirmOrder;
@@ -12270,7 +12255,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-554956";
+  var TARGET_CACHE = "abudhiya-offline-v4-555011";
 
   function forceReleaseSplash() {
     try {
