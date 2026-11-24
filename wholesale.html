@@ -787,6 +787,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -3510,6 +3512,11 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3790,7 +3797,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   .ab-clear-qty-btn.show { display: flex; }
   .ab-clear-qty-btn:active { transform: scale(0.86); }
 </style>
-<script data-ab-pro-ui="8">
+<script data-ab-pro-ui="9">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4418,7 +4425,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     var wTxt = document.getElementById("abProWelcomeTxt");
     if (wBox && wTxt) {
       if (savedName) {
-        wTxt.textContent = "👋 أهلاً بعودتك، " + savedName;
+        var _newW = "👋 أهلاً بعودتك، " + savedName; if (wTxt.textContent !== _newW) wTxt.textContent = _newW;
         wBox.style.display = "flex";
       } else {
         wBox.style.display = "none";
@@ -4477,6 +4484,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     var imgs = document.querySelectorAll("img");
     for (var j = 0; j < imgs.length; j++) {
       var img = imgs[j];
+      if (img.getAttribute("data-ab-img-chk") === "1") continue;
       if (img.closest("#abProZoomModal, #abRcptPreviewModal, #abProSplash, #abSv3ModalBg, #abSaifLuxuryHeader, #abDevStampFooter, #invoiceView, #invFilledWrap, [id*='modal' i], [class*='modal' i], [id*='qty' i], [class*='qty' i], [class*='sheet' i], [class*='popup' i], [class*='overlay' i], [role='dialog']")) continue;
       var _pCheck = img.parentElement, _inFixed = false;
       while (_pCheck && _pCheck !== document.body) { try { if (getComputedStyle(_pCheck).position === "fixed") { _inFixed = true; break; } } catch(e){} _pCheck = _pCheck.parentElement; }
@@ -4487,6 +4495,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       var matched = findProductForCard(card, byName);
       if (!matched) continue;
 
+      img.setAttribute("data-ab-img-chk", "1");
       card.setAttribute("data-ab-pro-card", "1");
       card.setAttribute("data-ab-prod-id", String(matched.id));
       card.setAttribute("data-ab-cat", getCategoryForProduct(matched));
@@ -4679,12 +4688,24 @@ window.addEventListener("beforeinstallprompt", function(e) {
     syncAllQuickClearButtons();
   }
 
-  if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(tick);
-    obs.observe(document.documentElement, { childList: true, subtree: true });
+  var _abTickBusy = false;
+  var _abTickTmr = null;
+  function safeTick() {
+    if (_abTickBusy) return;
+    _abTickBusy = true;
+    try { tick(); } catch (e) {}
+    _abTickBusy = false;
   }
-  setInterval(tick, 900);
-  setTimeout(tick, 300);
+  function scheduleTick() {
+    if (_abTickTmr) return;
+    _abTickTmr = setTimeout(function () { _abTickTmr = null; safeTick(); }, 220);
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(scheduleTick);
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(safeTick, 2500);
+  setTimeout(safeTick, 300);
 })();
 </script>
 <!-- ABUDHIYA_PRO_UI_END -->
@@ -4986,7 +5007,9 @@ window.addEventListener("beforeinstallprompt", function(e) {
     var cards = document.querySelectorAll('#productsGrid .card, .products-grid .card, .prod-card, .product-card, .item-card, [data-ab-pro-card="1"]');
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
-      if (!card || isInsideModal(card)) continue;
+      if (!card || card.getAttribute("data-ab-gold-done") === "1") continue;
+      if (isInsideModal(card)) { card.setAttribute("data-ab-gold-done", "1"); continue; }
+      card.setAttribute("data-ab-gold-done", "1");
 
       var parentGrid = card.parentElement;
       if (parentGrid && parentGrid !== document.body && !parentGrid.classList.contains("ab-sleek-grid-3")) {
@@ -5016,9 +5039,14 @@ window.addEventListener("beforeinstallprompt", function(e) {
   } else {
     applyZeroGap3ColShowcase();
   }
+  var _abGoldTmr = null;
+  function scheduleGold() {
+    if (_abGoldTmr) return;
+    _abGoldTmr = setTimeout(function () { _abGoldTmr = null; try { applyZeroGap3ColShowcase(); } catch (e) {} }, 240);
+  }
   if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(applyZeroGap3ColShowcase);
-    obs.observe(document.documentElement, { childList: true, subtree: true });
+    var obs = new MutationObserver(scheduleGold);
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
   }
   setTimeout(applyZeroGap3ColShowcase, 450);
 })();
@@ -5191,13 +5219,8 @@ window.addEventListener("beforeinstallprompt", function(e) {
 <!-- ABUDHIYA_DEV_STAMP_END -->
 
 <!-- ABUDHIYA_NOPRICE_OFFICIAL_START -->
-<style id="abNoPriceOfficialStyle" data-noprice-v="1">
-  /* إخفاء زر الإرسال بالسعر افتراضياً دون حذفه من النظام */
-  .ab-priced-btn-hidden {
-    display: none !important;
-  }
-
-  /* إبراز زر الإرسال بدون سعر كالزر الرسمي الأساسي للعملاء */
+<style id="abNoPriceOfficialStyle" data-noprice-v="2">
+  .ab-priced-btn-hidden { display: none !important; }
   .ab-official-noprice-btn {
     width: 100% !important;
     display: flex !important;
@@ -5214,13 +5237,9 @@ window.addEventListener("beforeinstallprompt", function(e) {
     box-shadow: 0 8px 20px rgba(5, 150, 105, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
     cursor: pointer !important;
     margin-top: 4px !important;
-    transition: transform 0.14s ease, box-shadow 0.18s ease !important;
+    transition: transform 0.14s ease !important;
   }
-  .ab-official-noprice-btn:active {
-    transform: scale(0.985) !important;
-  }
-
-  /* تنسيق واضح لزر الإرسال بالسعر عند إظهاره مؤقتاً من لوحة المدير ⚙ */
+  .ab-official-noprice-btn:active { transform: scale(0.985) !important; }
   .ab-priced-btn-unlocked {
     width: 100% !important;
     margin-top: 8px !important;
@@ -5228,8 +5247,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
     background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
     color: #fef08a !important;
   }
-
-  /* صف التحكم السري داخل لوحة الإعدادات ⚙ */
   #abPricedAdminCtrl {
     display: flex;
     flex-direction: column;
@@ -5263,57 +5280,51 @@ window.addEventListener("beforeinstallprompt", function(e) {
     cursor: pointer;
     font-family: inherit;
   }
-  .ab-adm-priced-send:active,
-  .ab-adm-priced-toggle:active {
-    transform: scale(0.98);
-  }
+  .ab-adm-priced-send:active, .ab-adm-priced-toggle:active { transform: scale(0.98); }
 </style>
-<script data-ab-noprice-official="1">
+<script data-ab-noprice-official="2">
 (function () {
-  if (window.__abNoPriceOfficialV1) return;
-  window.__abNoPriceOfficialV1 = true;
+  if (window.__abNoPriceOfficialV2) return;
+  window.__abNoPriceOfficialV2 = true;
 
   var SHOW_KEY = "ab_show_priced_btn_v1";
+  var _running = false;
+  var _timer = null;
 
   function isPricedUnlocked() {
     try { return localStorage.getItem(SHOW_KEY) === "1"; } catch (e) { return false; }
   }
-
   function setPricedUnlocked(flag) {
     try {
       if (flag) localStorage.setItem(SHOW_KEY, "1");
       else localStorage.removeItem(SHOW_KEY);
     } catch (e) {}
   }
+  function setTextSafe(el, txt) {
+    if (el && el.textContent !== txt) el.textContent = txt;
+  }
 
   function tagSilentButtons(box) {
     var noPriceBtn = box.querySelector('[data-ab-role="noprice"]');
     var pricedBtn = box.querySelector('[data-ab-role="priced"]');
-    if (noPriceBtn && pricedBtn) {
-      return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
-    }
+    if (noPriceBtn && pricedBtn) return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
 
     var btns = box.querySelectorAll("button");
     for (var i = 0; i < btns.length; i++) {
       var b = btns[i];
       if (!b || b.closest("#abSv3Admin, #abPricedAdminCtrl")) continue;
-      if (b.getAttribute("data-ab-role")) continue;
-      if (b.classList.contains("ab-sv3-smallbtn")) continue;
-
+      if (b.getAttribute("data-ab-role") || b.classList.contains("ab-sv3-smallbtn")) continue;
       var t = (b.textContent || "").replace(/\s+/g, " ").trim();
       if (!t || t === "⚙" || t === "⚙️") continue;
       if (
         t.indexOf("أرشيف") !== -1 || t.indexOf("الأرشيف") !== -1 ||
         t.indexOf("نسخ") !== -1 || t.indexOf("حفظ") !== -1 ||
-        t.indexOf("إغلاق") !== -1 || t.indexOf("GPS") !== -1 ||
-        t.indexOf("موقع") !== -1
+        t.indexOf("إغلاق") !== -1 || t.indexOf("GPS") !== -1 || t.indexOf("موقع") !== -1
       ) continue;
 
       if (
-        t.indexOf("بدون سعر") !== -1 ||
-        t.indexOf("بدون أسعار") !== -1 ||
-        t.indexOf("كميات فقط") !== -1 ||
-        t.indexOf("أصناف فقط") !== -1
+        t.indexOf("بدون سعر") !== -1 || t.indexOf("بدون أسعار") !== -1 ||
+        t.indexOf("كميات فقط") !== -1 || t.indexOf("أصناف فقط") !== -1
       ) {
         b.setAttribute("data-ab-role", "noprice");
         b.setAttribute("data-ab-orig-txt", t);
@@ -5328,95 +5339,97 @@ window.addEventListener("beforeinstallprompt", function(e) {
         pricedBtn = b;
       }
     }
-
     return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
   }
 
   function applyNoPricePolicy() {
-    var box = document.getElementById("abSilentOrderBox");
-    if (!box) return;
+    if (_running) return;
+    _running = true;
+    try {
+      var box = document.getElementById("abSilentOrderBox");
+      if (!box) return;
 
-    var found = tagSilentButtons(box);
-    var noPriceBtn = found.noPriceBtn;
-    var pricedBtn = found.pricedBtn;
-    var unlocked = isPricedUnlocked();
+      var found = tagSilentButtons(box);
+      var noPriceBtn = found.noPriceBtn;
+      var pricedBtn = found.pricedBtn;
+      var unlocked = isPricedUnlocked();
 
-    // 1) إبراز زر (بدون سعر) كالزر الرسمي الوحيد
-    if (noPriceBtn) {
-      noPriceBtn.classList.add("ab-official-noprice-btn");
-      noPriceBtn.classList.remove("ab-priced-btn-hidden");
-      if (!noPriceBtn.getAttribute("data-ab-renamed")) {
-        noPriceBtn.setAttribute("data-ab-renamed", "1");
-        noPriceBtn.textContent = "✅ اعتماد وإرسال الطلب الرسمي";
+      if (noPriceBtn) {
+        if (!noPriceBtn.classList.contains("ab-official-noprice-btn")) noPriceBtn.classList.add("ab-official-noprice-btn");
+        if (noPriceBtn.classList.contains("ab-priced-btn-hidden")) noPriceBtn.classList.remove("ab-priced-btn-hidden");
+        setTextSafe(noPriceBtn, "✅ اعتماد وإرسال الطلب الرسمي");
       }
-    }
 
-    // 2) إخفاء زر (بالسعر) افتراضياً أو إظهاره عند تفعيله من ⚙
-    if (pricedBtn) {
-      if (unlocked) {
-        pricedBtn.classList.remove("ab-priced-btn-hidden");
-        pricedBtn.classList.add("ab-priced-btn-unlocked");
-        var origT = pricedBtn.getAttribute("data-ab-orig-txt") || pricedBtn.textContent || "";
-        if (origT.indexOf("بالسعر") === -1) {
-          pricedBtn.textContent = "💰 اعتماد وإرسال الطلب (بالسعر)";
+      if (pricedBtn) {
+        if (unlocked) {
+          if (pricedBtn.classList.contains("ab-priced-btn-hidden")) pricedBtn.classList.remove("ab-priced-btn-hidden");
+          if (!pricedBtn.classList.contains("ab-priced-btn-unlocked")) pricedBtn.classList.add("ab-priced-btn-unlocked");
+          var origT = pricedBtn.getAttribute("data-ab-orig-txt") || "";
+          if (origT.indexOf("بالسعر") === -1) {
+            setTextSafe(pricedBtn, "💰 اعتماد وإرسال الطلب (بالسعر)");
+          }
+        } else {
+          if (!pricedBtn.classList.contains("ab-priced-btn-hidden")) pricedBtn.classList.add("ab-priced-btn-hidden");
+          if (pricedBtn.classList.contains("ab-priced-btn-unlocked")) pricedBtn.classList.remove("ab-priced-btn-unlocked");
         }
-      } else {
-        pricedBtn.classList.add("ab-priced-btn-hidden");
-        pricedBtn.classList.remove("ab-priced-btn-unlocked");
       }
+
+      var adm = document.getElementById("abSv3Admin");
+      if (adm && pricedBtn) {
+        var ctrl = document.getElementById("abPricedAdminCtrl");
+        if (!ctrl) {
+          ctrl = document.createElement("div");
+          ctrl.id = "abPricedAdminCtrl";
+          ctrl.innerHTML =
+            '<button type="button" id="abDirectSendPricedBtn" class="ab-adm-priced-send">💰 إرسال هذا الطلب بالسعر الآن</button>' +
+            '<button type="button" id="abTogglePricedBtn" class="ab-adm-priced-toggle"></button>';
+          adm.appendChild(ctrl);
+
+          document.getElementById("abDirectSendPricedBtn").addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var targetBtn = box.querySelector('[data-ab-role="priced"]');
+            if (targetBtn) targetBtn.click();
+          });
+
+          document.getElementById("abTogglePricedBtn").addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var nextState = !isPricedUnlocked();
+            setPricedUnlocked(nextState);
+            applyNoPricePolicy();
+            if (typeof showToast === "function") {
+              showToast(nextState ? "👁️ تم إظهار زر الإرسال بالسعر على جهازك" : "🔒 تم إخفاء زر الإرسال بالسعر");
+            }
+          });
+        }
+        var togBtn = document.getElementById("abTogglePricedBtn");
+        setTextSafe(
+          togBtn,
+          unlocked ? "🔒 إخفاء زر الإرسال بالسعر من الفاتورة" : "👁️ إظهار زر الإرسال بالسعر على جهازي"
+        );
+      }
+    } finally {
+      _running = false;
     }
+  }
 
-    // 3) إضافة أزرار التحكم السرية للمدير داخل لوحة ⚙ (#abSv3Admin)
-    var adm = document.getElementById("abSv3Admin");
-    if (adm && pricedBtn) {
-      var ctrl = document.getElementById("abPricedAdminCtrl");
-      if (!ctrl) {
-        ctrl = document.createElement("div");
-        ctrl.id = "abPricedAdminCtrl";
-        ctrl.innerHTML =
-          '<button type="button" id="abDirectSendPricedBtn" class="ab-adm-priced-send">💰 إرسال هذا الطلب بالسعر الآن</button>' +
-          '<button type="button" id="abTogglePricedBtn" class="ab-adm-priced-toggle"></button>';
-        adm.appendChild(ctrl);
-
-        document.getElementById("abDirectSendPricedBtn").addEventListener("click", function (ev) {
-          ev.preventDefault();
-          var targetBtn = box.querySelector('[data-ab-role="priced"]');
-          if (targetBtn) {
-            targetBtn.click();
-          }
-        });
-
-        document.getElementById("abTogglePricedBtn").addEventListener("click", function (ev) {
-          ev.preventDefault();
-          var nextState = !isPricedUnlocked();
-          setPricedUnlocked(nextState);
-          applyNoPricePolicy();
-          if (typeof showToast === "function") {
-            showToast(nextState ? "👁️ تم إظهار زر الإرسال بالسعر على جهازك" : "🔒 تم إخفاء زر الإرسال بالسعر");
-          }
-        });
-      }
-
-      var togBtn = document.getElementById("abTogglePricedBtn");
-      if (togBtn) {
-        togBtn.textContent = unlocked
-          ? "🔒 إخفاء زر الإرسال بالسعر من الفاتورة"
-          : "👁️ إظهار زر الإرسال بالسعر على جهازي";
-      }
-    }
+  function scheduleApply() {
+    if (_timer) return;
+    _timer = setTimeout(function () {
+      _timer = null;
+      applyNoPricePolicy();
+    }, 220);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyNoPricePolicy);
+    document.addEventListener("DOMContentLoaded", scheduleApply);
   } else {
-    applyNoPricePolicy();
+    scheduleApply();
   }
   if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(applyNoPricePolicy);
-    obs.observe(document.documentElement, { childList: true, subtree: true });
+    var obs = new MutationObserver(scheduleApply);
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
   }
-  setInterval(applyNoPricePolicy, 800);
-  setTimeout(applyNoPricePolicy, 300);
+  setInterval(applyNoPricePolicy, 2500);
 })();
 </script>
 <!-- ABUDHIYA_NOPRICE_OFFICIAL_END -->
