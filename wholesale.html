@@ -310,7 +310,7 @@
 <meta property="og:site_name" content="أبوسيف للتجارة العامة — سيئون">
 <meta property="og:title" content="أبوسيف للتجارة العامة — كتالوج أسعار الجملة">
 <meta property="og:description" content="تصفح الأصناف وأضف الكميات بلمسة واحدة • حضرموت، سيئون، شارع المطار • تلفون: 05492417 • جوال: 772202525 • مندوب مبيعات: 771458609">
-<meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg?v=1795496994">
+<meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg?v=1795497299">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -321,7 +321,7 @@
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="أبوسيف للتجارة">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795496994">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795497299">
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:500;font-display:swap;}
@@ -340,8 +340,8 @@ button,.btn-primary,.add-btn,.send-btn,.qty-btn{background:#000000 !important;ba
 .cat-btn.active,.tab-btn.active,.pill.active,.chip.active{background:#000000 !important;color:#FFFFFF !important;}
 input,select,textarea{background:#FFFFFF !important;color:#000000 !important;border:1.5px solid #000000 !important;font-weight:600 !important;}
 </style>
-<link rel="icon" type="image/png" href="/favicon.png?v=1795496994">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795496994">
+<link rel="icon" type="image/png" href="/favicon.png?v=1795497299">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795497299">
 </head>
 <body>
 <!-- ABUSAIF_LUXURY_HEADER_START -->
@@ -767,6 +767,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 </script>
 <!-- ABUSAIF_MISHQAS_BOX_END -->
 <!-- ABUSAIF_LUXURY_HEADER_END -->
+
+
 
 
 
@@ -3493,6 +3495,14 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
+
+
+
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3773,7 +3783,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   .ab-clear-qty-btn.show { display: flex; }
   .ab-clear-qty-btn:active { transform: scale(0.86); }
 </style>
-<script data-ab-pro-ui="11">
+<script data-ab-pro-ui="12">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4497,7 +4507,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           bEl.addEventListener("click", function (ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            addQuickQty(pObj, -999999999, cEl); catch (e) {} }
+            addQuickQty(pObj, -999999999, cEl); 
             if (typeof showToast === "function") showToast("🗑️ تم حذف كمية " + pObj.name);
           });
         })(matched, card, clrBtn);
@@ -4635,6 +4645,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         var q = Number(cartObj[pid] || 0);
         var btn = c.querySelector(".ab-clear-qty-btn");
         if (btn) btn.classList.toggle("show", q > 0);
+        var lastQ = c.getAttribute("data-ab-last-q");
+        if (lastQ !== String(q)) {
+          c.setAttribute("data-ab-last-q", String(q));
+          if (typeof syncCardBadgeVisual === "function") {
+            syncCardBadgeVisual(pid, q, c);
+          }
+        }
         if (q <= 0) {
           var fb = c.querySelector(".ab-instant-qty-badge");
           if (fb) fb.remove();
@@ -4642,7 +4659,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     } catch (e) {}
   }
-
   function tick() {
     mountTopHub();
     enhanceProductCards();
@@ -4651,7 +4667,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   var _abTickBusy = false;
-  var _abTickTmr = null;
+  var _abTickRaf = 0;
   function safeTick() {
     if (_abTickBusy) return;
     _abTickBusy = true;
@@ -4659,21 +4675,37 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     _abTickBusy = false;
   }
   function scheduleTick() {
-    if (_abTickTmr) return;
-    _abTickTmr = setTimeout(function () { _abTickTmr = null; safeTick(); }, 50);
+    if (_abTickRaf) return;
+    var raf = window.requestAnimationFrame || function (cb) { return setTimeout(cb, 16); };
+    _abTickRaf = raf(function () {
+      _abTickRaf = 0;
+      safeTick();
+    });
   }
   if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(scheduleTick);
+    var obs = new MutationObserver(function (muts) {
+      if (_abTickBusy) return;
+      for (var k = 0; k < muts.length; k++) {
+        if (muts[k].addedNodes && muts[k].addedNodes.length > 0) {
+          scheduleTick();
+          return;
+        }
+      }
+    });
     obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
   }
-  setInterval(safeTick, 2500);
-  setTimeout(safeTick, 300);
+  document.addEventListener("click", function () {
+    setTimeout(scheduleTick, 20);
+    setTimeout(syncAllQuickClearButtons, 80);
+  }, true);
+  setInterval(safeTick, 1500);
+  setTimeout(safeTick, 120);
 })();
 </script>
 <!-- ABUDHIYA_PRO_UI_END -->
 
 <!-- ABUDHIYA_GOLD_CARDS_START -->
-<style id="abGoldCardsLuxuryStyle" data-gold-v="8">
+<style id="abGoldCardsLuxuryStyle" data-gold-v="9">
   /* 1) شبكة 3 أعمدة هندسية متطابقة الارتفاع ومريحة للعين */
   .ab-sleek-grid-3,
   #productsGrid,
@@ -5090,25 +5122,40 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     }
   }
 
-  var _abGoldTmr = null;
-  function scheduleGold() {
-    if (_abGoldTmr) return;
-    _abGoldTmr = setTimeout(function () {
-      _abGoldTmr = null;
-      try { applyUnifiedSheenShowcase(); } catch (e) {}
-    }, 45);
+  var _abGoldBusy = false;
+  var _abGoldRaf = 0;
+  function runGoldSafe() {
+    if (_abGoldBusy) return;
+    _abGoldBusy = true;
+    try { applyUnifiedSheenShowcase(); } catch (e) {}
+    _abGoldBusy = false;
   }
-
+  function scheduleGold() {
+    if (_abGoldRaf) return;
+    var raf = window.requestAnimationFrame || function (cb) { return setTimeout(cb, 16); };
+    _abGoldRaf = raf(function () {
+      _abGoldRaf = 0;
+      runGoldSafe();
+    });
+  }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", scheduleGold);
   } else {
     scheduleGold();
   }
   if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(scheduleGold);
+    var obs = new MutationObserver(function (muts) {
+      if (_abGoldBusy) return;
+      for (var k = 0; k < muts.length; k++) {
+        if (muts[k].addedNodes && muts[k].addedNodes.length > 0) {
+          scheduleGold();
+          return;
+        }
+      }
+    });
     obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
   }
-  setTimeout(applyUnifiedSheenShowcase, 500);
+  setTimeout(runGoldSafe, 180);
 })();
 </script>
 <!-- ABUDHIYA_GOLD_CARDS_END -->
@@ -5858,8 +5905,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_PRICE_VISIBILITY_END -->
 
 <!-- ABUDHIYA_ULTRA_SMOOTH_START -->
-<style id="abUltraSmoothZeroShakeStyle" data-smooth-v="1">
-  /* 1) إيقاف شامل لجميع الحركات والارتدادات والاهتزازات على الأصناف وأزرارها */
+<style id="abUltraSmoothZeroShakeStyle" data-smooth-v="2">
+  /* 1) ثبات تام لبطاقات الأصناف بدون أي قفز أو اهتزاز مع ترك القوائم والنوافذ تعمل بطبيعتها 100% */
   #productsGrid,
   .products-grid,
   .ab-sleek-grid-3 {
@@ -5895,12 +5942,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-transform: none !important;
     border-width: 1.25px !important;
     outline: none !important;
-    contain: layout style !important;
-    transition: border-color 0.16s ease, box-shadow 0.16s ease !important;
+    transition: border-color 0.14s ease, box-shadow 0.14s ease !important;
     -webkit-tap-highlight-color: transparent !important;
   }
 
-  /* منع أي حركة أو انكماش أو قفز على الصور والأزرار والشارات داخل البطاقة */
+  /* إلغاء الاهتزاز والارتداد داخل بطاقات الأصناف فقط */
   #productsGrid .card *,
   .products-grid .card *,
   .ab-sleek-grid-3 > .card *,
@@ -5914,7 +5960,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-tap-highlight-color: transparent !important;
   }
 
-  /* 2) تحويل اللمعان إلى انعكاس زجاجي كريستالي ثابت ناعم ومريح للعين (بدون موجة متحركة) */
+  /* 2) لمعان زجاجي كريستالي ثابت ناعم ومريح للعين بدون حركة مزعجة */
   .ab-crystal-gloss::before {
     content: "" !important;
     position: absolute !important;
@@ -5950,10 +5996,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     ) !important;
   }
 
-  /* 3) استجابة لمس مخملية ناعمة جداً لأزرار الكميات (تغيير لون ناعم فقط بدون أي حركة) */
+  /* 3) استجابة لمس لونية ناعمة لأزرار الكميات المختصرة وزر الحذف */
+  [data-ab-pro-card="1"] .ab-qbar {
+    display: grid !important;
+    direction: rtl !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 2.5px !important;
+    margin-top: auto !important;
+    padding-top: 2px !important;
+  }
   [data-ab-pro-card="1"] .ab-qbtn,
   .ab-clear-qty-btn {
-    transition: background-color 0.14s ease, color 0.14s ease, border-color 0.14s ease, opacity 0.14s ease !important;
+    transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease, opacity 0.12s ease !important;
     transform: none !important;
   }
   [data-ab-pro-card="1"] .ab-qbtn:active {
@@ -5963,11 +6017,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     transform: none !important;
   }
   .ab-clear-qty-btn:active {
-    opacity: 0.78 !important;
+    opacity: 0.75 !important;
     transform: none !important;
   }
 
-  /* 4) تثبيت شارات الكمية فوق البطاقة بشكل مطلق (absolute) حتى لا تدفع أي عنصر عند ظهورها */
+  /* 4) تثبيت شارات الكمية فوق الزاوية اليسرى بشكل مطلق حتى لا تدفع أي عنصر */
   [data-ab-pro-card="1"] .qty-badge,
   [data-ab-pro-card="1"] .q-badge,
   [data-ab-pro-card="1"] .cart-badge,
@@ -5986,7 +6040,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     transform: none !important;
   }
 
-  /* 5) منع النبض على شريط السلة السفلي أيضاً */
+  /* 5) إزالة النبض من الشريط السفلي فقط دون لمس النوافذ المنبثقة */
   .bottom-nav *,
   .bottom-bar *,
   #cartBadge,
@@ -5995,9 +6049,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     transform: none !important;
   }
 
-  /* 6) إخفاء فوري (0ms) لكلاسات السعر الأصلية عند تفعيل إخفاء الأسعار لمنع أي قفزة ارتفاع */
+  /* 6) إخفاء فوري (0ms) لكلاسات السعر الدقيقة فقط */
   html.ab-prices-hidden .p-price,
-  html.ab-prices-hidden .price-bar,
   html.ab-prices-hidden .qp-price {
     display: none !important;
   }
