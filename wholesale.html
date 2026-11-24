@@ -7148,6 +7148,237 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_NUMPAD_VISIBILITY_END -->
 
+
+<!-- ABUDHIYA_CARD_CLEAN_FIX_START -->
+<style id="abCardCleanFixStyle" data-card-clean="1">
+  /* 1) توحيد خلفية المتجر بالأسود الفحمي الأنيق وإزالة الفواصل البيضاء بين البطاقات */
+  html,
+  body,
+  main,
+  #catalogView,
+  #productsView,
+  #shopView,
+  #homeView,
+  #productsGrid,
+  .products-grid,
+  .ab-sleek-grid-3 {
+    background-color: #09090d !important;
+  }
+
+  /* 2) تنسيق البطاقة الداكنة الذهبية بحواف ناعمة وتوحيد تام */
+  [data-ab-pro-card="1"] {
+    background: linear-gradient(168deg, #161512 0%, #0b0b0f 62%, #13110c 100%) !important;
+    border: 1.3px solid rgba(212, 175, 55, 0.82) !important;
+    border-radius: 14px !important;
+    padding: 5px 5px 6px !important;
+    color: #f8fafc !important;
+  }
+
+  /* إطار الصورة أبيض ناعم ومتجانس مع صور الأكياس وبحواف دائرية نظيفة */
+  [data-ab-pro-card="1"] .ab-hd-img-wrap {
+    background: #ffffff !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(212, 175, 55, 0.35) !important;
+    padding: 3px !important;
+  }
+
+  /* 3) إظهار أسماء جميع الأصناف بلون أبيض ناصع وخط عريض موحّد (سطرين بالضبط) */
+  [data-ab-pro-card="1"] .ab-clean-prod-title,
+  [data-ab-pro-card="1"] .ab-uni-title,
+  [data-ab-pro-card="1"] h3,
+  [data-ab-pro-card="1"] h4,
+  [data-ab-pro-card="1"] .prod-name,
+  [data-ab-pro-card="1"] .product-name,
+  [data-ab-pro-card="1"] .item-name,
+  [data-ab-pro-card="1"] .card-title,
+  [data-ab-pro-card="1"] .p-name,
+  [data-ab-pro-card="1"] .name,
+  [data-ab-pro-card="1"] .title {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-height: 2.7em !important;
+    max-height: 2.7em !important;
+    line-height: 1.35 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65) !important;
+    margin: 6px 3px 5px !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  /* 4) إخفاء صندوق السعر الفارغ (/ كيس) بالكامل عند قفل الأسعار (ويعود تلقائياً مع الرمز السري abodhya) */
+  html.ab-prices-hidden [data-ab-price-pill="1"] {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  html.ab-prices-hidden [data-ab-pro-card="1"] .p-price,
+  html.ab-prices-hidden [data-ab-pro-card="1"] .p-unit,
+  html.ab-prices-hidden [data-ab-pro-card="1"] .qp-price {
+    display: none !important;
+  }
+
+  /* 5) إخفاء شريط الكمية الأخضر المكرر (✅ XX كيس) وسط البطاقة والاكتفاء بشارة الكمية أعلى الصورة */
+  [data-ab-dup-qty-bar="1"] {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  
+
+  /* 6) تناسق أزرار الكميات (10-300) في أسفل كل بطاقة على خط واحد مستقيم */
+  [data-ab-pro-card="1"] .ab-qbar {
+    margin-top: auto !important;
+    padding-top: 3px !important;
+    gap: 3.5px !important;
+  }
+  [data-ab-pro-card="1"] .ab-qbtn {
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    padding: 5px 0 !important;
+    border-radius: 7px !important;
+  }
+</style>
+<script data-ab-card-clean="1">
+(function () {
+  if (window.__abCardCleanFixV1) return;
+  window.__abCardCleanFixV1 = true;
+
+  var UNIT_RE = /^[\s\/\\\-•|:]*(?:كيس|كرتون|كرتونه|حبة|حبه|بكت|شدة|شده|درزن|علبة|علبه|ربطة|ربطه|طقم|صندوق|قطعة|قطعه)[\s\/\\\-•|:]*$/;
+  var DUP_QTY_RE = /✅\s*\d+|\d+\s*(?:كيس|كرتون|حبة|بكت|شدة|درزن|علبة)\s*✅/;
+
+  function cleanSingleCard(card) {
+    if (!card || card.closest("#abSv3ModalBg, #abSv3ArchModalBg, #invoiceView, .ab-sleek-numpad-box")) return;
+
+    var imgWrap = card.querySelector(".ab-hd-img-wrap");
+    var qbar = card.querySelector(".ab-qbar");
+
+    // 1) إخفاء صندوق السعر الفارغ (/ كيس) بالكامل وإخفاء شريط الكمية الأخضر المكرر (✅ XX كيس)
+    var allEls = card.querySelectorAll("div, p, span, button");
+    for (var i = 0; i < allEls.length; i++) {
+      var el = allEls[i];
+      if (!el || el === imgWrap || el === qbar) continue;
+      if (imgWrap && imgWrap.contains(el)) continue;
+      if (qbar && qbar.contains(el)) continue;
+      if (el.classList.contains("ab-clear-qty-btn") || el.classList.contains("ab-instant-qty-badge") || el.classList.contains("ab-crystal-gloss") || el.classList.contains("ab-bonus-tag")) continue;
+      if (el.querySelector("img, .ab-qbar")) continue;
+
+      var fullTxt = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (!fullTxt) continue;
+
+      // أ) شريط الكمية الأخضر المكرر (✅ 20 كيس / ✅ 30 كيس)
+      if (DUP_QTY_RE.test(fullTxt) && fullTxt.length <= 28) {
+        el.setAttribute("data-ab-dup-qty-bar", "1");
+        continue;
+      }
+
+      // ب) صندوق السعر الذي يحتوي على عنصر سعر مخفي + كلمة (/ كيس أو / كرتون) أو يظهر منه فقط (/ كيس)
+      var hasPriceChild = !!el.querySelector('[data-ab-price-el="1"], .price, .prod-price, .item-price, .card-price, .p-price');
+      var looksLikePricePill =
+        UNIT_RE.test(fullTxt) ||
+        /^\/\s*(?:كيس|كرتون|حبة|بكت|شدة|درزن|علبة|ربطة)/.test(fullTxt) ||
+        (hasPriceChild && fullTxt.length <= 45 && (fullTxt.indexOf("/") !== -1 || fullTxt.indexOf("ر.ي") !== -1 || fullTxt.indexOf("كيس") !== -1 || fullTxt.indexOf("كرتون") !== -1));
+
+      if (looksLikePricePill) {
+        el.setAttribute("data-ab-price-pill", "1");
+        // إذا كان الأب المباشر هو الإطار المرسوم للصندوق نفسه ولا يحتوي اسم الصنف نعلّمه أيضاً
+        var par = el.parentElement;
+        if (par && par !== card && !par.querySelector("img, .ab-qbar, .ab-clean-prod-title")) {
+          var parTxt = (par.textContent || "").replace(/\s+/g, " ").trim();
+          if (parTxt.length <= 45 && (parTxt.indexOf("/") !== -1 || parTxt.indexOf("ر.ي") !== -1 || UNIT_RE.test(parTxt))) {
+            par.setAttribute("data-ab-price-pill", "1");
+          }
+        }
+        continue;
+      }
+    }
+
+    // 2) تحديد اسم الصنف الحقيقي وإظهاره بالأبيض الناصع في كل بطاقة
+    var titleEl = card.querySelector(".ab-clean-prod-title");
+    if (!titleEl) {
+      var candEls = card.querySelectorAll("h1, h2, h3, h4, p, div, span");
+      for (var t = 0; t < candEls.length; t++) {
+        var tn = candEls[t];
+        if (!tn || tn === imgWrap || tn === qbar) continue;
+        if (imgWrap && imgWrap.contains(tn)) continue;
+        if (qbar && qbar.contains(tn)) continue;
+        if (tn.closest('[data-ab-price-pill="1"], [data-ab-price-el="1"], [data-ab-dup-qty-bar="1"], button')) continue;
+        if (tn.getAttribute("data-ab-price-pill") === "1" || tn.getAttribute("data-ab-price-el") === "1" || tn.getAttribute("data-ab-dup-qty-bar") === "1") continue;
+        if (tn.classList.contains("ab-clear-qty-btn") || tn.classList.contains("ab-instant-qty-badge") || tn.classList.contains("ab-bonus-tag")) continue;
+        if (tn.querySelector("img, button, input, .ab-qbar, [data-ab-price-pill='1'], [data-ab-dup-qty-bar='1']")) continue;
+
+        var tx = (tn.textContent || "").replace(/\s+/g, " ").trim();
+        if (!tx || tx.length < 2) continue;
+        if (/^[0-9×x✕+\-\s]+$/i.test(tx)) continue;
+        if (UNIT_RE.test(tx) || DUP_QTY_RE.test(tx) || tx.indexOf("ر.ي") !== -1) continue;
+
+        tn.classList.add("ab-clean-prod-title");
+        break;
+      }
+    }
+  }
+
+  var _cleanBusy = false;
+  function cleanAllCards() {
+    if (_cleanBusy) return;
+    _cleanBusy = true;
+    try {
+      var cards = document.querySelectorAll('[data-ab-pro-card="1"], #productsGrid .card, .products-grid .card');
+      for (var i = 0; i < cards.length; i++) {
+        cleanSingleCard(cards[i]);
+      }
+    } catch (e) {}
+    _cleanBusy = false;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", cleanAllCards);
+  } else {
+    cleanAllCards();
+  }
+  setTimeout(cleanAllCards, 180);
+  setTimeout(cleanAllCards, 650);
+
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(function (muts) {
+      if (_cleanBusy) return;
+      for (var k = 0; k < muts.length; k++) {
+        var an = muts[k].addedNodes;
+        if (!an || !an.length) continue;
+        for (var j = 0; j < an.length; j++) {
+          var nd = an[j];
+          if (!nd || nd.nodeType !== 1) continue;
+          var cls = String(nd.className || "");
+          if (cls.indexOf("ab-") !== -1) continue;
+          if (nd.tagName === "IMG" || (nd.querySelector && nd.querySelector("img")) || DUP_QTY_RE.test(nd.textContent || "")) {
+            cleanAllCards();
+            return;
+          }
+        }
+      }
+    });
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+
+  document.addEventListener("click", function () {
+    setTimeout(cleanAllCards, 30);
+    setTimeout(cleanAllCards, 120);
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_CARD_CLEAN_FIX_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -7191,7 +7422,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-523587";
+  var TARGET_CACHE = "abudhiya-offline-v4-523853";
 
   function forceReleaseSplash() {
     try {
