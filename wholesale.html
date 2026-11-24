@@ -309,8 +309,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="أبوسيف للتجارة العامة — سيئون">
 <meta property="og:title" content="أبوسيف للتجارة العامة — كتالوج أسعار الجملة">
-<meta property="og:description" content="اضغط لفتح صور الأصناف وكتابة الكميات (50 / 100) وإرسال فاتورتك فوراً • المشقاص للصرافة: 254025903">
-<meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg">
+<meta property="og:description" content="تصفح الأصناف وأضف الكميات بلمسة واحدة • حضرموت، سيئون، شارع المطار • تلفون: 05492417 • جوال: 772202525 • مندوب مبيعات: 771458609">
+<meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg?v=1795494984">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -320,7 +320,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="كتالوج أبوضياء">
+<meta name="apple-mobile-web-app-title" content="أبوسيف للتجارة">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
@@ -5433,5 +5433,213 @@ window.addEventListener("beforeinstallprompt", function(e) {
 })();
 </script>
 <!-- ABUDHIYA_NOPRICE_OFFICIAL_END -->
+
+<!-- ABUDHIYA_FINAL_POLISH_START -->
+<style id="abFinalPolishStyle" data-polish-v="1">
+  /* 1) إخفاء شريط التصنيفات المكرر مع الإبقاء على زر إعادة آخر طلب فقط */
+  #abProChips [data-cat] {
+    display: none !important;
+  }
+  #abProTopHub {
+    margin: 5px 10px 6px !important;
+    gap: 6px !important;
+  }
+  #abProChips:empty {
+    display: none !important;
+  }
+  .ab-chips-no-repeat {
+    display: none !important;
+  }
+
+  /* 2) شريط تثبيت التطبيق على الجوال (PWA Install Bar) */
+  #abPwaInstallBar {
+    display: none;
+    direction: rtl;
+    margin: 2px 10px 6px;
+    padding: 8px 11px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(16, 16, 20, 0.96) 0%, rgba(30, 25, 14, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.58);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: inherit;
+  }
+  #abPwaInstallBar.show {
+    display: flex;
+  }
+  .ab-pwa-txt {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    flex: 1;
+  }
+  .ab-pwa-title {
+    font-size: 12px;
+    font-weight: 900;
+    color: #fef08a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ab-pwa-sub {
+    font-size: 10px;
+    font-weight: 600;
+    color: #cbd5e1;
+  }
+  .ab-pwa-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+  }
+  .ab-pwa-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 11px;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .ab-pwa-btn:active { transform: scale(0.95); }
+  .ab-pwa-close {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.7);
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+</style>
+<script data-ab-final-polish="1">
+(function () {
+  if (window.__abFinalPolishV1) return;
+  window.__abFinalPolishV1 = true;
+
+  var DISMISS_KEY = "ab_pwa_dismiss_ts_v1";
+  var deferredPrompt = null;
+
+  function isStandalone() {
+    return (
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function isDismissedRecently() {
+    try {
+      var ts = Number(localStorage.getItem(DISMISS_KEY) || 0);
+      return ts > 0 && (Date.now() - ts) < (7 * 24 * 60 * 60 * 1000);
+    } catch (e) { return false; }
+  }
+
+  function cleanEmptyChipsRow() {
+    var chips = document.getElementById("abProChips");
+    if (!chips) return;
+    var hasRepeat = !!document.getElementById("abRepeatOrderChip");
+    if (!hasRepeat) {
+      if (!chips.classList.contains("ab-chips-no-repeat")) chips.classList.add("ab-chips-no-repeat");
+    } else {
+      if (chips.classList.contains("ab-chips-no-repeat")) chips.classList.remove("ab-chips-no-repeat");
+    }
+  }
+
+  function mountInstallBar() {
+    if (isStandalone() || isDismissedRecently()) return null;
+    var bar = document.getElementById("abPwaInstallBar");
+    if (bar) return bar;
+
+    var anchor = document.getElementById("abProTopHub") || document.getElementById("abSaifLuxuryHeader");
+    if (!anchor || !anchor.parentNode) return null;
+
+    bar = document.createElement("div");
+    bar.id = "abPwaInstallBar";
+    bar.innerHTML =
+      '<div class="ab-pwa-txt">' +
+        '<div class="ab-pwa-title">📲 ثبّت متجر أبوسيف على شاشة جوالك</div>' +
+        '<div class="ab-pwa-sub">طلب أسرع بضغطة واحدة ويعمل حتى بدون نت</div>' +
+      '</div>' +
+      '<div class="ab-pwa-actions">' +
+        '<button type="button" id="abPwaInstallBtn" class="ab-pwa-btn">تثبيت الآن</button>' +
+        '<button type="button" id="abPwaDismissBtn" class="ab-pwa-close" aria-label="إغلاق">✕</button>' +
+      '</div>';
+
+    anchor.insertAdjacentElement("afterend", bar);
+
+    document.getElementById("abPwaDismissBtn").addEventListener("click", function () {
+      bar.classList.remove("show");
+      try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
+    });
+
+    document.getElementById("abPwaInstallBtn").addEventListener("click", function () {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function (choice) {
+          if (choice && choice.outcome === "accepted") {
+            bar.classList.remove("show");
+            if (typeof showToast === "function") showToast("✅ جاري تثبيت متجر أبوسيف على جوالك");
+          }
+          deferredPrompt = null;
+        }).catch(function () {});
+      } else {
+        var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent || "");
+        var msg = isIos
+          ? "📲 للتثبيت على آيفون: اضغط زر المشاركة أسفل المتصفح ثم «إضافة إلى الشاشة الرئيسية»"
+          : "📲 للتثبيت: اضغط قائمة المتصفح (⋮) بالأعلى ثم اختر «تثبيت التطبيق» أو «إضافة للشاشة الرئيسية»";
+        if (typeof showToast === "function") showToast(msg);
+        else alert(msg);
+      }
+    });
+
+    return bar;
+  }
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    var bar = mountInstallBar();
+    if (bar) bar.classList.add("show");
+  });
+
+  window.addEventListener("appinstalled", function () {
+    var bar = document.getElementById("abPwaInstallBar");
+    if (bar) bar.classList.remove("show");
+    deferredPrompt = null;
+  });
+
+  function initPolish() {
+    cleanEmptyChipsRow();
+    // على آيفون أو متصفحات لا تطلق beforeinstallprompt نظهر الشريط بلطف بعد ثانية
+    if (!isStandalone() && !isDismissedRecently()) {
+      var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent || "");
+      if (isIos) {
+        var bar = mountInstallBar();
+        if (bar) bar.classList.add("show");
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(initPolish, 500); });
+  } else {
+    setTimeout(initPolish, 500);
+  }
+  setTimeout(cleanEmptyChipsRow, 1200);
+})();
+</script>
+<!-- ABUDHIYA_FINAL_POLISH_END -->
 </body>
 </html>
