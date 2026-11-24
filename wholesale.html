@@ -2128,8 +2128,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       lines.push('📊 إجمالي الوحدات: *' + totalQty + '*');
     }
 
-    var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(lines.join('
-'));
+    var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(lines.join('\n'));
     window.open(url, '_blank');
   }
 
@@ -6898,6 +6897,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_ALWAYS_ARCHIVE_END -->
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -6941,7 +6941,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-522974";
+  var TARGET_CACHE = "abudhiya-offline-v4-523147";
 
   function forceReleaseSplash() {
     try {
