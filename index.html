@@ -7379,6 +7379,1084 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_CARD_CLEAN_FIX_END -->
 
+
+<!-- ABUDHIYA_ROYAL_VIP_START -->
+<style id="abRoyalVipStyle" data-royal-vip="1">
+  /* دمج شريط الأرشيف القديم بصرياً داخل لوحة القيادة الملكية لمنع التكرار مع بقاء الزر الأصلي عاملاً */
+  #abAlwaysArchTopWrap {
+    display: none !important;
+  }
+
+  /* 1) لوحة القيادة الملكية الزجاجية العلوية (4 أزرار متناسقة بصف واحد مضغوط) */
+  #abRoyalDock {
+    direction: rtl;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 6px 10px 6px;
+    padding: 6px;
+    border-radius: 14px;
+    background: linear-gradient(150deg, rgba(22, 20, 15, 0.96) 0%, rgba(10, 11, 16, 0.98) 100%);
+    border: 1.2px solid rgba(212, 175, 55, 0.62);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 248, 214, 0.22);
+    box-sizing: border-box;
+  }
+  .ab-rd-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 7px 3px 6px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.34);
+    background: linear-gradient(180deg, rgba(28, 27, 24, 0.92) 0%, rgba(13, 14, 19, 0.96) 100%);
+    color: #f8fafc;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    min-width: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-rd-btn:active {
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    border-color: #fef08a;
+  }
+  .ab-rd-btn.active {
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    border-color: #fef08a;
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.35);
+  }
+  .ab-rd-btn.listening {
+    background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
+    color: #ffffff;
+    border-color: #fca5a5;
+  }
+  .ab-rd-ico {
+    font-size: 16px;
+    line-height: 1;
+  }
+  .ab-rd-lbl {
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    color: #fef08a;
+  }
+  .ab-rd-btn.active .ab-rd-lbl,
+  .ab-rd-btn:active .ab-rd-lbl {
+    color: #09090b;
+  }
+  .ab-rd-btn.listening .ab-rd-lbl {
+    color: #ffffff;
+  }
+  .ab-rd-badge {
+    position: absolute;
+    top: -4px;
+    left: -3px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+    font-size: 9.5px;
+    font-weight: 900;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #09090b;
+    line-height: 1;
+  }
+  .ab-rd-badge.show {
+    display: inline-flex;
+  }
+
+  /* 2) نجمة المفضلة داخل الزاوية السفلية اليسرى لصورة الصنف (0px إزاحة، صفر اهتزاز) */
+  .ab-hd-img-wrap .ab-fav-star {
+    position: absolute !important;
+    bottom: 4px !important;
+    left: 4px !important;
+    z-index: 10 !important;
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    border: 1px solid rgba(212, 175, 55, 0.55) !important;
+    background: rgba(9, 9, 13, 0.80) !important;
+    color: #cbd5e1 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45) !important;
+  }
+  .ab-hd-img-wrap .ab-fav-star.on {
+    background: linear-gradient(135deg, #1c1917 0%, #09090b 100%) !important;
+    border-color: #facc15 !important;
+    color: #facc15 !important;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.45) !important;
+  }
+
+  /* تصفية المفضلة الفورية بدون إعادة رسم الشبكة */
+  html.ab-fav-filter-on [data-ab-pro-card="1"]:not([data-ab-fav="1"]) {
+    display: none !important;
+  }
+  #abFavEmptyBanner {
+    display: none;
+    direction: rtl;
+    margin: 10px 12px;
+    padding: 16px 14px;
+    border-radius: 14px;
+    background: linear-gradient(155deg, #16140f, #0d0e14);
+    border: 1.2px dashed rgba(212, 175, 55, 0.65);
+    color: #fef08a;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 800;
+    line-height: 1.75;
+  }
+  #abFavEmptyBanner.show {
+    display: block;
+  }
+
+  /* 3) زر الإيصال المصوّر الفاخر HD داخل صندوق الطلب وبطاقة التأكيد */
+  .ab-hd-rcpt-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1.3px solid rgba(254, 240, 138, 0.78);
+    background: linear-gradient(135deg, #272011 0%, #161410 55%, #241d0f 100%);
+    color: #fef08a !important;
+    font-size: 13px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 248, 214, 0.25);
+  }
+  .ab-hd-rcpt-btn:active {
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b !important;
+  }
+
+  /* 4) نافذة باركود QR والمشاركة + نافذة معاينة الإيصال المصوّر HD */
+  .ab-royal-modal-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 100040;
+    background: rgba(4, 5, 9, 0.84);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    direction: rtl;
+    box-sizing: border-box;
+  }
+  .ab-royal-modal-bg.open {
+    display: flex;
+  }
+  .ab-royal-modal-card {
+    width: 100%;
+    max-width: 390px;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    background: linear-gradient(165deg, #171510 0%, #0b0c10 62%, #15120c 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.86);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.72), 0 0 24px rgba(212, 175, 55, 0.22);
+    padding: 15px 14px 14px;
+    color: #f8fafc;
+    font-family: inherit;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .ab-royal-modal-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .ab-royal-modal-title {
+    font-size: 15.5px;
+    font-weight: 900;
+    color: #facc15;
+    margin: 2px 0 4px;
+  }
+  .ab-royal-modal-sub {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .ab-qr-frame {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 2.5px solid #d4af37;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), 0 0 18px rgba(212, 175, 55, 0.32);
+    margin-bottom: 10px;
+  }
+  .ab-qr-frame img {
+    width: 196px;
+    height: 196px;
+    display: block;
+    border-radius: 8px;
+  }
+  .ab-qr-link-pill {
+    display: block;
+    margin: 0 auto 12px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: #fef08a;
+    font-size: 11.5px;
+    font-weight: 800;
+    direction: ltr;
+    word-break: break-all;
+  }
+  .ab-royal-act-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 8px;
+  }
+  .ab-royal-btn-gold {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-royal-btn-wa {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(134, 239, 172, 0.65);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+  }
+  .ab-royal-btn-dark {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #14161e;
+    color: #fef08a;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-rcpt-preview-img {
+    width: 100%;
+    border-radius: 12px;
+    border: 1.5px solid rgba(212, 175, 55, 0.72);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* 5) صقل الشريط السفلي بأناقة زجاجية داكنة وخط ذهبي علوي */
+  .bottom-nav,
+  .bottom-bar {
+    background: linear-gradient(180deg, rgba(16, 15, 13, 0.97) 0%, rgba(7, 8, 12, 0.99) 100%) !important;
+    border-top: 1.2px solid rgba(212, 175, 55, 0.58) !important;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55) !important;
+  }
+</style>
+<script data-ab-royal-vip="1">
+(function () {
+  if (window.__abRoyalVipV1) return;
+  window.__abRoyalVipV1 = true;
+
+  var STORE_URL = "https://abudhiya-catalog.vercel.app";
+  var HAS_LOCAL_QR = true;
+  var FAV_KEY = "ab_vip_favs_v1";
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
+  var _lastReceiptDataUrl = "";
+  var _lastReceiptFileName = "Abusaif-Order.png";
+  var _voiceActive = false;
+
+  function notify(msg) {
+    if (typeof showToast === "function") showToast(msg);
+  }
+
+  /* ---------------- 1) نظام المفضلة الذكية ---------------- */
+  function loadFavMap() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
+      var map = {};
+      if (Array.isArray(arr)) {
+        for (var i = 0; i < arr.length; i++) map[String(arr[i])] = 1;
+      }
+      return map;
+    } catch (e) { return {}; }
+  }
+  function saveFavMap(map) {
+    try {
+      localStorage.setItem(FAV_KEY, JSON.stringify(Object.keys(map)));
+    } catch (e) {}
+  }
+  function getCardFavId(card, idx) {
+    var pid = card.getAttribute("data-ab-prod-id");
+    if (pid) return "id:" + pid;
+    var tEl = card.querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+    var t = tEl ? (tEl.textContent || "").trim() : "";
+    return t ? ("nm:" + t) : ("idx:" + idx);
+  }
+
+  function updateFavEmptyState() {
+    var banner = document.getElementById("abFavEmptyBanner");
+    if (!banner) return;
+    var isOn = document.documentElement.classList.contains("ab-fav-filter-on");
+    if (!isOn) {
+      banner.classList.remove("show");
+      return;
+    }
+    var favCards = document.querySelectorAll('[data-ab-pro-card="1"][data-ab-fav="1"]');
+    banner.classList.toggle("show", favCards.length === 0);
+  }
+
+  function syncFavButtons() {
+    var map = loadFavMap();
+    var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+    var favCount = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      if (!c || c.closest(".ab-sleek-numpad-box, #invoiceView, #abSv3ModalBg")) continue;
+      var wrap = c.querySelector(".ab-hd-img-wrap");
+      if (!wrap) continue;
+
+      var fid = getCardFavId(c, i);
+      var isFav = !!map[fid];
+      if (isFav) {
+        favCount++;
+        if (c.getAttribute("data-ab-fav") !== "1") c.setAttribute("data-ab-fav", "1");
+      } else {
+        if (c.hasAttribute("data-ab-fav")) c.removeAttribute("data-ab-fav");
+      }
+
+      var star = wrap.querySelector(".ab-fav-star");
+      if (!star) {
+        star = document.createElement("button");
+        star.type = "button";
+        star.className = "ab-fav-star";
+        star.setAttribute("aria-label", "إضافة للمفضلة");
+        (function (cardEl, favKeyId, starEl) {
+          starEl.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            var m = loadFavMap();
+            if (m[favKeyId]) {
+              delete m[favKeyId];
+              cardEl.removeAttribute("data-ab-fav");
+              starEl.classList.remove("on");
+              starEl.textContent = "☆";
+              notify("☆ تمت الإزالة من المفضلة");
+            } else {
+              m[favKeyId] = 1;
+              cardEl.setAttribute("data-ab-fav", "1");
+              starEl.classList.add("on");
+              starEl.textContent = "★";
+              notify("⭐ تمت الإضافة إلى أصنافك المفضلة");
+            }
+            saveFavMap(m);
+            refreshDockBadges();
+            updateFavEmptyState();
+          });
+        })(c, fid, star);
+        wrap.appendChild(star);
+      }
+      var nextTxt = isFav ? "★" : "☆";
+      if (star.textContent !== nextTxt) star.textContent = nextTxt;
+      star.classList.toggle("on", isFav);
+    }
+
+    var badge = document.getElementById("abDockFavBadge");
+    if (badge) {
+      var txt = String(favCount);
+      if (badge.textContent !== txt) badge.textContent = txt;
+      badge.classList.toggle("show", favCount > 0);
+    }
+    updateFavEmptyState();
+  }
+
+  function refreshDockBadges() {
+    // مزامنة عدّاد الأرشيف من الزر الأصلي
+    var origArchBadge = document.querySelector("#abAlwaysArchTopBtn .ab-always-arch-badge");
+    var dockArchBadge = document.getElementById("abDockArchBadge");
+    if (origArchBadge && dockArchBadge) {
+      var v = (origArchBadge.textContent || "0").trim();
+      if (dockArchBadge.textContent !== v) dockArchBadge.textContent = v;
+      dockArchBadge.classList.toggle("show", Number(v) > 0);
+    }
+    var favLen = Object.keys(loadFavMap()).length;
+    var dockFavBadge = document.getElementById("abDockFavBadge");
+    if (dockFavBadge) {
+      var fv = String(favLen);
+      if (dockFavBadge.textContent !== fv) dockFavBadge.textContent = fv;
+      dockFavBadge.classList.toggle("show", favLen > 0);
+    }
+  }
+
+  /* ---------------- 2) البحث الصوتي العربي الفوري ---------------- */
+  function findNativeSearchInput() {
+    var sels = [
+      '#searchInput', '#search', '#prodSearch', '#catalogSearch',
+      'input[type="search"]',
+      'input[placeholder*="بحث"]',
+      'input[placeholder*="ابحث"]',
+      'input[placeholder*="صنف"]'
+    ];
+    for (var i = 0; i < sels.length; i++) {
+      var el = document.querySelector(sels[i]);
+      if (el && !el.closest("#invoiceView, #abSv3ModalBg, #abRoyalQrModal")) return el;
+    }
+    return null;
+  }
+
+  function startVoiceSearch(btn) {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      notify("🎙️ البحث الصوتي يعمل في متصفح Chrome على الجوال");
+      var inp = findNativeSearchInput();
+      if (inp) { inp.focus(); inp.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      return;
+    }
+    if (_voiceActive) return;
+    try {
+      var rec = new SR();
+      rec.lang = "ar-SA";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      _voiceActive = true;
+      btn.classList.add("listening");
+      notify("🎙️ تكلّم الآن باسم الصنف (مثلاً: رنجو أو ريلاكس)...");
+
+      rec.onresult = function (ev) {
+        var spoken = "";
+        try { spoken = String(ev.results[0][0].transcript || "").trim(); } catch (e) {}
+        if (!spoken) return;
+        // إيقاف فلتر المفضلة عند البحث الصوتي ليظهر الصنف مباشرة
+        document.documentElement.classList.remove("ab-fav-filter-on");
+        var fBtn = document.getElementById("abDockFavBtn");
+        if (fBtn) fBtn.classList.remove("active");
+        updateFavEmptyState();
+
+        var inp = findNativeSearchInput();
+        if (inp) {
+          inp.value = spoken;
+          inp.dispatchEvent(new Event("input", { bubbles: true }));
+          inp.dispatchEvent(new Event("keyup", { bubbles: true }));
+          inp.dispatchEvent(new Event("change", { bubbles: true }));
+          notify("🔎 تم البحث عن: " + spoken);
+        } else {
+          notify("🎙️ سمعت: " + spoken);
+        }
+      };
+      rec.onerror = function () {
+        notify("⚠️ لم أتمكن من سماع الصوت — تأكد من السماح بالمايكروفون");
+      };
+      rec.onend = function () {
+        _voiceActive = false;
+        btn.classList.remove("listening");
+      };
+      rec.start();
+    } catch (e) {
+      _voiceActive = false;
+      btn.classList.remove("listening");
+      notify("⚠️ تعذر تشغيل البحث الصوتي في هذا المتصفح");
+    }
+  }
+
+  /* ---------------- 3) نافذة باركود QR والمشاركة الملكية ---------------- */
+  function openQrShareModal() {
+    var bg = document.getElementById("abRoyalQrModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abRoyalQrModal";
+      bg.className = "ab-royal-modal-bg";
+
+      var shareMsg =
+        "✨ *المتجر السحابي الرسمي — أبوسيف للتجارة العامة* ✨\n" +
+        "تصفح الأصناف واطلب الكميات بضغطة واحدة (يعمل حتى بدون نت) 🛒⚡\n\n" +
+        "🔗 *رابط المتجر المباشر:*\n" + STORE_URL + "\n\n" +
+        "📍 حضرموت - سيئون - شارع المطار غربي محطة السلطان\n" +
+        "☎️ تلفون: 05492417 | 📱 جوال: 772202525\n" +
+        "🚚 مندوب المبيعات: 771458609\n" +
+        "🏦 حساب المشقاص: 254025903";
+      var waShareHref = "https://wa.me/?text=" + encodeURIComponent(shareMsg);
+
+      var qrHtml = HAS_LOCAL_QR
+        ? '<div class="ab-qr-frame"><img src="/store-qr.png" alt="باركود متجر أبوسيف للتجارة العامة"></div>'
+        : '<div class="ab-qr-frame" style="padding:18px;color:#09090b;font-weight:900">📲 أبوسيف للتجارة العامة</div>';
+
+      bg.innerHTML =
+        '<div class="ab-royal-modal-card">' +
+          '<button type="button" class="ab-royal-modal-close" id="abQrCloseBtn">✕</button>' +
+          '<div class="ab-royal-modal-title">📲 باركود متجر أبوسيف السحابي</div>' +
+          '<div class="ab-royal-modal-sub">وجّه كاميرا جوال التاجر نحو الباركود لفتح المتجر مباشرة (يعمل بدون نت)</div>' +
+          qrHtml +
+          '<div class="ab-qr-link-pill">' + STORE_URL + '</div>' +
+          '<div class="ab-royal-act-stack">' +
+            '<a class="ab-royal-btn-wa" href="' + waShareHref + '" target="_blank" rel="noopener noreferrer">📤 إرسال رابط المتجر عبر الواتساب</a>' +
+            '<button type="button" class="ab-royal-btn-gold" id="abQrCopyBtn">📋 نسخ رابط المتجر</button>' +
+            '<button type="button" class="ab-royal-btn-dark" id="abQrNativeShareBtn">🔗 مشاركة سريعة عبر التطبيقات</button>' +
+          '</div>' +
+        '</div>';
+
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) {
+        if (ev.target === bg) bg.classList.remove("open");
+      });
+      document.getElementById("abQrCloseBtn").addEventListener("click", function () {
+        bg.classList.remove("open");
+      });
+      document.getElementById("abQrCopyBtn").addEventListener("click", function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(STORE_URL).then(function () {
+            notify("✅ تم نسخ رابط متجر أبوسيف");
+          }).catch(function () {
+            notify("🔗 " + STORE_URL);
+          });
+        } else {
+          notify("🔗 " + STORE_URL);
+        }
+      });
+      document.getElementById("abQrNativeShareBtn").addEventListener("click", function () {
+        if (navigator.share) {
+          navigator.share({
+            title: "أبوسيف للتجارة العامة — المتجر السحابي",
+            text: "تصفح الأصناف واطلب بضغطة واحدة من متجر أبوسيف للتجارة العامة",
+            url: STORE_URL
+          }).catch(function () {});
+        } else {
+          window.open(waShareHref, "_blank", "noopener,noreferrer");
+        }
+      });
+    }
+    bg.classList.add("open");
+  }
+
+  /* ---------------- 4) مولّد الإيصال المصوّر الفاخر HD (Canvas PNG يعمل 100% أوفلاين) ---------------- */
+  function drawRoundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function collectLiveOrderForReceipt() {
+    var showPrices = false;
+    try { showPrices = localStorage.getItem(PRICE_SECRET_KEY) === "1"; } catch (e) {}
+
+    var items = [];
+    var totalQty = 0;
+    var totalPrice = 0;
+
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+      var byId = {};
+      for (var p = 0; p < prods.length; p++) {
+        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      }
+      if (cartObj) {
+        var keys = Object.keys(cartObj);
+        for (var i = 0; i < keys.length; i++) {
+          var pid = keys[i];
+          var qty = Number(cartObj[pid] || 0);
+          if (qty <= 0) continue;
+          var pr = byId[String(pid)];
+          var name = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var unitP = pr ? Number(pr.wholesalePrice || pr.price || pr.p || 0) : 0;
+          var bonus = 0;
+          try { if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, qty) || 0); } catch (e) {}
+          items.push({ name: name, qty: qty, bonus: bonus, price: unitP, sub: unitP * qty });
+          totalQty += qty;
+          totalPrice += (unitP * qty);
+        }
+      }
+    } catch (e) {}
+
+    var custName = "";
+    var payMethod = "";
+    try {
+      var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView") || document;
+      var inps = box.querySelectorAll("input, select");
+      for (var k = 0; k < inps.length; k++) {
+        var el = inps[k];
+        var val = (el.value || "").trim();
+        if (!val) continue;
+        var hint = ((el.id || "") + " " + (el.name || "") + " " + (el.placeholder || "")).toLowerCase();
+        if (!custName && (hint.indexOf("name") !== -1 || hint.indexOf("اسم") !== -1 || hint.indexOf("عميل") !== -1 || hint.indexOf("محل") !== -1)) {
+          custName = val;
+        } else if (!payMethod && (el.tagName === "SELECT" || hint.indexOf("pay") !== -1 || hint.indexOf("دفع") !== -1)) {
+          payMethod = (el.tagName === "SELECT" && el.options && el.selectedIndex >= 0) ? el.options[el.selectedIndex].text.trim() : val;
+        }
+      }
+      if (!custName) custName = (localStorage.getItem("ab_cust_name") || localStorage.getItem("ab_sv3_name") || "").trim();
+      if (!payMethod) {
+        var actP = document.querySelector(".ab-pay-btn.active, [data-pay].active, .pay-opt.active");
+        if (actP) payMethod = (actP.textContent || "").trim();
+      }
+    } catch (e) {}
+
+    // إذا تم تفريغ السلة بعد الإرسال، نقرأ آخر طلب محفوظ
+    if (!items.length) {
+      var snap = window.__abLastConfirmOrder;
+      if (!snap) {
+        try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+      }
+      if (snap && Array.isArray(snap.items) && snap.items.length) {
+        items = snap.items;
+        totalQty = snap.totalQty || 0;
+        custName = custName || snap.custName || "";
+        payMethod = payMethod || snap.payMethod || "";
+      }
+    }
+
+    return {
+      items: items,
+      totalQty: totalQty,
+      totalPrice: totalPrice,
+      showPrices: showPrices && totalPrice > 0,
+      custName: custName || "عميل كريم",
+      payMethod: payMethod || "حسب الاتفاق",
+      refNo: "AB-" + String(Date.now()).slice(-6),
+      dateStr: new Date().toLocaleString("ar-YE", { hour12: true })
+    };
+  }
+
+  function renderLuxuryReceiptPng(order) {
+    var W = 900;
+    var rowH = 54;
+    var itemsCount = order.items.length;
+    var H = 370 + (itemsCount * rowH) + 235;
+    if (H < 660) H = 660;
+
+    var canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    var ctx = canvas.getContext("2d");
+    ctx.direction = "rtl";
+
+    // خلفية فحمية فاخرة متدرجة
+    var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, "#12110e");
+    bgGrad.addColorStop(0.5, "#090a0e");
+    bgGrad.addColorStop(1, "#14110b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // إطار ذهبي مزدوج
+    ctx.strokeStyle = "#d4af37";
+    ctx.lineWidth = 4;
+    drawRoundRect(ctx, 20, 20, W - 40, H - 40, 24);
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(254, 240, 138, 0.35)";
+    ctx.lineWidth = 1.5;
+    drawRoundRect(ctx, 32, 32, W - 64, H - 64, 18);
+    ctx.stroke();
+
+    // ترويسة أبوسيف الملكية
+    ctx.fillStyle = "#facc15";
+    ctx.font = "900 42px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("أبوسيف للتجارة العامة", W / 2, 96);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "700 21px sans-serif";
+    ctx.fillText("لبيع المواد الغذائية والحلويات بالجملة  •  سيئون", W / 2, 134);
+
+    // شارة إيصال رسمي
+    drawRoundRect(ctx, W / 2 - 170, 152, 340, 40, 20);
+    ctx.fillStyle = "rgba(212, 175, 55, 0.16)";
+    ctx.fill();
+    ctx.strokeStyle = "#d4af37";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "800 20px sans-serif";
+    ctx.fillText("إيصال تسجيل طلب رسمي  #" + order.refNo, W / 2, 179);
+
+    // صندوق بيانات العميل والوقت
+    drawRoundRect(ctx, 50, 212, W - 100, 96, 14);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(212, 175, 55, 0.35)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "800 21px sans-serif";
+    ctx.fillText("العميل / المحل: " + order.custName, W - 74, 248);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "700 18px sans-serif";
+    ctx.fillText("طريقة الدفع: " + order.payMethod, W - 74, 286);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "700 18px sans-serif";
+    ctx.fillText(order.dateStr, 74, 248);
+    ctx.fillStyle = "#86efac";
+    ctx.font = "800 18px sans-serif";
+    ctx.fillText("الحالة: تم التسجيل بنجاح ✓", 74, 286);
+
+    // ترويسة جدول الأصناف
+    var y = 328;
+    drawRoundRect(ctx, 50, y, W - 100, 44, 10);
+    ctx.fillStyle = "#d4af37";
+    ctx.fill();
+
+    ctx.fillStyle = "#09090b";
+    ctx.font = "900 20px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("#  الصنف", W - 72, y + 29);
+    ctx.textAlign = "center";
+    ctx.fillText("الكمية", order.showPrices ? 275 : 170, y + 29);
+    if (order.showPrices) {
+      ctx.textAlign = "left";
+      ctx.fillText("الإجمالي", 74, y + 29);
+    }
+
+    y += 52;
+    // صفوف الأصناف
+    for (var i = 0; i < order.items.length; i++) {
+      var it = order.items[i];
+      if (i % 2 === 0) {
+        drawRoundRect(ctx, 50, y, W - 100, rowH - 6, 8);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.035)";
+        ctx.fill();
+      }
+
+      var dispName = (i + 1) + ". " + String(it.name || "");
+      if (dispName.length > 38) dispName = dispName.slice(0, 37) + "…";
+
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "800 20px sans-serif";
+      ctx.fillText(dispName, W - 72, y + 32);
+
+      var qTxt = String(it.qty || 0);
+      if (it.bonus && it.bonus > 0) qTxt += " (+" + it.bonus + " مجاني)";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#fef08a";
+      ctx.font = "900 20px sans-serif";
+      ctx.fillText(qTxt, order.showPrices ? 275 : 170, y + 32);
+
+      if (order.showPrices) {
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#86efac";
+        ctx.font = "800 19px sans-serif";
+        ctx.fillText(Number(it.sub || 0).toLocaleString("en-US") + " ر.ي", 74, y + 32);
+      }
+      y += rowH;
+    }
+
+    // شريط الإجمالي النهائي
+    y += 12;
+    drawRoundRect(ctx, 50, y, W - 100, 56, 12);
+    ctx.fillStyle = "rgba(5, 150, 105, 0.22)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(52, 211, 153, 0.65)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 22px sans-serif";
+    ctx.fillText("عدد الأصناف: " + order.items.length + "   |   إجمالي الكميات: " + order.totalQty, W - 74, y + 36);
+
+    if (order.showPrices) {
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#fef08a";
+      ctx.font = "900 22px sans-serif";
+      ctx.fillText(Number(order.totalPrice || 0).toLocaleString("en-US") + " ر.ي", 74, y + 36);
+    }
+
+    // التذييل الرسمي وأرقام التواصل والمشقاص
+    y += 88;
+    ctx.strokeStyle = "rgba(212, 175, 55, 0.45)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(80, y);
+    ctx.lineTo(W - 80, y);
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "800 19px sans-serif";
+    ctx.fillText("حضرموت - سيئون - شارع المطار غربي محطة السلطان", W / 2, y + 36);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "700 18px sans-serif";
+    ctx.fillText("تلفون: 05492417  •  جوال: 772202525  •  مندوب المبيعات: 771458609", W / 2, y + 70);
+
+    ctx.fillStyle = "#93c5fd";
+    ctx.font = "800 18px sans-serif";
+    ctx.fillText("حساب المشقاص للصرافة: 254025903 (سالم عمر محمد هويدي باجابر)", W / 2, y + 102);
+
+    return canvas.toDataURL("image/png");
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var parts = dataUrl.split(",");
+    var mime = parts[0].match(/:(.*?);/)[1];
+    var bin = atob(parts[1]);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  function openHdReceiptModal() {
+    var order = collectLiveOrderForReceipt();
+    if (!order.items || !order.items.length) {
+      notify("⚠️ أضف أصنافاً أولاً لتوليد الإيصال المصوّر");
+      return;
+    }
+
+    _lastReceiptDataUrl = renderLuxuryReceiptPng(order);
+    _lastReceiptFileName = "Abusaif-" + order.refNo + ".png";
+
+    var bg = document.getElementById("abRoyalReceiptModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abRoyalReceiptModal";
+      bg.className = "ab-royal-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-royal-modal-card">' +
+          '<button type="button" class="ab-royal-modal-close" id="abRcptCloseBtn">✕</button>' +
+          '<div class="ab-royal-modal-title">🧾 إيصال الطلب المصوّر (HD)</div>' +
+          '<div class="ab-royal-modal-sub">إيصال رسمي جاهز للحفظ أو الإرسال المباشر على الواتساب</div>' +
+          '<img id="abRcptImgPreview" class="ab-rcpt-preview-img" alt="إيصال أبوسيف">' +
+          '<div class="ab-royal-act-stack">' +
+            '<button type="button" class="ab-royal-btn-wa" id="abRcptShareImgBtn">📤 مشاركة الإيصال كصورة عبر الواتساب</button>' +
+            '<button type="button" class="ab-royal-btn-gold" id="abRcptDownloadBtn">⬇️ حفظ الإيصال في الاستوديو</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(bg);
+
+      bg.addEventListener("click", function (ev) {
+        if (ev.target === bg) bg.classList.remove("open");
+      });
+      document.getElementById("abRcptCloseBtn").addEventListener("click", function () {
+        bg.classList.remove("open");
+      });
+      document.getElementById("abRcptDownloadBtn").addEventListener("click", function () {
+        var a = document.createElement("a");
+        a.href = _lastReceiptDataUrl;
+        a.download = _lastReceiptFileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        notify("✅ تم حفظ الإيصال المصوّر على جهازك");
+      });
+      document.getElementById("abRcptShareImgBtn").addEventListener("click", function () {
+        try {
+          var blob = dataUrlToBlob(_lastReceiptDataUrl);
+          var file = new File([blob], _lastReceiptFileName, { type: "image/png" });
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              title: "إيصال طلب — أبوسيف للتجارة العامة",
+              text: "إيصال الطلب الرسمي من متجر أبوسيف للتجارة العامة",
+              files: [file]
+            }).catch(function () {});
+            return;
+          }
+        } catch (e) {}
+        // احتياط إذا لم يدعم المتصفح مشاركة الملفات: تحميل الصورة مباشرة
+        document.getElementById("abRcptDownloadBtn").click();
+      });
+    }
+
+    var imgEl = document.getElementById("abRcptImgPreview");
+    if (imgEl) imgEl.src = _lastReceiptDataUrl;
+    bg.classList.add("open");
+  }
+
+  function injectReceiptButtons() {
+    // 1) زر داخل صندوق الطلب (#abSilentOrderBox)
+    var box = document.getElementById("abSilentOrderBox");
+    if (box && !document.getElementById("abBoxHdRcptBtn")) {
+      var b1 = document.createElement("button");
+      b1.type = "button";
+      b1.id = "abBoxHdRcptBtn";
+      b1.className = "ab-hd-rcpt-btn";
+      b1.textContent = "🧾 معاينة وحفظ الإيصال كصورة فاخرة (HD)";
+      b1.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        openHdReceiptModal();
+      });
+      box.appendChild(b1);
+    }
+
+    // 2) زر داخل بطاقة تأكيد الواتساب بعد إرسال الطلب
+    var cards = document.querySelectorAll(".ab-wa-confirm-card");
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].querySelector(".ab-hd-rcpt-btn")) continue;
+      var b2 = document.createElement("button");
+      b2.type = "button";
+      b2.className = "ab-hd-rcpt-btn";
+      b2.textContent = "🧾 حفظ / مشاركة الإيصال كصورة فاخرة (HD)";
+      b2.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        openHdReceiptModal();
+      });
+      cards[i].appendChild(b2);
+    }
+  }
+
+  /* ---------------- 5) تركيب لوحة القيادة الملكية العلوية ---------------- */
+  function mountRoyalDock() {
+    if (document.getElementById("abRoyalDock")) return;
+    var anchor = document.getElementById("abSaifLuxuryHeader") || document.body.firstElementChild;
+    if (!anchor || !anchor.parentNode) return;
+
+    var dock = document.createElement("div");
+    dock.id = "abRoyalDock";
+    dock.innerHTML =
+      '<button type="button" class="ab-rd-btn" id="abDockArchBtn">' +
+        '<span class="ab-rd-badge" id="abDockArchBadge">0</span>' +
+        '<span class="ab-rd-ico">📂</span>' +
+        '<span class="ab-rd-lbl">الأرشيف</span>' +
+      '</button>' +
+      '<button type="button" class="ab-rd-btn" id="abDockFavBtn">' +
+        '<span class="ab-rd-badge" id="abDockFavBadge">0</span>' +
+        '<span class="ab-rd-ico">⭐</span>' +
+        '<span class="ab-rd-lbl">المفضلة</span>' +
+      '</button>' +
+      '<button type="button" class="ab-rd-btn" id="abDockVoiceBtn">' +
+        '<span class="ab-rd-ico">🎙️</span>' +
+        '<span class="ab-rd-lbl">بحث صوتي</span>' +
+      '</button>' +
+      '<button type="button" class="ab-rd-btn" id="abDockQrBtn">' +
+        '<span class="ab-rd-ico">📲</span>' +
+        '<span class="ab-rd-lbl">باركود QR</span>' +
+      '</button>';
+
+    anchor.insertAdjacentElement("afterend", dock);
+
+    // رسالة مساعدة عند فتح المفضلة وهي فارغة
+    var emptyFav = document.createElement("div");
+    emptyFav.id = "abFavEmptyBanner";
+    emptyFav.innerHTML =
+      '⭐ لم تختر أصنافاً مفضلة بعد!<br>' +
+      'اضغط على النجمة <b>(☆)</b> أسفل صورة أي صنف ليظهر هنا فوراً للطلب السريع.';
+    dock.insertAdjacentElement("afterend", emptyFav);
+
+    document.getElementById("abDockArchBtn").addEventListener("click", function () {
+      var origBtn = document.getElementById("abAlwaysArchTopBtn");
+      if (origBtn) origBtn.click();
+    });
+
+    document.getElementById("abDockFavBtn").addEventListener("click", function () {
+      var nextOn = !document.documentElement.classList.contains("ab-fav-filter-on");
+      document.documentElement.classList.toggle("ab-fav-filter-on", nextOn);
+      this.classList.toggle("active", nextOn);
+      syncFavButtons();
+      updateFavEmptyState();
+      if (nextOn) {
+        var cnt = document.querySelectorAll('[data-ab-pro-card="1"][data-ab-fav="1"]').length;
+        notify(cnt > 0 ? ("⭐ عرض أصنافك المفضلة (" + cnt + ")") : "⭐ اضغط (☆) على أي صنف لإضافته للمفضلة");
+      } else {
+        notify("📦 عرض جميع الأصناف");
+      }
+    });
+
+    document.getElementById("abDockVoiceBtn").addEventListener("click", function () {
+      startVoiceSearch(this);
+    });
+
+    document.getElementById("abDockQrBtn").addEventListener("click", openQrShareModal);
+  }
+
+  function runRoyalSync() {
+    try {
+      mountRoyalDock();
+      syncFavButtons();
+      refreshDockBadges();
+      injectReceiptButtons();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(runRoyalSync, 220); });
+  } else {
+    setTimeout(runRoyalSync, 220);
+  }
+  setTimeout(runRoyalSync, 900);
+  document.addEventListener("click", function () {
+    setTimeout(refreshDockBadges, 350);
+    setTimeout(injectReceiptButtons, 600);
+    setTimeout(syncFavButtons, 180);
+  }, true);
+  setInterval(function () {
+    refreshDockBadges();
+    injectReceiptButtons();
+  }, 2400);
+})();
+</script>
+<!-- ABUDHIYA_ROYAL_VIP_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -7422,7 +8500,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-523853";
+  var TARGET_CACHE = "abudhiya-offline-v4-544571";
 
   function forceReleaseSplash() {
     try {
