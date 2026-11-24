@@ -6478,6 +6478,426 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_ORDER_CONFIRM_WA_END -->
 
+
+<!-- ABUDHIYA_ALWAYS_ARCHIVE_START -->
+<style id="abAlwaysArchiveStyle" data-always-arch="1">
+  /* شريط زر الأرشيف الدائم أعلى المتجر (أسود وذهبي ثابت بدون أي اهتزاز) */
+  #abAlwaysArchTopWrap {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 5px 10px 4px;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .ab-always-arch-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border-radius: 10px;
+    border: 1.2px solid rgba(212, 175, 55, 0.78);
+    background: linear-gradient(135deg, #171510 0%, #0d0d11 100%);
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 250, 224, 0.16);
+    white-space: nowrap;
+    transition: none;
+    transform: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-always-arch-btn:active {
+    background: linear-gradient(135deg, #d4af37 0%, #facc15 100%);
+    color: #09090b;
+  }
+  .ab-always-arch-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+    font-size: 10.5px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .ab-always-arch-btn:active .ab-always-arch-badge {
+    background: #09090b;
+    color: #fef08a;
+  }
+  .ab-always-arch-hint {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #94a3b8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* زر الأرشيف داخل شاشة الفاتورة الفارغة */
+  #abEmptyInvArchWrap {
+    direction: rtl;
+    margin: 12px auto 8px;
+    text-align: center;
+    width: 100%;
+    max-width: 320px;
+  }
+  #abEmptyInvArchWrap .ab-always-arch-btn {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 13.5px;
+  }
+
+  /* نافذة احتياطية نظيفة لقراءة الأرشيف إن لم تكن النافذة الأصلية مهيأة */
+  #abFallbackArchBg {
+    position: fixed;
+    inset: 0;
+    z-index: 100020;
+    background: rgba(0, 0, 0, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    direction: rtl;
+    box-sizing: border-box;
+  }
+  #abFallbackArchBg.open {
+    display: flex;
+  }
+  .ab-fb-arch-box {
+    width: 100%;
+    max-width: 440px;
+    max-height: 82vh;
+    background: #101116;
+    border: 1.5px solid rgba(212, 175, 55, 0.8);
+    border-radius: 16px;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #f8fafc;
+    font-family: inherit;
+  }
+  .ab-fb-arch-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #1b170e, #0d0e12);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+    font-size: 14px;
+    font-weight: 900;
+    color: #fef08a;
+  }
+  .ab-fb-arch-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #1e293b;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .ab-fb-arch-body {
+    padding: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ab-fb-arch-item {
+    background: #171922;
+    border: 1px solid rgba(212, 175, 55, 0.32);
+    border-radius: 12px;
+    padding: 10px 11px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .ab-fb-arch-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: #fef08a;
+    font-weight: 800;
+    margin-bottom: 5px;
+    font-size: 11.5px;
+  }
+  .ab-fb-arch-lines {
+    color: #e2e8f0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .ab-fb-arch-empty {
+    text-align: center;
+    padding: 28px 14px;
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+</style>
+<script data-ab-always-arch="1">
+(function () {
+  if (window.__abAlwaysArchiveV1) return;
+  window.__abAlwaysArchiveV1 = true;
+
+  var KNOWN_BTN_IDS = ["abSv3ArchiveBtn"];
+  var KNOWN_MODAL_IDS = [];
+  var KNOWN_LS_KEYS = ["ab_orders_archive_v1", "ab_sv3_name"];
+
+  function isVisibleEl(el) {
+    if (!el) return false;
+    try {
+      var st = window.getComputedStyle(el);
+      return st.display !== "none" && st.visibility !== "hidden" && st.opacity !== "0";
+    } catch (e) { return false; }
+  }
+
+  function readStoredArchiveRecords() {
+    var keysToTry = KNOWN_LS_KEYS.slice();
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (!k) continue;
+        if (/arch|history|orders/i.test(k) && keysToTry.indexOf(k) === -1) {
+          keysToTry.push(k);
+        }
+      }
+    } catch (e) {}
+
+    var best = [];
+    for (var j = 0; j < keysToTry.length; j++) {
+      try {
+        var raw = localStorage.getItem(keysToTry[j]);
+        if (!raw || raw.charAt(0) !== "[") continue;
+        var arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.length >= best.length) {
+          var sample = arr[0];
+          if (!sample || typeof sample === "object") {
+            best = arr;
+          }
+        }
+      } catch (e) {}
+    }
+    return best;
+  }
+
+  function findNativeArchiveButton() {
+    for (var i = 0; i < KNOWN_BTN_IDS.length; i++) {
+      var byId = document.getElementById(KNOWN_BTN_IDS[i]);
+      if (byId && !byId.classList.contains("ab-always-arch-btn")) return byId;
+    }
+
+    var scopes = [
+      document.getElementById("abSilentOrderBox"),
+      document.getElementById("invoiceView"),
+      document
+    ];
+    for (var s = 0; s < scopes.length; s++) {
+      var root = scopes[s];
+      if (!root) continue;
+      var btns = root.querySelectorAll("button");
+      for (var b = 0; b < btns.length; b++) {
+        var btn = btns[b];
+        if (!btn || btn.classList.contains("ab-always-arch-btn") || btn.closest("#abAlwaysArchTopWrap, #abEmptyInvArchWrap, #abFallbackArchBg")) continue;
+        var t = (btn.textContent || "").trim();
+        if (t.indexOf("أرشيف") !== -1 || t.indexOf("الأرشيف") !== -1 || t.indexOf("ارشيف") !== -1) {
+          return btn;
+        }
+      }
+    }
+    return null;
+  }
+
+  function findNativeArchiveModal() {
+    var ids = KNOWN_MODAL_IDS.concat(["abSv3ArchModalBg"]);
+    for (var i = 0; i < ids.length; i++) {
+      var m = document.getElementById(ids[i]);
+      if (m) return m;
+    }
+    return null;
+  }
+
+  function openFallbackArchiveModal() {
+    var bg = document.getElementById("abFallbackArchBg");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abFallbackArchBg";
+      bg.innerHTML =
+        '<div class="ab-fb-arch-box">' +
+          '<div class="ab-fb-arch-head">' +
+            '<span>📂 أرشيف الطلبات المسجّلة</span>' +
+            '<button type="button" class="ab-fb-arch-close" id="abFbArchCloseBtn">✕</button>' +
+          '</div>' +
+          '<div class="ab-fb-arch-body" id="abFbArchBody"></div>' +
+        '</div>';
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) {
+        if (ev.target === bg) bg.classList.remove("open");
+      });
+      document.getElementById("abFbArchCloseBtn").addEventListener("click", function () {
+        bg.classList.remove("open");
+      });
+    }
+
+    var body = document.getElementById("abFbArchBody");
+    var records = readStoredArchiveRecords();
+    if (!records.length) {
+      body.innerHTML =
+        '<div class="ab-fb-arch-empty">' +
+          '📂 لا توجد طلبات محفوظة في الأرشيف حتى الآن.<br>' +
+          'أي طلب يتم تسجيله سيظهر هنا تلقائياً في أي وقت.' +
+        '</div>';
+    } else {
+      body.innerHTML = "";
+      for (var i = 0; i < records.length; i++) {
+        var r = records[i] || {};
+        var card = document.createElement("div");
+        card.className = "ab-fb-arch-item";
+
+        var dt = r.date || r.time || r.createdAt || r.ts || "";
+        if (typeof dt === "number") {
+          try { dt = new Date(dt).toLocaleString("ar-YE", { hour12: true }); } catch (e) {}
+        }
+        var cust = r.customer || r.custName || r.name || r.shop || ("طلب #" + (records.length - i));
+        var pay = r.payment || r.payMethod || "";
+        var lines = [];
+        if (r.text || r.message || r.summary) {
+          lines.push(String(r.text || r.message || r.summary));
+        } else if (Array.isArray(r.items)) {
+          for (var j = 0; j < r.items.length; j++) {
+            var it = r.items[j];
+            if (typeof it === "string") lines.push("• " + it);
+            else if (it && typeof it === "object") {
+              lines.push("• " + (it.name || it.title || "صنف") + " × " + (it.qty || it.quantity || 1));
+            }
+          }
+        }
+        if (pay && lines.join(" ").indexOf(pay) === -1) {
+          lines.unshift("💳 الدفع: " + pay);
+        }
+
+        var metaDiv = document.createElement("div");
+        metaDiv.className = "ab-fb-arch-meta";
+        var s1 = document.createElement("span");
+        s1.textContent = "👤 " + cust;
+        var s2 = document.createElement("span");
+        s2.textContent = String(dt);
+        metaDiv.appendChild(s1);
+        metaDiv.appendChild(s2);
+
+        var bodyDiv = document.createElement("div");
+        bodyDiv.className = "ab-fb-arch-lines";
+        bodyDiv.textContent = lines.length ? lines.join("\n") : "تم تسجيل الطلب في الأرشيف.";
+
+        card.appendChild(metaDiv);
+        card.appendChild(bodyDiv);
+        body.appendChild(card);
+      }
+    }
+    bg.classList.add("open");
+  }
+
+  function triggerOpenArchive(ev) {
+    if (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+    var nativeModal = findNativeArchiveModal();
+    if (nativeModal && nativeModal.parentElement && nativeModal.parentElement !== document.body) {
+      document.body.appendChild(nativeModal);
+    }
+
+    var nativeBtn = findNativeArchiveButton();
+    if (nativeBtn) {
+      try { nativeBtn.click(); } catch (e) {}
+    }
+
+    // فحص بعد لحظة: إذا فتحت نافذة الأرشيف الأصلية نتركها؛ وإلا نفتح العرض الاحتياطي النظيف
+    setTimeout(function () {
+      var m = findNativeArchiveModal();
+      if (m && m.parentElement && m.parentElement !== document.body) {
+        document.body.appendChild(m);
+      }
+      if (m && isVisibleEl(m)) {
+        m.style.zIndex = "100020";
+        return;
+      }
+      openFallbackArchiveModal();
+    }, 140);
+  }
+
+  function updateArchiveCountBadges() {
+    var cnt = readStoredArchiveRecords().length;
+    var badges = document.querySelectorAll(".ab-always-arch-badge");
+    for (var i = 0; i < badges.length; i++) {
+      var txt = String(cnt);
+      if (badges[i].textContent !== txt) badges[i].textContent = txt;
+      badges[i].style.display = cnt > 0 ? "inline-flex" : "none";
+    }
+  }
+
+  function mountAlwaysArchiveButtons() {
+    // 1) زر دائم في أعلى المتجر (تحت ترويسة أبوسيف أو داخل الشريط العلوي)
+    if (!document.getElementById("abAlwaysArchTopWrap")) {
+      var anchor = document.getElementById("abSaifLuxuryHeader") || document.getElementById("abProTopHub") || document.body.firstElementChild;
+      if (anchor && anchor.parentNode) {
+        var wrap = document.createElement("div");
+        wrap.id = "abAlwaysArchTopWrap";
+        wrap.innerHTML =
+          '<button type="button" id="abAlwaysArchTopBtn" class="ab-always-arch-btn">' +
+            '<span>📂 أرشيف الطلبات</span>' +
+            '<span class="ab-always-arch-badge" style="display:none">0</span>' +
+          '</button>' +
+          '<span class="ab-always-arch-hint">مفتوح دائماً حتى والسلة فارغة</span>';
+        anchor.insertAdjacentElement("afterend", wrap);
+        document.getElementById("abAlwaysArchTopBtn").addEventListener("click", triggerOpenArchive);
+      }
+    }
+
+    // 2) زر داخل شاشة الفاتورة الفارغة حتى يظهر عند فتح الفاتورة قبل إضافة أصناف
+    var invView = document.getElementById("invoiceView");
+    if (invView && !document.getElementById("abEmptyInvArchWrap")) {
+      var emptyBox = invView.querySelector("#invEmpty, #emptyCart, .empty-cart, .empty-state");
+      var eWrap = document.createElement("div");
+      eWrap.id = "abEmptyInvArchWrap";
+      eWrap.innerHTML =
+        '<button type="button" id="abEmptyInvArchBtn" class="ab-always-arch-btn">' +
+          '<span>📂 فتح أرشيف الطلبات السابقة</span>' +
+          '<span class="ab-always-arch-badge" style="display:none">0</span>' +
+        '</button>';
+      if (emptyBox) {
+        emptyBox.appendChild(eWrap);
+      } else {
+        invView.insertAdjacentElement("afterbegin", eWrap);
+      }
+      document.getElementById("abEmptyInvArchBtn").addEventListener("click", triggerOpenArchive);
+    }
+
+    updateArchiveCountBadges();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(mountAlwaysArchiveButtons, 180); });
+  } else {
+    setTimeout(mountAlwaysArchiveButtons, 180);
+  }
+  setTimeout(mountAlwaysArchiveButtons, 900);
+  document.addEventListener("click", function () { setTimeout(updateArchiveCountBadges, 500); }, true);
+})();
+</script>
+<!-- ABUDHIYA_ALWAYS_ARCHIVE_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -6521,7 +6941,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-522611";
+  var TARGET_CACHE = "abudhiya-offline-v4-522974";
 
   function forceReleaseSplash() {
     try {
