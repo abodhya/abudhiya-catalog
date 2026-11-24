@@ -6155,5 +6155,128 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_ULTRA_SMOOTH_END -->
+
+<!-- ABUDHIYA_FULL_OFFLINE_START -->
+<style id="abFullOfflineStyle" data-full-offline="1">
+  #abOfflinePill {
+    position: fixed;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99998;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid rgba(212, 175, 55, 0.78);
+    color: #fef08a;
+    font-size: 11px;
+    font-weight: 800;
+    direction: rtl;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+  }
+  #abOfflinePill.show {
+    display: inline-flex;
+  }
+</style>
+<script data-ab-full-offline="1">
+(function () {
+  if (window.__abFullOfflineV1) return;
+  window.__abFullOfflineV1 = true;
+
+  function collectAllProductImageUrls() {
+    var set = {};
+    var out = [];
+    function addUrl(u) {
+      if (!u || typeof u !== "string") return;
+      u = u.trim();
+      if (!u || u.indexOf("data:") === 0 || u.indexOf("blob:") === 0) return;
+      if (!set[u]) {
+        set[u] = 1;
+        out.push(u);
+      }
+    }
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) {
+        for (var i = 0; i < PRODUCTS.length; i++) {
+          var p = PRODUCTS[i];
+          if (!p) continue;
+          addUrl(p.img || p.image || p.imageUrl || p.photo || p.thumb || p.pic);
+        }
+      }
+    } catch (e) {}
+    try {
+      var imgs = document.querySelectorAll("img[src]");
+      for (var j = 0; j < imgs.length; j++) {
+        addUrl(imgs[j].getAttribute("src"));
+      }
+    } catch (e) {}
+    return out;
+  }
+
+  function warmOfflineCache(sw) {
+    if (!sw || typeof sw.postMessage !== "function") return;
+    var urls = collectAllProductImageUrls();
+    if (urls.length) {
+      try { sw.postMessage({ type: "WARM_URLS", urls: urls }); } catch (e) {}
+    }
+  }
+
+  // تسجيل وتحديث Service Worker وحفظ كل صور الأصناف تلقائياً بمجرد الفتح
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("/sw.js", { scope: "/" }).then(function (reg) {
+        try { reg.update(); } catch (e) {}
+        if (reg.waiting) {
+          try { reg.waiting.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
+        }
+        reg.addEventListener("updatefound", function () {
+          var nw = reg.installing;
+          if (!nw) return;
+          nw.addEventListener("statechange", function () {
+            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+              try { nw.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
+            }
+          });
+        });
+        navigator.serviceWorker.ready.then(function (readyReg) {
+          setTimeout(function () {
+            warmOfflineCache(readyReg.active || navigator.serviceWorker.controller);
+          }, 900);
+        });
+      }).catch(function () {});
+    });
+  }
+
+  // مؤشر هادئ يظهر فقط عند انقطاع الإنترنت
+  function syncOfflinePill() {
+    var pill = document.getElementById("abOfflinePill");
+    if (!pill && document.body) {
+      pill = document.createElement("div");
+      pill.id = "abOfflinePill";
+      pill.textContent = "📡 وضع بدون نت — المتجر جاهز للتصفح وتجهيز الطلب";
+      document.body.appendChild(pill);
+    }
+    if (!pill) return;
+    pill.classList.toggle("show", navigator.onLine === false);
+  }
+
+  window.addEventListener("online", function () {
+    syncOfflinePill();
+    if (typeof showToast === "function") showToast("🌐 عاد الاتصال بالإنترنت");
+  });
+  window.addEventListener("offline", syncOfflinePill);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncOfflinePill);
+  } else {
+    syncOfflinePill();
+  }
+})();
+</script>
+<!-- ABUDHIYA_FULL_OFFLINE_END -->
 </body>
 </html>
