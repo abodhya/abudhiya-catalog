@@ -310,7 +310,7 @@
 <meta property="og:site_name" content="أبوسيف للتجارة العامة — سيئون">
 <meta property="og:title" content="أبوسيف للتجارة العامة — كتالوج أسعار الجملة">
 <meta property="og:description" content="تصفح الأصناف وأضف الكميات بلمسة واحدة • حضرموت، سيئون، شارع المطار • تلفون: 05492417 • جوال: 772202525 • مندوب مبيعات: 771458609">
-<meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg?v=1795494984">
+<meta property="og:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg?v=1795495760">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -321,7 +321,7 @@
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="أبوسيف للتجارة">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=1795495761">
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:500;font-display:swap;}
@@ -340,6 +340,8 @@ button,.btn-primary,.add-btn,.send-btn,.qty-btn{background:#000000 !important;ba
 .cat-btn.active,.tab-btn.active,.pill.active,.chip.active{background:#000000 !important;color:#FFFFFF !important;}
 input,select,textarea{background:#FFFFFF !important;color:#000000 !important;border:1.5px solid #000000 !important;font-weight:600 !important;}
 </style>
+<link rel="icon" type="image/png" href="/favicon.png?v=1795495761">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1795495761">
 </head>
 <body>
 <!-- ABUSAIF_LUXURY_HEADER_START -->
@@ -765,28 +767,6 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 </script>
 <!-- ABUSAIF_MISHQAS_BOX_END -->
 <!-- ABUSAIF_LUXURY_HEADER_END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <div class="toast" id="toastEl"></div>
@@ -3478,45 +3458,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
 </script>
 <!-- ABUDHIYA_OFFLINE_ENGINE_END -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -5641,5 +5582,160 @@ window.addEventListener("beforeinstallprompt", function(e) {
 })();
 </script>
 <!-- ABUDHIYA_FINAL_POLISH_END -->
+
+<!-- ABUDHIYA_PRICE_VISIBILITY_START -->
+<style id="abPriceVisibilityStyle" data-price-vis="1">
+  /* إخفاء الأسعار عن العملاء افتراضياً (بدون حذف أي كود، وتُفتح بلمسة من ⚙) */
+  html.ab-prices-hidden [data-ab-price-el="1"],
+  html.ab-prices-hidden .prod-price,
+  html.ab-prices-hidden .item-price,
+  html.ab-prices-hidden .card-price,
+  html.ab-prices-hidden .p-price,
+  html.ab-prices-hidden .price-tag,
+  html.ab-prices-hidden #cartTotal,
+  html.ab-prices-hidden #invTotal,
+  html.ab-prices-hidden #barTotal,
+  html.ab-prices-hidden #totalPrice {
+    display: none !important;
+  }
+
+  .ab-adm-prices-toggle {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #17171d;
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-prices-toggle:active { transform: scale(0.98); }
+</style>
+<script data-ab-price-vis="1">
+(function () {
+  if (window.__abPriceVisV1) return;
+  window.__abPriceVisV1 = true;
+
+  var SHOW_PRICES_KEY = "ab_show_prices_ui_v1";
+
+  function isPricesVisible() {
+    try { return localStorage.getItem(SHOW_PRICES_KEY) === "1"; } catch (e) { return false; }
+  }
+  function setPricesVisible(flag) {
+    try {
+      if (flag) localStorage.setItem(SHOW_PRICES_KEY, "1");
+      else localStorage.removeItem(SHOW_PRICES_KEY);
+    } catch (e) {}
+    document.documentElement.classList.toggle("ab-prices-hidden", !flag);
+  }
+
+  // تطبيق فوري قبل اكتمال الرسم لمنع أي وميض للأسعار
+  document.documentElement.classList.toggle("ab-prices-hidden", !isPricesVisible());
+
+  function isProtected(el) {
+    if (!el) return true;
+    if (el.closest("#abSaifLuxuryHeader, #abDevStampFooter, #abSv3Admin, #abPricedAdminCtrl, #abMishqasCard, #abProSplash, #abPwaInstallBar, #abSv3ModalBg, #abSv3ArchModalBg")) {
+      return true;
+    }
+    if (el.querySelector("img, input, select, textarea, svg, .ab-qbar, #abSilentOrderBox")) {
+      return true;
+    }
+    return false;
+  }
+
+  function tagPriceElements() {
+    try {
+      // 1) تمييز شريط وعناصر (سعر الجملة / سعر التجزئة / قائمة أسعار...)
+      var btns = document.querySelectorAll("button, a, div, p, span");
+      for (var i = 0; i < btns.length; i++) {
+        var el = btns[i];
+        if (!el || el.getAttribute("data-ab-price-el") === "1" || isProtected(el)) continue;
+
+        var tag = el.tagName;
+        var hasSubInteractive = (tag !== "BUTTON" && tag !== "A") && !!el.querySelector("button, a");
+        if (hasSubInteractive) continue;
+
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt || txt.length > 60) continue;
+
+        // أزرار وعبارة وضع الأسعار (جملة / تجزئة)
+        if (
+          txt.indexOf("سعر الجملة") !== -1 ||
+          txt.indexOf("سعر التجزئة") !== -1 ||
+          txt.indexOf("قائمة أسعار") !== -1
+        ) {
+          el.setAttribute("data-ab-price-el", "1");
+          // إذا كان الأب يضم فقط زري الجملة والتجزئة نعلّمه أيضاً لإزالة الفراغ
+          var p = el.parentElement;
+          if (p && !isProtected(p) && p !== document.body) {
+            var pBtns = p.querySelectorAll("button, a");
+            if (pBtns.length === 2) {
+              var pTxt = (p.textContent || "");
+              if (pTxt.indexOf("سعر الجملة") !== -1 && pTxt.indexOf("سعر التجزئة") !== -1 && pTxt.length < 70) {
+                p.setAttribute("data-ab-price-el", "1");
+              }
+            }
+          }
+          continue;
+        }
+
+        // نصوص الأسعار والإجماليات بالريال (ر.ي) داخل البطاقات والشريط السفلي والفاتورة
+        if (
+          tag !== "BUTTON" &&
+          tag !== "A" &&
+          txt.length <= 40 &&
+          (/\d[\d,\.]*\s*ر\.?\s*ي/.test(txt) || /ر\.?\s*ي\s*[\d,\.]+/.test(txt))
+        ) {
+          el.setAttribute("data-ab-price-el", "1");
+        }
+      }
+
+      // 2) إضافة زر التحكم بظهور الأسعار داخل لوحة المدير ⚙ (#abSv3Admin)
+      var adm = document.getElementById("abSv3Admin");
+      if (adm) {
+        var pBtn = document.getElementById("abTogglePricesUiBtn");
+        if (!pBtn) {
+          pBtn = document.createElement("button");
+          pBtn.type = "button";
+          pBtn.id = "abTogglePricesUiBtn";
+          pBtn.className = "ab-adm-prices-toggle";
+          pBtn.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var nextVis = !isPricesVisible();
+            setPricesVisible(nextVis);
+            syncToggleLabel();
+            if (typeof showToast === "function") {
+              showToast(nextVis ? "👁️ تم إظهار الأسعار في الواجهة على جهازك" : "🙈 تم إخفاء الأسعار من الواجهة");
+            }
+          });
+          adm.appendChild(pBtn);
+        }
+        syncToggleLabel();
+      }
+    } catch (e) {}
+  }
+
+  function syncToggleLabel() {
+    var pBtn = document.getElementById("abTogglePricesUiBtn");
+    if (!pBtn) return;
+    var lbl = isPricesVisible()
+      ? "🙈 إخفاء الأسعار من الواجهة"
+      : "👁️ إظهار الأسعار في الواجهة على جهازي";
+    if (pBtn.textContent !== lbl) pBtn.textContent = lbl;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 250); });
+  } else {
+    setTimeout(tagPriceElements, 250);
+  }
+  document.addEventListener("click", function () { setTimeout(tagPriceElements, 180); }, true);
+  setInterval(tagPriceElements, 2200);
+})();
+</script>
+<!-- ABUDHIYA_PRICE_VISIBILITY_END -->
 </body>
 </html>
