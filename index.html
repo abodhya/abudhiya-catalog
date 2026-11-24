@@ -769,6 +769,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 <!-- ABUSAIF_LUXURY_HEADER_END -->
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -3458,6 +3460,754 @@ window.addEventListener("beforeinstallprompt", function(e) {
 </script>
 <!-- ABUDHIYA_OFFLINE_ENGINE_END -->
 
+
+
+
+<!-- ABUDHIYA_DEV_STAMP_START -->
+<style id="abDevStampStyle">
+  .abdev-wrap {
+    direction: rtl;
+    width: 100%;
+    padding: 8px 10px 86px;
+    box-sizing: border-box;
+    font-family: 'IBM Plex Sans Arabic', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+  }
+  .abdev-mini-rect {
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(12, 12, 16, 0.96) 0%, rgba(26, 22, 14, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.52);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(254, 240, 138, 0.22);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+  }
+  .abdev-mini-rect::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 14%;
+    right: 14%;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, #fef08a, #d4af37, transparent);
+  }
+  .abdev-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+  .abdev-mini-seal {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: block;
+    transform: rotate(-7deg);
+    filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.35));
+  }
+  .abdev-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    line-height: 1.2;
+  }
+  .abdev-title {
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    background: linear-gradient(135deg, #fff7cc 0%, #facc15 50%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .abdev-sig-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+  }
+  .abdev-tag {
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(245, 230, 179, 0.72);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .abdev-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+  }
+  .abdev-call-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 11px;
+    font-weight: 900;
+    direction: ltr;
+    letter-spacing: 0.4px;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.28);
+    white-space: nowrap;
+    transition: transform 0.12s ease;
+  }
+  .abdev-call-pill:active, .abdev-wa-dot:active { transform: scale(0.94); }
+  .abdev-wa-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: rgba(16, 185, 129, 0.16);
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    color: #6ee7b7;
+    font-size: 13px;
+    flex: 0 0 28px;
+    transition: transform 0.12s ease;
+  }
+  @media (max-width: 360px) {
+    .abdev-mini-rect { padding: 6px 8px; gap: 6px; }
+    .abdev-mini-seal { width: 34px; height: 34px; flex-basis: 34px; }
+    .abdev-title { font-size: 11px; }
+    .abdev-tag { display: none; }
+    .abdev-call-pill { padding: 4px 7px; font-size: 10.5px; }
+  }
+</style>
+
+<footer id="abDevStampFooter" class="abdev-wrap" aria-label="ختم أبوضياء للتصميم والبرمجة">
+  <div class="abdev-mini-rect">
+    <div class="abdev-right">
+      <svg class="abdev-mini-seal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ختم أبوضياء">
+        <defs>
+          <linearGradient id="abMiniGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFF7CC"/>
+            <stop offset="45%" stop-color="#FACC15"/>
+            <stop offset="100%" stop-color="#B8860B"/>
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="46" fill="rgba(15,15,20,0.9)" stroke="url(#abMiniGold)" stroke-width="2.6" stroke-dasharray="4 2.2"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="url(#abMiniGold)" stroke-width="1.5"/>
+        <rect x="8" y="34" width="84" height="31" rx="5" fill="#09090D" stroke="url(#abMiniGold)" stroke-width="1.6"/>
+        <text x="50" y="51" text-anchor="middle" fill="url(#abMiniGold)" font-size="16" font-weight="900" font-family="sans-serif">أبوضياء</text>
+        <text x="50" y="61" text-anchor="middle" fill="#FDE68A" font-size="6.8" font-weight="800" font-family="sans-serif">تصميم وبرمجة</text>
+        <text x="50" y="24" text-anchor="middle" fill="#FEF08A" font-size="8" font-weight="900">★ ★ ★</text>
+        <text x="50" y="81" text-anchor="middle" fill="#EAB308" font-size="7.5" font-weight="900" font-family="monospace">DEV</text>
+      </svg>
+
+      <div class="abdev-text">
+        <div class="abdev-title">أبوضياء للتصميم والبرمجة</div>
+        <div class="abdev-sig-row">
+          <span class="abdev-tag">تطوير معتمد</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="abdev-left">
+      <a class="abdev-call-pill" href="tel:771458609" title="اتصال بالمبرمج">📞 771458609</a>
+      <a class="abdev-wa-dot" href="https://wa.me/967771458609" target="_blank" rel="noopener" title="واتساب المبرمج">💬</a>
+    </div>
+  </div>
+</footer>
+<!-- ABUDHIYA_DEV_STAMP_END -->
+
+<!-- ABUDHIYA_NOPRICE_OFFICIAL_START -->
+<style id="abNoPriceOfficialStyle" data-noprice-v="2">
+  .ab-priced-btn-hidden { display: none !important; }
+  .ab-official-noprice-btn {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 13px 16px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    border: 1.5px solid rgba(254, 240, 138, 0.58) !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    cursor: pointer !important;
+    margin-top: 4px !important;
+    transition: transform 0.14s ease !important;
+  }
+  .ab-official-noprice-btn:active { transform: scale(0.985) !important; }
+  .ab-priced-btn-unlocked {
+    width: 100% !important;
+    margin-top: 8px !important;
+    border: 1.5px dashed #d4af37 !important;
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
+    color: #fef08a !important;
+  }
+  #abPricedAdminCtrl {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(212, 175, 55, 0.45);
+    width: 100%;
+  }
+  .ab-adm-priced-send {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 1px solid #d4af37;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 55%, #facc15 100%);
+    color: #09090b;
+    font-size: 12.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-priced-toggle {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid #64748b;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-priced-send:active, .ab-adm-priced-toggle:active { transform: scale(0.98); }
+</style>
+<script data-ab-noprice-official="2">
+(function () {
+  if (window.__abNoPriceOfficialV2) return;
+  window.__abNoPriceOfficialV2 = true;
+
+  var SHOW_KEY = "ab_show_priced_btn_v1";
+  var _running = false;
+  var _timer = null;
+
+  function isPricedUnlocked() {
+    try { return localStorage.getItem(SHOW_KEY) === "1"; } catch (e) { return false; }
+  }
+  function setPricedUnlocked(flag) {
+    try {
+      if (flag) localStorage.setItem(SHOW_KEY, "1");
+      else localStorage.removeItem(SHOW_KEY);
+    } catch (e) {}
+  }
+  function setTextSafe(el, txt) {
+    if (el && el.textContent !== txt) el.textContent = txt;
+  }
+
+  function tagSilentButtons(box) {
+    var noPriceBtn = box.querySelector('[data-ab-role="noprice"]');
+    var pricedBtn = box.querySelector('[data-ab-role="priced"]');
+    if (noPriceBtn && pricedBtn) return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
+
+    var btns = box.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || b.closest("#abSv3Admin, #abPricedAdminCtrl")) continue;
+      if (b.getAttribute("data-ab-role") || b.classList.contains("ab-sv3-smallbtn")) continue;
+      var t = (b.textContent || "").replace(/\s+/g, " ").trim();
+      if (!t || t === "⚙" || t === "⚙️") continue;
+      if (
+        t.indexOf("أرشيف") !== -1 || t.indexOf("الأرشيف") !== -1 ||
+        t.indexOf("نسخ") !== -1 || t.indexOf("حفظ") !== -1 ||
+        t.indexOf("إغلاق") !== -1 || t.indexOf("GPS") !== -1 || t.indexOf("موقع") !== -1
+      ) continue;
+
+      if (
+        t.indexOf("بدون سعر") !== -1 || t.indexOf("بدون أسعار") !== -1 ||
+        t.indexOf("كميات فقط") !== -1 || t.indexOf("أصناف فقط") !== -1
+      ) {
+        b.setAttribute("data-ab-role", "noprice");
+        b.setAttribute("data-ab-orig-txt", t);
+        noPriceBtn = b;
+      } else if (
+        t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1 ||
+        t.indexOf("اعتماد") !== -1 || t.indexOf("بالسعر") !== -1 ||
+        t.indexOf("تأكيد") !== -1 || t.indexOf("الطلب") !== -1
+      ) {
+        b.setAttribute("data-ab-role", "priced");
+        b.setAttribute("data-ab-orig-txt", t);
+        pricedBtn = b;
+      }
+    }
+    return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
+  }
+
+  function applyNoPricePolicy() {
+    if (_running) return;
+    _running = true;
+    try {
+      var box = document.getElementById("abSilentOrderBox");
+      if (!box) return;
+
+      var found = tagSilentButtons(box);
+      var noPriceBtn = found.noPriceBtn;
+      var pricedBtn = found.pricedBtn;
+      var unlocked = isPricedUnlocked();
+
+      if (noPriceBtn) {
+        if (!noPriceBtn.classList.contains("ab-official-noprice-btn")) noPriceBtn.classList.add("ab-official-noprice-btn");
+        if (noPriceBtn.classList.contains("ab-priced-btn-hidden")) noPriceBtn.classList.remove("ab-priced-btn-hidden");
+        setTextSafe(noPriceBtn, "✅ اعتماد وإرسال الطلب الرسمي");
+      }
+
+      if (pricedBtn) {
+        if (unlocked) {
+          if (pricedBtn.classList.contains("ab-priced-btn-hidden")) pricedBtn.classList.remove("ab-priced-btn-hidden");
+          if (!pricedBtn.classList.contains("ab-priced-btn-unlocked")) pricedBtn.classList.add("ab-priced-btn-unlocked");
+          var origT = pricedBtn.getAttribute("data-ab-orig-txt") || "";
+          if (origT.indexOf("بالسعر") === -1) {
+            setTextSafe(pricedBtn, "💰 اعتماد وإرسال الطلب (بالسعر)");
+          }
+        } else {
+          if (!pricedBtn.classList.contains("ab-priced-btn-hidden")) pricedBtn.classList.add("ab-priced-btn-hidden");
+          if (pricedBtn.classList.contains("ab-priced-btn-unlocked")) pricedBtn.classList.remove("ab-priced-btn-unlocked");
+        }
+      }
+
+      var adm = document.getElementById("abSv3Admin");
+      if (adm && pricedBtn) {
+        var ctrl = document.getElementById("abPricedAdminCtrl");
+        if (!ctrl) {
+          ctrl = document.createElement("div");
+          ctrl.id = "abPricedAdminCtrl";
+          ctrl.innerHTML =
+            '<button type="button" id="abDirectSendPricedBtn" class="ab-adm-priced-send">💰 إرسال هذا الطلب بالسعر الآن</button>' +
+            '<button type="button" id="abTogglePricedBtn" class="ab-adm-priced-toggle"></button>';
+          adm.appendChild(ctrl);
+
+          document.getElementById("abDirectSendPricedBtn").addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var targetBtn = box.querySelector('[data-ab-role="priced"]');
+            if (targetBtn) targetBtn.click();
+          });
+
+          document.getElementById("abTogglePricedBtn").addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var nextState = !isPricedUnlocked();
+            setPricedUnlocked(nextState);
+            applyNoPricePolicy();
+            if (typeof showToast === "function") {
+              showToast(nextState ? "👁️ تم إظهار زر الإرسال بالسعر على جهازك" : "🔒 تم إخفاء زر الإرسال بالسعر");
+            }
+          });
+        }
+        var togBtn = document.getElementById("abTogglePricedBtn");
+        setTextSafe(
+          togBtn,
+          unlocked ? "🔒 إخفاء زر الإرسال بالسعر من الفاتورة" : "👁️ إظهار زر الإرسال بالسعر على جهازي"
+        );
+      }
+    } finally {
+      _running = false;
+    }
+  }
+
+  function scheduleApply() {
+    if (_timer) return;
+    _timer = setTimeout(function () {
+      _timer = null;
+      applyNoPricePolicy();
+    }, 220);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleApply);
+  } else {
+    scheduleApply();
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(scheduleApply);
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(applyNoPricePolicy, 2500);
+})();
+</script>
+<!-- ABUDHIYA_NOPRICE_OFFICIAL_END -->
+
+<!-- ABUDHIYA_FINAL_POLISH_START -->
+<style id="abFinalPolishStyle" data-polish-v="1">
+  /* 1) إخفاء شريط التصنيفات المكرر مع الإبقاء على زر إعادة آخر طلب فقط */
+  #abProChips [data-cat] {
+    display: none !important;
+  }
+  #abProTopHub {
+    margin: 5px 10px 6px !important;
+    gap: 6px !important;
+  }
+  #abProChips:empty {
+    display: none !important;
+  }
+  .ab-chips-no-repeat {
+    display: none !important;
+  }
+
+  /* 2) شريط تثبيت التطبيق على الجوال (PWA Install Bar) */
+  #abPwaInstallBar {
+    display: none;
+    direction: rtl;
+    margin: 2px 10px 6px;
+    padding: 8px 11px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(16, 16, 20, 0.96) 0%, rgba(30, 25, 14, 0.95) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.58);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: inherit;
+  }
+  #abPwaInstallBar.show {
+    display: flex;
+  }
+  .ab-pwa-txt {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    flex: 1;
+  }
+  .ab-pwa-title {
+    font-size: 12px;
+    font-weight: 900;
+    color: #fef08a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ab-pwa-sub {
+    font-size: 10px;
+    font-weight: 600;
+    color: #cbd5e1;
+  }
+  .ab-pwa-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+  }
+  .ab-pwa-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 11px;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .ab-pwa-btn:active { transform: scale(0.95); }
+  .ab-pwa-close {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.7);
+    color: #cbd5e1;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+</style>
+<script data-ab-final-polish="1">
+(function () {
+  if (window.__abFinalPolishV1) return;
+  window.__abFinalPolishV1 = true;
+
+  var DISMISS_KEY = "ab_pwa_dismiss_ts_v1";
+  var deferredPrompt = null;
+
+  function isStandalone() {
+    return (
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function isDismissedRecently() {
+    try {
+      var ts = Number(localStorage.getItem(DISMISS_KEY) || 0);
+      return ts > 0 && (Date.now() - ts) < (7 * 24 * 60 * 60 * 1000);
+    } catch (e) { return false; }
+  }
+
+  function cleanEmptyChipsRow() {
+    var chips = document.getElementById("abProChips");
+    if (!chips) return;
+    var hasRepeat = !!document.getElementById("abRepeatOrderChip");
+    if (!hasRepeat) {
+      if (!chips.classList.contains("ab-chips-no-repeat")) chips.classList.add("ab-chips-no-repeat");
+    } else {
+      if (chips.classList.contains("ab-chips-no-repeat")) chips.classList.remove("ab-chips-no-repeat");
+    }
+  }
+
+  function mountInstallBar() {
+    if (isStandalone() || isDismissedRecently()) return null;
+    var bar = document.getElementById("abPwaInstallBar");
+    if (bar) return bar;
+
+    var anchor = document.getElementById("abProTopHub") || document.getElementById("abSaifLuxuryHeader");
+    if (!anchor || !anchor.parentNode) return null;
+
+    bar = document.createElement("div");
+    bar.id = "abPwaInstallBar";
+    bar.innerHTML =
+      '<div class="ab-pwa-txt">' +
+        '<div class="ab-pwa-title">📲 ثبّت متجر أبوسيف على شاشة جوالك</div>' +
+        '<div class="ab-pwa-sub">طلب أسرع بضغطة واحدة ويعمل حتى بدون نت</div>' +
+      '</div>' +
+      '<div class="ab-pwa-actions">' +
+        '<button type="button" id="abPwaInstallBtn" class="ab-pwa-btn">تثبيت الآن</button>' +
+        '<button type="button" id="abPwaDismissBtn" class="ab-pwa-close" aria-label="إغلاق">✕</button>' +
+      '</div>';
+
+    anchor.insertAdjacentElement("afterend", bar);
+
+    document.getElementById("abPwaDismissBtn").addEventListener("click", function () {
+      bar.classList.remove("show");
+      try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
+    });
+
+    document.getElementById("abPwaInstallBtn").addEventListener("click", function () {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function (choice) {
+          if (choice && choice.outcome === "accepted") {
+            bar.classList.remove("show");
+            if (typeof showToast === "function") showToast("✅ جاري تثبيت متجر أبوسيف على جوالك");
+          }
+          deferredPrompt = null;
+        }).catch(function () {});
+      } else {
+        var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent || "");
+        var msg = isIos
+          ? "📲 للتثبيت على آيفون: اضغط زر المشاركة أسفل المتصفح ثم «إضافة إلى الشاشة الرئيسية»"
+          : "📲 للتثبيت: اضغط قائمة المتصفح (⋮) بالأعلى ثم اختر «تثبيت التطبيق» أو «إضافة للشاشة الرئيسية»";
+        if (typeof showToast === "function") showToast(msg);
+        else alert(msg);
+      }
+    });
+
+    return bar;
+  }
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    var bar = mountInstallBar();
+    if (bar) bar.classList.add("show");
+  });
+
+  window.addEventListener("appinstalled", function () {
+    var bar = document.getElementById("abPwaInstallBar");
+    if (bar) bar.classList.remove("show");
+    deferredPrompt = null;
+  });
+
+  function initPolish() {
+    cleanEmptyChipsRow();
+    // على آيفون أو متصفحات لا تطلق beforeinstallprompt نظهر الشريط بلطف بعد ثانية
+    if (!isStandalone() && !isDismissedRecently()) {
+      var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent || "");
+      if (isIos) {
+        var bar = mountInstallBar();
+        if (bar) bar.classList.add("show");
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(initPolish, 500); });
+  } else {
+    setTimeout(initPolish, 500);
+  }
+  setTimeout(cleanEmptyChipsRow, 1200);
+})();
+</script>
+<!-- ABUDHIYA_FINAL_POLISH_END -->
+
+<!-- ABUDHIYA_PRICE_VISIBILITY_START -->
+<style id="abPriceVisibilityStyle" data-price-vis="1">
+  /* إخفاء الأسعار عن العملاء افتراضياً (بدون حذف أي كود، وتُفتح بلمسة من ⚙) */
+  html.ab-prices-hidden [data-ab-price-el="1"],
+  html.ab-prices-hidden .prod-price,
+  html.ab-prices-hidden .item-price,
+  html.ab-prices-hidden .card-price,
+  html.ab-prices-hidden .p-price,
+  html.ab-prices-hidden .price-tag,
+  html.ab-prices-hidden #cartTotal,
+  html.ab-prices-hidden #invTotal,
+  html.ab-prices-hidden #barTotal,
+  html.ab-prices-hidden #totalPrice {
+    display: none !important;
+  }
+
+  .ab-adm-prices-toggle {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #17171d;
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-adm-prices-toggle:active { transform: scale(0.98); }
+</style>
+<script data-ab-price-vis="1">
+(function () {
+  if (window.__abPriceVisV1) return;
+  window.__abPriceVisV1 = true;
+
+  var SHOW_PRICES_KEY = "ab_show_prices_ui_v1";
+
+  function isPricesVisible() {
+    try { return localStorage.getItem(SHOW_PRICES_KEY) === "1"; } catch (e) { return false; }
+  }
+  function setPricesVisible(flag) {
+    try {
+      if (flag) localStorage.setItem(SHOW_PRICES_KEY, "1");
+      else localStorage.removeItem(SHOW_PRICES_KEY);
+    } catch (e) {}
+    document.documentElement.classList.toggle("ab-prices-hidden", !flag);
+  }
+
+  // تطبيق فوري قبل اكتمال الرسم لمنع أي وميض للأسعار
+  document.documentElement.classList.toggle("ab-prices-hidden", !isPricesVisible());
+
+  function isProtected(el) {
+    if (!el) return true;
+    if (el.closest("#abSaifLuxuryHeader, #abDevStampFooter, #abSv3Admin, #abPricedAdminCtrl, #abMishqasCard, #abProSplash, #abPwaInstallBar, #abSv3ModalBg, #abSv3ArchModalBg")) {
+      return true;
+    }
+    if (el.querySelector("img, input, select, textarea, svg, .ab-qbar, #abSilentOrderBox")) {
+      return true;
+    }
+    return false;
+  }
+
+  function tagPriceElements() {
+    try {
+      // 1) تمييز شريط وعناصر (سعر الجملة / سعر التجزئة / قائمة أسعار...)
+      var btns = document.querySelectorAll("button, a, div, p, span");
+      for (var i = 0; i < btns.length; i++) {
+        var el = btns[i];
+        if (!el || el.getAttribute("data-ab-price-el") === "1" || isProtected(el)) continue;
+
+        var tag = el.tagName;
+        var hasSubInteractive = (tag !== "BUTTON" && tag !== "A") && !!el.querySelector("button, a");
+        if (hasSubInteractive) continue;
+
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt || txt.length > 60) continue;
+
+        // أزرار وعبارة وضع الأسعار (جملة / تجزئة)
+        if (
+          txt.indexOf("سعر الجملة") !== -1 ||
+          txt.indexOf("سعر التجزئة") !== -1 ||
+          txt.indexOf("قائمة أسعار") !== -1
+        ) {
+          el.setAttribute("data-ab-price-el", "1");
+          // إذا كان الأب يضم فقط زري الجملة والتجزئة نعلّمه أيضاً لإزالة الفراغ
+          var p = el.parentElement;
+          if (p && !isProtected(p) && p !== document.body) {
+            var pBtns = p.querySelectorAll("button, a");
+            if (pBtns.length === 2) {
+              var pTxt = (p.textContent || "");
+              if (pTxt.indexOf("سعر الجملة") !== -1 && pTxt.indexOf("سعر التجزئة") !== -1 && pTxt.length < 70) {
+                p.setAttribute("data-ab-price-el", "1");
+              }
+            }
+          }
+          continue;
+        }
+
+        // نصوص الأسعار والإجماليات بالريال (ر.ي) داخل البطاقات والشريط السفلي والفاتورة
+        if (
+          tag !== "BUTTON" &&
+          tag !== "A" &&
+          txt.length <= 40 &&
+          (/\d[\d,\.]*\s*ر\.?\s*ي/.test(txt) || /ر\.?\s*ي\s*[\d,\.]+/.test(txt))
+        ) {
+          el.setAttribute("data-ab-price-el", "1");
+        }
+      }
+
+      // 2) إضافة زر التحكم بظهور الأسعار داخل لوحة المدير ⚙ (#abSv3Admin)
+      var adm = document.getElementById("abSv3Admin");
+      if (adm) {
+        var pBtn = document.getElementById("abTogglePricesUiBtn");
+        if (!pBtn) {
+          pBtn = document.createElement("button");
+          pBtn.type = "button";
+          pBtn.id = "abTogglePricesUiBtn";
+          pBtn.className = "ab-adm-prices-toggle";
+          pBtn.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            var nextVis = !isPricesVisible();
+            setPricesVisible(nextVis);
+            syncToggleLabel();
+            if (typeof showToast === "function") {
+              showToast(nextVis ? "👁️ تم إظهار الأسعار في الواجهة على جهازك" : "🙈 تم إخفاء الأسعار من الواجهة");
+            }
+          });
+          adm.appendChild(pBtn);
+        }
+        syncToggleLabel();
+      }
+    } catch (e) {}
+  }
+
+  function syncToggleLabel() {
+    var pBtn = document.getElementById("abTogglePricesUiBtn");
+    if (!pBtn) return;
+    var lbl = isPricesVisible()
+      ? "🙈 إخفاء الأسعار من الواجهة"
+      : "👁️ إظهار الأسعار في الواجهة على جهازي";
+    if (pBtn.textContent !== lbl) pBtn.textContent = lbl;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 250); });
+  } else {
+    setTimeout(tagPriceElements, 250);
+  }
+  document.addEventListener("click", function () { setTimeout(tagPriceElements, 180); }, true);
+  setInterval(tagPriceElements, 2200);
+})();
+</script>
+<!-- ABUDHIYA_PRICE_VISIBILITY_END -->
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3586,7 +4336,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 2.5px;
     margin-top: 4px;
-    direction: ltr;
+    direction: rtl;
     width: 100%;
   }
   .ab-qbtn {
@@ -4651,751 +5401,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
 </script>
 <!-- ABUDHIYA_PRO_UI_END -->
 
-
-<!-- ABUDHIYA_DEV_STAMP_START -->
-<style id="abDevStampStyle">
-  .abdev-wrap {
-    direction: rtl;
-    width: 100%;
-    padding: 8px 10px 86px;
-    box-sizing: border-box;
-    font-family: 'IBM Plex Sans Arabic', 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
-  }
-  .abdev-mini-rect {
-    position: relative;
-    max-width: 520px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(12, 12, 16, 0.96) 0%, rgba(26, 22, 14, 0.95) 100%);
-    border: 1px solid rgba(212, 175, 55, 0.52);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(254, 240, 138, 0.22);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    overflow: hidden;
-  }
-  .abdev-mini-rect::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 14%;
-    right: 14%;
-    height: 1.5px;
-    background: linear-gradient(90deg, transparent, #fef08a, #d4af37, transparent);
-  }
-  .abdev-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-    flex: 1;
-  }
-  .abdev-mini-seal {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
-    display: block;
-    transform: rotate(-7deg);
-    filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.35));
-  }
-  .abdev-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-width: 0;
-    line-height: 1.2;
-  }
-  .abdev-title {
-    font-size: 12px;
-    font-weight: 900;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    background: linear-gradient(135deg, #fff7cc 0%, #facc15 50%, #d4af37 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .abdev-sig-row {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-top: 2px;
-  }
-  .abdev-tag {
-    font-size: 9px;
-    font-weight: 700;
-    color: rgba(245, 230, 179, 0.72);
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-  }
-  .abdev-left {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex: 0 0 auto;
-  }
-  .abdev-call-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    text-decoration: none;
-    padding: 5px 9px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
-    color: #09090b;
-    font-size: 11px;
-    font-weight: 900;
-    direction: ltr;
-    letter-spacing: 0.4px;
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.28);
-    white-space: nowrap;
-    transition: transform 0.12s ease;
-  }
-  .abdev-call-pill:active, .abdev-wa-dot:active { transform: scale(0.94); }
-  .abdev-wa-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    background: rgba(16, 185, 129, 0.16);
-    border: 1px solid rgba(16, 185, 129, 0.5);
-    color: #6ee7b7;
-    font-size: 13px;
-    flex: 0 0 28px;
-    transition: transform 0.12s ease;
-  }
-  @media (max-width: 360px) {
-    .abdev-mini-rect { padding: 6px 8px; gap: 6px; }
-    .abdev-mini-seal { width: 34px; height: 34px; flex-basis: 34px; }
-    .abdev-title { font-size: 11px; }
-    .abdev-tag { display: none; }
-    .abdev-call-pill { padding: 4px 7px; font-size: 10.5px; }
-  }
-</style>
-
-<footer id="abDevStampFooter" class="abdev-wrap" aria-label="ختم أبوضياء للتصميم والبرمجة">
-  <div class="abdev-mini-rect">
-    <div class="abdev-right">
-      <svg class="abdev-mini-seal" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ختم أبوضياء">
-        <defs>
-          <linearGradient id="abMiniGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FFF7CC"/>
-            <stop offset="45%" stop-color="#FACC15"/>
-            <stop offset="100%" stop-color="#B8860B"/>
-          </linearGradient>
-        </defs>
-        <circle cx="50" cy="50" r="46" fill="rgba(15,15,20,0.9)" stroke="url(#abMiniGold)" stroke-width="2.6" stroke-dasharray="4 2.2"/>
-        <circle cx="50" cy="50" r="40" fill="none" stroke="url(#abMiniGold)" stroke-width="1.5"/>
-        <rect x="8" y="34" width="84" height="31" rx="5" fill="#09090D" stroke="url(#abMiniGold)" stroke-width="1.6"/>
-        <text x="50" y="51" text-anchor="middle" fill="url(#abMiniGold)" font-size="16" font-weight="900" font-family="sans-serif">أبوضياء</text>
-        <text x="50" y="61" text-anchor="middle" fill="#FDE68A" font-size="6.8" font-weight="800" font-family="sans-serif">تصميم وبرمجة</text>
-        <text x="50" y="24" text-anchor="middle" fill="#FEF08A" font-size="8" font-weight="900">★ ★ ★</text>
-        <text x="50" y="81" text-anchor="middle" fill="#EAB308" font-size="7.5" font-weight="900" font-family="monospace">DEV</text>
-      </svg>
-
-      <div class="abdev-text">
-        <div class="abdev-title">أبوضياء للتصميم والبرمجة</div>
-        <div class="abdev-sig-row">
-          <span class="abdev-tag">تطوير معتمد</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="abdev-left">
-      <a class="abdev-call-pill" href="tel:771458609" title="اتصال بالمبرمج">📞 771458609</a>
-      <a class="abdev-wa-dot" href="https://wa.me/967771458609" target="_blank" rel="noopener" title="واتساب المبرمج">💬</a>
-    </div>
-  </div>
-</footer>
-<!-- ABUDHIYA_DEV_STAMP_END -->
-
-<!-- ABUDHIYA_NOPRICE_OFFICIAL_START -->
-<style id="abNoPriceOfficialStyle" data-noprice-v="2">
-  .ab-priced-btn-hidden { display: none !important; }
-  .ab-official-noprice-btn {
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    padding: 13px 16px !important;
-    border-radius: 12px !important;
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-    color: #ffffff !important;
-    border: 1.5px solid rgba(254, 240, 138, 0.58) !important;
-    font-size: 15px !important;
-    font-weight: 900 !important;
-    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
-    cursor: pointer !important;
-    margin-top: 4px !important;
-    transition: transform 0.14s ease !important;
-  }
-  .ab-official-noprice-btn:active { transform: scale(0.985) !important; }
-  .ab-priced-btn-unlocked {
-    width: 100% !important;
-    margin-top: 8px !important;
-    border: 1.5px dashed #d4af37 !important;
-    background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
-    color: #fef08a !important;
-  }
-  #abPricedAdminCtrl {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px dashed rgba(212, 175, 55, 0.45);
-    width: 100%;
-  }
-  .ab-adm-priced-send {
-    width: 100%;
-    padding: 9px 10px;
-    border-radius: 9px;
-    border: 1px solid #d4af37;
-    background: linear-gradient(135deg, #b8860b 0%, #d4af37 55%, #facc15 100%);
-    color: #09090b;
-    font-size: 12.5px;
-    font-weight: 900;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ab-adm-priced-toggle {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 9px;
-    border: 1px solid #64748b;
-    background: #0f172a;
-    color: #e2e8f0;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ab-adm-priced-send:active, .ab-adm-priced-toggle:active { transform: scale(0.98); }
-</style>
-<script data-ab-noprice-official="2">
-(function () {
-  if (window.__abNoPriceOfficialV2) return;
-  window.__abNoPriceOfficialV2 = true;
-
-  var SHOW_KEY = "ab_show_priced_btn_v1";
-  var _running = false;
-  var _timer = null;
-
-  function isPricedUnlocked() {
-    try { return localStorage.getItem(SHOW_KEY) === "1"; } catch (e) { return false; }
-  }
-  function setPricedUnlocked(flag) {
-    try {
-      if (flag) localStorage.setItem(SHOW_KEY, "1");
-      else localStorage.removeItem(SHOW_KEY);
-    } catch (e) {}
-  }
-  function setTextSafe(el, txt) {
-    if (el && el.textContent !== txt) el.textContent = txt;
-  }
-
-  function tagSilentButtons(box) {
-    var noPriceBtn = box.querySelector('[data-ab-role="noprice"]');
-    var pricedBtn = box.querySelector('[data-ab-role="priced"]');
-    if (noPriceBtn && pricedBtn) return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
-
-    var btns = box.querySelectorAll("button");
-    for (var i = 0; i < btns.length; i++) {
-      var b = btns[i];
-      if (!b || b.closest("#abSv3Admin, #abPricedAdminCtrl")) continue;
-      if (b.getAttribute("data-ab-role") || b.classList.contains("ab-sv3-smallbtn")) continue;
-      var t = (b.textContent || "").replace(/\s+/g, " ").trim();
-      if (!t || t === "⚙" || t === "⚙️") continue;
-      if (
-        t.indexOf("أرشيف") !== -1 || t.indexOf("الأرشيف") !== -1 ||
-        t.indexOf("نسخ") !== -1 || t.indexOf("حفظ") !== -1 ||
-        t.indexOf("إغلاق") !== -1 || t.indexOf("GPS") !== -1 || t.indexOf("موقع") !== -1
-      ) continue;
-
-      if (
-        t.indexOf("بدون سعر") !== -1 || t.indexOf("بدون أسعار") !== -1 ||
-        t.indexOf("كميات فقط") !== -1 || t.indexOf("أصناف فقط") !== -1
-      ) {
-        b.setAttribute("data-ab-role", "noprice");
-        b.setAttribute("data-ab-orig-txt", t);
-        noPriceBtn = b;
-      } else if (
-        t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1 ||
-        t.indexOf("اعتماد") !== -1 || t.indexOf("بالسعر") !== -1 ||
-        t.indexOf("تأكيد") !== -1 || t.indexOf("الطلب") !== -1
-      ) {
-        b.setAttribute("data-ab-role", "priced");
-        b.setAttribute("data-ab-orig-txt", t);
-        pricedBtn = b;
-      }
-    }
-    return { noPriceBtn: noPriceBtn, pricedBtn: pricedBtn };
-  }
-
-  function applyNoPricePolicy() {
-    if (_running) return;
-    _running = true;
-    try {
-      var box = document.getElementById("abSilentOrderBox");
-      if (!box) return;
-
-      var found = tagSilentButtons(box);
-      var noPriceBtn = found.noPriceBtn;
-      var pricedBtn = found.pricedBtn;
-      var unlocked = isPricedUnlocked();
-
-      if (noPriceBtn) {
-        if (!noPriceBtn.classList.contains("ab-official-noprice-btn")) noPriceBtn.classList.add("ab-official-noprice-btn");
-        if (noPriceBtn.classList.contains("ab-priced-btn-hidden")) noPriceBtn.classList.remove("ab-priced-btn-hidden");
-        setTextSafe(noPriceBtn, "✅ اعتماد وإرسال الطلب الرسمي");
-      }
-
-      if (pricedBtn) {
-        if (unlocked) {
-          if (pricedBtn.classList.contains("ab-priced-btn-hidden")) pricedBtn.classList.remove("ab-priced-btn-hidden");
-          if (!pricedBtn.classList.contains("ab-priced-btn-unlocked")) pricedBtn.classList.add("ab-priced-btn-unlocked");
-          var origT = pricedBtn.getAttribute("data-ab-orig-txt") || "";
-          if (origT.indexOf("بالسعر") === -1) {
-            setTextSafe(pricedBtn, "💰 اعتماد وإرسال الطلب (بالسعر)");
-          }
-        } else {
-          if (!pricedBtn.classList.contains("ab-priced-btn-hidden")) pricedBtn.classList.add("ab-priced-btn-hidden");
-          if (pricedBtn.classList.contains("ab-priced-btn-unlocked")) pricedBtn.classList.remove("ab-priced-btn-unlocked");
-        }
-      }
-
-      var adm = document.getElementById("abSv3Admin");
-      if (adm && pricedBtn) {
-        var ctrl = document.getElementById("abPricedAdminCtrl");
-        if (!ctrl) {
-          ctrl = document.createElement("div");
-          ctrl.id = "abPricedAdminCtrl";
-          ctrl.innerHTML =
-            '<button type="button" id="abDirectSendPricedBtn" class="ab-adm-priced-send">💰 إرسال هذا الطلب بالسعر الآن</button>' +
-            '<button type="button" id="abTogglePricedBtn" class="ab-adm-priced-toggle"></button>';
-          adm.appendChild(ctrl);
-
-          document.getElementById("abDirectSendPricedBtn").addEventListener("click", function (ev) {
-            ev.preventDefault();
-            var targetBtn = box.querySelector('[data-ab-role="priced"]');
-            if (targetBtn) targetBtn.click();
-          });
-
-          document.getElementById("abTogglePricedBtn").addEventListener("click", function (ev) {
-            ev.preventDefault();
-            var nextState = !isPricedUnlocked();
-            setPricedUnlocked(nextState);
-            applyNoPricePolicy();
-            if (typeof showToast === "function") {
-              showToast(nextState ? "👁️ تم إظهار زر الإرسال بالسعر على جهازك" : "🔒 تم إخفاء زر الإرسال بالسعر");
-            }
-          });
-        }
-        var togBtn = document.getElementById("abTogglePricedBtn");
-        setTextSafe(
-          togBtn,
-          unlocked ? "🔒 إخفاء زر الإرسال بالسعر من الفاتورة" : "👁️ إظهار زر الإرسال بالسعر على جهازي"
-        );
-      }
-    } finally {
-      _running = false;
-    }
-  }
-
-  function scheduleApply() {
-    if (_timer) return;
-    _timer = setTimeout(function () {
-      _timer = null;
-      applyNoPricePolicy();
-    }, 220);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", scheduleApply);
-  } else {
-    scheduleApply();
-  }
-  if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(scheduleApply);
-    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
-  }
-  setInterval(applyNoPricePolicy, 2500);
-})();
-</script>
-<!-- ABUDHIYA_NOPRICE_OFFICIAL_END -->
-
-<!-- ABUDHIYA_FINAL_POLISH_START -->
-<style id="abFinalPolishStyle" data-polish-v="1">
-  /* 1) إخفاء شريط التصنيفات المكرر مع الإبقاء على زر إعادة آخر طلب فقط */
-  #abProChips [data-cat] {
-    display: none !important;
-  }
-  #abProTopHub {
-    margin: 5px 10px 6px !important;
-    gap: 6px !important;
-  }
-  #abProChips:empty {
-    display: none !important;
-  }
-  .ab-chips-no-repeat {
-    display: none !important;
-  }
-
-  /* 2) شريط تثبيت التطبيق على الجوال (PWA Install Bar) */
-  #abPwaInstallBar {
-    display: none;
-    direction: rtl;
-    margin: 2px 10px 6px;
-    padding: 8px 11px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(16, 16, 20, 0.96) 0%, rgba(30, 25, 14, 0.95) 100%);
-    border: 1px solid rgba(212, 175, 55, 0.58);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    font-family: inherit;
-  }
-  #abPwaInstallBar.show {
-    display: flex;
-  }
-  .ab-pwa-txt {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    min-width: 0;
-    flex: 1;
-  }
-  .ab-pwa-title {
-    font-size: 12px;
-    font-weight: 900;
-    color: #fef08a;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ab-pwa-sub {
-    font-size: 10px;
-    font-weight: 600;
-    color: #cbd5e1;
-  }
-  .ab-pwa-actions {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex: 0 0 auto;
-  }
-  .ab-pwa-btn {
-    border: none;
-    border-radius: 8px;
-    padding: 6px 11px;
-    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
-    color: #09090b;
-    font-size: 11.5px;
-    font-weight: 900;
-    cursor: pointer;
-    font-family: inherit;
-    white-space: nowrap;
-  }
-  .ab-pwa-btn:active { transform: scale(0.95); }
-  .ab-pwa-close {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    background: rgba(15, 23, 42, 0.7);
-    color: #cbd5e1;
-    font-size: 11px;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-</style>
-<script data-ab-final-polish="1">
-(function () {
-  if (window.__abFinalPolishV1) return;
-  window.__abFinalPolishV1 = true;
-
-  var DISMISS_KEY = "ab_pwa_dismiss_ts_v1";
-  var deferredPrompt = null;
-
-  function isStandalone() {
-    return (
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      window.navigator.standalone === true
-    );
-  }
-
-  function isDismissedRecently() {
-    try {
-      var ts = Number(localStorage.getItem(DISMISS_KEY) || 0);
-      return ts > 0 && (Date.now() - ts) < (7 * 24 * 60 * 60 * 1000);
-    } catch (e) { return false; }
-  }
-
-  function cleanEmptyChipsRow() {
-    var chips = document.getElementById("abProChips");
-    if (!chips) return;
-    var hasRepeat = !!document.getElementById("abRepeatOrderChip");
-    if (!hasRepeat) {
-      if (!chips.classList.contains("ab-chips-no-repeat")) chips.classList.add("ab-chips-no-repeat");
-    } else {
-      if (chips.classList.contains("ab-chips-no-repeat")) chips.classList.remove("ab-chips-no-repeat");
-    }
-  }
-
-  function mountInstallBar() {
-    if (isStandalone() || isDismissedRecently()) return null;
-    var bar = document.getElementById("abPwaInstallBar");
-    if (bar) return bar;
-
-    var anchor = document.getElementById("abProTopHub") || document.getElementById("abSaifLuxuryHeader");
-    if (!anchor || !anchor.parentNode) return null;
-
-    bar = document.createElement("div");
-    bar.id = "abPwaInstallBar";
-    bar.innerHTML =
-      '<div class="ab-pwa-txt">' +
-        '<div class="ab-pwa-title">📲 ثبّت متجر أبوسيف على شاشة جوالك</div>' +
-        '<div class="ab-pwa-sub">طلب أسرع بضغطة واحدة ويعمل حتى بدون نت</div>' +
-      '</div>' +
-      '<div class="ab-pwa-actions">' +
-        '<button type="button" id="abPwaInstallBtn" class="ab-pwa-btn">تثبيت الآن</button>' +
-        '<button type="button" id="abPwaDismissBtn" class="ab-pwa-close" aria-label="إغلاق">✕</button>' +
-      '</div>';
-
-    anchor.insertAdjacentElement("afterend", bar);
-
-    document.getElementById("abPwaDismissBtn").addEventListener("click", function () {
-      bar.classList.remove("show");
-      try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
-    });
-
-    document.getElementById("abPwaInstallBtn").addEventListener("click", function () {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(function (choice) {
-          if (choice && choice.outcome === "accepted") {
-            bar.classList.remove("show");
-            if (typeof showToast === "function") showToast("✅ جاري تثبيت متجر أبوسيف على جوالك");
-          }
-          deferredPrompt = null;
-        }).catch(function () {});
-      } else {
-        var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent || "");
-        var msg = isIos
-          ? "📲 للتثبيت على آيفون: اضغط زر المشاركة أسفل المتصفح ثم «إضافة إلى الشاشة الرئيسية»"
-          : "📲 للتثبيت: اضغط قائمة المتصفح (⋮) بالأعلى ثم اختر «تثبيت التطبيق» أو «إضافة للشاشة الرئيسية»";
-        if (typeof showToast === "function") showToast(msg);
-        else alert(msg);
-      }
-    });
-
-    return bar;
-  }
-
-  window.addEventListener("beforeinstallprompt", function (e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    var bar = mountInstallBar();
-    if (bar) bar.classList.add("show");
-  });
-
-  window.addEventListener("appinstalled", function () {
-    var bar = document.getElementById("abPwaInstallBar");
-    if (bar) bar.classList.remove("show");
-    deferredPrompt = null;
-  });
-
-  function initPolish() {
-    cleanEmptyChipsRow();
-    // على آيفون أو متصفحات لا تطلق beforeinstallprompt نظهر الشريط بلطف بعد ثانية
-    if (!isStandalone() && !isDismissedRecently()) {
-      var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent || "");
-      if (isIos) {
-        var bar = mountInstallBar();
-        if (bar) bar.classList.add("show");
-      }
-    }
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(initPolish, 500); });
-  } else {
-    setTimeout(initPolish, 500);
-  }
-  setTimeout(cleanEmptyChipsRow, 1200);
-})();
-</script>
-<!-- ABUDHIYA_FINAL_POLISH_END -->
-
-<!-- ABUDHIYA_PRICE_VISIBILITY_START -->
-<style id="abPriceVisibilityStyle" data-price-vis="1">
-  /* إخفاء الأسعار عن العملاء افتراضياً (بدون حذف أي كود، وتُفتح بلمسة من ⚙) */
-  html.ab-prices-hidden [data-ab-price-el="1"],
-  html.ab-prices-hidden .prod-price,
-  html.ab-prices-hidden .item-price,
-  html.ab-prices-hidden .card-price,
-  html.ab-prices-hidden .p-price,
-  html.ab-prices-hidden .price-tag,
-  html.ab-prices-hidden #cartTotal,
-  html.ab-prices-hidden #invTotal,
-  html.ab-prices-hidden #barTotal,
-  html.ab-prices-hidden #totalPrice {
-    display: none !important;
-  }
-
-  .ab-adm-prices-toggle {
-    width: 100%;
-    margin-top: 6px;
-    padding: 8px 10px;
-    border-radius: 9px;
-    border: 1px solid rgba(212, 175, 55, 0.55);
-    background: #17171d;
-    color: #fef08a;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ab-adm-prices-toggle:active { transform: scale(0.98); }
-</style>
-<script data-ab-price-vis="1">
-(function () {
-  if (window.__abPriceVisV1) return;
-  window.__abPriceVisV1 = true;
-
-  var SHOW_PRICES_KEY = "ab_show_prices_ui_v1";
-
-  function isPricesVisible() {
-    try { return localStorage.getItem(SHOW_PRICES_KEY) === "1"; } catch (e) { return false; }
-  }
-  function setPricesVisible(flag) {
-    try {
-      if (flag) localStorage.setItem(SHOW_PRICES_KEY, "1");
-      else localStorage.removeItem(SHOW_PRICES_KEY);
-    } catch (e) {}
-    document.documentElement.classList.toggle("ab-prices-hidden", !flag);
-  }
-
-  // تطبيق فوري قبل اكتمال الرسم لمنع أي وميض للأسعار
-  document.documentElement.classList.toggle("ab-prices-hidden", !isPricesVisible());
-
-  function isProtected(el) {
-    if (!el) return true;
-    if (el.closest("#abSaifLuxuryHeader, #abDevStampFooter, #abSv3Admin, #abPricedAdminCtrl, #abMishqasCard, #abProSplash, #abPwaInstallBar, #abSv3ModalBg, #abSv3ArchModalBg")) {
-      return true;
-    }
-    if (el.querySelector("img, input, select, textarea, svg, .ab-qbar, #abSilentOrderBox")) {
-      return true;
-    }
-    return false;
-  }
-
-  function tagPriceElements() {
-    try {
-      // 1) تمييز شريط وعناصر (سعر الجملة / سعر التجزئة / قائمة أسعار...)
-      var btns = document.querySelectorAll("button, a, div, p, span");
-      for (var i = 0; i < btns.length; i++) {
-        var el = btns[i];
-        if (!el || el.getAttribute("data-ab-price-el") === "1" || isProtected(el)) continue;
-
-        var tag = el.tagName;
-        var hasSubInteractive = (tag !== "BUTTON" && tag !== "A") && !!el.querySelector("button, a");
-        if (hasSubInteractive) continue;
-
-        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
-        if (!txt || txt.length > 60) continue;
-
-        // أزرار وعبارة وضع الأسعار (جملة / تجزئة)
-        if (
-          txt.indexOf("سعر الجملة") !== -1 ||
-          txt.indexOf("سعر التجزئة") !== -1 ||
-          txt.indexOf("قائمة أسعار") !== -1
-        ) {
-          el.setAttribute("data-ab-price-el", "1");
-          // إذا كان الأب يضم فقط زري الجملة والتجزئة نعلّمه أيضاً لإزالة الفراغ
-          var p = el.parentElement;
-          if (p && !isProtected(p) && p !== document.body) {
-            var pBtns = p.querySelectorAll("button, a");
-            if (pBtns.length === 2) {
-              var pTxt = (p.textContent || "");
-              if (pTxt.indexOf("سعر الجملة") !== -1 && pTxt.indexOf("سعر التجزئة") !== -1 && pTxt.length < 70) {
-                p.setAttribute("data-ab-price-el", "1");
-              }
-            }
-          }
-          continue;
-        }
-
-        // نصوص الأسعار والإجماليات بالريال (ر.ي) داخل البطاقات والشريط السفلي والفاتورة
-        if (
-          tag !== "BUTTON" &&
-          tag !== "A" &&
-          txt.length <= 40 &&
-          (/\d[\d,\.]*\s*ر\.?\s*ي/.test(txt) || /ر\.?\s*ي\s*[\d,\.]+/.test(txt))
-        ) {
-          el.setAttribute("data-ab-price-el", "1");
-        }
-      }
-
-      // 2) إضافة زر التحكم بظهور الأسعار داخل لوحة المدير ⚙ (#abSv3Admin)
-      var adm = document.getElementById("abSv3Admin");
-      if (adm) {
-        var pBtn = document.getElementById("abTogglePricesUiBtn");
-        if (!pBtn) {
-          pBtn = document.createElement("button");
-          pBtn.type = "button";
-          pBtn.id = "abTogglePricesUiBtn";
-          pBtn.className = "ab-adm-prices-toggle";
-          pBtn.addEventListener("click", function (ev) {
-            ev.preventDefault();
-            var nextVis = !isPricesVisible();
-            setPricesVisible(nextVis);
-            syncToggleLabel();
-            if (typeof showToast === "function") {
-              showToast(nextVis ? "👁️ تم إظهار الأسعار في الواجهة على جهازك" : "🙈 تم إخفاء الأسعار من الواجهة");
-            }
-          });
-          adm.appendChild(pBtn);
-        }
-        syncToggleLabel();
-      }
-    } catch (e) {}
-  }
-
-  function syncToggleLabel() {
-    var pBtn = document.getElementById("abTogglePricesUiBtn");
-    if (!pBtn) return;
-    var lbl = isPricesVisible()
-      ? "🙈 إخفاء الأسعار من الواجهة"
-      : "👁️ إظهار الأسعار في الواجهة على جهازي";
-    if (pBtn.textContent !== lbl) pBtn.textContent = lbl;
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(tagPriceElements, 250); });
-  } else {
-    setTimeout(tagPriceElements, 250);
-  }
-  document.addEventListener("click", function () { setTimeout(tagPriceElements, 180); }, true);
-  setInterval(tagPriceElements, 2200);
-})();
-</script>
-<!-- ABUDHIYA_PRICE_VISIBILITY_END -->
-
 <!-- ABUDHIYA_GOLD_CARDS_START -->
 <style id="abGoldCardsLuxuryStyle" data-gold-v="6">
   /* 1) شبكة 3 أعمدة هندسية متطابقة الارتفاع ومريحة للعين */
@@ -5588,6 +5593,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
   /* 5) تثبيت أزرار الكميات (10–300) أسفل كل بطاقة على خط أفقي موحّد */
   [data-ab-pro-card="1"] .ab-qbar {
+    direction: rtl !important;
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 2.5px !important;
@@ -5595,6 +5601,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     padding-top: 2px !important;
   }
   [data-ab-pro-card="1"] .ab-qbtn {
+    direction: ltr !important;
     font-size: 8.5px !important;
     padding: 3.5px 0 !important;
     min-width: 0 !important;
