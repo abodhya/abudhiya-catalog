@@ -785,6 +785,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -3504,6 +3506,10 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3629,8 +3635,8 @@ window.addEventListener("beforeinstallprompt", function(e) {
   /* 4) أزرار الكميات السريعة للجملة + شارة البونص داخل البطاقات */
   .ab-qbar {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 3px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.5px;
     margin-top: 4px;
     direction: ltr;
     width: 100%;
@@ -3784,7 +3790,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   .ab-clear-qty-btn.show { display: flex; }
   .ab-clear-qty-btn:active { transform: scale(0.86); }
 </style>
-<script data-ab-pro-ui="7">
+<script data-ab-pro-ui="8">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4531,12 +4537,14 @@ window.addEventListener("beforeinstallprompt", function(e) {
         var qbar = document.createElement("div");
         qbar.className = "ab-qbar";
         qbar.innerHTML =
-          '<button type="button" class="ab-qbtn" data-d="50">+50</button>' +
-          '<button type="button" class="ab-qbtn" data-d="100">+100</button>' +
-          '<button type="button" class="ab-qbtn" data-d="150">+150</button>' +
-          '<button type="button" class="ab-qbtn" data-d="200">+200</button>' +
-          '<button type="button" class="ab-qbtn" data-d="250">+250</button>' +
-          '<button type="button" class="ab-qbtn" data-d="300">+300</button>';
+          '<button type="button" class="ab-qbtn" data-d="10">10</button>' +
+          '<button type="button" class="ab-qbtn" data-d="20">20</button>' +
+          '<button type="button" class="ab-qbtn" data-d="30">30</button>' +
+          '<button type="button" class="ab-qbtn" data-d="40">40</button>' +
+          '<button type="button" class="ab-qbtn" data-d="50">50</button>' +
+          '<button type="button" class="ab-qbtn" data-d="100">100</button>' +
+          '<button type="button" class="ab-qbtn" data-d="200">200</button>' +
+          '<button type="button" class="ab-qbtn" data-d="300">300</button>';
         (function (pObj, bar, cEl) {
           var bs = bar.querySelectorAll(".ab-qbtn");
           for (var b = 0; b < bs.length; b++) {
@@ -4847,13 +4855,14 @@ window.addEventListener("beforeinstallprompt", function(e) {
   /* شريط الكميات السريعة مضبوط لعرض الـ 3 أعمدة */
   [data-ab-pro-card="1"] .ab-qbar {
     display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 2.5px !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 2px !important;
     margin-top: 3px !important;
   }
   [data-ab-pro-card="1"] .ab-qbtn {
     font-size: 8.5px !important;
     padding: 3px 0 !important;
+    min-width: 0 !important;
     border-radius: 5px !important;
     letter-spacing: -0.2px !important;
     white-space: nowrap !important;
