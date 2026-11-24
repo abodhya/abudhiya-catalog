@@ -6898,6 +6898,164 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_ALWAYS_ARCHIVE_END -->
 
 
+
+<!-- ABUDHIYA_NUMPAD_VISIBILITY_START -->
+<style id="abNumpadVisibilityStyle" data-numpad-vis="1">
+  /* 1) إظهار رقم الكمية بخط عريض وذهبي ساطع داخل الشريط الداكن بين - و + */
+  .ab-numpad-fixed .ab-numpad-qty-readout,
+  html.ab-prices-hidden .ab-numpad-fixed .ab-numpad-qty-readout,
+  .ab-sleek-numpad-box input[type="number"],
+  .ab-sleek-numpad-box input[type="tel"],
+  .ab-sleek-numpad-box input[type="text"],
+  .ab-sleek-numpad-box #qtyInput,
+  .ab-sleek-numpad-box #qtyDisplay,
+  .ab-sleek-numpad-box #qtyVal,
+  .ab-sleek-numpad-box #modalQty,
+  .ab-sleek-numpad-box .qty-display,
+  .ab-sleek-numpad-box .qty-val,
+  .ab-sleek-numpad-box .qty-value,
+  .ab-sleek-numpad-box .qty-input {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 40px !important;
+    min-width: 72px !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    caret-color: #fef08a !important;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 12px rgba(250, 204, 21, 0.38) !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    overflow: visible !important;
+    padding: 2px 6px !important;
+  }
+
+  .ab-numpad-fixed input.ab-numpad-qty-readout {
+    display: block !important;
+    width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .ab-numpad-fixed .ab-numpad-qty-readout::placeholder {
+    color: rgba(254, 240, 138, 0.55) !important;
+    -webkit-text-fill-color: rgba(254, 240, 138, 0.55) !important;
+  }
+
+  /* 2) إظهار اسم الصنف بوضوح تام على خلفية النافذة البيضاء (دون تغيير لون أزرار الأرقام السوداء) */
+  .ab-numpad-fixed .ab-numpad-prod-title {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: 14.5px !important;
+    font-weight: 900 !important;
+    line-height: 1.35 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: none !important;
+  }
+</style>
+<script data-ab-numpad-vis="1">
+(function () {
+  if (window.__abNumpadVisV1) return;
+  window.__abNumpadVisV1 = true;
+
+  function findNumpadBox() {
+    var box = document.querySelector(".ab-sleek-numpad-box");
+    if (box) return box;
+
+    var btns = document.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) {
+      var t = (btns[i].textContent || "").trim();
+      if (t.indexOf("إضافة للفاتورة") !== -1 || t.indexOf("اضافة للفاتورة") !== -1) {
+        var host = btns[i].closest(".modal-content, .modal-card, .modal-box, .sheet, .card, [id*='modal' i], [class*='modal' i]") || btns[i].parentElement;
+        if (host && host !== document.body) return host;
+      }
+    }
+    return null;
+  }
+
+  function enhanceNumpadContrast() {
+    try {
+      var box = findNumpadBox();
+      if (!box) return;
+      box.classList.add("ab-numpad-fixed");
+
+      // 1) تحديد خانة عرض الرقم الموجودة بين زري (-) و (+) أو أي حقل إدخال كمية
+      var allBtns = box.querySelectorAll("button");
+      var minusBtn = null;
+      var plusBtn = null;
+      for (var i = 0; i < allBtns.length; i++) {
+        var bt = (allBtns[i].textContent || "").replace(/\s+/g, "").trim();
+        if (bt === "-" || bt === "−" || bt === "–") minusBtn = allBtns[i];
+        else if (bt === "+") plusBtn = allBtns[i];
+      }
+
+      if (minusBtn && plusBtn && minusBtn.parentElement === plusBtn.parentElement) {
+        var row = minusBtn.parentElement;
+        var children = row.children;
+        for (var c = 0; c < children.length; c++) {
+          var ch = children[c];
+          if (ch === minusBtn || ch === plusBtn) continue;
+          if (ch.tagName === "BUTTON") continue;
+          ch.removeAttribute("data-ab-price-el");
+          ch.classList.add("ab-numpad-qty-readout");
+          var innerInp = ch.querySelector("input, span, div");
+          if (innerInp && innerInp.tagName !== "BUTTON") {
+            innerInp.removeAttribute("data-ab-price-el");
+            innerInp.classList.add("ab-numpad-qty-readout");
+          }
+        }
+      }
+
+      var inputs = box.querySelectorAll("input");
+      for (var k = 0; k < inputs.length; k++) {
+        if (inputs[k].type === "hidden") continue;
+        inputs[k].removeAttribute("data-ab-price-el");
+        inputs[k].classList.add("ab-numpad-qty-readout");
+      }
+
+      // 2) إظهار اسم الصنف أعلى النافذة البيضاء (تجنب تلوين أي زر أو سعر بالريال)
+      var img = box.querySelector("img");
+      var headerScope = (img && img.parentElement && img.parentElement.parentElement && box.contains(img.parentElement.parentElement))
+        ? img.parentElement.parentElement
+        : box;
+      var textEls = headerScope.querySelectorAll("h1, h2, h3, h4, p, div, span");
+      for (var j = 0; j < textEls.length; j++) {
+        var el = textEls[j];
+        if (!el || el.closest("button") || el.classList.contains("ab-numpad-qty-readout")) continue;
+        if (el.querySelector("button, img, input")) continue;
+        if (minusBtn && minusBtn.parentElement && minusBtn.parentElement.contains(el)) continue;
+        var txt = (el.textContent || "").trim();
+        if (!txt || txt.length < 2) continue;
+        if (txt.indexOf("ر.ي") !== -1 || txt.indexOf("اختصارات") !== -1 || txt.indexOf("اكتب الكمية") !== -1) continue;
+        if (/^[0-9+\-−×✕]+$/.test(txt)) continue;
+        el.classList.add("ab-numpad-prod-title");
+      }
+    } catch (e) {}
+  }
+
+  document.addEventListener("click", function () {
+    setTimeout(enhanceNumpadContrast, 40);
+    setTimeout(enhanceNumpadContrast, 220);
+  }, true);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(enhanceNumpadContrast, 300); });
+  } else {
+    setTimeout(enhanceNumpadContrast, 300);
+  }
+})();
+</script>
+<!-- ABUDHIYA_NUMPAD_VISIBILITY_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -6941,7 +7099,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-523147";
+  var TARGET_CACHE = "abudhiya-offline-v4-523302";
 
   function forceReleaseSplash() {
     try {
