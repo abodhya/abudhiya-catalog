@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="512" height="512">
+  <defs>
+    <linearGradient id="g24" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbe0"/>
+      <stop offset="30%" stop-color="#fee060"/>
+      <stop offset="58%" stop-color="#d49e1c"/>
+      <stop offset="82%" stop-color="#98660e"/>
+      <stop offset="100%" stop-color="#eec034"/>
+    </linearGradient>
+    <linearGradient id="gLo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0a620"/>
+      <stop offset="100%" stop-color="#805008"/>
+    </linearGradient>
+    <filter id="drop" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="14" stdDeviation="10" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+  <g filter="url(#drop)">
+    <text x="494" y="458" text-anchor="middle" fill="#5e3a06" stroke="#5e3a06" stroke-width="16" paint-order="stroke" font-size="230" font-weight="900" font-family="sans-serif">أبوسيف</text>
+    <text x="490" y="446" text-anchor="middle" fill="url(#g24)" stroke="#6c4208" stroke-width="10" paint-order="stroke" font-size="230" font-weight="900" font-family="sans-serif">أبوسيف</text>
+    <path d="M743 648 C553 750 286 736 68 512 C290 778 562 796 752 680 Z" fill="url(#gLo)"/>
+    <path d="M735 616 C545 706 282 694 68 512 C286 736 553 750 743 648 Z" fill="url(#g24)"/>
+    <path d="M772 636 C826 614 884 594 930 644 L912 678 C868 644 824 650 766 672 Z" fill="#18120c" stroke="#facc15" stroke-width="7"/>
+    <polygon points="716,664 734,626 700,536 718,528 760,616 786,632 772,660 818,754 798,762 752,674" fill="url(#g24)" stroke="#7a4c0a" stroke-width="5"/>
+    <circle cx="932" cy="656" r="26" fill="url(#g24)" stroke="#7a4c0a" stroke-width="4"/>
+  </g>
+</svg>

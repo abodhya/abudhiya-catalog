@@ -1,34 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="512" height="512">
   <defs>
-    <radialGradient id="glassOrb" cx="50%" cy="48%" r="50%">
-      <stop offset="0%" stop-color="#262422" stop-opacity="0.30"/>
-      <stop offset="68%" stop-color="#14151c" stop-opacity="0.46"/>
-      <stop offset="100%" stop-color="#0a0c12" stop-opacity="0.62"/>
-    </radialGradient>
-    <linearGradient id="domeShine" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.34"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    <linearGradient id="g24" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbe0"/>
+      <stop offset="30%" stop-color="#fee060"/>
+      <stop offset="58%" stop-color="#d49e1c"/>
+      <stop offset="82%" stop-color="#98660e"/>
+      <stop offset="100%" stop-color="#eec034"/>
     </linearGradient>
-    <linearGradient id="goldHi" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fffbe6"/>
-      <stop offset="48%" stop-color="#facc15"/>
-      <stop offset="100%" stop-color="#d4af37"/>
+    <linearGradient id="gLo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0a620"/>
+      <stop offset="100%" stop-color="#805008"/>
     </linearGradient>
-    <linearGradient id="goldLo" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#eab308"/>
-      <stop offset="100%" stop-color="#926b10"/>
-    </linearGradient>
+    <filter id="drop" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="14" stdDeviation="10" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
   </defs>
-  <circle cx="512" cy="512" r="414" fill="url(#glassOrb)"/>
-  <ellipse cx="490" cy="305" rx="280" ry="165" fill="url(#domeShine)"/>
-  <circle cx="512" cy="512" r="414" fill="none" stroke="url(#goldHi)" stroke-width="14"/>
-  <circle cx="512" cy="512" r="388" fill="none" stroke="#d4af37" stroke-opacity="0.6" stroke-width="3.5"/>
-  <path d="M654 390 C528 450 350 430 190 272 C356 472 538 492 663 418 Z" fill="url(#goldLo)"/>
-  <path d="M646 362 C518 412 344 392 190 272 C350 430 528 450 654 390 Z" fill="url(#goldHi)"/>
-  <path d="M680 381 C728 360 778 342 818 386 L802 416 C764 386 724 391 674 411 Z" fill="#161412" stroke="#facc15" stroke-width="6"/>
-  <polygon points="632,404 648,372 616,288 632,280 670,362 693,376 680,400 720,486 704,493 663,414" fill="url(#goldHi)" stroke="#926b10" stroke-width="4"/>
-  <circle cx="818" cy="396" r="22" fill="url(#goldHi)"/>
-  <text x="512" y="654" text-anchor="middle" fill="#fedc4a" stroke="#0e0c09" stroke-width="10" paint-order="stroke" font-size="178" font-weight="900" font-family="sans-serif">أبوسيف</text>
-  <line x1="278" y1="700" x2="746" y2="700" stroke="#e4bc3a" stroke-width="5"/>
-  <text x="512" y="782" text-anchor="middle" fill="#ffffff" stroke="#0c0d12" stroke-width="7" paint-order="stroke" font-size="66" font-weight="800" font-family="sans-serif">للتجارة العامة</text>
+  <g filter="url(#drop)">
+    <text x="494" y="458" text-anchor="middle" fill="#5e3a06" stroke="#5e3a06" stroke-width="16" paint-order="stroke" font-size="230" font-weight="900" font-family="sans-serif">أبوسيف</text>
+    <text x="490" y="446" text-anchor="middle" fill="url(#g24)" stroke="#6c4208" stroke-width="10" paint-order="stroke" font-size="230" font-weight="900" font-family="sans-serif">أبوسيف</text>
+    <path d="M743 648 C553 750 286 736 68 512 C290 778 562 796 752 680 Z" fill="url(#gLo)"/>
+    <path d="M735 616 C545 706 282 694 68 512 C286 736 553 750 743 648 Z" fill="url(#g24)"/>
+    <path d="M772 636 C826 614 884 594 930 644 L912 678 C868 644 824 650 766 672 Z" fill="#18120c" stroke="#facc15" stroke-width="7"/>
+    <polygon points="716,664 734,626 700,536 718,528 760,616 786,632 772,660 818,754 798,762 752,674" fill="url(#g24)" stroke="#7a4c0a" stroke-width="5"/>
+    <circle cx="932" cy="656" r="26" fill="url(#g24)" stroke="#7a4c0a" stroke-width="4"/>
+  </g>
 </svg>
