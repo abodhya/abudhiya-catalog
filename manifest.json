@@ -10,30 +10,24 @@
   "lang": "ar",
   "icons": [
     {
-      "src": "/abusaif-icon-192.png?v=1795549248",
+      "src": "/abusaif-glass-192.png?v=1795555204",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/abusaif-icon-192.png?v=1795549248",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/abusaif-icon-512.png?v=1795549248",
+      "src": "/abusaif-glass-512.png?v=1795555204",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/abusaif-icon-512.png?v=1795549248",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "src": "/abusaif-glass.svg?v=1795555204",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "scope": "/",
-  "id": "/?app=abusaif-sword-v3"
+  "id": "/?app=abusaif-glass-v4"
 }
