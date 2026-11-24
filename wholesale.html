@@ -4651,348 +4651,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
 </script>
 <!-- ABUDHIYA_PRO_UI_END -->
 
-<!-- ABUDHIYA_GOLD_CARDS_START -->
-<style id="abGoldCardsLuxuryStyle" data-gold-v="5">
-  /* شبكة 3 أعمدة رشيقة على الجوال بدون أي فراغات جانبية */
-  .ab-sleek-grid-3,
-  #productsGrid,
-  .products-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 7px !important;
-    align-items: stretch !important;
-    box-sizing: border-box !important;
-  }
-  @media (min-width: 680px) {
-    .ab-sleek-grid-3,
-    #productsGrid,
-    .products-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-      gap: 10px !important;
-    }
-  }
-
-  /* بطاقة الصنف المدمجة بإطار ذهبي ملكي بدون فراغات زائدة */
-  .ab-sleek-grid-3 > .card,
-  #productsGrid .card,
-  .products-grid .card,
-  .prod-card,
-  .product-card,
-  .item-card,
-  [data-ab-pro-card="1"] {
-    position: relative !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    border-radius: 11px !important;
-    border: 1.25px solid rgba(212, 175, 55, 0.88) !important;
-    padding: 3px !important;
-    margin: 0 !important;
-    min-height: 0 !important;
-    box-shadow:
-      0 0 0 0.5px rgba(255, 248, 204, 0.35),
-      0 6px 14px rgba(0, 0, 0, 0.48),
-      0 0 10px rgba(212, 175, 55, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
-    overflow: hidden !important;
-    transition: transform 0.14s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-  }
-
-  /* خط بريق ذهبي رفيع أعلى البطاقة */
-  .ab-sleek-grid-3 > .card::before,
-  #productsGrid .card::before,
-  .products-grid .card::before,
-  .prod-card::before,
-  .product-card::before,
-  .item-card::before,
-  [data-ab-pro-card="1"]::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: 2px !important;
-    background: linear-gradient(90deg, #9a6f14 0%, #e5c158 24%, #fffbe0 50%, #e5c158 76%, #9a6f14 100%) !important;
-    z-index: 6 !important;
-    pointer-events: none !important;
-  }
-
-  /* خط ضوئي ذهبي خفيف أسفل البطاقة */
-  .ab-sleek-grid-3 > .card::after,
-  #productsGrid .card::after,
-  .products-grid .card::after,
-  .prod-card::after,
-  .product-card::after,
-  .item-card::after,
-  [data-ab-pro-card="1"]::after {
-    content: "" !important;
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 16% !important;
-    right: 16% !important;
-    height: 1.2px !important;
-    background: linear-gradient(90deg, transparent 0%, #d4af37 30%, #fff7cc 50%, #d4af37 70%, transparent 100%) !important;
-    z-index: 6 !important;
-    pointer-events: none !important;
-  }
-
-  /* توهج عند اللمس */
-  .ab-sleek-grid-3 > .card:active,
-  #productsGrid .card:active,
-  .products-grid .card:active,
-  .prod-card:active,
-  .product-card:active,
-  .item-card:active,
-  [data-ab-pro-card="1"]:active {
-    transform: scale(0.98) !important;
-    border-color: #fff7cc !important;
-    box-shadow:
-      0 0 0 1px rgba(255, 247, 204, 0.72),
-      0 8px 18px rgba(0, 0, 0, 0.54),
-      0 0 16px rgba(250, 204, 21, 0.42) !important;
-  }
-
-  /* حاوية الصورة: مربع 1:1 كامل بدون هوامش أو فراغات بيضاء */
-  .ab-hd-img-wrap {
-    position: relative !important;
-    width: 100% !important;
-    aspect-ratio: 1 / 1 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    border-radius: 8px !important;
-    background: #0d0d10 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* صورة الصنف: تملأ المربع 1:1 بالكامل بدون فراغات جانبية وبألوانها الأصلية 100% */
-  .ab-sleek-grid-3 > .card img,
-  #productsGrid .card img,
-  .products-grid .card img,
-  .prod-card img,
-  .product-card img,
-  .item-card img,
-  [data-ab-pro-card="1"] img {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    aspect-ratio: 1 / 1 !important;
-    height: auto !important;
-    max-height: none !important;
-    object-fit: contain !important;
-    object-position: center center !important;
-    background: #0d0d10 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-    border-radius: 8px !important;
-    border: none !important;
-    box-shadow: none !important;
-    filter: none !important;
-    -webkit-filter: none !important;
-    image-rendering: -webkit-optimize-contrast !important;
-    image-rendering: high-quality !important;
-    transform: translateZ(0) !important;
-  }
-
-  /* نصوص وأسعار مضغوطة ومتناسقة داخل بطاقة الـ 3 أعمدة */
-  .ab-sleek-grid-3 > .card h3,
-  .ab-sleek-grid-3 > .card h4,
-  .ab-sleek-grid-3 > .card .prod-name,
-  .ab-sleek-grid-3 > .card .name,
-  [data-ab-pro-card="1"] .prod-name,
-  [data-ab-pro-card="1"] .name {
-    font-size: 10.5px !important;
-    line-height: 1.25 !important;
-    margin: 4px 1px 2px !important;
-    padding: 0 !important;
-  }
-
-  /* شريط الكميات السريعة مضبوط لعرض الـ 3 أعمدة */
-  [data-ab-pro-card="1"] .ab-qbar {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 2px !important;
-    margin-top: 3px !important;
-  }
-  [data-ab-pro-card="1"] .ab-qbtn {
-    font-size: 8.5px !important;
-    padding: 3px 0 !important;
-    min-width: 0 !important;
-    border-radius: 5px !important;
-    letter-spacing: -0.2px !important;
-    white-space: nowrap !important;
-  }
-
-  /* طبقة اللمعان الزجاجي النقي بدون أي تغيير في لون المنتج */
-  .ab-crystal-gloss {
-    position: absolute !important;
-    inset: 0 !important;
-    pointer-events: none !important;
-    z-index: 4 !important;
-    overflow: hidden !important;
-    border-radius: inherit !important;
-  }
-  .ab-crystal-gloss::before {
-    content: "" !important;
-    position: absolute !important;
-    inset: 0 !important;
-    background: linear-gradient(
-      142deg,
-      rgba(255, 255, 255, 0.30) 0%,
-      rgba(255, 255, 255, 0.08) 14%,
-      rgba(255, 255, 255, 0) 28%,
-      rgba(255, 255, 255, 0) 86%,
-      rgba(255, 255, 255, 0.10) 100%
-    ) !important;
-  }
-  .ab-crystal-gloss::after {
-    content: "" !important;
-    position: absolute !important;
-    top: -35% !important;
-    left: -130% !important;
-    width: 50% !important;
-    height: 170% !important;
-    transform: rotate(22deg) !important;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.42) 50%,
-      rgba(255, 255, 255, 0) 100%
-    ) !important;
-    animation: abCrystalSweep 7s ease-in-out infinite !important;
-    animation-delay: var(--ab-gleam-delay, 0s) !important;
-  }
-  @keyframes abCrystalSweep {
-    0%, 78% { left: -130%; opacity: 0; }
-    84% { opacity: 1; }
-    97% { left: 165%; opacity: 0.88; }
-    100% { left: 165%; opacity: 0; }
-  }
-
-  /* إبقاء لوحة الأرقام المنبثقة صغيرة ورشيقة ومعزولة تماماً */
-  .ab-sleek-numpad-box {
-    max-width: 315px !important;
-    width: min(92vw, 315px) !important;
-    border-radius: 18px !important;
-    border: 1.5px solid rgba(212, 175, 55, 0.85) !important;
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.58), 0 0 18px rgba(212, 175, 55, 0.24) !important;
-    padding: 12px 13px !important;
-    box-sizing: border-box !important;
-  }
-  .ab-sleek-numpad-box img {
-    width: 62px !important;
-    height: 62px !important;
-    max-width: 62px !important;
-    max-height: 62px !important;
-    aspect-ratio: 1 / 1 !important;
-    object-fit: contain !important;
-    background: #ffffff !important;
-    border-radius: 10px !important;
-    border: 1px solid rgba(212, 175, 55, 0.55) !important;
-    padding: 3px !important;
-    filter: none !important;
-  }
-</style>
-<script data-ab-hd-gloss="5">
-(function () {
-  function isInsideModal(el) {
-    if (!el) return false;
-    if (el.closest("#abProZoomModal, #abRcptPreviewModal, #abProSplash, #abSv3ModalBg, #abSv3ArchModalBg, #abSaifLuxuryHeader, #abDevStampFooter, #invoiceView, #invFilledWrap")) {
-      return true;
-    }
-    if (el.closest('[id*="modal" i], [class*="modal" i], [id*="qty" i], [class*="qty" i], [class*="sheet" i], [class*="popup" i], [class*="overlay" i], [role="dialog"]')) {
-      return true;
-    }
-    var cur = el;
-    while (cur && cur !== document.body) {
-      try {
-        if (getComputedStyle(cur).position === "fixed") return true;
-      } catch (e) {}
-      cur = cur.parentElement;
-    }
-    return false;
-  }
-
-  function applyZeroGap3ColShowcase() {
-    // 1) عزل وتنسيق لوحة الأرقام المنبثقة
-    var modals = document.querySelectorAll('[id*="qty" i], [class*="qty-modal" i], [id*="numpad" i], [class*="numpad" i], [id*="modal" i], [class*="modal" i]');
-    for (var m = 0; m < modals.length; m++) {
-      var mod = modals[m];
-      if (!mod || mod.id === "abProZoomModal" || mod.id === "abRcptPreviewModal" || mod.id === "abSv3ModalBg" || mod.id === "abSv3ArchModalBg") continue;
-      var btns = mod.querySelectorAll("button");
-      var digitHits = 0;
-      for (var b = 0; b < btns.length; b++) {
-        if (/^[0-9]$/.test((btns[b].textContent || "").trim())) digitHits++;
-      }
-      if (digitHits >= 5) {
-        var innerBox = mod.querySelector(".modal-content, .modal-card, .modal-box, .sheet, .card, > div") || mod;
-        if (innerBox && innerBox !== document.body) {
-          innerBox.classList.add("ab-sleek-numpad-box");
-          innerBox.removeAttribute("data-ab-pro-card");
-          var stray = innerBox.querySelectorAll(".ab-crystal-gloss, .ab-qbar, .ab-zoom-mini-btn, .ab-bonus-tag");
-          for (var s = 0; s < stray.length; s++) stray[s].remove();
-          var wraps = innerBox.querySelectorAll(".ab-hd-img-wrap");
-          for (var w = 0; w < wraps.length; w++) wraps[w].classList.remove("ab-hd-img-wrap");
-        }
-      }
-    }
-
-    // 2) ضبط شبكة البطاقات على 3 أعمدة بدون فراغات وتطبيق اللمعان
-    var cards = document.querySelectorAll('#productsGrid .card, .products-grid .card, .prod-card, .product-card, .item-card, [data-ab-pro-card="1"]');
-    for (var i = 0; i < cards.length; i++) {
-      var card = cards[i];
-      if (!card || card.getAttribute("data-ab-gold-done") === "1") continue;
-      if (isInsideModal(card)) { card.setAttribute("data-ab-gold-done", "1"); continue; }
-      card.setAttribute("data-ab-gold-done", "1");
-
-      var parentGrid = card.parentElement;
-      if (parentGrid && parentGrid !== document.body && !parentGrid.classList.contains("ab-sleek-grid-3")) {
-        parentGrid.classList.add("ab-sleek-grid-3");
-      }
-
-      var img = card.querySelector("img");
-      if (img) {
-        var wrap = img.parentElement;
-        if (wrap && wrap !== card && !wrap.classList.contains("ab-hd-img-wrap")) {
-          wrap.classList.add("ab-hd-img-wrap");
-        }
-      }
-
-      if (!card.querySelector(".ab-crystal-gloss")) {
-        var gloss = document.createElement("span");
-        gloss.className = "ab-crystal-gloss";
-        gloss.setAttribute("aria-hidden", "true");
-        gloss.style.setProperty("--ab-gleam-delay", ((i % 6) * 0.85).toFixed(2) + "s");
-        card.appendChild(gloss);
-      }
-    }
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyZeroGap3ColShowcase);
-  } else {
-    applyZeroGap3ColShowcase();
-  }
-  var _abGoldTmr = null;
-  function scheduleGold() {
-    if (_abGoldTmr) return;
-    _abGoldTmr = setTimeout(function () { _abGoldTmr = null; try { applyZeroGap3ColShowcase(); } catch (e) {} }, 240);
-  }
-  if (typeof MutationObserver !== "undefined") {
-    var obs = new MutationObserver(scheduleGold);
-    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
-  }
-  setTimeout(applyZeroGap3ColShowcase, 450);
-})();
-</script>
-<!-- ABUDHIYA_GOLD_CARDS_END -->
 
 <!-- ABUDHIYA_DEV_STAMP_START -->
 <style id="abDevStampStyle">
@@ -5737,5 +5395,433 @@ window.addEventListener("beforeinstallprompt", function(e) {
 })();
 </script>
 <!-- ABUDHIYA_PRICE_VISIBILITY_END -->
+
+<!-- ABUDHIYA_GOLD_CARDS_START -->
+<style id="abGoldCardsLuxuryStyle" data-gold-v="6">
+  /* 1) شبكة 3 أعمدة هندسية متطابقة الارتفاع ومريحة للعين */
+  .ab-sleek-grid-3,
+  #productsGrid,
+  .products-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-rows: 1fr !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+  }
+  @media (min-width: 680px) {
+    .ab-sleek-grid-3,
+    #productsGrid,
+    .products-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      gap: 11px !important;
+    }
+  }
+
+  /* 2) بطاقة الصنف الموحّدة: خلفية مخملية داكنة + إطار ذهبي مصقول + ارتفاع متطابق 100% */
+  .ab-sleek-grid-3 > .card,
+  #productsGrid .card,
+  .products-grid .card,
+  .prod-card,
+  .product-card,
+  .item-card,
+  [data-ab-pro-card="1"] {
+    position: relative !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 4px 4px 5px !important;
+    border-radius: 13px !important;
+    background: linear-gradient(165deg, #171613 0%, #0c0c0f 58%, #15120c 100%) !important;
+    border: 1.25px solid rgba(212, 175, 55, 0.82) !important;
+    box-shadow:
+      0 0 0 0.5px rgba(254, 240, 138, 0.28),
+      0 8px 18px rgba(0, 0, 0, 0.52),
+      0 0 12px rgba(212, 175, 55, 0.14),
+      inset 0 1px 0 rgba(255, 249, 214, 0.52) !important;
+    overflow: hidden !important;
+    transition: transform 0.16s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+  }
+
+  /* شريط بريق ذهبي معدني ناعم على الحافة العلوية */
+  .ab-sleek-grid-3 > .card::before,
+  #productsGrid .card::before,
+  .products-grid .card::before,
+  .prod-card::before,
+  .product-card::before,
+  .item-card::before,
+  [data-ab-pro-card="1"]::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, #7c5810 0%, #d4af37 22%, #fff8d6 50%, #d4af37 78%, #7c5810 100%) !important;
+    z-index: 8 !important;
+    pointer-events: none !important;
+  }
+
+  /* خط انعكاس ذهبي هادئ أسفل البطاقة */
+  .ab-sleek-grid-3 > .card::after,
+  #productsGrid .card::after,
+  .products-grid .card::after,
+  .prod-card::after,
+  .product-card::after,
+  .item-card::after,
+  [data-ab-pro-card="1"]::after {
+    content: "" !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 18% !important;
+    right: 18% !important;
+    height: 1.2px !important;
+    background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.78) 30%, #fff7cc 50%, rgba(212, 175, 55, 0.78) 70%, transparent 100%) !important;
+    z-index: 8 !important;
+    pointer-events: none !important;
+  }
+
+  /* توهج دافئ وناعم عند اللمس */
+  .ab-sleek-grid-3 > .card:active,
+  #productsGrid .card:active,
+  .products-grid .card:active,
+  .prod-card:active,
+  .product-card:active,
+  .item-card:active,
+  [data-ab-pro-card="1"]:active {
+    transform: translateY(-1px) scale(0.984) !important;
+    border-color: #fef08a !important;
+    box-shadow:
+      0 0 0 1px rgba(254, 240, 138, 0.7),
+      0 10px 22px rgba(0, 0, 0, 0.58),
+      0 0 18px rgba(250, 204, 21, 0.36) !important;
+  }
+
+  /* 3) نافذة عرض الصورة الموحّدة (مربع 1:1 متطابق بإطار داخلي مريح للعين) */
+  .ab-hd-img-wrap {
+    position: relative !important;
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex: 0 0 auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    border-radius: 9px !important;
+    background: radial-gradient(circle at 50% 42%, #1d1c18 0%, #0b0b0e 100%) !important;
+    border: 1px solid rgba(212, 175, 55, 0.24) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 3px 10px rgba(0, 0, 0, 0.35) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  /* صورة الصنف بألوانها الأصلية 100% وبدون قص وبدقة عالية */
+  .ab-sleek-grid-3 > .card img,
+  #productsGrid .card img,
+  .products-grid .card img,
+  .prod-card img,
+  .product-card img,
+  .item-card img,
+  [data-ab-pro-card="1"] img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 8px !important;
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: high-quality !important;
+    transform: translateZ(0) !important;
+  }
+
+  /* 4) توحيد ارتفاع اسم الصنف على سطرين بالضبط لتصطف كل البطاقات على ميزان واحد */
+  .ab-uni-title {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-height: 2.6em !important;
+    max-height: 2.6em !important;
+    line-height: 1.3 !important;
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    color: #f8fafc !important;
+    margin: 5px 2px 4px !important;
+    padding: 0 !important;
+    word-break: break-word !important;
+    letter-spacing: 0.1px !important;
+  }
+
+  /* تثبيت شارة البونص داخل الزاوية السفلية لصندوق الصورة كي لا تغير ارتفاع البطاقة */
+  .ab-hd-img-wrap > .ab-bonus-tag {
+    position: absolute !important;
+    bottom: 4px !important;
+    right: 4px !important;
+    z-index: 7 !important;
+    margin: 0 !important;
+    padding: 1.5px 6px !important;
+    font-size: 8.5px !important;
+    line-height: 1.2 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.42) !important;
+  }
+
+  /* 5) تثبيت أزرار الكميات (10–300) أسفل كل بطاقة على خط أفقي موحّد */
+  [data-ab-pro-card="1"] .ab-qbar {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 2.5px !important;
+    margin-top: auto !important;
+    padding-top: 2px !important;
+  }
+  [data-ab-pro-card="1"] .ab-qbtn {
+    font-size: 8.5px !important;
+    padding: 3.5px 0 !important;
+    min-width: 0 !important;
+    border-radius: 6px !important;
+    background: linear-gradient(180deg, #1b1e28 0%, #101218 100%) !important;
+    border: 1px solid rgba(212, 175, 55, 0.38) !important;
+    color: #fef08a !important;
+    letter-spacing: -0.2px !important;
+    white-space: nowrap !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+  [data-ab-pro-card="1"] .ab-qbtn:active {
+    background: linear-gradient(135deg, #d4af37, #facc15) !important;
+    color: #09090b !important;
+    border-color: #fef08a !important;
+  }
+
+  /* 6) طبقة اللمعان الزجاجي الحريري المريح للعين (ضوء نقي فوق الإطار بدون تعديل ألوان المنتج) */
+  .ab-crystal-gloss {
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 5 !important;
+    overflow: hidden !important;
+    border-radius: inherit !important;
+  }
+  /* انعكاس زجاجي مقوّس هادئ في الثلث العلوي */
+  .ab-crystal-gloss::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -18% !important;
+    left: -15% !important;
+    width: 130% !important;
+    height: 46% !important;
+    border-radius: 0 0 50% 50% !important;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 250, 232, 0.08) 55%,
+      rgba(255, 255, 255, 0) 100%
+    ) !important;
+  }
+  /* موجة بريق حريرية ناعمة تعمل على المعالج الرسومي (GPU 60fps) */
+  .ab-crystal-gloss::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -40% !important;
+    left: 0 !important;
+    width: 44% !important;
+    height: 185% !important;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 252, 238, 0.14) 28%,
+      rgba(255, 255, 255, 0.40) 50%,
+      rgba(255, 248, 220, 0.14) 72%,
+      rgba(255, 255, 255, 0) 100%
+    ) !important;
+    will-change: transform, opacity !important;
+    animation: abSilkSweep 6.2s cubic-bezier(0.35, 0, 0.25, 1) infinite !important;
+    animation-delay: var(--ab-gleam-delay, 0s) !important;
+  }
+  @keyframes abSilkSweep {
+    0%, 72% {
+      transform: translate3d(-180%, 0, 0) rotate(24deg);
+      opacity: 0;
+    }
+    79% {
+      opacity: 1;
+    }
+    96% {
+      transform: translate3d(280%, 0, 0) rotate(24deg);
+      opacity: 0.92;
+    }
+    100% {
+      transform: translate3d(280%, 0, 0) rotate(24deg);
+      opacity: 0;
+    }
+  }
+
+  /* 7) إبقاء لوحة الأرقام المنبثقة صغيرة ورشيقة ومعزولة تماماً */
+  .ab-sleek-numpad-box {
+    max-width: 315px !important;
+    width: min(92vw, 315px) !important;
+    border-radius: 18px !important;
+    border: 1.5px solid rgba(212, 175, 55, 0.85) !important;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.58), 0 0 18px rgba(212, 175, 55, 0.24) !important;
+    padding: 12px 13px !important;
+    box-sizing: border-box !important;
+  }
+  .ab-sleek-numpad-box img {
+    width: 62px !important;
+    height: 62px !important;
+    max-width: 62px !important;
+    max-height: 62px !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: contain !important;
+    background: #ffffff !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(212, 175, 55, 0.55) !important;
+    padding: 3px !important;
+    filter: none !important;
+  }
+</style>
+<script data-ab-hd-gloss="6">
+(function () {
+  function isInsideModal(el) {
+    if (!el) return false;
+    if (el.closest("#abProZoomModal, #abRcptPreviewModal, #abProSplash, #abSv3ModalBg, #abSv3ArchModalBg, #abSaifLuxuryHeader, #abDevStampFooter, #invoiceView, #invFilledWrap")) {
+      return true;
+    }
+    if (el.closest('[id*="modal" i], [class*="modal" i], [id*="qty" i], [class*="qty" i], [class*="sheet" i], [class*="popup" i], [class*="overlay" i], [role="dialog"]')) {
+      return true;
+    }
+    var cur = el;
+    while (cur && cur !== document.body) {
+      try {
+        if (getComputedStyle(cur).position === "fixed") return true;
+      } catch (e) {}
+      cur = cur.parentElement;
+    }
+    return false;
+  }
+
+  function applyUnifiedSheenShowcase() {
+    // 1) عزل وتنسيق لوحة الأرقام المنبثقة
+    var modals = document.querySelectorAll('[id*="qty" i], [class*="qty-modal" i], [id*="numpad" i], [class*="numpad" i], [id*="modal" i], [class*="modal" i]');
+    for (var m = 0; m < modals.length; m++) {
+      var mod = modals[m];
+      if (!mod || mod.id === "abProZoomModal" || mod.id === "abRcptPreviewModal" || mod.id === "abSv3ModalBg" || mod.id === "abSv3ArchModalBg") continue;
+      var btns = mod.querySelectorAll("button");
+      var digitHits = 0;
+      for (var b = 0; b < btns.length; b++) {
+        if (/^[0-9]$/.test((btns[b].textContent || "").trim())) digitHits++;
+      }
+      if (digitHits >= 5) {
+        var innerBox = mod.querySelector(".modal-content, .modal-card, .modal-box, .sheet, .card, > div") || mod;
+        if (innerBox && innerBox !== document.body) {
+          innerBox.classList.add("ab-sleek-numpad-box");
+          innerBox.removeAttribute("data-ab-pro-card");
+          var stray = innerBox.querySelectorAll(".ab-crystal-gloss, .ab-qbar, .ab-bonus-tag");
+          for (var s = 0; s < stray.length; s++) stray[s].remove();
+          var wraps = innerBox.querySelectorAll(".ab-hd-img-wrap");
+          for (var w = 0; w < wraps.length; w++) wraps[w].classList.remove("ab-hd-img-wrap");
+        }
+      }
+    }
+
+    // 2) توحيد أحجام البطاقات والصور والعناوين وتفعيل اللمعان الحريري المتتابع
+    var cards = document.querySelectorAll('#productsGrid .card, .products-grid .card, .prod-card, .product-card, .item-card, [data-ab-pro-card="1"]');
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (!card || card.getAttribute("data-ab-gold-done") === "1") continue;
+      if (isInsideModal(card)) {
+        card.setAttribute("data-ab-gold-done", "1");
+        continue;
+      }
+      card.setAttribute("data-ab-gold-done", "1");
+
+      var parentGrid = card.parentElement;
+      if (parentGrid && parentGrid !== document.body && !parentGrid.classList.contains("ab-sleek-grid-3")) {
+        parentGrid.classList.add("ab-sleek-grid-3");
+      }
+
+      // ضبط حاوية الصورة الموحّدة 1:1
+      var img = card.querySelector("img");
+      var imgWrap = null;
+      if (img) {
+        var wrap = img.parentElement;
+        if (wrap && wrap !== card) {
+          wrap.classList.add("ab-hd-img-wrap");
+          imgWrap = wrap;
+        }
+      }
+
+      // نقل شارة البونص داخل الزاوية السفلية لصندوق الصورة للحفاظ على تساوي ارتفاع جميع البطاقات
+      var bTag = card.querySelector(":scope > .ab-bonus-tag");
+      if (bTag && imgWrap) {
+        imgWrap.appendChild(bTag);
+      }
+
+      // توحيد ارتفاع اسم الصنف على سطرين بالضبط
+      var tEls = card.querySelectorAll("h3, h4, .prod-name, .p-name, .item-name, .card-title, .prod-title, .name, .title, p");
+      for (var t = 0; t < tEls.length; t++) {
+        var tn = tEls[t];
+        if (!tn || tn.closest(".ab-qbar, .ab-hd-img-wrap") || tn.classList.contains("ab-bonus-tag") || tn.getAttribute("data-ab-price-el") === "1") continue;
+        if (tn.querySelector("img, button, input")) continue;
+        var tx = (tn.textContent || "").trim();
+        if (tx && !/^\d+\s*[×x]$/i.test(tx) && tx.indexOf("ر.ي") === -1) {
+          tn.classList.add("ab-uni-title");
+          break;
+        }
+      }
+
+      // تركيب طبقة اللمعان الحريري فوق إطار الصورة بتتابع مريح للعين
+      var glossHost = imgWrap || card;
+      if (!glossHost.querySelector(".ab-crystal-gloss")) {
+        var gloss = document.createElement("span");
+        gloss.className = "ab-crystal-gloss";
+        gloss.setAttribute("aria-hidden", "true");
+        gloss.style.setProperty("--ab-gleam-delay", ((i % 6) * 0.75).toFixed(2) + "s");
+        glossHost.appendChild(gloss);
+      }
+    }
+  }
+
+  var _abGoldTmr = null;
+  function scheduleGold() {
+    if (_abGoldTmr) return;
+    _abGoldTmr = setTimeout(function () {
+      _abGoldTmr = null;
+      try { applyUnifiedSheenShowcase(); } catch (e) {}
+    }, 240);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleGold);
+  } else {
+    scheduleGold();
+  }
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(scheduleGold);
+    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
+  }
+  setTimeout(applyUnifiedSheenShowcase, 500);
+})();
+</script>
+<!-- ABUDHIYA_GOLD_CARDS_END -->
 </body>
 </html>
