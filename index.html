@@ -10661,6 +10661,1479 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_IMPERIAL_V3_END -->
 
+
+<!-- ABUDHIYA_QUANTUM_V4_START -->
+<style id="abQuantumV4Style" data-quantum-v4="1">
+  /* 1) شريط أدوات القوة الأسطورية المضغوط (صف زجاجي واحد فائق الأناقة بدون أي إزاحة للبطاقات) */
+  #abQuantumStrip {
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 2px 10px 4px;
+    padding: 4px 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+  #abQuantumStrip::-webkit-scrollbar { display: none; }
+  .ab-q-pill {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.58);
+    background: linear-gradient(135deg, rgba(28, 24, 15, 0.96) 0%, rgba(11, 13, 20, 0.98) 100%);
+    color: #fef08a;
+    font-size: 11px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(254, 240, 138, 0.2);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-q-pill.magic {
+    background: linear-gradient(135deg, #0369a1 0%, #0d9488 55%, #b45309 100%);
+    border-color: #fde047;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.34);
+  }
+  .ab-q-pill:active {
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+  }
+
+  /* 2) بطاقة مقياس حمولة السيارة + الحاسبة السرية داخل الفاتورة */
+  #abQuantumLoadBox {
+    direction: rtl;
+    margin: 8px 0;
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: linear-gradient(155deg, rgba(16, 18, 27, 0.96), rgba(9, 10, 15, 0.98));
+    border: 1px solid rgba(212, 175, 55, 0.42);
+    box-sizing: border-box;
+  }
+  .ab-ql-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #fef08a;
+    margin-bottom: 6px;
+  }
+  .ab-ql-bar-bg {
+    width: 100%;
+    height: 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+  }
+  .ab-ql-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #10b981 0%, #facc15 65%, #ef4444 100%);
+  }
+  .ab-ql-meta {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  .ab-ql-cfg {
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    color: #fef08a;
+    border-radius: 7px;
+    padding: 2px 7px;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* الحاسبة السرية (مخفية عن العملاء تماماً ولا تظهر إلا عند فتح الرمز abodhya) */
+  html.ab-prices-hidden #abQuantumSecretCalc {
+    display: none !important;
+  }
+  #abQuantumSecretCalc {
+    direction: rtl;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 12px;
+    background: linear-gradient(155deg, rgba(28, 22, 11, 0.96), rgba(12, 13, 19, 0.98));
+    border: 1.3px solid rgba(250, 204, 21, 0.72);
+    box-sizing: border-box;
+  }
+  .ab-sc-head {
+    font-size: 12px;
+    font-weight: 900;
+    color: #facc15;
+    margin-bottom: 7px;
+  }
+  .ab-sc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+  .ab-sc-inp {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.48);
+    background: #0b0d14;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 800;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .ab-sc-res {
+    padding: 7px 9px;
+    border-radius: 9px;
+    background: rgba(5, 150, 105, 0.2);
+    border: 1px solid rgba(52, 211, 153, 0.55);
+    color: #86efac;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.65;
+  }
+
+  /* 3) نوافذ النسخة الأسطورية (الطلب الذكي + القوالب + دفتر المحلات + الباركود) */
+  .ab-q-modal-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 100080;
+    background: rgba(3, 5, 10, 0.90);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    direction: rtl;
+    box-sizing: border-box;
+  }
+  .ab-q-modal-bg.open { display: flex; }
+  .ab-q-modal-box {
+    width: 100%;
+    max-width: 430px;
+    max-height: 89vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    background: linear-gradient(165deg, #17150f 0%, #0a0c12 60%, #15120c 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.88);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78), 0 0 26px rgba(212, 175, 55, 0.18);
+    padding: 15px 14px 14px;
+    color: #f8fafc;
+    font-family: inherit;
+    position: relative;
+    box-sizing: border-box;
+    text-align: right;
+  }
+  .ab-q-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .ab-q-title {
+    font-size: 15.5px;
+    font-weight: 900;
+    color: #facc15;
+    text-align: center;
+    margin: 2px 0 4px;
+  }
+  .ab-q-sub {
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-align: center;
+    margin-bottom: 10px;
+    line-height: 1.55;
+  }
+  .ab-q-textarea {
+    width: 100%;
+    min-height: 88px;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1.2px solid rgba(212, 175, 55, 0.55);
+    background: #0d1018;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    box-sizing: border-box;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .ab-q-inp {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.48);
+    background: #0d1018;
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: inherit;
+    box-sizing: border-box;
+    margin-bottom: 6px;
+  }
+  .ab-q-btn-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 7px;
+  }
+  .ab-q-btn-row3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 7px;
+  }
+  .ab-q-btn-gold {
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 11px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 12.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+  }
+  .ab-q-btn-cyan {
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 11px;
+    border: 1px solid #7dd3fc;
+    background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+  }
+  .ab-q-btn-dark {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #141722;
+    color: #fef08a;
+    font-size: 11.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+  }
+  .ab-q-btn-red {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(248, 113, 113, 0.55);
+    background: rgba(127, 29, 29, 0.45);
+    color: #fecaca;
+    font-size: 11.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+  }
+  .ab-q-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  .ab-q-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 9px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(212, 175, 55, 0.28);
+    font-size: 12px;
+  }
+  .ab-q-item-thumb {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+    background: #ffffff;
+    object-fit: contain;
+    flex: 0 0 34px;
+    padding: 2px;
+  }
+  .ab-q-qty-ctrl {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+  }
+  .ab-q-mini-btn {
+    padding: 4px 8px;
+    border-radius: 7px;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #1b1912;
+    color: #fef08a;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-q-qty-num {
+    width: 44px;
+    padding: 3px 4px;
+    border-radius: 7px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #0b0d14;
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 900;
+    text-align: center;
+    font-family: inherit;
+  }
+  .ab-q-unmatched {
+    margin-top: 8px;
+    padding: 7px 9px;
+    border-radius: 9px;
+    background: rgba(234, 88, 12, 0.16);
+    border: 1px solid rgba(251, 146, 60, 0.5);
+    color: #fed7aa;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .ab-scan-video-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000000;
+    border: 1.5px solid #d4af37;
+    margin-bottom: 10px;
+  }
+  .ab-scan-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .ab-scan-laser {
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 50%;
+    height: 2px;
+    background: #facc15;
+    box-shadow: 0 0 12px #facc15;
+    pointer-events: none;
+  }
+  .ab-bt-print-btn {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1.2px solid #7dd3fc;
+    background: linear-gradient(135deg, #0369a1 0%, #0284c7 55%, #0d9488 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 6px;
+  }
+</style>
+<script data-ab-quantum-v4="1">
+(function () {
+  if (window.__abQuantumLegendV4) return;
+  window.__abQuantumLegendV4 = true;
+
+  var TPL_KEY = "ab_quantum_templates_v4";
+  var CRM_KEY = "ab_quantum_shops_crm_v4";
+  var CAP_KEY = "ab_quantum_truck_cap_v4";
+  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
+  var _parsedMatches = [];
+  var _scanStream = null;
+  var _scanTimer = null;
+  var _crmSelectedGps = "";
+
+  function notify(msg) {
+    if (typeof showToast === "function") showToast(msg);
+  }
+
+  function getCartObj() {
+    try {
+      if (typeof CART !== "undefined" && CART) return CART;
+      if (typeof cart !== "undefined" && cart) return cart;
+    } catch (e) {}
+    return null;
+  }
+
+  function getProductsArr() {
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) return PRODUCTS;
+    } catch (e) {}
+    return [];
+  }
+
+  function classifyUnit(prod) {
+    var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || "").trim() : "";
+    var nm = String((prod && prod.name) || "");
+    var cat = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nm) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(cat)) {
+      return { key: "carton", label: "كرتون" };
+    }
+    return { key: "bag", label: "كيس" };
+  }
+
+  function syncCardVisual(pid, qty) {
+    try {
+      var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+      for (var i = 0; i < cards.length; i++) {
+        var c = cards[i];
+        if (String(c.getAttribute("data-ab-prod-id") || "") !== String(pid)) continue;
+        c.setAttribute("data-ab-last-q", String(qty));
+        var badge = c.querySelector(".ab-instant-qty-badge");
+        if (badge) {
+          badge.textContent = qty > 0 ? (qty + " ×") : "";
+          badge.style.display = qty > 0 ? "inline-flex" : "none";
+        }
+        var clr = c.querySelector(".ab-clear-qty-btn");
+        if (clr) clr.style.display = qty > 0 ? "flex" : "none";
+      }
+    } catch (e) {}
+  }
+
+  function syncAllCardsFromCart() {
+    var cartObj = getCartObj();
+    if (!cartObj) return;
+    var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+    for (var i = 0; i < cards.length; i++) {
+      var pid = cards[i].getAttribute("data-ab-prod-id");
+      if (!pid) continue;
+      var q = Number(cartObj[pid] || 0);
+      syncCardVisual(pid, q);
+    }
+    try { if (typeof saveCart === "function") saveCart(); } catch (e) {}
+    try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) {}
+    try { if (typeof updateBottomBar === "function") updateBottomBar(); } catch (e) {}
+    var inv = document.getElementById("invoiceView");
+    if (inv && window.getComputedStyle(inv).display !== "none") {
+      try { if (typeof renderInvoice === "function") renderInvoice(); } catch (e) {}
+    }
+    updateLoadAndSecretCalc();
+  }
+
+  function readCartStats() {
+    var cartObj = getCartObj();
+    var prods = getProductsArr();
+    var byId = {};
+    for (var p = 0; p < prods.length; p++) {
+      if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+    }
+    var items = [], bags = 0, cartons = 0, totalPrice = 0;
+    if (cartObj) {
+      var ks = Object.keys(cartObj);
+      for (var i = 0; i < ks.length; i++) {
+        var pid = ks[i];
+        var q = Number(cartObj[pid] || 0);
+        if (q <= 0) continue;
+        var pr = byId[String(pid)];
+        var u = classifyUnit(pr);
+        var price = pr ? Number(pr.wholesalePrice || pr.price || pr.p || 0) : 0;
+        items.push({ id: pid, prod: pr, name: (pr && pr.name) || ("صنف #" + pid), qty: q, unitKey: u.key, unitLabel: u.label, price: price, sub: price * q });
+        if (u.key === "carton") cartons += q;
+        else bags += q;
+        totalPrice += (price * q);
+      }
+    }
+    return { items: items, bags: bags, cartons: cartons, totalPrice: totalPrice };
+  }
+
+  /* ============================================================================
+     1) محرك الطلب الذكي الفوري (AI Magic Bulk-Order Parser — نص + لصق واتساب + صوت)
+     ============================================================================ */
+  function normalizeArabic(s) {
+    return String(s || "")
+      .replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); })
+      .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+      .replace(/[أإآٱ]/g, "ا")
+      .replace(/ة/g, "ه")
+      .replace(/[ىي]/g, "ي")
+      .replace(/ؤ/g, "و")
+      .replace(/ئ/g, "ي")
+      .replace(/[^\u0600-\u06FF0-9a-zA-Z\s*×xX]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function replaceArabicNumberWords(text) {
+    var s = " " + normalizeArabic(text) + " ";
+    var map = [
+      ["ثلاثميه", "300"], ["ثلاثمائه", "300"], ["ميتين", "200"], ["مائتين", "200"],
+      ["ميه وخمسين", "150"], ["مائه وخمسين", "150"], ["ميه", "100"], ["مئه", "100"], ["مائه", "100"],
+      ["خمسه وتسعين", "95"], ["تسعين", "90"], ["ثمانين", "80"], ["خمسه وسبعين", "75"], ["سبعين", "70"],
+      ["ستين", "60"], ["خمسين", "50"], ["اربعين", "40"], ["خمسه وثلاثين", "35"], ["ثلاثين", "30"],
+      ["خمسه وعشرين", "25"], ["عشرين", "20"], ["خمسه عشر", "15"], ["خمسطاش", "15"], ["خمسطعش", "15"],
+      ["اثناعش", "12"], ["اثنا عشر", "12"], ["عشره", "10"], ["تسعه", "9"], ["ثمانيه", "8"],
+      ["سبعه", "7"], ["سته", "6"], ["خمسه", "5"], ["اربعه", "4"], ["ثلاثه", "3"], ["اثنين", "2"], ["حبتين", "2"], ["كيسين", "2"], ["كرتونين", "2"]
+    ];
+    for (var i = 0; i < map.length; i++) {
+      s = s.split(" " + map[i][0] + " ").join(" " + map[i][1] + " ");
+    }
+    return s.trim();
+  }
+
+  function tokenBigramScore(a, b) {
+    if (!a || !b) return 0;
+    if (b.indexOf(a) !== -1) return 0.92;
+    if (a.indexOf(b) !== -1) return 0.85;
+    var aToks = a.split(" ").filter(Boolean);
+    var bToks = b.split(" ").filter(Boolean);
+    var hit = 0;
+    for (var i = 0; i < aToks.length; i++) {
+      var at = aToks[i];
+      if (at.length < 2) continue;
+      for (var j = 0; j < bToks.length; j++) {
+        var bt = bToks[j];
+        if (bt === at) { hit += 1.0; break; }
+        if (bt.indexOf(at) !== -1 || at.indexOf(bt) !== -1) { hit += 0.78; break; }
+      }
+    }
+    var tokScore = aToks.length ? (hit / aToks.length) : 0;
+
+    // معامل دايس للمقاطع الثنائية لتصحيح الأخطاء الإملائية الخفيفة
+    var aNoSp = a.replace(/\s+/g, "");
+    var bNoSp = b.replace(/\s+/g, "");
+    if (aNoSp.length < 2 || bNoSp.length < 2) return tokScore;
+    var bgA = {};
+    var cntA = 0;
+    for (var x = 0; x < aNoSp.length - 1; x++) {
+      var g = aNoSp.slice(x, x + 2);
+      bgA[g] = (bgA[g] || 0) + 1;
+      cntA++;
+    }
+    var inter = 0;
+    var cntB = bNoSp.length - 1;
+    for (var y = 0; y < cntB; y++) {
+      var g2 = bNoSp.slice(y, y + 2);
+      if (bgA[g2] > 0) { inter++; bgA[g2]--; }
+    }
+    var dice = (2 * inter) / (cntA + cntB);
+    return Math.max(tokScore * 0.85 + dice * 0.25, dice);
+  }
+
+  function parseBulkOrderText(rawInput) {
+    var prods = getProductsArr();
+    if (!prods.length) return { matches: [], unmatched: [] };
+
+    // تقسيم النص إلى أجزاء ذكية (أسطر، فواصل، زائد، أو " و " قبل الأرقام أو الأسماء)
+    var prepped = String(rawInput || "")
+      .replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); })
+      .replace(/[،,;؛+|•]/g, "\n")
+      .replace(/\s+و\s+/g, "\n")
+      .replace(/\s+و(?=\d)/g, "\n");
+
+    var lines = prepped.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+    var fillerRe = /\b(اريد|ابغي|ابغى|جيب|اعطني|اعطيني|سجل|ضف|اضف|اطلب|من|الي|علي|في|كيس|اكياس|اكيس|كرتون|كراتين|كارتون|حبه|حبات|بكت|شده|شدات|درزن|عدد|الكميه|كميه|لو|سمحت|ممكن|فضلك)\b/g;
+
+    var prodIndex = prods.map(function (p) {
+      var nmClean = normalizeArabic(p.name || "").replace(/\b\d+\s*[*×x]\s*\d+\b/g, " ").replace(/\s+/g, " ").trim();
+      return { prod: p, norm: nmClean };
+    });
+
+    var matchesById = {};
+    var matches = [];
+    var unmatched = [];
+
+    for (var i = 0; i < lines.length; i++) {
+      var seg = replaceArabicNumberWords(lines[i]);
+      if (!seg) continue;
+
+      // استبعاد مقاسات العبوة مثل 1*50 أو 50*1 قبل استخراج رقم الكمية
+      var noPack = seg.replace(/\b\d+\s*[*×x]\s*\d+\b/g, " ");
+      var nums = noPack.match(/\b\d+\b/g);
+      var qty = nums && nums.length ? Number(nums[0]) : 10;
+      if (qty <= 0 || qty > 50000) qty = 10;
+
+      var query = noPack.replace(/\b\d+\b/g, " ").replace(fillerRe, " ").replace(/\s+/g, " ").trim();
+      if (!query || query.length < 2) continue;
+
+      var best = null;
+      var bestScore = 0;
+      for (var p = 0; p < prodIndex.length; p++) {
+        var sc = tokenBigramScore(query, prodIndex[p].norm);
+        if (sc > bestScore) {
+          bestScore = sc;
+          best = prodIndex[p].prod;
+        }
+      }
+
+      if (best && bestScore >= 0.42) {
+        var bid = String(best.id);
+        if (matchesById[bid]) {
+          matchesById[bid].qty += qty;
+        } else {
+          var u = classifyUnit(best);
+          var rec = { id: best.id, prod: best, name: best.name, img: best.img || best.image || "", qty: qty, unitLabel: u.label, score: Math.round(bestScore * 100) };
+          matchesById[bid] = rec;
+          matches.push(rec);
+        }
+      } else {
+        unmatched.push(lines[i]);
+      }
+    }
+
+    return { matches: matches, unmatched: unmatched };
+  }
+
+  function openAiBulkOrderModal() {
+    var bg = document.getElementById("abQuantumAiModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abQuantumAiModal";
+      bg.className = "ab-q-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-q-modal-box">' +
+          '<button type="button" class="ab-q-close" id="abAiCloseBtn">✕</button>' +
+          '<div class="ab-q-title">🧠 الطلب الذكي الفوري (بجملة واحدة)</div>' +
+          '<div class="ab-q-sub">الصق رسالة طلب العميل من الواتساب أو اكتبها أو أملِها بالصوت — وسأجهّز السلة كاملة بضغطة واحدة (يعمل 100% بدون نت)</div>' +
+          '<textarea id="abAiOrderInput" class="ab-q-textarea" placeholder="مثال:\n20 رنجو برتقالي و 15 ريلاكس حار\n10 كراتين شراب وطني و 25 جامبو"></textarea>' +
+          '<div class="ab-q-btn-row">' +
+            '<button type="button" class="ab-q-btn-gold" id="abAiAnalyzeBtn">⚡ تحليل الطلب فوراً</button>' +
+            '<button type="button" class="ab-q-btn-cyan" id="abAiVoiceBtn">🎙️ إملاء الطلب بالصوت</button>' +
+          '</div>' +
+          '<div id="abAiResultsWrap" class="ab-q-list"></div>' +
+          '<div id="abAiUnmatchedBox" class="ab-q-unmatched" style="display:none"></div>' +
+          '<button type="button" class="ab-q-btn-gold" id="abAiApplyAllBtn" style="display:none;margin-top:10px">✅ اعتماد وإضافة الكل للسلة بلمسة واحدة</button>' +
+        '</div>';
+      document.body.appendChild(bg);
+
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abAiCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+
+      function renderParsedResults(res) {
+        _parsedMatches = res.matches || [];
+        var listEl = document.getElementById("abAiResultsWrap");
+        var unmEl = document.getElementById("abAiUnmatchedBox");
+        var applyBtn = document.getElementById("abAiApplyAllBtn");
+
+        listEl.innerHTML = "";
+        if (!_parsedMatches.length) {
+          listEl.innerHTML = '<div style="text-align:center;padding:12px;color:#94a3b8;font-size:12px">لم يتم التعرف على أصناف — اكتب اسم الصنف والكمية (مثلاً: 20 رنجو).</div>';
+          applyBtn.style.display = "none";
+        } else {
+          for (var i = 0; i < _parsedMatches.length; i++) {
+            (function (idx, item) {
+              var row = document.createElement("div");
+              row.className = "ab-q-item-row";
+              row.innerHTML =
+                '<div style="display:flex;align-items:center;gap:7px;min-width:0;flex:1">' +
+                  (item.img ? '<img class="ab-q-item-thumb" src="' + item.img + '" alt="">' : '') +
+                  '<div style="min-width:0">' +
+                    '<div style="font-weight:900;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.name + '</div>' +
+                    '<div style="font-size:10px;color:#86efac;font-weight:800">تطابق ذكي ' + item.score + '% • ' + item.unitLabel + '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="ab-q-qty-ctrl">' +
+                  '<input type="number" class="ab-q-qty-num" value="' + item.qty + '" min="1">' +
+                  '<button type="button" class="ab-q-mini-btn" style="color:#fca5a5">✕</button>' +
+                '</div>';
+              row.querySelector("input").addEventListener("input", function () {
+                var v = Number(this.value || 0);
+                if (v > 0) _parsedMatches[idx].qty = v;
+              });
+              row.querySelector("button").addEventListener("click", function () {
+                _parsedMatches.splice(idx, 1);
+                renderParsedResults({ matches: _parsedMatches, unmatched: res.unmatched });
+              });
+              listEl.appendChild(row);
+            })(i, _parsedMatches[i]);
+          }
+          applyBtn.style.display = "block";
+          applyBtn.textContent = "✅ إضافة " + _parsedMatches.length + " صنف للسلة دفعة واحدة";
+        }
+
+        if (res.unmatched && res.unmatched.length) {
+          unmEl.style.display = "block";
+          unmEl.textContent = "⚠️ عبارات لم تُطابق: " + res.unmatched.join("  |  ");
+        } else {
+          unmEl.style.display = "none";
+        }
+      }
+
+      document.getElementById("abAiAnalyzeBtn").addEventListener("click", function () {
+        var txt = (document.getElementById("abAiOrderInput").value || "").trim();
+        if (!txt) { notify("⚠️ اكتب أو الصق الطلبية أولاً"); return; }
+        renderParsedResults(parseBulkOrderText(txt));
+      });
+
+      document.getElementById("abAiVoiceBtn").addEventListener("click", function () {
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) { notify("🎙️ الإملاء الصوتي يتطلب متصفح Chrome"); return; }
+        var btn = this;
+        try {
+          var rec = new SR();
+          rec.lang = "ar-SA";
+          rec.interimResults = false;
+          btn.textContent = "🔴 استمع الآن... تكلّم بالطلبية";
+          rec.onresult = function (ev) {
+            var sp = "";
+            try { sp = String(ev.results[0][0].transcript || "").trim(); } catch (e) {}
+            if (sp) {
+              var ta = document.getElementById("abAiOrderInput");
+              ta.value = ta.value ? (ta.value + "\n" + sp) : sp;
+              renderParsedResults(parseBulkOrderText(ta.value));
+              notify("⚡ تم تحليل طلبك الصوتي تلقائياً!");
+            }
+          };
+          rec.onend = function () { btn.textContent = "🎙️ إملاء الطلب بالصوت"; };
+          rec.onerror = function () { btn.textContent = "🎙️ إملاء الطلب بالصوت"; notify("⚠️ لم يتم التقاط الصوت"); };
+          rec.start();
+        } catch (e) {
+          btn.textContent = "🎙️ إملاء الطلب بالصوت";
+        }
+      });
+
+      document.getElementById("abAiApplyAllBtn").addEventListener("click", function () {
+        var cartObj = getCartObj();
+        if (!cartObj || !_parsedMatches.length) return;
+        var added = 0;
+        for (var i = 0; i < _parsedMatches.length; i++) {
+          var m = _parsedMatches[i];
+          if (!m || m.qty <= 0) continue;
+          cartObj[m.id] = Number(cartObj[m.id] || 0) + Number(m.qty);
+          added++;
+        }
+        syncAllCardsFromCart();
+        bg.classList.remove("open");
+        notify("🚀 تمت إضافة " + added + " صنف إلى السلة بنجاح!");
+      });
+    }
+    bg.classList.add("open");
+  }
+
+  /* ============================================================================
+     2) سلال وقوالب البقالات الجاهزة + مضاعفة/تنصيف/تصفير السلة
+     ============================================================================ */
+  function loadTemplates() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(TPL_KEY) || "[]");
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function saveTemplates(arr) {
+    try { localStorage.setItem(TPL_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  function openTemplatesModal() {
+    var bg = document.getElementById("abQuantumTplModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abQuantumTplModal";
+      bg.className = "ab-q-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-q-modal-box">' +
+          '<button type="button" class="ab-q-close" id="abTplCloseBtn">✕</button>' +
+          '<div class="ab-q-title">📋 سلال وقوالب الطلبات الجاهزة</div>' +
+          '<div class="ab-q-sub">احفظ أي طلبية متكررة كقالب دائم وعبّئها للسلة في ثانية واحدة</div>' +
+          '<div class="ab-q-btn-row3">' +
+            '<button type="button" class="ab-q-btn-dark" id="abTplMul2Btn">⚡ مضاعفة ×2</button>' +
+            '<button type="button" class="ab-q-btn-dark" id="abTplDiv2Btn">➗ تنصيف ÷2</button>' +
+            '<button type="button" class="ab-q-btn-red" id="abTplClearCartBtn">🗑️ تفريغ السلة</button>' +
+          '</div>' +
+          '<div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(212,175,55,0.3)">' +
+            '<input id="abNewTplName" class="ab-q-inp" placeholder="اسم القالب الجديد (مثلاً: طلبية بقالة النور)">' +
+            '<button type="button" class="ab-q-btn-gold" id="abSaveCurTplBtn">💾 حفظ السلة الحالية كقالب دائم</button>' +
+          '</div>' +
+          '<div id="abSavedTplsList" class="ab-q-list"></div>' +
+        '</div>';
+      document.body.appendChild(bg);
+
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abTplCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+
+      document.getElementById("abTplMul2Btn").addEventListener("click", function () {
+        var c = getCartObj();
+        if (!c || !Object.keys(c).length) { notify("⚠️ السلة فارغة"); return; }
+        Object.keys(c).forEach(function (k) { if (c[k] > 0) c[k] = Number(c[k]) * 2; });
+        syncAllCardsFromCart();
+        notify("⚡ تمت مضاعفة جميع كميات السلة (×2)");
+      });
+
+      document.getElementById("abTplDiv2Btn").addEventListener("click", function () {
+        var c = getCartObj();
+        if (!c || !Object.keys(c).length) { notify("⚠️ السلة فارغة"); return; }
+        Object.keys(c).forEach(function (k) { if (c[k] > 0) c[k] = Math.max(1, Math.round(Number(c[k]) / 2)); });
+        syncAllCardsFromCart();
+        notify("➗ تم تنصيف جميع كميات السلة (÷2)");
+      });
+
+      document.getElementById("abTplClearCartBtn").addEventListener("click", function () {
+        var c = getCartObj();
+        if (!c || !Object.keys(c).length) { notify("السلة فارغة بالفعل"); return; }
+        if (!window.confirm("هل تريد تفريغ جميع الأصناف من السلة؟")) return;
+        Object.keys(c).forEach(function (k) { delete c[k]; });
+        syncAllCardsFromCart();
+        notify("🗑️ تم تفريغ السلة بالكامل");
+      });
+
+      document.getElementById("abSaveCurTplBtn").addEventListener("click", function () {
+        var st = readCartStats();
+        if (!st.items.length) { notify("⚠️ أضف أصنافاً للسلة أولاً ثم احفظها كقالب"); return; }
+        var nm = (document.getElementById("abNewTplName").value || "").trim() || ("قالب #" + (loadTemplates().length + 1));
+        var arr = loadTemplates();
+        arr.unshift({
+          id: "tpl_" + Date.now(),
+          name: nm,
+          bags: st.bags,
+          cartons: st.cartons,
+          items: st.items.map(function (it) { return { id: it.id, qty: it.qty }; })
+        });
+        saveTemplates(arr.slice(0, 30));
+        document.getElementById("abNewTplName").value = "";
+        renderTpls();
+        notify("✅ تم حفظ القالب: " + nm);
+      });
+    }
+
+    function renderTpls() {
+      var list = document.getElementById("abSavedTplsList");
+      var arr = loadTemplates();
+      if (!arr.length) {
+        list.innerHTML = '<div style="text-align:center;padding:14px;color:#94a3b8;font-size:12px">لا توجد قوالب محفوظة بعد — جهّز طلبية واضغط «حفظ السلة الحالية».</div>';
+        return;
+      }
+      list.innerHTML = "";
+      for (var i = 0; i < arr.length; i++) {
+        (function (tpl) {
+          var row = document.createElement("div");
+          row.className = "ab-q-item-row";
+          var meta = [];
+          meta.push(tpl.items.length + " صنف");
+          if (tpl.bags > 0) meta.push(tpl.bags + " كيس");
+          if (tpl.cartons > 0) meta.push(tpl.cartons + " كرتون");
+          row.innerHTML =
+            '<div><b style="color:#fef08a">' + tpl.name + '</b><br><span style="font-size:10.5px;color:#cbd5e1">' + meta.join(" • ") + '</span></div>' +
+            '<div style="display:flex;gap:5px">' +
+              '<button type="button" class="ab-q-mini-btn load-tpl">⚡ تعبئة</button>' +
+              '<button type="button" class="ab-q-mini-btn del-tpl" style="color:#fca5a5">✕</button>' +
+            '</div>';
+          row.querySelector(".load-tpl").addEventListener("click", function () {
+            var c = getCartObj();
+            if (!c) return;
+            for (var k = 0; k < tpl.items.length; k++) {
+              c[tpl.items[k].id] = Number(tpl.items[k].qty || 0);
+            }
+            syncAllCardsFromCart();
+            bg.classList.remove("open");
+            notify("⚡ تم تحميل قالب «" + tpl.name + "» إلى السلة");
+          });
+          row.querySelector(".del-tpl").addEventListener("click", function () {
+            saveTemplates(loadTemplates().filter(function (x) { return x.id !== tpl.id; }));
+            renderTpls();
+          });
+          list.appendChild(row);
+        })(arr[i]);
+      }
+    }
+
+    renderTpls();
+    bg.classList.add("open");
+  }
+
+  /* ============================================================================
+     3) دفتر المحلات والعملاء الذكي (Mini CRM — يعمل 100% بدون نت)
+     ============================================================================ */
+  function loadShops() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(CRM_KEY) || "[]");
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function saveShops(arr) {
+    try { localStorage.setItem(CRM_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  function applyShopToInvoice(shop) {
+    if (!shop) return;
+    try {
+      localStorage.setItem("ab_cust_name", shop.name);
+      localStorage.setItem("ab_sv3_name", shop.name);
+    } catch (e) {}
+    var inps = document.querySelectorAll('#abSilentOrderBox input, #invoiceView input');
+    for (var i = 0; i < inps.length; i++) {
+      var el = inps[i];
+      var h = ((el.id || "") + " " + (el.name || "") + " " + (el.placeholder || "")).toLowerCase();
+      if (h.indexOf("name") !== -1 || h.indexOf("اسم") !== -1 || h.indexOf("عميل") !== -1 || h.indexOf("محل") !== -1 || h.indexOf("بقال") !== -1) {
+        el.value = shop.name + (shop.area ? (" - " + shop.area) : "");
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+      } else if (shop.phone && (h.indexOf("phone") !== -1 || h.indexOf("جوال") !== -1 || h.indexOf("رقم") !== -1)) {
+        el.value = shop.phone;
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    }
+    _crmSelectedGps = shop.gps || "";
+    notify("✅ تم اختيار المحل: " + shop.name + (shop.gps ? " + الموقع محفوظ 📍" : ""));
+  }
+
+  function openCrmModal() {
+    var bg = document.getElementById("abQuantumCrmModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abQuantumCrmModal";
+      bg.className = "ab-q-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-q-modal-box">' +
+          '<button type="button" class="ab-q-close" id="abCrmCloseBtn">✕</button>' +
+          '<div class="ab-q-title">📒 دفتر المحلات والعملاء (CRM)</div>' +
+          '<div class="ab-q-sub">احفظ محلات خط سيرك مع أرقامهم ومواقعهم GPS لتجهيز الفواتير بلمسة واحدة</div>' +
+          '<input id="abCrmSearch" class="ab-q-inp" placeholder="🔎 ابحث عن اسم المحل أو الحي...">' +
+          '<div id="abCrmList" class="ab-q-list" style="margin-bottom:10px"></div>' +
+          '<div style="padding-top:9px;border-top:1px dashed rgba(212,175,55,0.3)">' +
+            '<input id="abCrmName" class="ab-q-inp" placeholder="اسم المحل / البقالة (مثلاً: بقالة الأمانة)">' +
+            '<div class="ab-q-btn-row" style="margin-top:0;margin-bottom:6px">' +
+              '<input id="abCrmPhone" class="ab-q-inp" type="tel" placeholder="رقم الجوال" style="margin:0">' +
+              '<input id="abCrmArea" class="ab-q-inp" placeholder="الحي / المنطقة" style="margin:0">' +
+            '</div>' +
+            '<div class="ab-q-btn-row">' +
+              '<button type="button" class="ab-q-btn-dark" id="abCrmGrabGpsBtn">📍 التقاط موقع المحل</button>' +
+              '<button type="button" class="ab-q-btn-gold" id="abCrmSaveBtn">➕ حفظ في الدفتر</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(bg);
+
+      var tempGps = "";
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abCrmCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abCrmSearch").addEventListener("input", renderShops);
+
+      document.getElementById("abCrmGrabGpsBtn").addEventListener("click", function () {
+        var btn = this;
+        if (!navigator.geolocation) { notify("⚠️ GPS غير مدعوم"); return; }
+        btn.textContent = "⏳ جاري التحديد...";
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            tempGps = "https://maps.google.com/?q=" + pos.coords.latitude.toFixed(6) + "," + pos.coords.longitude.toFixed(6);
+            btn.textContent = "✅ تم حفظ الموقع";
+          },
+          function () { btn.textContent = "📍 التقاط موقع المحل"; notify("⚠️ فعّل GPS واسمح بالوصول"); },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      });
+
+      document.getElementById("abCrmSaveBtn").addEventListener("click", function () {
+        var nm = (document.getElementById("abCrmName").value || "").trim();
+        if (!nm) { notify("⚠️ اكتب اسم المحل أولاً"); return; }
+        var ph = (document.getElementById("abCrmPhone").value || "").trim();
+        var ar = (document.getElementById("abCrmArea").value || "").trim();
+        var arr = loadShops();
+        arr.unshift({ id: "sh_" + Date.now(), name: nm, phone: ph, area: ar, gps: tempGps });
+        saveShops(arr);
+        document.getElementById("abCrmName").value = "";
+        document.getElementById("abCrmPhone").value = "";
+        document.getElementById("abCrmArea").value = "";
+        tempGps = "";
+        document.getElementById("abCrmGrabGpsBtn").textContent = "📍 التقاط موقع المحل";
+        renderShops();
+        notify("✅ تمت إضافة «" + nm + "» إلى دفتر المحلات");
+      });
+    }
+
+    function renderShops() {
+      var list = document.getElementById("abCrmList");
+      var q = normalizeArabic(document.getElementById("abCrmSearch").value || "");
+      var arr = loadShops().filter(function (s) {
+        if (!q) return true;
+        return normalizeArabic(s.name + " " + s.area + " " + s.phone).indexOf(q) !== -1;
+      });
+      if (!arr.length) {
+        list.innerHTML = '<div style="text-align:center;padding:12px;color:#94a3b8;font-size:12px">الدفتر فارغ حالياً — أضف محلات عملائك بالأسفل.</div>';
+        return;
+      }
+      list.innerHTML = "";
+      for (var i = 0; i < arr.length; i++) {
+        (function (shop) {
+          var row = document.createElement("div");
+          row.className = "ab-q-item-row";
+          var sub = [shop.area, shop.phone, shop.gps ? "📍GPS" : ""].filter(Boolean).join(" • ");
+          row.innerHTML =
+            '<div style="min-width:0;flex:1"><b style="color:#fef08a">' + shop.name + '</b><br><span style="font-size:10.5px;color:#cbd5e1">' + (sub || "محل مسجّل") + '</span></div>' +
+            '<div style="display:flex;gap:4px">' +
+              '<button type="button" class="ab-q-mini-btn use-sh">✓ اختيار</button>' +
+              (shop.phone ? '<a class="ab-q-mini-btn" style="text-decoration:none" href="tel:' + shop.phone + '">📞</a>' : '') +
+              '<button type="button" class="ab-q-mini-btn del-sh" style="color:#fca5a5">✕</button>' +
+            '</div>';
+          row.querySelector(".use-sh").addEventListener("click", function () {
+            applyShopToInvoice(shop);
+            bg.classList.remove("open");
+          });
+          row.querySelector(".del-sh").addEventListener("click", function () {
+            saveShops(loadShops().filter(function (x) { return x.id !== shop.id; }));
+            renderShops();
+          });
+          list.appendChild(row);
+        })(arr[i]);
+      }
+    }
+
+    renderShops();
+    bg.classList.add("open");
+  }
+
+  /* ============================================================================
+     4) قارئ الباركود بالكاميرا (Offline BarcodeDetector + بحث فوري بالرمز)
+     ============================================================================ */
+  function stopCameraScanner() {
+    if (_scanTimer) { clearInterval(_scanTimer); _scanTimer = null; }
+    if (_scanStream) {
+      try { _scanStream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {}
+      _scanStream = null;
+    }
+  }
+
+  function findProductByCodeOrText(code) {
+    var prods = getProductsArr();
+    var cNorm = normalizeArabic(code);
+    if (!cNorm) return null;
+    for (var i = 0; i < prods.length; i++) {
+      var p = prods[i];
+      var fields = [p.barcode, p.code, p.sku, p.id, p.name].map(function (x) { return normalizeArabic(x || ""); });
+      for (var f = 0; f < fields.length; f++) {
+        if (fields[f] && (fields[f] === cNorm || fields[f].indexOf(cNorm) !== -1)) return p;
+      }
+    }
+    return null;
+  }
+
+  function openBarcodeScannerModal() {
+    var bg = document.getElementById("abQuantumScanModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abQuantumScanModal";
+      bg.className = "ab-q-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-q-modal-box">' +
+          '<button type="button" class="ab-q-close" id="abScanCloseBtn">✕</button>' +
+          '<div class="ab-q-title">📷 قارئ الباركود السريع بالكاميرا</div>' +
+          '<div class="ab-q-sub" id="abScanStatus">وجّه الكاميرا نحو باركود الكرتون أو الكيس (أو اكتب الرقم بالأسفل)</div>' +
+          '<div class="ab-scan-video-wrap"><video id="abScanVideo" playsinline autoplay muted></video><div class="ab-scan-laser"></div></div>' +
+          '<div style="display:flex;gap:6px">' +
+            '<input id="abScanManualInp" class="ab-q-inp" placeholder="أو اكتب رمز/اسم الصنف هنا..." style="margin:0;flex:1">' +
+            '<button type="button" class="ab-q-btn-gold" id="abScanManualBtn" style="width:auto;padding:8px 14px">🔎 بحث</button>' +
+          '</div>' +
+          '<div id="abScanResultCard" style="margin-top:10px"></div>' +
+        '</div>';
+      document.body.appendChild(bg);
+
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) { stopCameraScanner(); bg.classList.remove("open"); } });
+      document.getElementById("abScanCloseBtn").addEventListener("click", function () { stopCameraScanner(); bg.classList.remove("open"); });
+
+      document.getElementById("abScanManualBtn").addEventListener("click", function () {
+        var val = (document.getElementById("abScanManualInp").value || "").trim();
+        handleScannedCode(val);
+      });
+    }
+
+    function handleScannedCode(code) {
+      if (!code) return;
+      var resEl = document.getElementById("abScanResultCard");
+      var prod = findProductByCodeOrText(code);
+      if (!prod) {
+        resEl.innerHTML = '<div class="ab-q-unmatched">لم يُطابق الرمز («' + code + '») أي صنف — يمكنك البحث بالاسم أعلاه.</div>';
+        return;
+      }
+      var u = classifyUnit(prod);
+      resEl.innerHTML =
+        '<div class="ab-q-item-row" style="flex-direction:column;align-items:stretch;gap:8px">' +
+          '<div style="display:flex;align-items:center;gap:8px">' +
+            (prod.img ? '<img class="ab-q-item-thumb" src="' + prod.img + '" style="width:44px;height:44px">' : '') +
+            '<div><b style="color:#fef08a">' + prod.name + '</b><br><span style="font-size:11px;color:#86efac">تم التعرف بنجاح • ' + u.label + '</span></div>' +
+          '</div>' +
+          '<div class="ab-q-btn-row3" style="margin-top:0">' +
+            '<button type="button" class="ab-q-btn-gold" data-add="10">+10</button>' +
+            '<button type="button" class="ab-q-btn-gold" data-add="20">+20</button>' +
+            '<button type="button" class="ab-q-btn-gold" data-add="50">+50</button>' +
+          '</div>' +
+        '</div>';
+      var btns = resEl.querySelectorAll("button[data-add]");
+      for (var b = 0; b < btns.length; b++) {
+        btns[b].addEventListener("click", function () {
+          var amt = Number(this.getAttribute("data-add") || 10);
+          var c = getCartObj();
+          if (c) {
+            c[prod.id] = Number(c[prod.id] || 0) + amt;
+            syncAllCardsFromCart();
+            notify("✅ أُضيف +" + amt + " " + u.label + " من " + prod.name);
+          }
+        });
+      }
+    }
+
+    bg.classList.add("open");
+    var stEl = document.getElementById("abScanStatus");
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      stEl.textContent = "⚠️ الكاميرا غير متاحة — استخدم البحث السريع بالأسفل";
+      return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } }).then(function (stream) {
+      _scanStream = stream;
+      var vid = document.getElementById("abScanVideo");
+      vid.srcObject = stream;
+      if ("BarcodeDetector" in window) {
+        var det = new window.BarcodeDetector({ formats: ["ean_13", "ean_8", "code_128", "code_39", "upc_a", "qr_code"] });
+        _scanTimer = setInterval(function () {
+          if (vid.readyState < 2) return;
+          det.detect(vid).then(function (codes) {
+            if (codes && codes.length && codes[0].rawValue) {
+              var raw = String(codes[0].rawValue).trim();
+              document.getElementById("abScanManualInp").value = raw;
+              handleScannedCode(raw);
+            }
+          }).catch(function () {});
+        }, 550);
+      } else {
+        stEl.textContent = "📷 الكاميرا مفتوحة — اكتب رقم الباركود أو اسم الصنف بالأسفل للمطابقة الفورية";
+      }
+    }).catch(function () {
+      stEl.textContent = "⚠️ اسمح للمتصفح بالوصول للكاميرا أو استخدم البحث بالأسفل";
+    });
+  }
+
+  /* ============================================================================
+     5) مقياس حمولة السيارة الذكي + الحاسبة السرية للخصم والعملة داخل الفاتورة
+     ============================================================================ */
+  function loadTruckCap() {
+    try {
+      var o = JSON.parse(localStorage.getItem(CAP_KEY) || "null");
+      if (o && o.bags > 0 && o.cartons > 0) return o;
+    } catch (e) {}
+    return { bags: 250, cartons: 60 };
+  }
+
+  function updateLoadAndSecretCalc() {
+    var box = document.getElementById("abSilentOrderBox");
+    if (!box) return;
+    var st = readCartStats();
+    var cap = loadTruckCap();
+
+    var loadBox = document.getElementById("abQuantumLoadBox");
+    if (!loadBox) {
+      loadBox = document.createElement("div");
+      loadBox.id = "abQuantumLoadBox";
+      loadBox.innerHTML =
+        '<div class="ab-ql-top">' +
+          '<span>🚛 حمولة سيارة التوزيع</span>' +
+          '<span id="abQlPct">0%</span>' +
+        '</div>' +
+        '<div class="ab-ql-bar-bg"><div class="ab-ql-bar-fill" id="abQlFill"></div></div>' +
+        '<div class="ab-ql-meta">' +
+          '<span id="abQlSummary">0 كيس • 0 كرتون</span>' +
+          '<button type="button" class="ab-ql-cfg" id="abQlCfgBtn">⚙️ تعديل السعة</button>' +
+        '</div>';
+      var repCard = document.getElementById("abImpRepGpsCard");
+      if (repCard && repCard.parentNode === box) repCard.insertAdjacentElement("afterend", loadBox);
+      else box.insertAdjacentElement("afterbegin", loadBox);
+
+      document.getElementById("abQlCfgBtn").addEventListener("click", function () {
+        var cur = loadTruckCap();
+        var nb = Number(window.prompt("أقصى سعة للسيارة من الأكياس:", String(cur.bags)) || cur.bags);
+        var nc = Number(window.prompt("أقصى سعة للسيارة من الكراتين:", String(cur.cartons)) || cur.cartons);
+        if (nb > 0 && nc > 0) {
+          try { localStorage.setItem(CAP_KEY, JSON.stringify({ bags: nb, cartons: nc })); } catch (e) {}
+          updateLoadAndSecretCalc();
+          notify("✅ تم تحديث سعة سيارة التوزيع");
+        }
+      });
+    }
+
+    var pct = Math.min(100, Math.round(((st.bags / cap.bags) + (st.cartons / cap.cartons)) * 100));
+    var pctEl = document.getElementById("abQlPct");
+    var fillEl = document.getElementById("abQlFill");
+    var sumEl = document.getElementById("abQlSummary");
+    if (pctEl) pctEl.textContent = pct + "% من الحمولة";
+    if (fillEl) fillEl.style.width = pct + "%";
+    if (sumEl) sumEl.textContent = "🛍️ " + st.bags + "/" + cap.bags + " كيس  •  📦 " + st.cartons + "/" + cap.cartons + " كرتون";
+
+    // الحاسبة السرية (مربوطة بـ html.ab-prices-hidden فلا تظهر نهائياً إلا بعد فتح الرمز abodhya)
+    var calcBox = document.getElementById("abQuantumSecretCalc");
+    if (!calcBox) {
+      calcBox = document.createElement("div");
+      calcBox.id = "abQuantumSecretCalc";
+      calcBox.innerHTML =
+        '<div class="ab-sc-head">💎 حاسبة الخصم والعملة السرية (تظهر لك فقط)</div>' +
+        '<div class="ab-sc-grid">' +
+          '<input id="abScDiscPct" class="ab-sc-inp" type="number" min="0" max="90" placeholder="خصم نسبة % (مثلاً 5)">' +
+          '<input id="abScSarRate" class="ab-sc-inp" type="number" min="1" placeholder="سعر الصرف للريال السعودي">' +
+        '</div>' +
+        '<div class="ab-sc-res" id="abScResult"></div>';
+      loadBox.insertAdjacentElement("afterend", calcBox);
+      document.getElementById("abScDiscPct").addEventListener("input", updateLoadAndSecretCalc);
+      document.getElementById("abScSarRate").addEventListener("input", updateLoadAndSecretCalc);
+    }
+
+    var resEl = document.getElementById("abScResult");
+    if (resEl) {
+      var rawTotal = st.totalPrice || 0;
+      var discPct = Number((document.getElementById("abScDiscPct") && document.getElementById("abScDiscPct").value) || 0);
+      var sarRate = Number((document.getElementById("abScSarRate") && document.getElementById("abScSarRate").value) || 0);
+      var discVal = Math.round(rawTotal * (Math.max(0, Math.min(90, discPct)) / 100));
+      var netTotal = Math.max(0, rawTotal - discVal);
+      var htmlRes = "💰 الإجمالي: " + rawTotal.toLocaleString("en-US") + " ر.ي";
+      if (discVal > 0) htmlRes += "<br>🏷️ بعد خصم (" + discPct + "%): <b>" + netTotal.toLocaleString("en-US") + " ر.ي</b> (وفّرت " + discVal.toLocaleString("en-US") + ")";
+      if (sarRate > 0 && netTotal > 0) htmlRes += "<br>🇸🇦 بالريال السعودي: <b>" + (netTotal / sarRate).toFixed(2) + " ر.س</b>";
+      resEl.innerHTML = htmlRes;
+    }
+  }
+
+  /* ============================================================================
+     6) طباعة بلوتوث مباشرة للطابعات الحرارية 80mm (Web Bluetooth ESC/POS GS v 0)
+     ============================================================================ */
+  function buildEscPosRasterChunks(imgEl) {
+    var W = 576; // 80mm thermal printer standard width (72 bytes per row)
+    var scale = W / (imgEl.naturalWidth || W);
+    var H = Math.max(64, Math.round((imgEl.naturalHeight || 400) * scale));
+
+    var c = document.createElement("canvas");
+    c.width = W;
+    c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(imgEl, 0, 0, W, H);
+    var px = ctx.getImageData(0, 0, W, H).data;
+
+    var bytesPerRow = W / 8;
+    var chunks = [];
+    // ESC @ (Reset printer)
+    chunks.push(new Uint8Array([0x1B, 0x40]));
+
+    var sliceH = 64;
+    for (var y0 = 0; y0 < H; y0 += sliceH) {
+      var curH = Math.min(sliceH, H - y0);
+      var buf = new Uint8Array(8 + bytesPerRow * curH);
+      // GS v 0 m xL xH yL yH
+      buf[0] = 0x1D; buf[1] = 0x76; buf[2] = 0x30; buf[3] = 0x00;
+      buf[4] = bytesPerRow & 0xFF; buf[5] = (bytesPerRow >> 8) & 0xFF;
+      buf[6] = curH & 0xFF; buf[7] = (curH >> 8) & 0xFF;
+
+      var off = 8;
+      for (var y = 0; y < curH; y++) {
+        var rowY = y0 + y;
+        for (var bx = 0; bx < bytesPerRow; bx++) {
+          var bVal = 0;
+          for (var bit = 0; bit < 8; bit++) {
+            var x = bx * 8 + bit;
+            var idx = (rowY * W + x) * 4;
+            var lum = 0.299 * px[idx] + 0.587 * px[idx + 1] + 0.114 * px[idx + 2];
+            if (lum < 165) bVal |= (0x80 >> bit);
+          }
+          buf[off++] = bVal;
+        }
+      }
+      chunks.push(buf);
+    }
+
+    // Feed 4 lines + Cut
+    chunks.push(new Uint8Array([0x1B, 0x64, 0x04, 0x1D, 0x56, 0x42, 0x00]));
+    return chunks;
+  }
+
+  function printThermalViaBluetooth() {
+    var imgEl = document.getElementById("abThImgPrev");
+    if (!imgEl || !imgEl.src) { notify("⚠️ افتح معاينة الإيصال أولاً"); return; }
+    if (!navigator.bluetooth) {
+      notify("🖨️ البلوتوث المباشر يتطلب Chrome — سيتم الفتح عبر تطبيق الطابعة");
+      var fb = document.getElementById("abThSharePrintBtn");
+      if (fb) fb.click();
+      return;
+    }
+
+    var svcList = [
+      "000018f0-0000-1000-8000-00805f9b34fb",
+      "0000ff00-0000-1000-8000-00805f9b34fb",
+      "49535343-fe7d-4ae5-8fa9-9fafd205e455",
+      "e7810a71-73ae-499d-8c15-faa9aef0c3f2"
+    ];
+    notify("📡 جاري البحث عن الطابعة الحرارية عبر البلوتوث...");
+
+    navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: svcList })
+      .then(function (dev) { return dev.gatt.connect(); })
+      .then(function (server) { return server.getPrimaryServices(); })
+      .then(function (services) {
+        var charProms = services.map(function (s) { return s.getCharacteristics().catch(function () { return []; }); });
+        return Promise.all(charProms);
+      })
+      .then(function (charLists) {
+        var writer = null;
+        for (var i = 0; i < charLists.length && !writer; i++) {
+          for (var j = 0; j < charLists[i].length; j++) {
+            var ch = charLists[i][j];
+            if (ch.properties && (ch.properties.writeWithoutResponse || ch.properties.write)) {
+              writer = ch;
+              break;
+            }
+          }
+        }
+        if (!writer) throw new Error("NO_WRITER");
+
+        var blocks = buildEscPosRasterChunks(imgEl);
+        var packets = [];
+        for (var b = 0; b < blocks.length; b++) {
+          var arr = blocks[b];
+          for (var p = 0; p < arr.length; p += 100) {
+            packets.push(arr.slice(p, Math.min(p + 100, arr.length)));
+          }
+        }
+        notify("🖨️ جاري إرسال الإيصال للطابعة (" + packets.length + " حزمة)...");
+
+        var seq = Promise.resolve();
+        packets.forEach(function (pkt) {
+          seq = seq.then(function () {
+            if (writer.properties.writeWithoutResponse && writer.writeValueWithoutResponse) {
+              return writer.writeValueWithoutResponse(pkt);
+            }
+            return writer.writeValue(pkt);
+          });
+        });
+        return seq;
+      })
+      .then(function () {
+        notify("✅ تمت الطباعة الحرارية عبر البلوتوث بنجاح!");
+      })
+      .catch(function () {
+        notify("⚠️ تعذر الاتصال المباشر بالبلوتوث — استخدم زر تطبيق الطابعة بالأسفل");
+      });
+  }
+
+  function injectBluetoothButtonIntoThermalModal() {
+    var thBtn = document.getElementById("abThSharePrintBtn");
+    if (!thBtn || document.getElementById("abThDirectBtBtn")) return;
+    var btBtn = document.createElement("button");
+    btBtn.type = "button";
+    btBtn.id = "abThDirectBtBtn";
+    btBtn.className = "ab-bt-print-btn";
+    btBtn.textContent = "📡 طباعة بلوتوث مباشرة للطابعة (80mm ESC/POS)";
+    btBtn.addEventListener("click", printThermalViaBluetooth);
+    thBtn.insertAdjacentElement("beforebegin", btBtn);
+  }
+
+  /* ============================================================================
+     7) تركيب شريط القوة الأسطورية + ربط موقع الـ CRM تلقائياً برسائل الواتساب
+     ============================================================================ */
+  function mountQuantumStrip() {
+    if (document.getElementById("abQuantumStrip")) return;
+    var anchor = document.getElementById("abRoyalDock") || document.getElementById("abSaifLuxuryHeader");
+    if (!anchor || !anchor.parentNode) return;
+
+    var strip = document.createElement("div");
+    strip.id = "abQuantumStrip";
+    strip.innerHTML =
+      '<button type="button" class="ab-q-pill magic" id="abQAiBtn">🧠 طلب ذكي</button>' +
+      '<button type="button" class="ab-q-pill" id="abQTplBtn">📋 سلال جاهزة</button>' +
+      '<button type="button" class="ab-q-pill" id="abQCrmBtn">📒 دفتر المحلات</button>' +
+      '<button type="button" class="ab-q-pill" id="abQScanBtn">📷 باركود</button>';
+
+    anchor.insertAdjacentElement("afterend", strip);
+
+    document.getElementById("abQAiBtn").addEventListener("click", openAiBulkOrderModal);
+    document.getElementById("abQTplBtn").addEventListener("click", openTemplatesModal);
+    document.getElementById("abQCrmBtn").addEventListener("click", openCrmModal);
+    document.getElementById("abQScanBtn").addEventListener("click", openBarcodeScannerModal);
+  }
+
+  // إرفاق موقع المحل المحفوظ من دفتر المحلات تلقائياً داخل أي رابط واتساب
+  document.addEventListener("click", function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
+    if (a && _crmSelectedGps) {
+      var h = a.getAttribute("href") || "";
+      if (/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) {
+        try {
+          var u = new URL(h, window.location.origin);
+          var txt = u.searchParams.get("text") || "";
+          if (txt && txt.indexOf("maps.google.com") === -1 && txt.indexOf("رابط المتجر المباشر") === -1) {
+            var nextTxt = txt + "\n📍 *موقع المحل (من الدفتر):* " + _crmSelectedGps;
+            var parts = [];
+            u.searchParams.forEach(function (val, key) {
+              if (key === "text") parts.push("text=" + encodeURIComponent(nextTxt));
+              else parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(val));
+            });
+            a.setAttribute("href", u.origin + u.pathname + "?" + parts.join("&"));
+          }
+        } catch (e) {}
+      }
+    }
+    setTimeout(function () {
+      updateLoadAndSecretCalc();
+      injectBluetoothButtonIntoThermalModal();
+    }, 140);
+  }, true);
+
+  function bootQuantum() {
+    try {
+      mountQuantumStrip();
+      updateLoadAndSecretCalc();
+      injectBluetoothButtonIntoThermalModal();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(bootQuantum, 380); });
+  } else {
+    setTimeout(bootQuantum, 380);
+  }
+  setTimeout(bootQuantum, 1200);
+  setInterval(function () {
+    updateLoadAndSecretCalc();
+    injectBluetoothButtonIntoThermalModal();
+  }, 2200);
+})();
+</script>
+<!-- ABUDHIYA_QUANTUM_V4_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -10704,7 +12177,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-550240";
+  var TARGET_CACHE = "abudhiya-offline-v4-552977";
 
   function forceReleaseSplash() {
     try {
