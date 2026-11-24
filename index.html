@@ -8998,6 +8998,1669 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_ROYAL_VIP_END -->
 
 
+
+<!-- ABUDHIYA_IMPERIAL_V3_START -->
+<style id="abImperialV3Style" data-imperial-v3="1">
+  /* 1) شريط دوائر الحالات والعروض الملكية أعلى الأصناف */
+  #abImpStoriesWrap {
+    direction: rtl;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 10px 8px;
+    margin: 0 0 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    background: #09090d;
+  }
+  #abImpStoriesWrap::-webkit-scrollbar { display: none; }
+  .ab-st-item {
+    flex: 0 0 66px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-st-ring {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    padding: 2.5px;
+    background: linear-gradient(135deg, #facc15 0%, #d4af37 45%, #fef08a 75%, #b8860b 100%);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.28);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ab-st-ring.action-ring {
+    background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 55%, #facc15 100%);
+  }
+  .ab-st-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #09090d;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  .ab-st-ring.action-ring .ab-st-inner {
+    background: linear-gradient(155deg, #161822 0%, #0a0b10 100%);
+    color: #fef08a;
+    font-size: 22px;
+  }
+  .ab-st-inner img {
+    width: 86%;
+    height: 86%;
+    object-fit: contain;
+    display: block;
+  }
+  .ab-st-tag {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #ffffff;
+    font-size: 8.5px;
+    font-weight: 900;
+    padding: 1px 5px;
+    border-radius: 999px;
+    border: 1px solid #09090d;
+    line-height: 1.3;
+  }
+  .ab-st-tag.gold {
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+  }
+  .ab-st-name {
+    width: 66px;
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #f1f5f9;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+  }
+
+  /* 2) شريط العدّاد الحي المفصول (مثبّت فوق الشريط السفلي بدون أي إزاحة للبطاقات) */
+  #abImpLiveBar {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 66px;
+    z-index: 9985;
+    direction: rtl;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(16, 15, 12, 0.96) 0%, rgba(9, 11, 17, 0.98) 100%);
+    border: 1.3px solid rgba(212, 175, 55, 0.85);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(254, 240, 138, 0.25);
+    box-sizing: border-box;
+  }
+  #abImpLiveBar.show { display: flex; }
+  .ab-live-pills {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+  }
+  .ab-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fef08a;
+    font-size: 11.5px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .ab-live-pill.carton {
+    background: rgba(14, 165, 233, 0.18);
+    border-color: rgba(56, 189, 248, 0.58);
+    color: #bae6fd;
+  }
+  .ab-live-go-btn {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    border-radius: 9px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 11.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* 3) مؤشر تحفيز البونص الذكي + بطاقة المندوب والـ GPS داخل الفاتورة */
+  #abImpBonusBanner {
+    display: none;
+    direction: rtl;
+    margin: 8px 0;
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(38, 29, 10, 0.96), rgba(16, 14, 10, 0.98));
+    border: 1.2px solid rgba(250, 204, 21, 0.72);
+    box-sizing: border-box;
+  }
+  #abImpBonusBanner.show { display: block; }
+  .ab-bb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #fef08a;
+  }
+  .ab-bb-row + .ab-bb-row {
+    border-top: 1px dashed rgba(212, 175, 55, 0.28);
+    margin-top: 4px;
+    padding-top: 6px;
+  }
+  .ab-bb-add {
+    flex: 0 0 auto;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+
+  #abImpRepGpsCard {
+    direction: rtl;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 12px;
+    background: linear-gradient(155deg, rgba(16, 19, 28, 0.95), rgba(10, 12, 18, 0.98));
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+  .ab-rg-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .ab-rg-lbl {
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #fef08a;
+    white-space: nowrap;
+  }
+  .ab-rg-sel {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 7px 9px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.52);
+    background: #0d0f16;
+    color: #f8fafc;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: inherit;
+  }
+  .ab-rg-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .ab-rg-btn {
+    padding: 8px 8px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #141722;
+    color: #fef08a;
+    font-size: 11.5px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+  }
+  .ab-rg-btn.ok {
+    background: rgba(5, 150, 105, 0.24);
+    border-color: rgba(52, 211, 153, 0.72);
+    color: #86efac;
+  }
+  .ab-rg-btn.thermal {
+    background: #1a1916;
+    border-color: rgba(254, 240, 138, 0.65);
+    color: #ffffff;
+  }
+
+  /* 4) النوافذ الإمبراطورية (بوستر الحالة + الجرد اليومي + الطباعة الحرارية + إدارة المناديب) */
+  .ab-imp-modal-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 100060;
+    background: rgba(4, 5, 10, 0.88);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    direction: rtl;
+    box-sizing: border-box;
+  }
+  .ab-imp-modal-bg.open { display: flex; }
+  .ab-imp-modal-box {
+    width: 100%;
+    max-width: 410px;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    background: linear-gradient(165deg, #171510 0%, #0b0c11 65%, #15120c 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.88);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.75);
+    padding: 15px 14px 14px;
+    color: #f8fafc;
+    font-family: inherit;
+    position: relative;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .ab-imp-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .ab-imp-title {
+    font-size: 15.5px;
+    font-weight: 900;
+    color: #facc15;
+    margin: 2px 0 6px;
+  }
+  .ab-imp-sub {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .ab-story-poster-img-wrap {
+    width: 220px;
+    height: 220px;
+    margin: 6px auto 10px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 2px solid #d4af37;
+    padding: 8px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ab-story-poster-img-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .ab-story-qgrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 10px 0 8px;
+  }
+  .ab-story-qbtn {
+    padding: 10px 4px;
+    border-radius: 10px;
+    border: 1.2px solid #facc15;
+    background: linear-gradient(135deg, #272011 0%, #151410 100%);
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-story-qbtn:active {
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+  }
+  .ab-imp-btn-gold {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 6px;
+  }
+  .ab-imp-btn-wa {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(134, 239, 172, 0.68);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+    margin-top: 6px;
+  }
+  .ab-imp-btn-dark {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 6px;
+  }
+  .ab-daily-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .ab-daily-stat {
+    padding: 8px 4px;
+    border-radius: 10px;
+    background: #141722;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+  }
+  .ab-daily-stat b {
+    display: block;
+    font-size: 16px;
+    color: #facc15;
+    font-weight: 900;
+  }
+  .ab-daily-stat span {
+    font-size: 10px;
+    color: #cbd5e1;
+    font-weight: 700;
+  }
+  .ab-daily-list {
+    text-align: right;
+    max-height: 240px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+  .ab-daily-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 9px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .ab-daily-row .q { color: #fef08a; white-space: nowrap; }
+  .ab-thermal-img {
+    width: 100%;
+    max-width: 320px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 2px solid #d4af37;
+    display: block;
+    margin: 6px auto 10px;
+  }
+  .ab-rep-adm-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 7px 8px;
+    border-radius: 9px;
+    background: #141722;
+    border: 1px solid rgba(212, 175, 55, 0.28);
+    margin-bottom: 6px;
+    text-align: right;
+    font-size: 11.5px;
+  }
+  .ab-rep-mini-btn {
+    padding: 4px 7px;
+    border-radius: 7px;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #1f1b10;
+    color: #fef08a;
+    font-size: 10.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-rep-inp {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #0d0f16;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: inherit;
+    box-sizing: border-box;
+    margin-bottom: 6px;
+  }
+  .ab-adm-imp-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(56, 189, 248, 0.55);
+    background: #0f1b2d;
+    color: #7dd3fc;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+</style>
+<script data-ab-imperial-v3="1">
+(function () {
+  if (window.__abImperialV3) return;
+  window.__abImperialV3 = true;
+
+  var STORE_URL = "https://abudhiya-catalog.vercel.app";
+  var SECRET_CODE = "abodhya";
+  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+  var REPS_KEY = "ab_imp_reps_list_v3";
+  var ACTIVE_REP_KEY = "ab_imp_active_rep_v3";
+  var DAILY_LOG_KEY = "ab_imp_daily_log_v3";
+  var _attachedGpsUrl = "";
+  var _lastThermalUrl = "";
+  var _lastThermalName = "Abusaif-80mm.png";
+  var _lastLiveSig = "";
+
+  function notify(msg) {
+    if (typeof showToast === "function") showToast(msg);
+  }
+
+  function todayIso() {
+    var d = new Date();
+    var m = String(d.getMonth() + 1).padStart(2, "0");
+    var day = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + m + "-" + day;
+  }
+
+  function getCartObj() {
+    try {
+      if (typeof CART !== "undefined" && CART) return CART;
+      if (typeof cart !== "undefined" && cart) return cart;
+    } catch (e) {}
+    return null;
+  }
+
+  function getProductsArr() {
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) return PRODUCTS;
+    } catch (e) {}
+    return [];
+  }
+
+  function classifyUnit(prod, fallbackName) {
+    var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim() : "";
+    var nm = String((prod && prod.name) || fallbackName || "");
+    var cat = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nm) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(cat)) {
+      return { key: "carton", label: "كرتون" };
+    }
+    return { key: "bag", label: "كيس" };
+  }
+
+  function readLiveCartDetailed() {
+    var cartObj = getCartObj();
+    var prods = getProductsArr();
+    var byId = {};
+    for (var p = 0; p < prods.length; p++) {
+      if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+    }
+    var items = [];
+    var bags = 0, cartons = 0, totalQty = 0, totalPrice = 0;
+    var others = {};
+    if (cartObj) {
+      var keys = Object.keys(cartObj);
+      for (var i = 0; i < keys.length; i++) {
+        var pid = keys[i];
+        var qty = Number(cartObj[pid] || 0);
+        if (qty <= 0) continue;
+        var pr = byId[String(pid)];
+        var name = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+        var u = classifyUnit(pr, name);
+        var bonus = 0;
+        try { if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, qty) || 0); } catch (e) {}
+        var unitP = pr ? Number(pr.wholesalePrice || pr.price || pr.p || 0) : 0;
+        items.push({
+          id: pid,
+          prod: pr || null,
+          name: name,
+          qty: qty,
+          bonus: bonus,
+          unitKey: u.key,
+          unitLabel: u.label,
+          price: unitP,
+          sub: unitP * qty
+        });
+        totalQty += qty;
+        totalPrice += (unitP * qty);
+        if (u.key === "carton") cartons += qty;
+        else if (u.key === "bag") bags += qty;
+        else others[u.label] = (others[u.label] || 0) + qty;
+      }
+    }
+    return { items: items, bags: bags, cartons: cartons, others: others, totalQty: totalQty, totalPrice: totalPrice };
+  }
+
+  function syncCardVisualQty(pid, qty) {
+    try {
+      var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+      for (var i = 0; i < cards.length; i++) {
+        var c = cards[i];
+        if (String(c.getAttribute("data-ab-prod-id") || "") !== String(pid)) continue;
+        c.setAttribute("data-ab-last-q", String(qty));
+        var badge = c.querySelector(".ab-instant-qty-badge");
+        if (badge) {
+          badge.textContent = qty > 0 ? (qty + " ×") : "";
+          badge.style.display = qty > 0 ? "inline-flex" : "none";
+        }
+        var clr = c.querySelector(".ab-clear-qty-btn");
+        if (clr) clr.style.display = qty > 0 ? "flex" : "none";
+      }
+    } catch (e) {}
+  }
+
+  function updateSafeCartCounters() {
+    var st = readLiveCartDetailed();
+    var cb = document.getElementById("cartBadge");
+    if (cb) {
+      cb.textContent = String(st.items.length);
+      cb.style.display = st.items.length > 0 ? "" : "none";
+    }
+    try { if (typeof saveCart === "function") saveCart(); } catch (e) {}
+    try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) {}
+    try { if (typeof updateBottomBar === "function") updateBottomBar(); } catch (e) {}
+    var inv = document.getElementById("invoiceView");
+    if (inv && window.getComputedStyle(inv).display !== "none") {
+      try { if (typeof renderInvoice === "function") renderInvoice(); } catch (e) {}
+    }
+    updateLiveSplitBar();
+    updateBonusBoostBanner();
+  }
+
+  function addQtyToCartSafe(pid, delta) {
+    var cartObj = getCartObj();
+    if (!cartObj) return false;
+    var cur = Number(cartObj[pid] || 0);
+    var next = Math.max(0, cur + Number(delta || 0));
+    if (next > 0) cartObj[pid] = next;
+    else delete cartObj[pid];
+    syncCardVisualQty(pid, next);
+    updateSafeCartCounters();
+    return next;
+  }
+
+  /* ---------------- 1) نظام المناديب المتعددين + حفظ تلقائي من الرابط (?rep=) ---------------- */
+  function defaultReps() {
+    return [
+      { id: "1", name: "مندوب المبيعات (أبوسيف)", phone: "967771458609" },
+      { id: "2", name: "إدارة المحل (أبوسيف)", phone: "967772202525" }
+    ];
+  }
+
+  function normalizePhone(raw) {
+    var d = String(raw || "").replace(/[^\d]/g, "");
+    if (!d) return "967771458609";
+    if (d.length === 9 && d.charAt(0) === "7") return "967" + d;
+    if (d.indexOf("00967") === 0) return d.slice(2);
+    return d;
+  }
+
+  function loadReps() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(REPS_KEY) || "null");
+      if (Array.isArray(arr) && arr.length) return arr;
+    } catch (e) {}
+    return defaultReps();
+  }
+
+  function saveReps(arr) {
+    try { localStorage.setItem(REPS_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  function getActiveRep() {
+    var reps = loadReps();
+    var savedId = "";
+    try { savedId = localStorage.getItem(ACTIVE_REP_KEY) || ""; } catch (e) {}
+    for (var i = 0; i < reps.length; i++) {
+      if (String(reps[i].id) === String(savedId)) return reps[i];
+    }
+    return reps[0];
+  }
+
+  function setActiveRepId(id) {
+    try { localStorage.setItem(ACTIVE_REP_KEY, String(id)); } catch (e) {}
+  }
+
+  function detectRepFromUrl() {
+    try {
+      var sp = new URLSearchParams(window.location.search || "");
+      var qRep = (sp.get("rep") || "").trim();
+      var qPhone = (sp.get("rep_phone") || sp.get("phone") || "").trim();
+      if (!qRep) return;
+      var reps = loadReps();
+      var found = null;
+      for (var i = 0; i < reps.length; i++) {
+        if (String(reps[i].id) === qRep || String(reps[i].name) === qRep) {
+          found = reps[i];
+          break;
+        }
+      }
+      if (!found) {
+        var newId = "r" + String(Date.now()).slice(-4);
+        found = { id: newId, name: qRep, phone: normalizePhone(qPhone || "771458609") };
+        reps.push(found);
+        saveReps(reps);
+      } else if (qPhone) {
+        found.phone = normalizePhone(qPhone);
+        saveReps(reps);
+      }
+      setActiveRepId(found.id);
+    } catch (e) {}
+  }
+  detectRepFromUrl();
+
+  /* ---------------- 2) دوائر الحالات والعروض الملكية (Stories) ---------------- */
+  function openStoryModal(prod) {
+    if (!prod) return;
+    var bg = document.getElementById("abImpStoryModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abImpStoryModal";
+      bg.className = "ab-imp-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-imp-modal-box">' +
+          '<button type="button" class="ab-imp-close" id="abStoryCloseBtn">✕</button>' +
+          '<div class="ab-imp-title" id="abStoryTitle"></div>' +
+          '<div class="ab-imp-sub" id="abStoryMeta"></div>' +
+          '<div class="ab-story-poster-img-wrap"><img id="abStoryImg" alt=""></div>' +
+          '<div class="ab-story-qgrid" id="abStoryQgrid"></div>' +
+          '<button type="button" class="ab-imp-btn-dark" id="abStoryDoneBtn">إغلاق ومتابعة التسوق</button>' +
+        '</div>';
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abStoryCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abStoryDoneBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+    }
+
+    var u = classifyUnit(prod, prod.name);
+    var bonusHint = "";
+    try {
+      if (typeof calcBonus === "function") {
+        for (var q = 5; q <= 100; q += 5) {
+          var b = Number(calcBonus(prod, q) || 0);
+          if (b > 0) {
+            bonusHint = "🎁 عرض البونص: اطلب " + q + " " + u.label + " واحصل على +" + b + " مجاني";
+            break;
+          }
+        }
+      }
+    } catch (e) {}
+
+    document.getElementById("abStoryTitle").textContent = prod.name || "صنف مميز";
+    document.getElementById("abStoryMeta").textContent = bonusHint || ("الوحدة: " + u.label + " • إضافة سريعة بلمسة واحدة");
+    document.getElementById("abStoryImg").src = prod.img || prod.image || prod.imageUrl || "";
+
+    var grid = document.getElementById("abStoryQgrid");
+    grid.innerHTML = "";
+    var quickSteps = u.key === "carton" ? [5, 10, 20, 50] : [10, 20, 50, 100];
+    for (var i = 0; i < quickSteps.length; i++) {
+      (function (amt) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ab-story-qbtn";
+        btn.textContent = "+" + amt;
+        btn.addEventListener("click", function () {
+          var nq = addQtyToCartSafe(prod.id, amt);
+          notify("✅ " + prod.name + ": الإجمالي " + nq + " " + u.label);
+        });
+        grid.appendChild(btn);
+      })(quickSteps[i]);
+    }
+    bg.classList.add("open");
+  }
+
+  function repeatLastOrder() {
+    var snap = window.__abLastConfirmOrder;
+    if (!snap) {
+      try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+    }
+    if (!snap || !Array.isArray(snap.items) || !snap.items.length) {
+      // احتياط: قراءة آخر طلب من سجل اليوم
+      try {
+        var log = JSON.parse(localStorage.getItem(DAILY_LOG_KEY) || "[]");
+        if (Array.isArray(log) && log.length && log[0].items && log[0].items.length) snap = log[0];
+      } catch (e) {}
+    }
+    if (!snap || !Array.isArray(snap.items) || !snap.items.length) {
+      notify("📂 لا يوجد طلب سابق لتكراره بعد — سجّل طلبك الأول أولاً");
+      return;
+    }
+
+    var cartObj = getCartObj();
+    var prods = getProductsArr();
+    if (!cartObj || !prods.length) {
+      notify("⚠️ تعذر الوصول لقائمة الأصناف حالياً");
+      return;
+    }
+
+    var byName = {};
+    for (var p = 0; p < prods.length; p++) {
+      if (prods[p] && prods[p].name) byName[String(prods[p].name).trim()] = prods[p];
+    }
+
+    var restored = 0;
+    for (var i = 0; i < snap.items.length; i++) {
+      var it = snap.items[i];
+      var q = Number(it.qty || 0);
+      if (q <= 0) continue;
+      var matched = null;
+      if (it.id !== undefined) {
+        for (var j = 0; j < prods.length; j++) {
+          if (String(prods[j].id) === String(it.id)) { matched = prods[j]; break; }
+        }
+      }
+      if (!matched && it.name) matched = byName[String(it.name).trim()];
+      if (matched) {
+        cartObj[matched.id] = q;
+        syncCardVisualQty(matched.id, q);
+        restored++;
+      }
+    }
+
+    if (restored > 0) {
+      updateSafeCartCounters();
+      notify("🔄 تم تكرار آخر طلب (" + restored + " صنف) — يمكنك التعديل أو الاعتماد فوراً");
+    } else {
+      notify("⚠️ لم يتم العثور على أصناف الطلب السابق");
+    }
+  }
+
+  function mountStoriesStrip() {
+    if (document.getElementById("abImpStoriesWrap")) return;
+    var anchor = document.getElementById("abRoyalDock") || document.getElementById("abSaifLuxuryHeader");
+    if (!anchor || !anchor.parentNode) return;
+    var prods = getProductsArr();
+    if (!prods.length) return;
+
+    var wrap = document.createElement("div");
+    wrap.id = "abImpStoriesWrap";
+
+    // الدائرة 1: تكرار آخر طلب بلمسة واحدة
+    var repBtn = document.createElement("button");
+    repBtn.type = "button";
+    repBtn.className = "ab-st-item";
+    repBtn.innerHTML =
+      '<div class="ab-st-ring action-ring"><div class="ab-st-inner">🔄</div><span class="ab-st-tag gold">سريع</span></div>' +
+      '<div class="ab-st-name">تكرار طلب</div>';
+    repBtn.addEventListener("click", repeatLastOrder);
+    wrap.appendChild(repBtn);
+
+    // الدائرة 2: جرد طلبات اليوم
+    var dayBtn = document.createElement("button");
+    dayBtn.type = "button";
+    dayBtn.className = "ab-st-item";
+    dayBtn.innerHTML =
+      '<div class="ab-st-ring action-ring"><div class="ab-st-inner">📊</div><span class="ab-st-tag gold">اليوم</span></div>' +
+      '<div class="ab-st-name">جرد اليوم</div>';
+    dayBtn.addEventListener("click", openDailyInventoryModal);
+    wrap.appendChild(dayBtn);
+
+    // اختيار أفضل 10 أصناف (الأولوية لأصناف البونص ثم المتوفرة بصورة واضحة)
+    var bonusList = [];
+    var regularList = [];
+    for (var i = 0; i < prods.length; i++) {
+      var pr = prods[i];
+      if (!pr || !(pr.img || pr.image || pr.imageUrl)) continue;
+      var hasB = false;
+      try { if (typeof calcBonus === "function" && Number(calcBonus(pr, 50) || 0) > 0) hasB = true; } catch (e) {}
+      if (hasB) bonusList.push(pr);
+      else regularList.push(pr);
+    }
+    var picked = bonusList.concat(regularList).slice(0, 10);
+
+    for (var k = 0; k < picked.length; k++) {
+      (function (item, isBonusItem) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ab-st-item";
+        var src = item.img || item.image || item.imageUrl || "";
+        var shortNm = String(item.name || "").split(/\s+/).slice(0, 2).join(" ");
+        var tagHtml = isBonusItem ? '<span class="ab-st-tag">بونص</span>' : '<span class="ab-st-tag gold">مميز</span>';
+        btn.innerHTML =
+          '<div class="ab-st-ring"><div class="ab-st-inner"><img src="' + src + '" alt=""></div>' + tagHtml + '</div>' +
+          '<div class="ab-st-name">' + shortNm + '</div>';
+        btn.addEventListener("click", function () { openStoryModal(item); });
+        wrap.appendChild(btn);
+      })(picked[k], k < bonusList.length);
+    }
+
+    anchor.insertAdjacentElement("afterend", wrap);
+  }
+
+  /* ---------------- 3) شريط العدّاد الحي المفصول (Live Split Bar) ---------------- */
+  function updateLiveSplitBar() {
+    var bar = document.getElementById("abImpLiveBar");
+    if (!bar && document.body) {
+      bar = document.createElement("div");
+      bar.id = "abImpLiveBar";
+      bar.innerHTML =
+        '<div class="ab-live-pills" id="abImpLivePills"></div>' +
+        '<button type="button" class="ab-live-go-btn" id="abImpLiveGoInv">📋 الفاتورة</button>';
+      document.body.appendChild(bar);
+      document.getElementById("abImpLiveGoInv").addEventListener("click", function () {
+        var navBtns = document.querySelectorAll(".bottom-nav button, .bottom-bar button, #navInvoice, [data-tab='invoice']");
+        for (var i = 0; i < navBtns.length; i++) {
+          var t = (navBtns[i].textContent || "").trim();
+          if (t.indexOf("الفاتورة") !== -1 || t.indexOf("السلة") !== -1) {
+            navBtns[i].click();
+            return;
+          }
+        }
+        var inv = document.getElementById("invoiceView");
+        if (inv) inv.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+    if (!bar) return;
+
+    // إخفاء الشريط الحي داخل شاشة الفاتورة نفسها ليبقى العرض واسعاً
+    var inv = document.getElementById("invoiceView");
+    var inInvoice = inv && window.getComputedStyle(inv).display !== "none";
+    var st = readLiveCartDetailed();
+
+    if (inInvoice || !st.items.length) {
+      bar.classList.remove("show");
+      return;
+    }
+
+    // ضبط الارتفاع فوق الشريط السفلي بدقة بدون أي تداخل
+    var bnav = document.querySelector(".bottom-nav, .bottom-bar");
+    if (bnav) {
+      var bh = Math.round(bnav.getBoundingClientRect().height || 58);
+      bar.style.bottom = (bh + 8) + "px";
+    }
+
+    var sig = st.bags + "|" + st.cartons + "|" + JSON.stringify(st.others) + "|" + st.items.length;
+    if (sig !== _lastLiveSig) {
+      _lastLiveSig = sig;
+      var pills = document.getElementById("abImpLivePills");
+      if (pills) {
+        var html = "";
+        if (st.bags > 0) html += '<span class="ab-live-pill">🛍️ ' + st.bags + ' كيس</span>';
+        if (st.cartons > 0) html += '<span class="ab-live-pill carton">📦 ' + st.cartons + ' كرتون</span>';
+        var ok = Object.keys(st.others || {});
+        for (var oi = 0; oi < ok.length; oi++) {
+          html += '<span class="ab-live-pill">📌 ' + st.others[ok[oi]] + ' ' + ok[oi] + '</span>';
+        }
+        pills.innerHTML = html;
+      }
+    }
+    bar.classList.add("show");
+  }
+
+  /* ---------------- 4) مؤشر تحفيز البونص الذكي + لوحة المندوب والـ GPS داخل الفاتورة ---------------- */
+  function updateBonusBoostBanner() {
+    var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView");
+    if (!box) return;
+    var banner = document.getElementById("abImpBonusBanner");
+    if (!banner) {
+      banner = document.createElement("div");
+      banner.id = "abImpBonusBanner";
+      box.insertAdjacentElement("afterbegin", banner);
+    }
+
+    if (typeof calcBonus !== "function") {
+      banner.classList.remove("show");
+      return;
+    }
+
+    var st = readLiveCartDetailed();
+    var tips = [];
+    for (var i = 0; i < st.items.length; i++) {
+      var it = st.items[i];
+      if (!it.prod) continue;
+      var curB = Number(calcBonus(it.prod, it.qty) || 0);
+      for (var d = 1; d <= 15; d++) {
+        var nextB = Number(calcBonus(it.prod, it.qty + d) || 0);
+        if (nextB > curB) {
+          tips.push({
+            id: it.id,
+            name: it.name,
+            unitLabel: it.unitLabel,
+            delta: d,
+            gain: nextB - curB
+          });
+          break;
+        }
+      }
+      if (tips.length >= 2) break;
+    }
+
+    if (!tips.length) {
+      banner.classList.remove("show");
+      return;
+    }
+
+    banner.innerHTML = "";
+    for (var t = 0; t < tips.length; t++) {
+      (function (tip) {
+        var row = document.createElement("div");
+        row.className = "ab-bb-row";
+        row.innerHTML =
+          '<span>🎁 باقي <b>' + tip.delta + ' ' + tip.unitLabel + '</b> على «' + tip.name + '» لربح <b>+' + tip.gain + ' مجاني</b></span>' +
+          '<button type="button" class="ab-bb-add">+' + tip.delta + '</button>';
+        row.querySelector(".ab-bb-add").addEventListener("click", function () {
+          addQtyToCartSafe(tip.id, tip.delta);
+          notify("🎉 تم إكمال الكمية وإضافة +" + tip.gain + " مجاني!");
+        });
+        banner.appendChild(row);
+      })(tips[t]);
+    }
+    banner.classList.add("show");
+  }
+
+  function mountRepAndGpsCard() {
+    var box = document.getElementById("abSilentOrderBox");
+    if (!box || document.getElementById("abImpRepGpsCard")) return;
+
+    var card = document.createElement("div");
+    card.id = "abImpRepGpsCard";
+    card.innerHTML =
+      '<div class="ab-rg-row">' +
+        '<span class="ab-rg-lbl">🚚 المندوب:</span>' +
+        '<select id="abImpRepSelect" class="ab-rg-sel"></select>' +
+      '</div>' +
+      '<div class="ab-rg-actions">' +
+        '<button type="button" id="abImpGpsBtn" class="ab-rg-btn">📍 إرفاق موقع المحل</button>' +
+        '<button type="button" id="abImpThermalBtn" class="ab-rg-btn thermal">🖨️ إيصال حراري 80mm</button>' +
+      '</div>';
+
+    var banner = document.getElementById("abImpBonusBanner");
+    if (banner && banner.parentNode === box) banner.insertAdjacentElement("afterend", card);
+    else box.insertAdjacentElement("afterbegin", card);
+
+    refreshRepDropdown();
+
+    document.getElementById("abImpRepSelect").addEventListener("change", function () {
+      setActiveRepId(this.value);
+      var r = getActiveRep();
+      notify("🚚 تم اختيار المندوب: " + r.name);
+    });
+
+    document.getElementById("abImpGpsBtn").addEventListener("click", function () {
+      var btn = this;
+      if (_attachedGpsUrl) {
+        _attachedGpsUrl = "";
+        btn.classList.remove("ok");
+        btn.textContent = "📍 إرفاق موقع المحل";
+        notify("تم إلغاء إرفاق الموقع");
+        return;
+      }
+      if (!navigator.geolocation) {
+        notify("⚠️ تحديد الموقع غير مدعوم في هذا المتصفح");
+        return;
+      }
+      btn.textContent = "⏳ جاري تحديد الموقع...";
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          var lat = pos.coords.latitude.toFixed(6);
+          var lng = pos.coords.longitude.toFixed(6);
+          _attachedGpsUrl = "https://maps.google.com/?q=" + lat + "," + lng;
+          btn.classList.add("ok");
+          btn.textContent = "✅ تم إرفاق الموقع (GPS)";
+          notify("📍 تم التقاط موقع المحل — سيُرفق تلقائياً مع الطلب");
+        },
+        function () {
+          btn.classList.remove("ok");
+          btn.textContent = "📍 إرفاق موقع المحل";
+          notify("⚠️ فعّل GPS واسمح للمتصفح بالوصول للموقع");
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+      );
+    });
+
+    document.getElementById("abImpThermalBtn").addEventListener("click", function () {
+      openThermalReceiptModal(null);
+    });
+  }
+
+  function refreshRepDropdown() {
+    var sel = document.getElementById("abImpRepSelect");
+    if (!sel) return;
+    var reps = loadReps();
+    var act = getActiveRep();
+    sel.innerHTML = "";
+    for (var i = 0; i < reps.length; i++) {
+      var opt = document.createElement("option");
+      opt.value = reps[i].id;
+      opt.textContent = reps[i].name + " (" + String(reps[i].phone).replace(/^967/, "") + ")";
+      if (String(reps[i].id) === String(act.id)) opt.selected = true;
+      sel.appendChild(opt);
+    }
+  }
+
+  /* ---------------- 5) مولّد الإيصال الحراري المحمول 80mm (576px أبيض وأسود حاد) ---------------- */
+  function renderThermal80mmPng(payload) {
+    var W = 576;
+    var items = payload.items || [];
+    var rowH = 44;
+    var H = 310 + (items.length * rowH) + 210;
+    if (H < 520) H = 520;
+
+    var c = document.createElement("canvas");
+    c.width = W;
+    c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.direction = "rtl";
+
+    // خلفية بيضاء ناصعة للطباعة الحرارية
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+    ctx.font = "900 34px sans-serif";
+    ctx.fillText("أبوسيف للتجارة العامة", W / 2, 52);
+
+    ctx.font = "700 20px sans-serif";
+    ctx.fillText("سيئون - شارع المطار غربي محطة السلطان", W / 2, 84);
+    ctx.fillText("ت: 05492417  |  ج: 772202525", W / 2, 112);
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath(); ctx.moveTo(20, 128); ctx.lineTo(W - 20, 128); ctx.stroke();
+
+    ctx.font = "900 23px sans-serif";
+    ctx.fillText(payload.title || "إيصال طلب رسمي", W / 2, 160);
+
+    ctx.textAlign = "right";
+    ctx.font = "700 19px sans-serif";
+    ctx.fillText("العميل: " + (payload.custName || "عميل كريم"), W - 24, 196);
+    ctx.fillText("المندوب: " + (payload.repName || getActiveRep().name), W - 24, 224);
+    ctx.fillText("التاريخ: " + (payload.dateStr || new Date().toLocaleString("ar-YE", { hour12: true })), W - 24, 252);
+
+    var y = 272;
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(20, y, W - 40, 38);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 19px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("الصنف", W - 30, y + 26);
+    ctx.textAlign = "left";
+    ctx.fillText(payload.showPrices ? "الكمية / الإجمالي" : "الكمية", 30, y + 26);
+
+    y += 46;
+    ctx.fillStyle = "#000000";
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var nm = (i + 1) + ". " + String(it.name || "");
+      if (nm.length > 26) nm = nm.slice(0, 25) + "…";
+      ctx.textAlign = "right";
+      ctx.font = "800 19px sans-serif";
+      ctx.fillText(nm, W - 24, y + 24);
+
+      var qTxt = String(it.qty || 0) + " " + (it.unitLabel || "كيس");
+      if (it.bonus && it.bonus > 0) qTxt += " (+" + it.bonus + ")";
+      if (payload.showPrices && it.sub > 0) qTxt += " | " + Number(it.sub).toLocaleString("en-US");
+      ctx.textAlign = "left";
+      ctx.font = "900 18.5px sans-serif";
+      ctx.fillText(qTxt, 24, y + 24);
+
+      ctx.strokeStyle = "#888888";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(22, y + rowH - 6); ctx.lineTo(W - 22, y + rowH - 6); ctx.stroke();
+      y += rowH;
+    }
+
+    y += 8;
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(W - 20, y); ctx.stroke();
+
+    y += 32;
+    ctx.textAlign = "right";
+    ctx.font = "900 22px sans-serif";
+    ctx.fillText("عدد الأصناف: " + items.length, W - 24, y);
+    if (payload.bags > 0) {
+      y += 32;
+      ctx.fillText("إجمالي الأكياس: " + payload.bags + " كيس", W - 24, y);
+    }
+    if (payload.cartons > 0) {
+      y += 32;
+      ctx.fillText("إجمالي الكراتين: " + payload.cartons + " كرتون", W - 24, y);
+    }
+    if (payload.showPrices && payload.totalPrice > 0) {
+      y += 34;
+      ctx.fillText("الإجمالي: " + Number(payload.totalPrice).toLocaleString("en-US") + " ر.ي", W - 24, y);
+    }
+
+    y += 38;
+    ctx.textAlign = "center";
+    ctx.font = "800 18px sans-serif";
+    ctx.fillText("حساب المشقاص: 254025903", W / 2, y);
+    ctx.font = "700 17px sans-serif";
+    ctx.fillText("شكراً لتعاملكم مع أبوسيف للتجارة العامة", W / 2, y + 28);
+
+    return c.toDataURL("image/png");
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var parts = dataUrl.split(",");
+    var mime = parts[0].match(/:(.*?);/)[1];
+    var bin = atob(parts[1]);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  function openThermalReceiptModal(customPayload) {
+    var payload = customPayload;
+    if (!payload) {
+      var st = readLiveCartDetailed();
+      var showPrices = false;
+      try { showPrices = localStorage.getItem(PRICE_SECRET_KEY) === "1"; } catch (e) {}
+      if (!st.items.length) {
+        var snap = window.__abLastConfirmOrder;
+        if (!snap) {
+          try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+        }
+        if (snap && snap.items && snap.items.length) {
+          var bags = 0, cartons = 0;
+          for (var i = 0; i < snap.items.length; i++) {
+            var it = snap.items[i];
+            if (it.unitKey === "carton") cartons += Number(it.qty || 0);
+            else bags += Number(it.qty || 0);
+          }
+          payload = {
+            title: "إيصال طلب رسمي (80mm)",
+            custName: snap.custName || "عميل كريم",
+            repName: getActiveRep().name,
+            items: snap.items,
+            bags: bags,
+            cartons: cartons,
+            totalPrice: 0,
+            showPrices: false
+          };
+        }
+      } else {
+        var cname = "";
+        try {
+          var inp = document.querySelector('#abSilentOrderBox input[placeholder*="اسم"], #invoiceView input[placeholder*="اسم"]');
+          if (inp) cname = (inp.value || "").trim();
+        } catch (e) {}
+        payload = {
+          title: "إيصال طلب رسمي (80mm)",
+          custName: cname || "عميل كريم",
+          repName: getActiveRep().name,
+          items: st.items,
+          bags: st.bags,
+          cartons: st.cartons,
+          totalPrice: st.totalPrice,
+          showPrices: showPrices && st.totalPrice > 0
+        };
+      }
+    }
+
+    if (!payload || !payload.items || !payload.items.length) {
+      notify("⚠️ أضف أصنافاً أولاً لإنشاء الإيصال الحراري");
+      return;
+    }
+
+    _lastThermalUrl = renderThermal80mmPng(payload);
+    _lastThermalName = "Abusaif-80mm-" + String(Date.now()).slice(-5) + ".png";
+
+    var bg = document.getElementById("abImpThermalModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abImpThermalModal";
+      bg.className = "ab-imp-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-imp-modal-box">' +
+          '<button type="button" class="ab-imp-close" id="abThCloseBtn">✕</button>' +
+          '<div class="ab-imp-title">🖨️ إيصال حراري 80mm جاهز للطباعة</div>' +
+          '<div class="ab-imp-sub">مصمّم بدقة تباين عالية لطابعات البلوتوث الحرارية (يعمل بدون نت)</div>' +
+          '<img id="abThImgPrev" class="ab-thermal-img" alt="إيصال حراري">' +
+          '<button type="button" class="ab-imp-btn-gold" id="abThSharePrintBtn">🖨️ إرسال مباشر لتطبيق الطابعة الحرارية</button>' +
+          '<button type="button" class="ab-imp-btn-dark" id="abThSaveBtn">⬇️ حفظ صورة الإيصال (80mm)</button>' +
+        '</div>';
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abThCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abThSaveBtn").addEventListener("click", function () {
+        var a = document.createElement("a");
+        a.href = _lastThermalUrl;
+        a.download = _lastThermalName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        notify("✅ تم حفظ الإيصال الحراري (80mm)");
+      });
+      document.getElementById("abThSharePrintBtn").addEventListener("click", function () {
+        try {
+          var blob = dataUrlToBlob(_lastThermalUrl);
+          var file = new File([blob], _lastThermalName, { type: "image/png" });
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({ title: "طباعة إيصال أبوسيف 80mm", files: [file] }).catch(function () {});
+            return;
+          }
+        } catch (e) {}
+        document.getElementById("abThSaveBtn").click();
+      });
+    }
+
+    document.getElementById("abThImgPrev").src = _lastThermalUrl;
+    bg.classList.add("open");
+  }
+
+  /* ---------------- 6) سجل وجرد طلبات اليوم (📊 جرد اليوم) ---------------- */
+  function loadDailyLog() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(DAILY_LOG_KEY) || "[]");
+      if (!Array.isArray(arr)) return [];
+      var t = todayIso();
+      return arr.filter(function (o) { return o && o.day === t; });
+    } catch (e) { return []; }
+  }
+
+  function recordOrderToDailyLog(st) {
+    if (!st || !st.items || !st.items.length) return;
+    try {
+      var list = loadDailyLog();
+      // منع التسجيل المزدوج لنفس الطلب خلال 8 ثوانٍ
+      if (list.length && (Date.now() - (list[0].ts || 0)) < 8000 && list[0].totalQty === st.totalQty) return;
+      var entry = {
+        day: todayIso(),
+        ts: Date.now(),
+        repName: getActiveRep().name,
+        bags: st.bags,
+        cartons: st.cartons,
+        totalQty: st.totalQty,
+        items: st.items.map(function (it) {
+          return { id: it.id, name: it.name, qty: it.qty, unitKey: it.unitKey, unitLabel: it.unitLabel };
+        })
+      };
+      list.unshift(entry);
+      localStorage.setItem(DAILY_LOG_KEY, JSON.stringify(list.slice(0, 120)));
+    } catch (e) {}
+  }
+
+  function openDailyInventoryModal() {
+    var list = loadDailyLog();
+    var totalOrders = list.length;
+    var totalBags = 0, totalCartons = 0;
+    var byItem = {};
+
+    for (var i = 0; i < list.length; i++) {
+      var ord = list[i];
+      totalBags += Number(ord.bags || 0);
+      totalCartons += Number(ord.cartons || 0);
+      var its = ord.items || [];
+      for (var j = 0; j < its.length; j++) {
+        var it = its[j];
+        var key = it.name + "||" + (it.unitLabel || "كيس");
+        if (!byItem[key]) byItem[key] = { name: it.name, unitLabel: it.unitLabel || "كيس", unitKey: it.unitKey || "bag", qty: 0 };
+        byItem[key].qty += Number(it.qty || 0);
+      }
+    }
+
+    var mergedItems = Object.keys(byItem).map(function (k) { return byItem[k]; }).sort(function (a, b) { return b.qty - a.qty; });
+
+    var bg = document.getElementById("abImpDailyModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abImpDailyModal";
+      bg.className = "ab-imp-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-imp-modal-box">' +
+          '<button type="button" class="ab-imp-close" id="abDailyCloseBtn">✕</button>' +
+          '<div class="ab-imp-title">📊 جرد طلبات اليوم</div>' +
+          '<div class="ab-imp-sub" id="abDailyDateSub"></div>' +
+          '<div class="ab-daily-cards">' +
+            '<div class="ab-daily-stat"><b id="abDOrders">0</b><span>عدد الطلبات</span></div>' +
+            '<div class="ab-daily-stat"><b id="abDBags">0</b><span>🛍️ إجمالي الأكياس</span></div>' +
+            '<div class="ab-daily-stat"><b id="abDCartons">0</b><span>📦 إجمالي الكراتين</span></div>' +
+          '</div>' +
+          '<div class="ab-daily-list" id="abDailyItemsList"></div>' +
+          '<a class="ab-imp-btn-wa" id="abDailyWaBtn" target="_blank" rel="noopener noreferrer">📤 إرسال كشف الجرد للواتساب</a>' +
+          '<button type="button" class="ab-imp-btn-gold" id="abDailyThermalBtn">🖨️ طباعة كشف الجرد حراري (80mm)</button>' +
+          '<button type="button" class="ab-imp-btn-dark" id="abDailyResetBtn">🗑️ تصفير جرد اليوم</button>' +
+        '</div>';
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abDailyCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abDailyResetBtn").addEventListener("click", function () {
+        if (!window.confirm("هل تريد تصفير جرد اليوم على هذا الجهاز؟")) return;
+        try { localStorage.removeItem(DAILY_LOG_KEY); } catch (e) {}
+        notify("🗑️ تم تصفير جرد اليوم");
+        openDailyInventoryModal();
+      });
+    }
+
+    document.getElementById("abDailyDateSub").textContent = "تاريخ اليوم: " + todayIso() + " • المندوب: " + getActiveRep().name;
+    document.getElementById("abDOrders").textContent = String(totalOrders);
+    document.getElementById("abDBags").textContent = String(totalBags);
+    document.getElementById("abDCartons").textContent = String(totalCartons);
+
+    var listEl = document.getElementById("abDailyItemsList");
+    if (!mergedItems.length) {
+      listEl.innerHTML = '<div style="text-align:center;padding:18px;color:#94a3b8;font-size:12px">لا توجد طلبات مسجلة اليوم حتى الآن.</div>';
+    } else {
+      listEl.innerHTML = "";
+      for (var m = 0; m < mergedItems.length; m++) {
+        var r = document.createElement("div");
+        r.className = "ab-daily-row";
+        r.innerHTML = '<span>' + (m + 1) + '. ' + mergedItems[m].name + '</span><span class="q">' + mergedItems[m].qty + ' ' + mergedItems[m].unitLabel + '</span>';
+        listEl.appendChild(r);
+      }
+    }
+
+    var rep = getActiveRep();
+    var waLines = [
+      "📊 *كشف جرد طلبات اليوم — أبوسيف للتجارة العامة*",
+      "📅 *التاريخ:* " + todayIso(),
+      "🚚 *المندوب:* " + rep.name,
+      "━━━━━━━━━━━━━━━━━━",
+      "🧾 *عدد الطلبات:* " + totalOrders
+    ];
+    if (totalBags > 0) waLines.push("🛍️ *إجمالي الأكياس:* " + totalBags + " كيس");
+    if (totalCartons > 0) waLines.push("📦 *إجمالي الكراتين:* " + totalCartons + " كرتون");
+    if (mergedItems.length) {
+      waLines.push("━━━━━━━━━━━━━━━━━━");
+      waLines.push("📦 *تفصيل الأصناف المطلوبة:*");
+      for (var w = 0; w < mergedItems.length; w++) {
+        waLines.push((w + 1) + ". " + mergedItems[w].name + " ⬅️ *" + mergedItems[w].qty + " " + mergedItems[w].unitLabel + "*");
+      }
+    }
+    document.getElementById("abDailyWaBtn").href = "https://wa.me/" + normalizePhone(rep.phone) + "?text=" + encodeURIComponent(waLines.join("\n"));
+
+    var thBtn = document.getElementById("abDailyThermalBtn");
+    thBtn.onclick = function () {
+      if (!mergedItems.length) { notify("⚠️ لا توجد أصناف لطباعتها"); return; }
+      bg.classList.remove("open");
+      openThermalReceiptModal({
+        title: "جرد طلبات اليوم (" + todayIso() + ")",
+        custName: "عدد الطلبات: " + totalOrders,
+        repName: rep.name,
+        items: mergedItems,
+        bags: totalBags,
+        cartons: totalCartons,
+        totalPrice: 0,
+        showPrices: false
+      });
+    };
+
+    bg.classList.add("open");
+  }
+
+  /* ---------------- 7) لوحة إدارة المناديب ونسخ الروابط الخاصة (محمية برمز abodhya داخل ⚙) ---------------- */
+  function openRepsManagerModal() {
+    var entered = window.prompt("🔐 أدخل الرمز السري لإدارة المناديب:");
+    if (entered === null) return;
+    if (String(entered).trim().toLowerCase() !== SECRET_CODE) {
+      notify("❌ الرمز السري غير صحيح");
+      return;
+    }
+
+    var bg = document.getElementById("abImpRepsModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abImpRepsModal";
+      bg.className = "ab-imp-modal-bg";
+      bg.innerHTML =
+        '<div class="ab-imp-modal-box">' +
+          '<button type="button" class="ab-imp-close" id="abRepsCloseBtn">✕</button>' +
+          '<div class="ab-imp-title">👥 إدارة المناديب والروابط الخاصة</div>' +
+          '<div class="ab-imp-sub">أضف أي مندوب وانسخ رابطه الخاص ليثبت تلقائياً على جوال عملائه</div>' +
+          '<div id="abRepsAdminList" style="margin-bottom:10px"></div>' +
+          '<input id="abNewRepName" class="ab-rep-inp" placeholder="اسم المندوب (مثلاً: أحمد سالم)">' +
+          '<input id="abNewRepPhone" class="ab-rep-inp" type="tel" placeholder="رقم واتساب المندوب (مثلاً: 771458609)">' +
+          '<button type="button" class="ab-imp-btn-gold" id="abAddRepSaveBtn">➕ إضافة المندوب</button>' +
+        '</div>';
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abRepsCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abAddRepSaveBtn").addEventListener("click", function () {
+        var nm = (document.getElementById("abNewRepName").value || "").trim();
+        var ph = normalizePhone(document.getElementById("abNewRepPhone").value || "");
+        if (!nm) { notify("⚠️ اكتب اسم المندوب أولاً"); return; }
+        var reps = loadReps();
+        reps.push({ id: "r" + String(Date.now()).slice(-5), name: nm, phone: ph });
+        saveReps(reps);
+        document.getElementById("abNewRepName").value = "";
+        document.getElementById("abNewRepPhone").value = "";
+        refreshRepDropdown();
+        renderRepsAdminList();
+        notify("✅ تمت إضافة المندوب: " + nm);
+      });
+    }
+
+    function renderRepsAdminList() {
+      var listEl = document.getElementById("abRepsAdminList");
+      var reps = loadReps();
+      listEl.innerHTML = "";
+      for (var i = 0; i < reps.length; i++) {
+        (function (rep, idx) {
+          var row = document.createElement("div");
+          row.className = "ab-rep-adm-row";
+          var shortPh = String(rep.phone).replace(/^967/, "");
+          var linkUrl = STORE_URL + "/?rep=" + encodeURIComponent(rep.name) + "&rep_phone=" + encodeURIComponent(shortPh);
+          row.innerHTML =
+            '<div><b style="color:#fef08a">' + rep.name + '</b><br><span style="color:#94a3b8;font-size:10.5px">' + shortPh + '</span></div>' +
+            '<div style="display:flex;gap:4px">' +
+              '<button type="button" class="ab-rep-mini-btn copy-lnk">🔗 رابط</button>' +
+              (idx > 0 ? '<button type="button" class="ab-rep-mini-btn del-rep" style="color:#fca5a5">✕</button>' : '') +
+            '</div>';
+          row.querySelector(".copy-lnk").addEventListener("click", function () {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(linkUrl).then(function () { notify("✅ تم نسخ رابط المندوب: " + rep.name); });
+            } else {
+              window.prompt("رابط المندوب الخاص:", linkUrl);
+            }
+          });
+          var delB = row.querySelector(".del-rep");
+          if (delB) {
+            delB.addEventListener("click", function () {
+              var arr = loadReps().filter(function (x) { return x.id !== rep.id; });
+              saveReps(arr);
+              refreshRepDropdown();
+              renderRepsAdminList();
+            });
+          }
+          listEl.appendChild(row);
+        })(reps[i], i);
+      }
+    }
+
+    renderRepsAdminList();
+    bg.classList.add("open");
+  }
+
+  function mountAdminRepsButton() {
+    var adm = document.getElementById("abSv3Admin");
+    if (!adm || document.getElementById("abImpAdminRepsBtn")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "abImpAdminRepsBtn";
+    btn.className = "ab-adm-imp-btn";
+    btn.textContent = "👥 إدارة المناديب وروابطهم الخاصة";
+    btn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      openRepsManagerModal();
+    });
+    adm.appendChild(btn);
+  }
+
+  /* ---------------- 8) إدراج اسم المندوب وموقع الـ GPS تلقائياً في رسائل الواتساب + توثيق الجرد ---------------- */
+  function enrichWaUrlWithRepAndGps(rawUrl) {
+    if (!rawUrl || typeof rawUrl !== "string") return rawUrl;
+    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(rawUrl)) return rawUrl;
+    try {
+      var u = new URL(rawUrl, window.location.origin);
+      var txt = u.searchParams.get("text");
+      if (!txt) return rawUrl;
+      if (txt.indexOf("رابط المتجر المباشر") !== -1 || txt.indexOf("كشف جرد طلبات اليوم") !== -1) return rawUrl;
+
+      var rep = getActiveRep();
+      var extra = [];
+      if (rep && rep.name && txt.indexOf("المندوب:") === -1) {
+        extra.push("🚚 *المندوب:* " + rep.name);
+      }
+      if (_attachedGpsUrl && txt.indexOf("maps.google.com") === -1) {
+        extra.push("📍 *موقع المحل (GPS):* " + _attachedGpsUrl);
+      }
+
+      var targetPath = u.pathname;
+      if (rep && rep.phone && /^\/\d{9,15}$/.test(u.pathname)) {
+        targetPath = "/" + normalizePhone(rep.phone);
+      }
+
+      var finalTxt = extra.length ? (txt + "\n" + extra.join("\n")) : txt;
+      if (finalTxt === txt && targetPath === u.pathname) return rawUrl;
+
+      var parts = [];
+      u.searchParams.forEach(function (val, key) {
+        if (key === "text") parts.push("text=" + encodeURIComponent(finalTxt));
+        else parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(val));
+      });
+      return u.origin + targetPath + "?" + parts.join("&");
+    } catch (e) {}
+    return rawUrl;
+  }
+
+  if (typeof window.open === "function" && !window.open.__abImpV3Patched) {
+    var origOpen = window.open;
+    var wrappedOpen = function (url) {
+      var args = Array.prototype.slice.call(arguments);
+      if (typeof url === "string") args[0] = enrichWaUrlWithRepAndGps(url);
+      return origOpen.apply(this, args);
+    };
+    wrappedOpen.__abImpV3Patched = true;
+    window.open = wrappedOpen;
+  }
+
+  document.addEventListener("click", function (ev) {
+    // أ) تحديث روابط الواتساب بالـ GPS والمندوب عند اللمس
+    var a = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
+    if (a) {
+      var h = a.getAttribute("href") || "";
+      if (/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) {
+        var nh = enrichWaUrlWithRepAndGps(h);
+        if (nh !== h) a.setAttribute("href", nh);
+      }
+    }
+
+    // ب) تسجيل الطلب تلقائياً في جرد اليوم لحظة الضغط على زر اعتماد الطلب
+    var btn = ev.target && ev.target.closest ? ev.target.closest("button") : null;
+    if (btn && btn.closest("#abSilentOrderBox") && !btn.closest("#abSv3Admin, #abImpRepGpsCard, .ab-wa-confirm-card")) {
+      var t = (btn.textContent || "").trim();
+      if ((t.indexOf("اعتماد") !== -1 || t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1) && t.indexOf("أرشيف") === -1) {
+        var st = readLiveCartDetailed();
+        if (st.items.length) recordOrderToDailyLog(st);
+      }
+    }
+
+    setTimeout(function () {
+      updateLiveSplitBar();
+      updateBonusBoostBanner();
+      mountRepAndGpsCard();
+    }, 120);
+  }, true);
+
+  function bootImperial() {
+    try {
+      mountStoriesStrip();
+      mountRepAndGpsCard();
+      mountAdminRepsButton();
+      updateLiveSplitBar();
+      updateBonusBoostBanner();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(bootImperial, 320); });
+  } else {
+    setTimeout(bootImperial, 320);
+  }
+  setTimeout(bootImperial, 1100);
+  setInterval(function () {
+    updateLiveSplitBar();
+    mountRepAndGpsCard();
+    mountAdminRepsButton();
+  }, 1800);
+})();
+</script>
+<!-- ABUDHIYA_IMPERIAL_V3_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -9041,7 +10704,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-549249";
+  var TARGET_CACHE = "abudhiya-offline-v4-550240";
 
   function forceReleaseSplash() {
     try {
