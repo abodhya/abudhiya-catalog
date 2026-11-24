@@ -6156,8 +6156,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_ULTRA_SMOOTH_END -->
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
-<style id="abFullOfflineStyle" data-full-offline="1">
+<style id="abFullOfflineStyle" data-full-offline="2">
   #abOfflinePill {
     position: fixed;
     top: 8px;
@@ -6183,12 +6184,30 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     display: inline-flex;
   }
 </style>
-<script data-ab-full-offline="1">
+<script data-ab-full-offline="2">
 (function () {
-  if (window.__abFullOfflineV1) return;
-  window.__abFullOfflineV1 = true;
+  if (window.__abFullOfflineV2) return;
+  window.__abFullOfflineV2 = true;
 
-  function collectAllProductImageUrls() {
+  // 1) حماية ضد تجميد شاشة البداية (Splash) عند انقطاع الإنترنت
+  function forceReleaseSplash() {
+    try {
+      var sp = document.getElementById("abProSplash");
+      if (sp) {
+        sp.style.opacity = "0";
+        sp.style.pointerEvents = "none";
+        sp.style.display = "none";
+      }
+      var loaders = document.querySelectorAll(".splash, #splash, #loadingOverlay, .loading-overlay");
+      for (var i = 0; i < loaders.length; i++) {
+        loaders[i].style.display = "none";
+      }
+    } catch (e) {}
+  }
+  setTimeout(forceReleaseSplash, navigator.onLine === false ? 150 : 900);
+
+  // 2) جمع كل صور الأصناف والروابط الخارجية لحفظها بالخلفية
+  function collectAllUrlsToCache() {
     var set = {};
     var out = [];
     function addUrl(u) {
@@ -6211,54 +6230,69 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
     try {
       var imgs = document.querySelectorAll("img[src]");
-      for (var j = 0; j < imgs.length; j++) {
-        addUrl(imgs[j].getAttribute("src"));
-      }
+      for (var j = 0; j < imgs.length; j++) addUrl(imgs[j].getAttribute("src"));
+      var links = document.querySelectorAll('link[rel="stylesheet"][href], link[rel="icon"][href], link[rel="apple-touch-icon"][href]');
+      for (var l = 0; l < links.length; l++) addUrl(links[l].getAttribute("href"));
     } catch (e) {}
     return out;
   }
 
-  function warmOfflineCache(sw) {
-    if (!sw || typeof sw.postMessage !== "function") return;
-    var urls = collectAllProductImageUrls();
-    if (urls.length) {
-      try { sw.postMessage({ type: "WARM_URLS", urls: urls }); } catch (e) {}
-    }
+  function sendWarmRequest(sw) {
+    if (!sw || typeof sw.postMessage !== "function" || navigator.onLine === false) return;
+    try {
+      sw.postMessage({ type: "WARM_ALL", urls: collectAllUrlsToCache() });
+    } catch (e) {}
   }
 
-  // تسجيل وتحديث Service Worker وحفظ كل صور الأصناف تلقائياً بمجرد الفتح
+  // 3) تسجيل فوري لـ Service Worker (دون انتظار حدث load حتى لا يتأخر)
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-      navigator.serviceWorker.register("/sw.js", { scope: "/" }).then(function (reg) {
-        try { reg.update(); } catch (e) {}
-        if (reg.waiting) {
-          try { reg.waiting.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
-        }
-        reg.addEventListener("updatefound", function () {
-          var nw = reg.installing;
-          if (!nw) return;
-          nw.addEventListener("statechange", function () {
-            if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              try { nw.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
+    navigator.serviceWorker.addEventListener("message", function (ev) {
+      var d = ev.data || {};
+      if (d.type === "OFFLINE_READY" && d.cache) {
+        try {
+          var seenKey = "ab_offline_ready_notified";
+          if (localStorage.getItem(seenKey) !== d.cache) {
+            localStorage.setItem(seenKey, d.cache);
+            if (typeof showToast === "function") {
+              showToast("✅ تم حفظ المتجر والصور (" + (d.count || "") + ") — جاهز الآن بدون نت");
             }
-          });
-        });
-        navigator.serviceWorker.ready.then(function (readyReg) {
-          setTimeout(function () {
-            warmOfflineCache(readyReg.active || navigator.serviceWorker.controller);
-          }, 900);
-        });
-      }).catch(function () {});
+          }
+        } catch (e) {}
+      }
     });
+
+    navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" }).then(function (reg) {
+      try { reg.update(); } catch (e) {}
+      if (reg.waiting) {
+        try { reg.waiting.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
+      }
+      reg.addEventListener("updatefound", function () {
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener("statechange", function () {
+          if (nw.state === "installed") {
+            try { nw.postMessage({ type: "SKIP_WAITING" }); } catch (e) {}
+          }
+          if (nw.state === "activated") {
+            setTimeout(function () { sendWarmRequest(nw); }, 300);
+          }
+        });
+      });
+      navigator.serviceWorker.ready.then(function (readyReg) {
+        setTimeout(function () {
+          sendWarmRequest(readyReg.active || navigator.serviceWorker.controller);
+        }, 500);
+      });
+    }).catch(function () {});
   }
 
-  // مؤشر هادئ يظهر فقط عند انقطاع الإنترنت
+  // 4) مؤشر هادئ أعلى الصفحة عند انقطاع النت
   function syncOfflinePill() {
     var pill = document.getElementById("abOfflinePill");
     if (!pill && document.body) {
       pill = document.createElement("div");
       pill.id = "abOfflinePill";
-      pill.textContent = "📡 وضع بدون نت — المتجر جاهز للتصفح وتجهيز الطلب";
+      pill.textContent = "📡 وضع بدون نت — المتجر يعمل من ذاكرة الجهاز";
       document.body.appendChild(pill);
     }
     if (!pill) return;
@@ -6268,8 +6302,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   window.addEventListener("online", function () {
     syncOfflinePill();
     if (typeof showToast === "function") showToast("🌐 عاد الاتصال بالإنترنت");
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.ready.then(function (r) { sendWarmRequest(r.active); }).catch(function () {});
+    }
   });
-  window.addEventListener("offline", syncOfflinePill);
+  window.addEventListener("offline", function () {
+    forceReleaseSplash();
+    syncOfflinePill();
+  });
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", syncOfflinePill);
   } else {
