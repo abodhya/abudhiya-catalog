@@ -779,6 +779,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <div class="toast" id="toastEl"></div>
 
 <!-- ===== شاشة 1: صور الأصناف الكاملة ===== -->
@@ -3486,6 +3488,10 @@ window.addEventListener("beforeinstallprompt", function(e) {
 
 
 
+
+
+
+
 <!-- ABUDHIYA_PRO_UI_START -->
 <style id="abProWorldClassStyle">
   /* 1) شاشة الترحيب الخاطفة */
@@ -3766,7 +3772,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   .ab-clear-qty-btn.show { display: flex; }
   .ab-clear-qty-btn:active { transform: scale(0.86); }
 </style>
-<script data-ab-pro-ui="5">
+<script data-ab-pro-ui="6">
 (function () {
   if (window.__abProWorldClassV1) return;
   window.__abProWorldClassV1 = true;
@@ -4136,18 +4142,37 @@ window.addEventListener("beforeinstallprompt", function(e) {
     var liveCard = document.querySelector('[data-ab-prod-id="' + String(prodId) + '"]') || fallbackCard;
     if (!liveCard) return;
 
-    // 1) تحقق إن كانت الشارة الأصلية للمتجر ظهرت وتحدّثت فعلياً فوق الصنف
+    // حماية دائمة لحاوية الصورة والصورة نفسها حتى لا تختفي أبداً عند الحذف
+    var imgWrap = liveCard.querySelector(".ab-hd-img-wrap");
+    if (imgWrap && imgWrap.style.display === "none") imgWrap.style.display = "";
+    var cardImg = liveCard.querySelector("img");
+    if (cardImg && cardImg.style.display === "none") cardImg.style.display = "";
+
+    function isSafeBadgeEl(el) {
+      if (!el) return false;
+      if (
+        el.classList.contains("ab-clear-qty-btn") ||
+        el.classList.contains("ab-hd-img-wrap") ||
+        el.classList.contains("ab-crystal-gloss") ||
+        el.classList.contains("ab-qbar")
+      ) return false;
+      if (el.querySelector("img, picture, button, input, svg, .ab-hd-img-wrap, .ab-qbar")) return false;
+      return true;
+    }
+
+    // 1) تحقق إن كانت الشارة الأصلية للمتجر (بدون أي صورة داخلها) ظهرت وتحدّثت فعلياً
     var existingFallback = liveCard.querySelector(".ab-instant-qty-badge");
     var hasNativeUpdated = false;
     var els = liveCard.querySelectorAll("span, div");
     for (var i = 0; i < els.length; i++) {
-      if (els[i] === existingFallback) continue;
+      if (els[i] === existingFallback || !isSafeBadgeEl(els[i])) continue;
       var t = (els[i].textContent || "").replace(/\s+/g, " ").trim();
       if (
         qty > 0 &&
         (t === (qty + " ×") || t === (qty + "×") || t === (qty + " x") || t === (qty + "x") || t === ("× " + qty) || t === ("x " + qty))
       ) {
         hasNativeUpdated = true;
+        els[i].style.display = "";
         els[i].classList.remove("ab-pro-pulse");
         void els[i].offsetWidth;
         els[i].classList.add("ab-pro-pulse");
@@ -4160,9 +4185,9 @@ window.addEventListener("beforeinstallprompt", function(e) {
       return;
     }
 
-    // 2) إن لم تكن الشارة الأصلية قد أعيد رسمها، نحدّثها أو نعرضها مباشرة فوق الصنف بنفس الشكل الأخضر
+    // 2) تحديث الشارة الأصلية المعرّفة بكلاس إن وجدت
     var nativeBadge = liveCard.querySelector(".qty-badge, .q-badge, .cart-badge, .badge-qty, .prod-qty, .count-badge, .card-badge");
-    if (nativeBadge) {
+    if (nativeBadge && isSafeBadgeEl(nativeBadge)) {
       if (qty > 0) {
         nativeBadge.textContent = qty + " ×";
         nativeBadge.style.display = "";
@@ -4176,6 +4201,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       return;
     }
 
+    // 3) إظهار الشارة البديلة عند الإضافة أو إخفاء الشارة النصية فقط عند التصفير
     if (qty > 0) {
       if (!existingFallback) {
         existingFallback = document.createElement("span");
@@ -4190,7 +4216,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
       if (existingFallback) existingFallback.remove();
       var zEls = liveCard.querySelectorAll("span, div");
       for (var z = 0; z < zEls.length; z++) {
-        if (zEls[z].classList.contains("ab-clear-qty-btn")) continue;
+        if (!isSafeBadgeEl(zEls[z])) continue;
         var zt = (zEls[z].textContent || "").replace(/\s+/g, " ").trim();
         if (/^\d+\s*[×x]$/i.test(zt) || /^[×x]\s*\d+$/i.test(zt)) {
           zEls[z].style.display = "none";
