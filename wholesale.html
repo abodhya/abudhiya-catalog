@@ -3041,5 +3041,963 @@ window.addEventListener("beforeinstallprompt", function(e) {
 })();
 </script>
 <!-- ABUDHIYA_OFFLINE_ENGINE_END -->
+
+<!-- ABUDHIYA_PRO_UI_START -->
+<style id="abProWorldClassStyle">
+  /* 1) شاشة الترحيب الخاطفة */
+  #abProSplash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999999;
+    background: radial-gradient(circle at 30% 20%, #0f2e22 0%, #0b1320 65%, #060912 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    direction: rtl;
+    transition: opacity 0.38s ease, visibility 0.38s ease;
+  }
+  #abProSplash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+  .ab-sp-logo {
+    width: 78px;
+    height: 78px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #10b981, #047857);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    box-shadow: 0 14px 36px rgba(16,185,129,0.42), inset 0 1px 1px rgba(255,255,255,0.4);
+    margin-bottom: 14px;
+    animation: abSpPulse 0.9s ease infinite alternate;
+  }
+  .ab-sp-title { font-size: 23px; font-weight: 900; letter-spacing: 0.3px; margin-bottom: 4px; }
+  .ab-sp-sub { font-size: 13px; color: #a7f3d0; font-weight: 600; }
+  @keyframes abSpPulse { from { transform: scale(0.96); } to { transform: scale(1.04); } }
+
+  /* 2) لمسات الزجاج المصقول Glassmorphism والحركات الناعمة */
+  header, .top-bar, .bottom-nav, .bottom-bar, nav {
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+  }
+  .ab-pro-pulse { animation: abCartBump 0.35s ease; }
+  @keyframes abCartBump {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  /* 3) شريط الترحيب الشخصي + شريط العروض + شرائح التصنيف وإعادة آخر طلب */
+  #abProTopHub {
+    direction: rtl;
+    margin: 8px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ab-pro-welcome {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 13px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(15,23,42,0.06));
+    border: 1px solid rgba(16,185,129,0.32);
+    backdrop-filter: blur(8px);
+    font-size: 13px;
+    font-weight: 800;
+    color: #065f46;
+  }
+  .ab-pro-ticker {
+    overflow: hidden;
+    border-radius: 11px;
+    background: linear-gradient(90deg, #0f172a, #1e293b, #0f172a);
+    color: #fde68a;
+    padding: 7px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+    border: 1px solid rgba(253,230,138,0.28);
+    white-space: nowrap;
+    position: relative;
+  }
+  .ab-pro-ticker-inner {
+    display: inline-block;
+    padding-left: 100%;
+    animation: abTickerScroll 20s linear infinite;
+  }
+  @keyframes abTickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+  }
+  .ab-pro-chips {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 2px 1px 4px;
+    scrollbar-width: none;
+  }
+  .ab-pro-chips::-webkit-scrollbar { display: none; }
+  .ab-pro-chip {
+    flex: 0 0 auto;
+    border: 1px solid #cbd5e1;
+    background: rgba(255,255,255,0.92);
+    color: #0f172a;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.16s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .ab-pro-chip.active {
+    background: linear-gradient(135deg, #0f9d58, #0b7a43);
+    color: #ffffff;
+    border-color: #0b7a43;
+    box-shadow: 0 4px 12px rgba(15,157,88,0.28);
+  }
+  .ab-pro-chip-repeat {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    border-color: #d97706;
+  }
+
+  /* 4) أزرار الكميات السريعة للجملة + شارة البونص داخل البطاقات */
+  .ab-qbar {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+    justify-content: center;
+    direction: ltr;
+    width: 100%;
+  }
+  .ab-qbtn {
+    flex: 1;
+    border: 1px solid #d1fae5;
+    background: #ecfdf5;
+    color: #065f46;
+    border-radius: 7px;
+    padding: 4px 2px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.1s ease, background 0.15s ease;
+  }
+  .ab-qbtn:active { transform: scale(0.92); background: #10b981; color: #fff; }
+  .ab-bonus-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+    border: 1px solid #f59e0b;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 8px;
+    margin-top: 3px;
+  }
+
+  /* 5) نافذة تكبير الصورة HD Zoom + نافذة معاينة الإيصال الرسمي */
+  .ab-pro-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 10, 20, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    direction: rtl;
+  }
+  .ab-zoom-card {
+    background: #ffffff;
+    color: #0f172a;
+    width: 100%;
+    max-width: 370px;
+    border-radius: 20px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 24px 55px rgba(0,0,0,0.45);
+    position: relative;
+  }
+  .ab-zoom-img {
+    width: 100%;
+    max-height: 52vh;
+    object-fit: contain;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 10px;
+  }
+  .ab-zoom-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #111827;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .ab-rcpt-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 11px;
+    border-radius: 10px;
+    border: 1.5px solid #0f172a;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-pro-nudge {
+    position: fixed;
+    bottom: 78px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #065f46, #047857);
+    color: #fef3c7;
+    padding: 9px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 800;
+    z-index: 999995;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.3);
+    direction: rtl;
+    max-width: 92vw;
+    text-align: center;
+    border: 1px solid #34d399;
+  }
+  .ab-old-wa-hidden { display: none !important; }
+</style>
+<script data-ab-pro-ui="1">
+(function () {
+  if (window.__abProWorldClassV1) return;
+  window.__abProWorldClassV1 = true;
+
+  var LAST_CART_KEY = "ab_last_cart_v1";
+  var RECEIPTS_KEY = "ab_receipts_map_v1";
+  var CUST_NAME_KEY = "ab_saved_cust_name_v1";
+  var PROMO_KEY = "ab_promo_ticker_v1";
+  var DEFAULT_PROMO = "🔥 عروض أبوضياء للتوزيع — سيئون • تجهيز فوري وتوصيل سريع • اطلب الآن بكل سهولة";
+  var activeCat = "الكل";
+  var NL = String.fromCharCode(10);
+
+  // 1) شاشة الترحيب الخاطفة (مرة واحدة لكل جلسة)
+  function showSplashOnce() {
+    try {
+      if (sessionStorage.getItem("ab_splash_seen")) return;
+      sessionStorage.setItem("ab_splash_seen", "1");
+    } catch (e) {}
+    var sp = document.createElement("div");
+    sp.id = "abProSplash";
+    sp.innerHTML =
+      '<div class="ab-sp-logo">🏪</div>' +
+      '<div class="ab-sp-title">أبوضياء للتوزيع</div>' +
+      '<div class="ab-sp-sub">سيئون • الجملة والتجزئة</div>';
+    document.body.appendChild(sp);
+    setTimeout(function () {
+      sp.classList.add("hide");
+      setTimeout(function () { if (sp.parentNode) sp.remove(); }, 420);
+    }, 650);
+  }
+  if (document.body) showSplashOnce();
+  else document.addEventListener("DOMContentLoaded", showSplashOnce);
+
+  // 2) التقاط إحداثيات الـ GPS تلقائياً عند ضغط العميل على زر الموقع الموجود في الفاتورة
+  try {
+    if (navigator.geolocation && navigator.geolocation.getCurrentPosition && !navigator.geolocation.__abHooked) {
+      var origGeo = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+      navigator.geolocation.getCurrentPosition = function (succ, err, opts) {
+        return origGeo(function (pos) {
+          try {
+            if (pos && pos.coords) {
+              var lat = Number(pos.coords.latitude).toFixed(6);
+              var lng = Number(pos.coords.longitude).toFixed(6);
+              window.__abCapturedGps = {
+                lat: lat,
+                lng: lng,
+                url: "https://maps.google.com/?q=" + lat + "," + lng
+              };
+            }
+          } catch (e) {}
+          if (typeof succ === "function") succ(pos);
+        }, err, opts);
+      };
+      navigator.geolocation.__abHooked = true;
+    }
+  } catch (e) {}
+
+  // 3) دوال مساعدة لجمع الأصناف وحفظ الإيصال وإعادة آخر طلب
+  function getStructuredCartItems() {
+    var out = [];
+    try {
+      if (typeof CART !== "undefined" && CART && typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) {
+        for (var i = 0; i < PRODUCTS.length; i++) {
+          var p = PRODUCTS[i];
+          var q = Number(CART[p.id] || 0);
+          if (q > 0) {
+            var bon = (typeof calcBonus === "function") ? Number(calcBonus(p, q) || 0) : 0;
+            var price = Number(p.price || 0);
+            out.push({ id: p.id, name: p.name, unit: p.unit || "كيس", qty: q, bon: bon, price: price, sub: q * price });
+          }
+        }
+      }
+    } catch (e) {}
+    return out;
+  }
+
+  function saveReceiptMeta(orderId, obj) {
+    try {
+      var map = {};
+      try { map = JSON.parse(localStorage.getItem(RECEIPTS_KEY) || "{}"); } catch (e) { map = {}; }
+      map[orderId] = obj;
+      var keys = Object.keys(map);
+      if (keys.length > 80) {
+        for (var i = 0; i < keys.length - 80; i++) delete map[keys[i]];
+      }
+      localStorage.setItem(RECEIPTS_KEY, JSON.stringify(map));
+    } catch (e) {}
+  }
+
+  function loadReceiptMeta(orderId) {
+    try {
+      var map = JSON.parse(localStorage.getItem(RECEIPTS_KEY) || "{}");
+      return map[orderId] || null;
+    } catch (e) { return null; }
+  }
+
+  // 4) إثراء طلب الإرسال الصامت برابط الـ GPS + حفظ لقطة السلة للإيصال وإعادة الطلب
+  if (window.fetch && !window.fetch.__abProWrapped) {
+    var prevFetch = window.fetch.bind(window);
+    var wrappedFetch = function (input, init) {
+      try {
+        var url = (typeof input === "string") ? input : (input && input.url ? input.url : "");
+        var method = (init && init.method) ? String(init.method).toUpperCase() : "GET";
+        if (method === "POST" && init && typeof init.body === "string" && (url.indexOf("/api/order") !== -1 || url.indexOf("ntfy.sh/") !== -1)) {
+          var body = JSON.parse(init.body);
+          if (body && body.orderId && body.text) {
+            // إرفاق الـ GPS تلقائياً إن تم التقاطه
+            if (window.__abCapturedGps && window.__abCapturedGps.url && !body.gpsUrl) {
+              body.gpsUrl = window.__abCapturedGps.url;
+              var gpsLine = "📍 موقع المحل: " + body.gpsUrl;
+              if (body.text.indexOf(body.gpsUrl) === -1) {
+                var sepIdx = body.text.indexOf("━━━━━━━━━━━━━━");
+                if (sepIdx !== -1) {
+                  body.text = body.text.slice(0, sepIdx) + gpsLine + NL + body.text.slice(sepIdx);
+                } else {
+                  body.text = body.text + NL + gpsLine;
+                }
+              }
+              init = Object.assign({}, init, { body: JSON.stringify(body) });
+            }
+            // حفظ بيانات الإيصال وسلة آخر طلب
+            if (window.__abLastSavedOrderId !== body.orderId) {
+              window.__abLastSavedOrderId = body.orderId;
+              var items = getStructuredCartItems();
+              if (items.length) {
+                try { localStorage.setItem(LAST_CART_KEY, JSON.stringify(items)); } catch (e) {}
+              }
+              if (body.customerName) {
+                try { localStorage.setItem(CUST_NAME_KEY, body.customerName); } catch (e) {}
+              }
+              var now = new Date();
+              var pad = function (n) { return String(n).padStart(2, "0"); };
+              var hh = now.getHours();
+              var recObj = {
+                orderId: body.orderId,
+                date: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()),
+                time: pad(hh % 12 || 12) + ":" + pad(now.getMinutes()) + " " + (hh >= 12 ? "م" : "ص"),
+                customerName: body.customerName || "عميل كريم",
+                customerPhone: body.customerPhone || "",
+                totalQty: body.totalQty || 0,
+                fmtTotal: body.fmtTotal || String(body.total || 0),
+                withPrice: body.withPrice !== false,
+                gpsUrl: body.gpsUrl || "",
+                items: items,
+                text: body.text
+              };
+              window.__abLatestReceipt = recObj;
+              saveReceiptMeta(body.orderId, recObj);
+            }
+          }
+        }
+      } catch (e) {}
+      return prevFetch(input, init);
+    };
+    wrappedFetch.__abProWrapped = true;
+    window.fetch = wrappedFetch;
+  }
+
+  // 5) رسم إيصال الطلب الرسمي الأبيض والأسود على Canvas بدقة عالية (يعمل بدون نت)
+  function renderOfficialReceipt(rec) {
+    if (!rec) return;
+    var items = Array.isArray(rec.items) ? rec.items : [];
+    var W = 800;
+    var rowH = 44;
+    var H = 370 + Math.max(items.length, 1) * rowH + 130;
+    var canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    var ctx = canvas.getContext("2d");
+
+    // خلفية بيضاء رسمية
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, W, H);
+    ctx.direction = "rtl";
+
+    // إطار خارجي
+    ctx.strokeStyle = "#111111";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(20, 20, W - 40, H - 40);
+
+    // ترويسة
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(20, 20, W - 40, 108);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "center";
+    ctx.font = "bold 34px sans-serif";
+    ctx.fillText("أبوضياء للتوزيع — سيئون", W / 2, 70);
+    ctx.font = "600 20px sans-serif";
+    ctx.fillStyle = "#E5E7EB";
+    ctx.fillText("إيصال اعتماد طلب رسمي  •  هاتف: 771458609", W / 2, 106);
+
+    // صندوق بيانات الطلب والعميل
+    var y = 148;
+    ctx.fillStyle = "#F8FAFC";
+    ctx.fillRect(40, y, W - 80, 128);
+    ctx.strokeStyle = "#CBD5E1";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(40, y, W - 80, 128);
+
+    ctx.fillStyle = "#111111";
+    ctx.font = "bold 20px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("رقم الطلب: #" + rec.orderId, W - 60, y + 36);
+    ctx.fillText("العميل: " + (rec.customerName || "غير محدد"), W - 60, y + 74);
+    ctx.fillText("الجوال: " + (rec.customerPhone || "-"), W - 60, y + 110);
+
+    ctx.textAlign = "left";
+    ctx.font = "600 19px sans-serif";
+    ctx.fillText("التاريخ: " + (rec.date || ""), 60, y + 36);
+    ctx.fillText("الوقت: " + (rec.time || ""), 60, y + 74);
+    ctx.fillText(rec.withPrice ? "النوع: طلب بالسعر" : "النوع: أصناف بدون سعر", 60, y + 110);
+
+    // ترويسة الجدول
+    y = 296;
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(40, y, W - 80, 44);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 19px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("الصنف", W - 60, y + 29);
+    ctx.textAlign = "center";
+    ctx.fillText("الكمية", rec.withPrice ? 340 : 140, y + 29);
+    if (rec.withPrice) {
+      ctx.fillText("السعر", 220, y + 29);
+      ctx.fillText("الإجمالي", 105, y + 29);
+    }
+
+    y += 44;
+    ctx.font = "600 18px sans-serif";
+    if (!items.length) {
+      ctx.fillStyle = "#333333";
+      ctx.textAlign = "center";
+      ctx.fillText("تفاصيل الطلب محفوظة في السجل النصي", W / 2, y + 28);
+      y += rowH;
+    } else {
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        if (i % 2 === 1) {
+          ctx.fillStyle = "#F3F4F6";
+          ctx.fillRect(40, y, W - 80, rowH);
+        }
+        ctx.strokeStyle = "#E2E8F0";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(40, y, W - 80, rowH);
+
+        ctx.fillStyle = "#111111";
+        ctx.textAlign = "right";
+        var nm = String(it.name || "").slice(0, 34);
+        ctx.fillText((i + 1) + ". " + nm, W - 56, y + 29);
+
+        ctx.textAlign = "center";
+        var qTxt = String(it.qty) + (it.bon > 0 ? (" (+" + it.bon + ")") : "");
+        ctx.fillText(qTxt, rec.withPrice ? 340 : 140, y + 29);
+        if (rec.withPrice) {
+          ctx.fillText(Number(it.price || 0).toLocaleString("en-US"), 220, y + 29);
+          ctx.fillText(Number(it.sub || 0).toLocaleString("en-US"), 105, y + 29);
+        }
+        y += rowH;
+      }
+    }
+
+    // شريط الإجمالي النهائي
+    y += 16;
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(40, y, W - 80, 56);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 23px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("عدد الأكياس: " + rec.totalQty, W - 62, y + 36);
+    if (rec.withPrice) {
+      ctx.textAlign = "left";
+      ctx.fillText("الإجمالي: " + rec.fmtTotal + " ر.ي", 62, y + 36);
+    }
+
+    // تذييل
+    ctx.fillStyle = "#475569";
+    ctx.font = "600 16px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("شكراً لتعاملكم مع أبوضياء للتوزيع — تم الاعتماد إلكترونياً", W / 2, H - 36);
+
+    var dataUrl = canvas.toDataURL("image/png");
+    var old = document.getElementById("abRcptPreviewModal");
+    if (old) old.remove();
+    var ov = document.createElement("div");
+    ov.id = "abRcptPreviewModal";
+    ov.className = "ab-pro-overlay";
+    ov.innerHTML =
+      '<div class="ab-zoom-card">' +
+        '<button type="button" class="ab-zoom-close" id="abRcptClose">✕</button>' +
+        '<div style="font-weight:800;font-size:16px;margin-bottom:8px;">🧾 الإيصال الرسمي للطلب #' + rec.orderId + '</div>' +
+        '<img src="' + dataUrl + '" class="ab-zoom-img" alt="إيصال الطلب">' +
+        '<div style="display:flex;gap:8px;">' +
+          '<button type="button" id="abRcptDlBtn" class="ab-sv3-mbtn ab-sv3-ok" style="flex:1;">⬇️ حفظ الصورة</button>' +
+          '<button type="button" id="abRcptShareBtn" class="ab-sv3-mbtn ab-sv3-new" style="flex:1;">📤 مشاركة</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(ov);
+
+    document.getElementById("abRcptClose").onclick = function () { ov.remove(); };
+    ov.onclick = function (e) { if (e.target === ov) ov.remove(); };
+    document.getElementById("abRcptDlBtn").onclick = function () {
+      var a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "Abudhiya_Receipt_" + rec.orderId + ".png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof showToast === "function") showToast("✅ تم حفظ الإيصال الرسمي في جهازك");
+    };
+    document.getElementById("abRcptShareBtn").onclick = function () {
+      canvas.toBlob(function (blob) {
+        if (blob && navigator.share) {
+          var file = new File([blob], "Abudhiya_Receipt_" + rec.orderId + ".png", { type: "image/png" });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({ files: [file], title: "إيصال طلب أبوضياء للتوزيع #" + rec.orderId }).catch(function () {});
+            return;
+          }
+        }
+        document.getElementById("abRcptDlBtn").click();
+      }, "image/png");
+    };
+  }
+
+  // 6) إضافة كمية سريعة + محفّز البونص الذكي + نبض عدّاد السلة
+  function showBonusNudge(msg) {
+    var old = document.getElementById("abProNudgeToast");
+    if (old) old.remove();
+    var el = document.createElement("div");
+    el.id = "abProNudgeToast";
+    el.className = "ab-pro-nudge";
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(function () { if (el.parentNode) el.remove(); }, 3400);
+  }
+
+  function addQuickQty(prod, delta) {
+    try {
+      if (typeof CART === "undefined" || !CART || !prod) return;
+      var cur = Number(CART[prod.id] || 0);
+      var next = Math.max(0, cur + delta);
+      CART[prod.id] = next;
+      if (typeof saveCart === "function") saveCart();
+      if (typeof renderProducts === "function") renderProducts();
+      if (typeof renderInvoiceView === "function") renderInvoiceView();
+      if (typeof updateCartBadge === "function") updateCartBadge();
+
+      // نبض السلة
+      var navs = document.querySelectorAll(".bottom-nav button, .bottom-bar button, #cartBadge");
+      for (var i = 0; i < navs.length; i++) {
+        navs[i].classList.remove("ab-pro-pulse");
+        void navs[i].offsetWidth;
+        navs[i].classList.add("ab-pro-pulse");
+      }
+
+      // محفّز البونص الذكي
+      if (typeof calcBonus === "function") {
+        var curBon = Number(calcBonus(prod, next) || 0);
+        var prevBon = Number(calcBonus(prod, cur) || 0);
+        if (curBon > prevBon) {
+          showBonusNudge("🎉 مبروك! حصلت على +" + curBon + " مجاني على " + prod.name);
+        } else {
+          for (var k = 1; k <= 5; k++) {
+            var futBon = Number(calcBonus(prod, next + k) || 0);
+            if (futBon > curBon) {
+              showBonusNudge("🎁 أضف " + k + " إضافي من «" + prod.name + "» لتحصل على " + futBon + " مجاني!");
+              break;
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 7) إعادة آخر طلب بضغطة واحدة
+  function repeatLastOrder() {
+    var items = [];
+    try { items = JSON.parse(localStorage.getItem(LAST_CART_KEY) || "[]"); } catch (e) { items = []; }
+    if (!items.length || typeof CART === "undefined" || !CART) {
+      if (typeof showToast === "function") showToast("ℹ️ لم يتم تسجيل طلب سابق بعد");
+      return;
+    }
+    var added = 0;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (it && it.id !== undefined && Number(it.qty) > 0) {
+        CART[it.id] = Number(it.qty);
+        added++;
+      }
+    }
+    if (added > 0) {
+      if (typeof saveCart === "function") saveCart();
+      if (typeof renderProducts === "function") renderProducts();
+      if (typeof renderInvoiceView === "function") renderInvoiceView();
+      if (typeof showToast === "function") showToast("🔄 تم تعبئة السلة بأصناف آخر طلب (" + added + " صنف)!");
+    }
+  }
+
+  // 8) تكبير الصورة HD Zoom مع أزرار إضافة سريعة
+  function openProductZoom(prod, imgSrc) {
+    var old = document.getElementById("abProZoomModal");
+    if (old) old.remove();
+    var ov = document.createElement("div");
+    ov.id = "abProZoomModal";
+    ov.className = "ab-pro-overlay";
+    var fmtNum = (typeof fmt === "function") ? fmt : function (n) { return Number(n || 0).toLocaleString("en-US"); };
+    ov.innerHTML =
+      '<div class="ab-zoom-card">' +
+        '<button type="button" class="ab-zoom-close" id="abZoomClose">✕</button>' +
+        '<img src="' + imgSrc + '" class="ab-zoom-img" alt="">' +
+        '<div style="font-size:17px;font-weight:900;margin-bottom:4px;">' + (prod ? prod.name : "") + '</div>' +
+        (prod ? ('<div style="font-size:16px;font-weight:800;color:#0b7a43;margin-bottom:10px;">' + fmtNum(prod.price) + ' ر.ي</div>') : '') +
+        (prod ? (
+          '<div class="ab-qbar" style="gap:6px;">' +
+            '<button type="button" class="ab-qbtn" data-d="1" style="padding:9px;font-size:13px;">+1</button>' +
+            '<button type="button" class="ab-qbtn" data-d="5" style="padding:9px;font-size:13px;">+5</button>' +
+            '<button type="button" class="ab-qbtn" data-d="10" style="padding:9px;font-size:13px;">+10</button>' +
+            '<button type="button" class="ab-qbtn" data-d="25" style="padding:9px;font-size:13px;">+25</button>' +
+            '<button type="button" class="ab-qbtn" data-d="50" style="padding:9px;font-size:13px;">+50</button>' +
+          '</div>'
+        ) : '') +
+      '</div>';
+    document.body.appendChild(ov);
+    document.getElementById("abZoomClose").onclick = function () { ov.remove(); };
+    ov.onclick = function (e) { if (e.target === ov) ov.remove(); };
+    if (prod) {
+      var qbs = ov.querySelectorAll(".ab-qbtn");
+      for (var i = 0; i < qbs.length; i++) {
+        qbs[i].onclick = function () {
+          var d = Number(this.getAttribute("data-d"));
+          addQuickQty(prod, d);
+          if (typeof showToast === "function") showToast("✅ تمت إضافة +" + d + " من " + prod.name);
+        };
+      }
+    }
+  }
+
+  // 9) بناء الشريط الذكي (الترحيب + العروض + التصنيفات + إعادة آخر طلب)
+  function getCategoryForProduct(p) {
+    var nm = String((p && p.name) || "");
+    if (p && p.category && String(p.category).trim()) return String(p.category).trim();
+    if (nm.indexOf("رنجو") !== -1) return "رنجو";
+    if (nm.indexOf("ريلاكس") !== -1) return "ريلاكس";
+    if (nm.indexOf("جامبو") !== -1) return "جامبو";
+    if (nm.indexOf("شراب") !== -1 || nm.indexOf("عصير") !== -1 || nm.indexOf("جيلي") !== -1) return "عصائر وشراب";
+    return "أصناف أخرى";
+  }
+
+  function applyCategoryFilter() {
+    var cards = document.querySelectorAll("[data-ab-prod-id]");
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var cat = card.getAttribute("data-ab-cat") || "";
+      var hasBon = card.getAttribute("data-ab-has-bonus") === "1";
+      var show = (activeCat === "الكل") || (activeCat === "عروض 🎁" ? hasBon : (cat === activeCat));
+      card.style.display = show ? "" : "none";
+    }
+  }
+
+  function mountTopHub() {
+    var hub = document.getElementById("abProTopHub");
+    var grid = document.getElementById("productsGrid") ||
+               document.querySelector(".products-grid, .grid, #catalogView, main");
+    if (!grid) return;
+
+    if (!hub) {
+      hub = document.createElement("div");
+      hub.id = "abProTopHub";
+      var promoTxt = DEFAULT_PROMO;
+      try { promoTxt = localStorage.getItem(PROMO_KEY) || DEFAULT_PROMO; } catch (e) {}
+      hub.innerHTML =
+        '<div id="abProWelcome" class="ab-pro-welcome"><span id="abProWelcomeTxt"></span><span>🌟 عميل مميز</span></div>' +
+        '<div class="ab-pro-ticker"><div id="abProTickerTxt" class="ab-pro-ticker-inner"></div></div>' +
+        '<div id="abProChips" class="ab-pro-chips"></div>';
+      document.getElementById("abProTickerTxt");
+      grid.parentNode.insertBefore(hub, grid);
+      document.getElementById("abProTickerTxt").textContent = promoTxt;
+    }
+
+    // تحديث الترحيب الشخصي
+    var savedName = "";
+    try {
+      var inp = document.getElementById("custNameInp");
+      savedName = (inp && inp.value.trim()) || localStorage.getItem(CUST_NAME_KEY) || "";
+    } catch (e) {}
+    var wBox = document.getElementById("abProWelcome");
+    var wTxt = document.getElementById("abProWelcomeTxt");
+    if (wBox && wTxt) {
+      if (savedName) {
+        wTxt.textContent = "👋 أهلاً بعودتك، " + savedName;
+        wBox.style.display = "flex";
+      } else {
+        wBox.style.display = "none";
+      }
+    }
+
+    // بناء شرائح التصنيف مرة واحدة بعد توفر المنتجات
+    var chipsBox = document.getElementById("abProChips");
+    if (chipsBox && !chipsBox.getAttribute("data-built") && typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS) && PRODUCTS.length) {
+      chipsBox.setAttribute("data-built", "1");
+      var cats = ["الكل"];
+      var hasAnyBonus = false;
+      for (var i = 0; i < PRODUCTS.length; i++) {
+        var c = getCategoryForProduct(PRODUCTS[i]);
+        if (cats.indexOf(c) === -1) cats.push(c);
+        if (typeof calcBonus === "function") {
+          try { if (Number(calcBonus(PRODUCTS[i], 20) || 0) > 0 || Number(calcBonus(PRODUCTS[i], 50) || 0) > 0) hasAnyBonus = true; } catch (e) {}
+        }
+      }
+      if (hasAnyBonus) cats.push("عروض 🎁");
+
+      var html = "";
+      var hasLast = false;
+      try { hasLast = JSON.parse(localStorage.getItem(LAST_CART_KEY) || "[]").length > 0; } catch (e) {}
+      if (hasLast) {
+        html += '<button type="button" id="abRepeatOrderChip" class="ab-pro-chip ab-pro-chip-repeat">🔄 إعادة آخر طلب</button>';
+      }
+      for (var j = 0; j < cats.length; j++) {
+        html += '<button type="button" class="ab-pro-chip' + (cats[j] === activeCat ? ' active' : '') + '" data-cat="' + cats[j] + '">' + cats[j] + '</button>';
+      }
+      chipsBox.innerHTML = html;
+
+      var repBtn = document.getElementById("abRepeatOrderChip");
+      if (repBtn) repBtn.onclick = repeatLastOrder;
+
+      var cBtns = chipsBox.querySelectorAll("[data-cat]");
+      for (var k = 0; k < cBtns.length; k++) {
+        cBtns[k].onclick = function () {
+          activeCat = this.getAttribute("data-cat");
+          for (var m = 0; m < cBtns.length; m++) cBtns[m].classList.remove("active");
+          this.classList.add("active");
+          applyCategoryFilter();
+        };
+      }
+    }
+  }
+
+  // 10) تحسين بطاقات المنتجات (كميات سريعة + تكبير صورة + شارة بونص)
+  function enhanceProductCards() {
+    if (typeof PRODUCTS === "undefined" || !Array.isArray(PRODUCTS) || !PRODUCTS.length) return;
+    var byName = {};
+    for (var i = 0; i < PRODUCTS.length; i++) {
+      if (PRODUCTS[i] && PRODUCTS[i].name) byName[String(PRODUCTS[i].name).trim()] = PRODUCTS[i];
+    }
+
+    var imgs = document.querySelectorAll("img");
+    for (var j = 0; j < imgs.length; j++) {
+      var img = imgs[j];
+      if (img.closest("#abProZoomModal, #abRcptPreviewModal, #abProSplash, #abSv3ModalBg")) continue;
+      var card = img.closest(".product-card, .prod-card, .card, .item-card") || img.parentElement;
+      if (!card || card === document.body || card.getAttribute("data-ab-pro-card") === "1") continue;
+
+      var cardTxt = (card.textContent || "").trim();
+      var matched = null;
+      for (var n in byName) {
+        if (Object.prototype.hasOwnProperty.call(byName, n) && cardTxt.indexOf(n) !== -1) {
+          if (!matched || n.length > matched.name.length) matched = byName[n];
+        }
+      }
+      if (!matched) continue;
+
+      card.setAttribute("data-ab-pro-card", "1");
+      card.setAttribute("data-ab-prod-id", String(matched.id));
+      card.setAttribute("data-ab-cat", getCategoryForProduct(matched));
+
+      // تكبير الصورة بضغطة واحدة
+      img.style.cursor = "zoom-in";
+      (function (pObj, imEl) {
+        imEl.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          openProductZoom(pObj, imEl.currentSrc || imEl.src);
+        });
+      })(matched, img);
+
+      // شارة البونص إن وجد عرض مجاني على الصنف
+      var hasBon = false;
+      if (typeof calcBonus === "function") {
+        try {
+          if (Number(calcBonus(matched, 10) || 0) > 0 || Number(calcBonus(matched, 25) || 0) > 0 || Number(calcBonus(matched, 50) || 0) > 0) hasBon = true;
+        } catch (e) {}
+      }
+      card.setAttribute("data-ab-has-bonus", hasBon ? "1" : "0");
+      if (hasBon && !card.querySelector(".ab-bonus-tag")) {
+        var bTag = document.createElement("div");
+        bTag.className = "ab-bonus-tag";
+        bTag.textContent = "🎁 عرض بونص";
+        card.appendChild(bTag);
+      }
+
+      // أزرار الكميات السريعة للجملة
+      if (!card.querySelector(".ab-qbar")) {
+        var qbar = document.createElement("div");
+        qbar.className = "ab-qbar";
+        qbar.innerHTML =
+          '<button type="button" class="ab-qbtn" data-d="5">+5</button>' +
+          '<button type="button" class="ab-qbtn" data-d="10">+10</button>' +
+          '<button type="button" class="ab-qbtn" data-d="25">+25</button>' +
+          '<button type="button" class="ab-qbtn" data-d="50">+50</button>';
+        (function (pObj, bar) {
+          var bs = bar.querySelectorAll(".ab-qbtn");
+          for (var b = 0; b < bs.length; b++) {
+            bs[b].addEventListener("click", function (ev) {
+              ev.stopPropagation();
+              addQuickQty(pObj, Number(this.getAttribute("data-d")));
+            });
+          }
+        })(matched, qbar);
+        card.appendChild(qbar);
+      }
+    }
+    applyCategoryFilter();
+  }
+
+  // 11) إخفاء زر الواتساب القديم أسفل الفاتورة + إضافة خانة تعديل شريط العروض في لوحة الإدارة المخفية + زر الإيصال الرسمي
+  function enhanceInvoiceAndModals() {
+    // حفظ اسم العميل تلقائياً للترحيب الشخصي
+    var nameInp = document.getElementById("custNameInp");
+    if (nameInp && !nameInp.getAttribute("data-ab-name-hook")) {
+      nameInp.setAttribute("data-ab-name-hook", "1");
+      nameInp.addEventListener("change", function () {
+        if (this.value.trim()) {
+          try { localStorage.setItem(CUST_NAME_KEY, this.value.trim()); } catch (e) {}
+        }
+      });
+    }
+
+    // إخفاء زر الواتساب القديم أسفل الفاتورة لتوحيد مسار الاعتماد الصامت
+    var invWrap = document.getElementById("invFilledWrap");
+    if (invWrap) {
+      var btns = invWrap.querySelectorAll("button, a");
+      for (var i = 0; i < btns.length; i++) {
+        var b = btns[i];
+        if (b.closest("#abSilentOrderBox")) continue;
+        var t = (b.textContent || "").trim();
+        if ((t.indexOf("واتس") !== -1 || t.indexOf("تأكيد الفاتورة") !== -1 || t.indexOf("إرسال الطلب") !== -1) && t.indexOf("GPS") === -1 && t.indexOf("موقع") === -1) {
+          b.classList.add("ab-old-wa-hidden");
+        }
+      }
+    }
+
+    // إضافة تعديل نص شريط العروض داخل لوحة الإدارة المخفية (⚙)
+    var adm = document.getElementById("abSv3Admin");
+    if (adm && !document.getElementById("abProPromoInp")) {
+      var curPromo = DEFAULT_PROMO;
+      try { curPromo = localStorage.getItem(PROMO_KEY) || DEFAULT_PROMO; } catch (e) {}
+      var row = document.createElement("div");
+      row.className = "ab-sv3-row";
+      row.innerHTML =
+        '<input type="text" id="abProPromoInp" class="ab-sv3-inp" style="direction:rtl;text-align:right;" value="' + curPromo.replace(/"/g, "&quot;") + '" placeholder="نص شريط العروض">' +
+        '<button type="button" id="abProSavePromo" class="ab-sv3-smallbtn">حفظ العرض</button>';
+      adm.appendChild(row);
+      document.getElementById("abProSavePromo").onclick = function () {
+        var val = document.getElementById("abProPromoInp").value.trim() || DEFAULT_PROMO;
+        try { localStorage.setItem(PROMO_KEY, val); } catch (e) {}
+        var tk = document.getElementById("abProTickerTxt");
+        if (tk) tk.textContent = val;
+        if (typeof showToast === "function") showToast("✅ تم تحديث شريط العروض");
+      };
+    }
+
+    // إضافة زر "🧾 حفظ الإيصال الرسمي (صورة)" داخل نافذة نجاح الاعتماد
+    var modal = document.getElementById("abSv3ModalBg");
+    if (modal && !document.getElementById("abProReceiptBtn")) {
+      var card = modal.querySelector(".ab-sv3-modal");
+      if (card) {
+        var rBtn = document.createElement("button");
+        rBtn.type = "button";
+        rBtn.id = "abProReceiptBtn";
+        rBtn.className = "ab-rcpt-btn";
+        rBtn.textContent = "🧾 حفظ / مشاركة الإيصال الرسمي";
+        rBtn.onclick = function () {
+          renderOfficialReceipt(window.__abLatestReceipt);
+        };
+        card.appendChild(rBtn);
+      }
+    }
+
+    // إضافة زر "🧾 إيصال" لكل طلب داخل نافذة الأرشيف
+    var archModal = document.getElementById("abSv3ArchModalBg");
+    if (archModal && !archModal.getAttribute("data-rcpt-wired")) {
+      archModal.setAttribute("data-rcpt-wired", "1");
+      var arr = [];
+      try { arr = JSON.parse(localStorage.getItem("ab_orders_archive_v1") || "[]"); } catch (e) { arr = []; }
+      var itemsEls = archModal.querySelectorAll(".ab-sv3-arch-item");
+      for (var k = 0; k < itemsEls.length; k++) {
+        var o = arr[k];
+        if (!o) continue;
+        var b2 = document.createElement("button");
+        b2.type = "button";
+        b2.className = "ab-sv3-smallbtn";
+        b2.style.marginRight = "6px";
+        b2.style.background = "#0b7a43";
+        b2.textContent = "🧾 إيصال رسمي";
+        (function (ord) {
+          b2.onclick = function () {
+            var meta = loadReceiptMeta(ord.orderId) || ord;
+            renderOfficialReceipt(meta);
+          };
+        })(o);
+        itemsEls[k].appendChild(b2);
+      }
+    }
+  }
+
+  function tick() {
+    mountTopHub();
+    enhanceProductCards();
+    enhanceInvoiceAndModals();
+  }
+
+  if (typeof MutationObserver !== "undefined") {
+    var obs = new MutationObserver(tick);
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+  }
+  setInterval(tick, 900);
+  setTimeout(tick, 300);
+})();
+</script>
+<!-- ABUDHIYA_PRO_UI_END -->
 </body>
 </html>
