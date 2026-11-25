@@ -4,36 +4,36 @@
   "description": "أبوسيف للتجارة العامة — لبيع المواد الغذائية والحلويات بالجملة • سيئون",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A0A",
-  "theme_color": "#0A0A0A",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "dir": "rtl",
   "lang": "ar",
   "icons": [
     {
-      "src": "/abusaif-app-1795604381-192.png",
+      "src": "/abusaif-app-1795610830-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/abusaif-app-1795604381-mask-192.png",
+      "src": "/abusaif-app-1795610830-mask-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/abusaif-app-1795604381-512.png",
+      "src": "/abusaif-app-1795610830-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/abusaif-app-1795604381-mask-512.png",
+      "src": "/abusaif-app-1795610830-mask-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
   "scope": "/",
-  "id": "/?app=abusaif-1795604381"
+  "id": "/?app=abusaif-1795610830"
 }
