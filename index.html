@@ -17092,6 +17092,170 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_ORDER_LOCK_111_END -->
 
+
+<!-- ABUDHIYA_GUEST_CLEAN_MODE_START -->
+<style id="abGuestCleanModeStyle" data-guest-clean="1">
+  /* 1) إخفاء أدوات المناديب والمستودع الميدانية عن الزائر فقط */
+  html.ab-role-guest #abQCrmBtn,
+  html.ab-role-guest #abQScanBtn,
+  html.ab-role-guest #abQTplBtn,
+  html.ab-role-guest #abQuantumLoadBox,
+  html.ab-role-guest #abQuantumSecretCalc,
+  html.ab-role-guest #abImpRepGpsCard,
+  html.ab-role-guest #abImpGpsBtn,
+  html.ab-role-guest #abImpThermalBtn,
+  html.ab-role-guest [data-ab-guest-hide="1"] {
+    display: none !important;
+  }
+
+  /* توسيط زر الطلب الذكي بعرض كامل أنيق للزائر بعد إخفاء أدوات المناديب */
+  html.ab-role-guest #abQuantumStrip #abQAiBtn {
+    flex: 1 1 100% !important;
+    justify-content: center !important;
+  }
+
+  /* 2) إخفاء الإعدادات السرية وصندوق قفل 111 وأزرار اعتماد الطلب بالكامل عن الزائر */
+  html.ab-role-guest #abSv3Admin,
+  html.ab-role-guest #abPricedAdminCtrl,
+  html.ab-role-guest #abLock111Box,
+  html.ab-role-guest #abAdminMasterBar,
+  html.ab-role-guest #abStaffPriceBar,
+  html.ab-role-guest #abDirectRepBox,
+  html.ab-role-guest #abRepVaultTopBar,
+  html.ab-role-guest .ab-wa-confirm-card,
+  html.ab-role-guest [data-ab-submit-111="1"],
+  html.ab-role-guest [data-ab-warehouse-submit="1"],
+  html.ab-role-guest .ab-official-noprice-btn,
+  html.ab-role-guest #abRvSilentSendBtn,
+  html.ab-role-guest #abDirectRepSendBtn,
+  html.ab-role-guest button[data-ab-role="noprice"],
+  html.ab-role-guest button[data-ab-role="priced"] {
+    display: none !important;
+  }
+
+  /* 3) إخفاء الأسعار داخل شريط وعارض «حالات المنتجات الجديدة والعروض» عن الزائر فقط */
+  html.ab-role-guest #abNewStatusBar .ab-ns-price-row,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusBar .ab-ns-price-row,
+  html.ab-role-guest #abNewStatusViewer .ab-ns-price-row,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusViewer .ab-ns-price-row,
+  html.ab-role-guest #abNewStatusBar .ab-ns-price-tag,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusBar .ab-ns-price-tag,
+  html.ab-role-guest #abNewStatusViewer .ab-ns-price-tag,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusViewer .ab-ns-price-tag,
+  html.ab-role-guest #abNewStatusBar .ab-ns-old-price,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusBar .ab-ns-old-price,
+  html.ab-role-guest #abNewStatusViewer .ab-ns-old-price,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusViewer .ab-ns-old-price,
+  html.ab-role-guest #abNewStatusBar .ab-ns-save-pill,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusBar .ab-ns-save-pill,
+  html.ab-role-guest #abNewStatusViewer .ab-ns-save-pill,
+  html.ab-role-guest.ab-prices-hidden #abNewStatusViewer .ab-ns-save-pill {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* ضبط تباعد شريط المشاركة والحفظ كصورة للزائر بدون خط فاصل زائد */
+  html.ab-role-guest #abOrder111ActionBar {
+    padding: 10px !important;
+  }
+</style>
+<script data-ab-guest-clean="1">
+(function () {
+  if (window.__abGuestCleanModeV1) return;
+  window.__abGuestCleanModeV1 = true;
+
+  var ROLE_KEY = "ab_app_role_v1";
+  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
+  var SESSION_UNLOCK_111 = "ab_submit_unlocked_111_sess";
+
+  function isGuestRole() {
+    if (document.documentElement.classList.contains("ab-role-guest")) return true;
+    try { return localStorage.getItem(ROLE_KEY) === "guest"; } catch (e) { return false; }
+  }
+
+  function tagDynamicGuestHiddenElements() {
+    try {
+      // 1) وسم دائرتَي «تكرار طلب» و «جرد اليوم» في شريط الحالات الدائري
+      var storyItems = document.querySelectorAll("#abImpStoriesWrap .ab-st-item");
+      for (var i = 0; i < storyItems.length; i++) {
+        var st = storyItems[i];
+        var txt = (st.textContent || "").trim();
+        if (st.querySelector(".action-ring") || txt.indexOf("جرد اليوم") !== -1 || txt.indexOf("تكرار طلب") !== -1) {
+          if (st.getAttribute("data-ab-guest-hide") !== "1") {
+            st.setAttribute("data-ab-guest-hide", "1");
+          }
+        }
+      }
+
+      // 2) وسم زر ترس الإعدادات (⚙) وأي أزرار إدارة/طابعة حرارية داخل الفاتورة
+      var scopes = [document.getElementById("abSilentOrderBox"), document.getElementById("invoiceView")];
+      for (var s = 0; s < scopes.length; s++) {
+        var root = scopes[s];
+        if (!root) continue;
+        var btns = root.querySelectorAll("button, a");
+        for (var b = 0; b < btns.length; b++) {
+          var el = btns[b];
+          if (!el || el.closest("#abOrder111ActionBar")) continue;
+          var bt = (el.textContent || "").replace(/\s+/g, " ").trim();
+          var bid = (el.id || "").toLowerCase();
+          var isSecretOrRepTool =
+            bt === "⚙" || bt === "⚙️" ||
+            bt.indexOf("⚙") !== -1 ||
+            bt.indexOf("إدارة المناديب") !== -1 ||
+            bt.indexOf("حراري") !== -1 ||
+            bt.indexOf("80mm") !== -1 ||
+            bt.indexOf("موقع المحل") !== -1 ||
+            bid.indexOf("gear") !== -1 ||
+            bid.indexOf("admin") !== -1;
+
+          if (isSecretOrRepTool && el.getAttribute("data-ab-guest-hide") !== "1") {
+            el.setAttribute("data-ab-guest-hide", "1");
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  function enforceGuestCleanProtection() {
+    tagDynamicGuestHiddenElements();
+    if (!isGuestRole()) return;
+
+    var html = document.documentElement;
+    if (!html.classList.contains("ab-role-guest")) html.classList.add("ab-role-guest");
+    if (!html.classList.contains("ab-prices-hidden")) html.classList.add("ab-prices-hidden");
+    if (!html.classList.contains("ab-inv-prices-hidden")) html.classList.add("ab-inv-prices-hidden");
+    if (!html.classList.contains("ab-submit-locked-111")) html.classList.add("ab-submit-locked-111");
+
+    try {
+      if (localStorage.getItem(PRICE_SECRET_KEY) === "1") localStorage.removeItem(PRICE_SECRET_KEY);
+      if (sessionStorage.getItem(SESSION_UNLOCK_111) === "1") sessionStorage.removeItem(SESSION_UNLOCK_111);
+    } catch (e) {}
+  }
+
+  // تصفير جلسة 111 فوراً عند الضغط على «الدخول كزائر»
+  document.addEventListener("click", function (ev) {
+    var gBtn = ev.target && ev.target.closest ? ev.target.closest("#abGateGuestGo") : null;
+    if (gBtn) {
+      try {
+        sessionStorage.removeItem(SESSION_UNLOCK_111);
+        localStorage.removeItem(PRICE_SECRET_KEY);
+      } catch (e) {}
+      setTimeout(enforceGuestCleanProtection, 80);
+    }
+    setTimeout(enforceGuestCleanProtection, 200);
+  }, true);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(enforceGuestCleanProtection, 220); });
+  } else {
+    setTimeout(enforceGuestCleanProtection, 220);
+  }
+  setTimeout(enforceGuestCleanProtection, 950);
+  setInterval(enforceGuestCleanProtection, 1500);
+})();
+</script>
+<!-- ABUDHIYA_GUEST_CLEAN_MODE_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -17135,7 +17299,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-589305";
+  var TARGET_CACHE = "abudhiya-offline-v4-602315";
 
   function forceReleaseSplash() {
     try {
