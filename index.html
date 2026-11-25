@@ -13834,17 +13834,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_SPLIT_UNITS_WA_END -->
 
 
+
+
 <!-- ABUDHIYA_NEW_ARRIVAL_STATUS_START -->
-<style id="abNewArrivalStatusStyle" data-new-status="1">
-  /* 1) شريط حالات المنتجات الجديدة في أعلى المتجر فور الدخول */
+<style id="abNewArrivalStatusStyle" data-new-status="2">
+  /* 1) شريط حالات العروض الخاصة والمنتجات الجديدة أعلى المتجر فور الدخول */
   #abNewStatusBar {
     direction: rtl;
     margin: 6px 10px 6px;
     padding: 9px 9px 8px;
     border-radius: 16px;
-    background: linear-gradient(150deg, rgba(28, 22, 11, 0.98) 0%, rgba(11, 12, 18, 0.99) 62%, rgba(22, 17, 9, 0.98) 100%);
-    border: 1.4px solid rgba(250, 204, 21, 0.78);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55), 0 0 18px rgba(212, 175, 55, 0.16), inset 0 1px 0 rgba(255, 250, 205, 0.25);
+    background: linear-gradient(150deg, rgba(28, 22, 11, 0.98) 0%, rgba(11, 12, 18, 0.99) 62%, rgba(24, 15, 10, 0.98) 100%);
+    border: 1.4px solid rgba(250, 204, 21, 0.8);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55), 0 0 18px rgba(212, 175, 55, 0.18), inset 0 1px 0 rgba(255, 250, 205, 0.25);
     box-sizing: border-box;
     display: none;
   }
@@ -13902,9 +13904,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   .ab-ns-track::-webkit-scrollbar { display: none; }
 
-  /* بطاقة الحالة الفاخرة (تجمع شكل حالة الواتساب + صورة واضحة + السعر الذهبي) */
   .ab-ns-card {
-    flex: 0 0 172px;
+    flex: 0 0 186px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -13921,6 +13922,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-tap-highlight-color: transparent;
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.42);
   }
+  .ab-ns-card.is-offer {
+    border-color: rgba(249, 115, 22, 0.85);
+    background: linear-gradient(145deg, rgba(46, 16, 12, 0.96) 0%, rgba(18, 12, 16, 0.98) 60%, rgba(30, 20, 10, 0.97) 100%);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25), inset 0 1px 0 rgba(254, 215, 170, 0.22);
+  }
   .ab-ns-card.single-hero {
     flex: 1 1 100%;
     padding: 9px 10px;
@@ -13929,16 +13935,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-color: #fef08a;
     filter: brightness(1.08);
   }
+
   .ab-ns-ring {
     position: relative;
-    width: 56px;
-    height: 56px;
-    flex: 0 0 56px;
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
     border-radius: 50%;
     padding: 2.5px;
     background: conic-gradient(from 0deg, #facc15, #f97316, #fef08a, #d4af37, #facc15);
     box-shadow: 0 0 14px rgba(250, 204, 21, 0.35);
     box-sizing: border-box;
+  }
+  .ab-ns-card.is-offer .ab-ns-ring {
+    background: conic-gradient(from 0deg, #ef4444, #f97316, #facc15, #dc2626, #ef4444);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.48);
   }
   .ab-ns-ring-inner {
     width: 100%;
@@ -13962,7 +13973,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     position: absolute;
     bottom: -3px;
     right: -3px;
-    padding: 1px 5px;
+    padding: 1px 6px;
     border-radius: 999px;
     background: linear-gradient(135deg, #ef4444, #b91c1c);
     color: #ffffff;
@@ -13972,25 +13983,91 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     line-height: 1.3;
     white-space: nowrap;
   }
+  .ab-ns-card.is-offer .ab-ns-badge {
+    background: linear-gradient(135deg, #f97316, #dc2626);
+    color: #fef9c3;
+  }
+
   .ab-ns-info {
     min-width: 0;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
   }
   .ab-ns-name {
     font-size: 11.5px;
     font-weight: 900;
     color: #ffffff;
-    line-height: 1.3;
+    line-height: 1.28;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .ab-ns-offer-mini {
+    font-size: 10px;
+    font-weight: 900;
+    color: #86efac;
+    background: rgba(5, 150, 105, 0.22);
+    border: 1px solid rgba(52, 211, 153, 0.5);
+    border-radius: 7px;
+    padding: 1.5px 6px;
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ab-ns-timer-mini {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #fed7aa;
+    white-space: nowrap;
+  }
 
-  /* حماية مطلقة لظهور سعر الحالة الجديدة حتى عند قفل أسعار باقي الكتالوج */
+  /* حماية مطلقة لظهور الأسعار والخصم داخل بطاقات وعارض العروض حتى مع قفل أسعار الكتالوج */
+  .ab-ns-price-row,
+  html.ab-prices-hidden #abNewStatusBar .ab-ns-price-row,
+  html.ab-prices-hidden #abNewStatusViewer .ab-ns-price-row {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .ab-ns-old-price,
+  html.ab-prices-hidden #abNewStatusBar .ab-ns-old-price,
+  html.ab-prices-hidden #abNewStatusViewer .ab-ns-old-price {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    visibility: visible !important;
+    opacity: 0.85 !important;
+    color: #fca5a5 !important;
+    -webkit-text-fill-color: #fca5a5 !important;
+    text-decoration: line-through !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+  .ab-ns-save-pill,
+  html.ab-prices-hidden #abNewStatusBar .ab-ns-save-pill,
+  html.ab-prices-hidden #abNewStatusViewer .ab-ns-save-pill {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    padding: 1px 6px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #dc2626, #ea580c) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 9.5px !important;
+    font-weight: 900 !important;
+    white-space: nowrap !important;
+  }
   .ab-ns-price-tag,
   html.ab-prices-hidden #abNewStatusBar .ab-ns-price-tag,
   html.ab-prices-hidden #abNewStatusViewer .ab-ns-price-tag {
@@ -14014,16 +14091,28 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-shadow: 0 2px 8px rgba(212, 175, 55, 0.35) !important;
     white-space: nowrap !important;
   }
-  .ab-ns-pcur::after {
-    content: " " attr(data-cur);
-  }
-  .ab-ns-punit {
+  .ab-ns-pcur::after { content: " " attr(data-cur); }
+  .ab-ns-punit { font-size: 9.5px !important; font-weight: 800 !important; opacity: 0.85 !important; }
+
+  /* شارة العرض على بطاقة الصنف نفسها في الكتالوج (أسفل اليمين — 0px إزاحة) */
+  .ab-hd-img-wrap .ab-offer-corner-tag {
+    position: absolute !important;
+    bottom: 4px !important;
+    right: 4px !important;
+    z-index: 9 !important;
+    padding: 2px 7px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%) !important;
+    color: #fef9c3 !important;
     font-size: 9.5px !important;
-    font-weight: 800 !important;
-    opacity: 0.85 !important;
+    font-weight: 900 !important;
+    border: 1px solid #fde047 !important;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.5) !important;
+    pointer-events: none !important;
+    line-height: 1.3 !important;
   }
 
-  /* 2) عارض الحالة الاحترافي بملء الشاشة (بأسلوب حالات الواتساب الفاخرة) */
+  /* 2) عارض الحالة والعرض بملء الشاشة */
   #abNewStatusViewer {
     position: fixed !important;
     inset: 0 !important;
@@ -14039,48 +14128,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #ffffff !important;
     font-family: inherit !important;
   }
-  #abNewStatusViewer.open {
-    display: flex !important;
+  #abNewStatusViewer.open { display: flex !important; }
+  #abNewStatusViewer.offer-theme {
+    background: radial-gradient(circle at 50% 25%, #3b120c 0%, #110a0d 58%, #050609 100%) !important;
   }
 
-  .ab-nsv-top {
-    width: 100%;
-    max-width: 430px;
-  }
-  .ab-nsv-bars {
-    display: flex;
-    gap: 5px;
-    width: 100%;
-    margin-bottom: 10px;
-    direction: ltr;
-  }
-  .ab-nsv-bar-track {
-    flex: 1;
-    height: 3.5px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.22);
-    overflow: hidden;
-  }
-  .ab-nsv-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #facc15, #fef08a);
-    border-radius: 999px;
-  }
+  .ab-nsv-top { width: 100%; max-width: 430px; }
+  .ab-nsv-bars { display: flex; gap: 5px; width: 100%; margin-bottom: 10px; direction: ltr; }
+  .ab-nsv-bar-track { flex: 1; height: 3.5px; border-radius: 999px; background: rgba(255, 255, 255, 0.22); overflow: hidden; }
+  .ab-nsv-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #facc15, #fef08a); border-radius: 999px; }
   .ab-nsv-bar-fill.done { width: 100%; }
 
-  .ab-nsv-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .ab-nsv-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-align: right;
-  }
+  .ab-nsv-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .ab-nsv-brand { display: flex; align-items: center; gap: 8px; text-align: right; }
   .ab-nsv-avatar {
     width: 38px;
     height: 38px;
@@ -14093,22 +14153,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     justify-content: center;
     font-size: 17px;
   }
-  .ab-nsv-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .ab-nsv-btitle {
-    font-size: 13px;
-    font-weight: 900;
-    color: #fef08a;
-    line-height: 1.25;
-  }
-  .ab-nsv-bsub {
-    font-size: 10.5px;
-    font-weight: 700;
-    color: #cbd5e1;
-  }
+  .ab-nsv-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .ab-nsv-btitle { font-size: 13px; font-weight: 900; color: #fef08a; line-height: 1.25; }
+  .ab-nsv-bsub { font-size: 10.5px; font-weight: 700; color: #cbd5e1; }
   .ab-nsv-close {
     width: 34px;
     height: 34px;
@@ -14133,9 +14180,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     position: relative;
-    padding: 8px 0;
+    padding: 6px 0;
     box-sizing: border-box;
     overflow-y: auto;
   }
@@ -14143,21 +14190,33 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 14px;
+    padding: 5px 15px;
     border-radius: 999px;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.92), rgba(185, 28, 28, 0.95));
-    border: 1px solid rgba(254, 240, 138, 0.75);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.94), rgba(185, 28, 28, 0.96));
+    border: 1px solid rgba(254, 240, 138, 0.8);
     color: #ffffff;
+    font-size: 12px;
+    font-weight: 900;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.42);
+  }
+  .ab-nsv-timer-pill {
+    display: none;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(249, 115, 22, 0.22);
+    border: 1px solid rgba(251, 146, 60, 0.72);
+    color: #fed7aa;
     font-size: 11.5px;
     font-weight: 900;
-    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
   }
+  .ab-nsv-timer-pill.show { display: inline-flex; }
+
   .ab-nsv-photo-card {
     position: relative;
-    width: 248px;
-    height: 248px;
-    max-width: 68vw;
-    max-height: 34vh;
+    width: 235px;
+    height: 235px;
+    max-width: 64vw;
+    max-height: 31vh;
     border-radius: 22px;
     background: #ffffff;
     border: 2.5px solid #d4af37;
@@ -14168,12 +14227,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     justify-content: center;
     box-sizing: border-box;
   }
-  .ab-nsv-photo-card img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
+  #abNewStatusViewer.offer-theme .ab-nsv-photo-card {
+    border-color: #f97316;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.75), 0 0 36px rgba(239, 68, 68, 0.35);
   }
+  .ab-nsv-photo-card img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
   .ab-nsv-nav-btn {
     position: absolute;
     top: 50%;
@@ -14196,7 +14254,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   .ab-nsv-nav-btn.next { left: 0; }
 
   .ab-nsv-prod-name {
-    font-size: 18px;
+    font-size: 17.5px;
     font-weight: 900;
     color: #ffffff;
     text-align: center;
@@ -14204,6 +14262,30 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 0 8px;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
   }
+  .ab-nsv-offer-callout {
+    display: none;
+    padding: 8px 16px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.34), rgba(6, 78, 59, 0.85));
+    border: 1.3px solid #34d399;
+    color: #ecfdf5;
+    font-size: 13.5px;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.32);
+  }
+  .ab-nsv-offer-callout.show { display: block; }
+
+  .ab-nsv-hero-price {
+    padding: 8px 20px !important;
+    font-size: 19px !important;
+    border: 1.5px solid #fef9c3 !important;
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+  }
+  .ab-nsv-hero-price .ab-ns-punit { font-size: 13px !important; }
+  .ab-nsv-hero-old { font-size: 14px !important; }
+  .ab-nsv-hero-save { font-size: 12px !important; padding: 4px 10px !important; }
+
   .ab-nsv-note {
     font-size: 12px;
     font-weight: 700;
@@ -14211,17 +14293,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     text-align: center;
     line-height: 1.5;
     max-width: 340px;
-  }
-
-  /* شارة السعر الملكية الكبيرة داخل عارض الحالة */
-  .ab-nsv-hero-price {
-    padding: 8px 22px !important;
-    font-size: 20px !important;
-    border: 1.5px solid #fef9c3 !important;
-    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
-  }
-  .ab-nsv-hero-price .ab-ns-punit {
-    font-size: 13px !important;
   }
 
   .ab-nsv-bottom {
@@ -14233,18 +14304,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 10px 10px 11px;
     box-sizing: border-box;
   }
-  .ab-nsv-qtitle {
-    font-size: 11px;
-    font-weight: 800;
-    color: #fef08a;
-    text-align: center;
-    margin-bottom: 7px;
-  }
-  .ab-nsv-qgrid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-  }
+  .ab-nsv-qtitle { font-size: 11px; font-weight: 800; color: #fef08a; text-align: center; margin-bottom: 7px; }
+  .ab-nsv-qgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
   .ab-nsv-qbtn {
     padding: 10px 4px;
     border-radius: 10px;
@@ -14256,18 +14317,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-family: inherit;
     cursor: pointer;
   }
-  .ab-nsv-qbtn:active {
-    background: linear-gradient(135deg, #d4af37, #facc15);
-    color: #09090b;
-  }
+  .ab-nsv-qbtn:active { background: linear-gradient(135deg, #d4af37, #facc15); color: #09090b; }
 </style>
-<script data-ab-new-status="1">
+<script data-ab-new-status="2">
 (function () {
-  if (window.__abNewArrivalStatusV1) return;
-  window.__abNewArrivalStatusV1 = true;
+  if (window.__abNewArrivalStatusV2) return;
+  window.__abNewArrivalStatusV2 = true;
 
   var INLINE_CFG = {"autoPopupOnFirstVisit": true, "autoFallbackNewest": true, "items": []};
-  var SEEN_KEY = "ab_new_status_seen_sig_v1";
+  var SEEN_KEY = "ab_new_status_seen_sig_v2";
   var _activeItems = [];
   var _curIdx = 0;
   var _autoTimer = null;
@@ -14276,6 +14334,17 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   function notify(msg) {
     try { if (typeof showToast === "function") showToast(msg); } catch (e) {}
+  }
+
+  function normAr(s) {
+    return String(s || "")
+      .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+      .replace(/[أإآٱ]/g, "ا")
+      .replace(/ة/g, "ه")
+      .replace(/ى/g, "ي")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
   }
 
   function getProductsArr() {
@@ -14314,24 +14383,59 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return n.toLocaleString("en-US");
   }
 
-  function buildPriceTagHtml(price, unitLabel, extraClass) {
-    var pStr = formatNum(price);
-    if (!pStr) return "";
-    var uHtml = unitLabel ? ('<span class="ab-ns-punit">/ ' + unitLabel + '</span>') : "";
-    return (
-      '<span class="ab-ns-price-tag ' + (extraClass || "") + '">' +
-        '<span class="ab-ns-pnum">' + pStr + '</span>' +
-        '<span class="ab-ns-pcur" data-cur="ر.ي"></span>' +
-        uHtml +
-      '</span>'
-    );
+  function formatRemainingTime(expiresAt) {
+    if (!expiresAt) return "";
+    var ts = typeof expiresAt === "number" ? expiresAt : Date.parse(expiresAt);
+    if (!isFinite(ts)) return "";
+    var diff = ts - Date.now();
+    if (diff <= 0) return "EXPIRED";
+    var mins = Math.floor(diff / 60000);
+    var days = Math.floor(mins / 1440);
+    var hrs = Math.floor((mins % 1440) / 60);
+    var remM = mins % 60;
+    if (days > 0) return "⏳ متبقي: " + days + " يوم" + (hrs > 0 ? (" و " + hrs + " س") : "");
+    if (hrs > 0) return "⏳ متبقي: " + hrs + " س" + (remM > 0 ? (" و " + remM + " د") : "");
+    return "⏳ متبقي: " + Math.max(1, remM) + " دقيقة";
+  }
+
+  function buildPriceRowHtml(item, isHero) {
+    var p = Number(item.price || 0);
+    var oldP = Number(item.oldPrice || 0);
+    var pStr = formatNum(p);
+    var oldStr = (oldP > 0 && (p <= 0 || oldP > p)) ? formatNum(oldP) : "";
+    if (!pStr && !oldStr) return "";
+
+    var html = '<div class="ab-ns-price-row"' + (isHero ? ' style="justify-content:center"' : '') + '>';
+    if (oldStr) {
+      html += '<span class="ab-ns-old-price ' + (isHero ? 'ab-nsv-hero-old' : '') + '"><span>' + oldStr + '</span><span class="ab-ns-pcur" data-cur="ر.ي"></span></span>';
+    }
+    if (pStr) {
+      var uHtml = item.unit ? ('<span class="ab-ns-punit">/ ' + item.unit + '</span>') : "";
+      html +=
+        '<span class="ab-ns-price-tag ' + (isHero ? 'ab-nsv-hero-price' : '') + '">' +
+          '<span class="ab-ns-pnum">' + pStr + '</span>' +
+          '<span class="ab-ns-pcur" data-cur="ر.ي"></span>' +
+          uHtml +
+        '</span>';
+    }
+    if (oldP > p && p > 0) {
+      var pct = Math.round(((oldP - p) / oldP) * 100);
+      if (pct >= 1) {
+        html += '<span class="ab-ns-save-pill ' + (isHero ? 'ab-nsv-hero-save' : '') + '">وفّر ' + pct + '%</span>';
+      }
+    }
+    html += '</div>';
+    return html;
   }
 
   function resolveStatusItems(cfg) {
     var prods = getProductsArr();
     var byId = {};
+    var byName = {};
     for (var p = 0; p < prods.length; p++) {
-      if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      if (!prods[p]) continue;
+      if (prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      if (prods[p].name) byName[normAr(prods[p].name)] = prods[p];
     }
 
     var manual = (cfg && Array.isArray(cfg.items)) ? cfg.items : [];
@@ -14340,26 +14444,46 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     for (var i = 0; i < manual.length; i++) {
       var it = manual[i];
       if (!it || it.active === false) continue;
-      var matchedProd = (it.productId !== undefined && byId[String(it.productId)]) ? byId[String(it.productId)] : null;
+
+      // استبعاد العروض المنتهية تلقائياً
+      if (it.expiresAt) {
+        var rem = formatRemainingTime(it.expiresAt);
+        if (rem === "EXPIRED") continue;
+      }
+
+      var matchedProd = null;
+      if (it.productId !== undefined && byId[String(it.productId)]) matchedProd = byId[String(it.productId)];
+      else if (it.name && byName[normAr(it.name)]) matchedProd = byName[normAr(it.name)];
+
       var name = String(it.name || (matchedProd && matchedProd.name) || "").trim();
       var img = String(it.img || it.image || (matchedProd && (matchedProd.img || matchedProd.image || matchedProd.imageUrl)) || "").trim();
-      var price = Number(it.price || (matchedProd && (matchedProd.wholesalePrice || matchedProd.price || matchedProd.p)) || 0);
+      var basePrice = matchedProd ? Number(matchedProd.wholesalePrice || matchedProd.price || matchedProd.p || 0) : 0;
+      var price = Number(it.price || basePrice || 0);
+      var oldPrice = Number(it.oldPrice || 0);
+      var offerText = String(it.offerText || "").trim();
+      var kind = String(it.type || ((oldPrice > price || offerText) ? "offer" : "new")).toLowerCase();
+      var isOffer = (kind === "offer");
       if (!name) continue;
+
       out.push({
-        id: String(it.id || it.productId || ("new_" + i)),
+        id: String(it.id || it.productId || ("st_" + i)),
         productId: matchedProd ? matchedProd.id : (it.productId !== undefined ? it.productId : ("new_status_" + i)),
+        type: isOffer ? "offer" : "new",
+        isOffer: isOffer,
         name: name,
         img: img,
         price: price,
+        oldPrice: oldPrice,
+        offerText: offerText,
+        expiresAt: it.expiresAt || null,
         unit: detectUnitLabel(it, matchedProd),
-        badge: String(it.badge || "جديد").trim(),
-        note: String(it.note || "🆕 وصل حديثاً إلى أبوسيف للتجارة العامة — اطلب كميتك الآن بلمسة واحدة").trim(),
+        badge: String(it.badge || (isOffer ? "🔥 عرض" : "جديد")).trim(),
+        note: String(it.note || (isOffer ? "🔥 عرض خاص لفترة محدودة من أبوسيف للتجارة العامة — استفد منه الآن!" : "🆕 وصل حديثاً إلى أبوسيف للتجارة العامة — اطلب كميتك الآن بلمسة واحدة")).trim(),
         isManual: true,
         prodRef: matchedProd
       });
     }
 
-    // في حال عدم إضافة منتج جديد يدوياً بعد، يعرض تلقائياً أحدث 4 أصناف في المتجر كحالات «وصل حديثاً»
     if (!out.length && (!cfg || cfg.autoFallbackNewest !== false) && prods.length) {
       var withImg = [];
       for (var k = prods.length - 1; k >= 0 && withImg.length < 4; k--) {
@@ -14371,9 +14495,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         withImg.push({
           id: "auto_" + String(pr.id),
           productId: pr.id,
+          type: "new",
+          isOffer: false,
           name: String(pr.name).trim(),
           img: pImg,
           price: pPrice,
+          oldPrice: 0,
+          offerText: "",
+          expiresAt: null,
           unit: detectUnitLabel(null, pr),
           badge: "جديد",
           note: "✨ متوفر الآن للطلب الفوري من متجر أبوسيف للتجارة العامة",
@@ -14387,15 +14516,50 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return out;
   }
 
+  function decorateCatalogOfferCards(items) {
+    try {
+      var offers = items.filter(function (x) { return x.isManual && x.isOffer; });
+      if (!offers.length) return;
+      var offerById = {};
+      var offerByName = {};
+      for (var i = 0; i < offers.length; i++) {
+        offerById[String(offers[i].productId)] = offers[i];
+        offerByName[normAr(offers[i].name)] = offers[i];
+      }
+
+      var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+      for (var c = 0; c < cards.length; c++) {
+        var card = cards[c];
+        var wrap = card.querySelector(".ab-hd-img-wrap");
+        if (!wrap) continue;
+        var pid = card.getAttribute("data-ab-prod-id") || "";
+        var tEl = card.querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+        var nm = tEl ? normAr(tEl.textContent || "") : "";
+        var hit = (pid && offerById[pid]) || (nm && offerByName[nm]) || null;
+        var oldTag = wrap.querySelector(".ab-offer-corner-tag");
+        if (hit) {
+          var lbl = hit.badge || "🔥 عرض";
+          if (hit.oldPrice > hit.price && hit.price > 0) {
+            lbl = "🔥 -" + Math.round(((hit.oldPrice - hit.price) / hit.oldPrice) * 100) + "%";
+          }
+          if (!oldTag) {
+            oldTag = document.createElement("span");
+            oldTag.className = "ab-offer-corner-tag";
+            wrap.appendChild(oldTag);
+          }
+          if (oldTag.textContent !== lbl) oldTag.textContent = lbl;
+        } else if (oldTag) {
+          oldTag.remove();
+        }
+      }
+    } catch (e) {}
+  }
+
   function addStatusItemToCart(item, qtyToAdd) {
     if (!item || qtyToAdd <= 0) return;
     var cartObj = getCartObj();
-    if (!cartObj) {
-      notify("⚠️ تعذر إضافة الصنف للسلة حالياً");
-      return;
-    }
+    if (!cartObj) { notify("⚠️ تعذر إضافة الصنف للسلة حالياً"); return; }
 
-    // إذا كان المنتج جديداً تماماً وغير مدرج بعد في PRODUCTS نُسجّله مؤقتاً ليظهر في الفاتورة والإيصال والواتساب
     var prods = getProductsArr();
     var targetId = item.productId;
     var exists = false;
@@ -14416,7 +14580,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     var nextQty = Number(cartObj[targetId] || 0) + Number(qtyToAdd);
     cartObj[targetId] = nextQty;
 
-    // تحديث شارات البطاقة وعداد السلة والفاتورة بأمان
     try {
       var card = document.querySelector('[data-ab-pro-card="1"][data-ab-prod-id="' + String(targetId).replace(/"/g, "") + '"]');
       if (card) {
@@ -14435,18 +14598,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     notify("✅ تمت إضافة +" + qtyToAdd + " " + (item.unit || "كيس") + " من «" + item.name + "» (الإجمالي: " + nextQty + ")");
   }
 
-  /* ---------------- عارض الحالة بملء الشاشة ---------------- */
+  /* ---------------- عارض الحالة والعرض بملء الشاشة ---------------- */
   function clearStoryTimers() {
     if (_autoTimer) { clearTimeout(_autoTimer); _autoTimer = null; }
     if (_progressRaf) { cancelAnimationFrame(_progressRaf); _progressRaf = null; }
   }
-
   function closeViewer() {
     clearStoryTimers();
     var v = document.getElementById("abNewStatusViewer");
     if (v) v.classList.remove("open");
   }
-
   function ensureViewerDom() {
     var v = document.getElementById("abNewStatusViewer");
     if (v) return v;
@@ -14457,10 +14618,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '<div class="ab-nsv-bars" id="abNsvBars"></div>' +
         '<div class="ab-nsv-header">' +
           '<div class="ab-nsv-brand">' +
-            '<div class="ab-nsv-avatar"><img src="/abusaif-3d-192.png" onerror="this.style.display=\'none\';this.parentNode.textContent=\'⚔️\'" alt=""></div>' +
+            '<div class="ab-nsv-avatar"><img id="abNsvLogoImg" src="/abusaif-3d-192.png" alt=""></div>' +
             '<div>' +
               '<div class="ab-nsv-btitle">أبوسيف للتجارة العامة</div>' +
-              '<div class="ab-nsv-bsub" id="abNsvCounter">🆕 وصل حديثاً</div>' +
+              '<div class="ab-nsv-bsub" id="abNsvCounter">✨ جديدنا وعروضنا</div>' +
             '</div>' +
           '</div>' +
           '<button type="button" class="ab-nsv-close" id="abNsvCloseBtn" aria-label="إغلاق">✕</button>' +
@@ -14469,9 +14630,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       '<div class="ab-nsv-stage">' +
         '<button type="button" class="ab-nsv-nav-btn prev" id="abNsvPrevBtn" aria-label="السابق">‹</button>' +
         '<button type="button" class="ab-nsv-nav-btn next" id="abNsvNextBtn" aria-label="التالي">›</button>' +
-        '<div class="ab-nsv-ribbon" id="abNsvRibbon">🆕 وصل حديثاً</div>' +
+        '<div class="ab-nsv-ribbon" id="abNsvRibbon"></div>' +
+        '<div class="ab-nsv-timer-pill" id="abNsvTimerPill"></div>' +
         '<div class="ab-nsv-photo-card"><img id="abNsvImg" alt=""></div>' +
         '<div class="ab-nsv-prod-name" id="abNsvName"></div>' +
+        '<div class="ab-nsv-offer-callout" id="abNsvOfferCallout"></div>' +
         '<div id="abNsvPriceSlot"></div>' +
         '<div class="ab-nsv-note" id="abNsvNote"></div>' +
       '</div>' +
@@ -14481,6 +14644,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       '</div>';
     document.body.appendChild(v);
 
+    var logoImg = document.getElementById("abNsvLogoImg");
+    if (logoImg) {
+      logoImg.addEventListener("error", function () {
+        this.style.display = "none";
+        if (this.parentNode) this.parentNode.textContent = "⚔️";
+      });
+    }
     document.getElementById("abNsvCloseBtn").addEventListener("click", closeViewer);
     document.getElementById("abNsvPrevBtn").addEventListener("click", function () {
       if (_curIdx > 0) showStatusAt(_curIdx - 1);
@@ -14501,8 +14671,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
     var v = ensureViewerDom();
     var item = _activeItems[idx];
+    v.classList.toggle("offer-theme", !!item.isOffer);
 
-    // رسم أشرطة التقدّم العلوية (مثل حالات الواتساب)
     var barsWrap = document.getElementById("abNsvBars");
     barsWrap.innerHTML = "";
     for (var i = 0; i < _activeItems.length; i++) {
@@ -14515,11 +14685,32 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       barsWrap.appendChild(tr);
     }
 
-    document.getElementById("abNsvCounter").textContent = "🆕 جديدنا (" + (idx + 1) + " / " + _activeItems.length + ")";
-    document.getElementById("abNsvRibbon").textContent = "✨ " + (item.badge || "وصل حديثاً") + " ✨";
+    document.getElementById("abNsvCounter").textContent =
+      (item.isOffer ? "🔥 عرض خاص (" : "🆕 وصل حديثاً (") + (idx + 1) + " / " + _activeItems.length + ")";
+    document.getElementById("abNsvRibbon").textContent =
+      item.isOffer ? ("🔥 " + (item.badge || "عرض خاص لفترة محدودة") + " 🔥") : ("✨ " + (item.badge || "وصل حديثاً") + " ✨");
+
+    var timerEl = document.getElementById("abNsvTimerPill");
+    var remTxt = item.expiresAt ? formatRemainingTime(item.expiresAt) : "";
+    if (remTxt && remTxt !== "EXPIRED") {
+      timerEl.textContent = remTxt;
+      timerEl.classList.add("show");
+    } else {
+      timerEl.classList.remove("show");
+    }
+
     document.getElementById("abNsvImg").src = item.img || "";
     document.getElementById("abNsvName").textContent = item.name;
-    document.getElementById("abNsvPriceSlot").innerHTML = buildPriceTagHtml(item.price, item.unit, "ab-nsv-hero-price");
+
+    var callout = document.getElementById("abNsvOfferCallout");
+    if (item.offerText) {
+      callout.textContent = "🎁 " + item.offerText;
+      callout.classList.add("show");
+    } else {
+      callout.classList.remove("show");
+    }
+
+    document.getElementById("abNsvPriceSlot").innerHTML = buildPriceRowHtml(item, true);
     document.getElementById("abNsvNote").textContent = item.note || "";
 
     var prevBtn = document.getElementById("abNsvPrevBtn");
@@ -14538,18 +14729,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         b.type = "button";
         b.className = "ab-nsv-qbtn";
         b.textContent = "+" + amt;
-        b.addEventListener("click", function () {
-          addStatusItemToCart(item, amt);
-        });
+        b.addEventListener("click", function () { addStatusItemToCart(item, amt); });
         qgrid.appendChild(b);
       })(steps[s]);
     }
 
     v.classList.add("open");
 
-    // تقدّم سلس للحالة (9 ثوانٍ لكل منتج جديد ليتأمل العميل الصورة والسعر براحته)
     clearStoryTimers();
-    var durationMs = 9000;
+    var durationMs = 10000;
     var startedAt = Date.now();
     var curFill = document.getElementById("abNsvCurFill");
     function tick() {
@@ -14577,7 +14765,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       bar.id = "abNewStatusBar";
       bar.innerHTML =
         '<div class="ab-ns-head">' +
-          '<span class="ab-ns-head-title"><span class="ab-ns-live-dot"></span>🆕 جديدنا • وصل حديثاً</span>' +
+          '<span class="ab-ns-head-title" id="abNsHeadTitle"><span class="ab-ns-live-dot"></span>🆕 جديدنا • وصل حديثاً</span>' +
           '<span class="ab-ns-head-hint">اضغط للمعاينة 👆</span>' +
         '</div>' +
         '<div class="ab-ns-track" id="abNewStatusTrack"></div>';
@@ -14589,6 +14777,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       return;
     }
 
+    var hasOffers = _activeItems.some(function (x) { return x.isOffer; });
+    var hasNew = _activeItems.some(function (x) { return !x.isOffer; });
+    var headTitleEl = document.getElementById("abNsHeadTitle");
+    if (headTitleEl) {
+      var labelTxt = (hasOffers && hasNew)
+        ? "🔥 عروضنا الخاصة وجديدنا"
+        : (hasOffers ? "🔥 عروض خاصة لفترة محدودة" : "🆕 جديدنا • وصل حديثاً");
+      headTitleEl.innerHTML = '<span class="ab-ns-live-dot"></span>' + labelTxt;
+    }
+
     var track = document.getElementById("abNewStatusTrack");
     track.innerHTML = "";
     var isSingle = _activeItems.length === 1;
@@ -14597,26 +14795,34 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       (function (idx, item) {
         var card = document.createElement("button");
         card.type = "button";
-        card.className = "ab-ns-card" + (isSingle ? " single-hero" : "");
+        card.className = "ab-ns-card" + (item.isOffer ? " is-offer" : "") + (isSingle ? " single-hero" : "");
+
+        var remStr = item.expiresAt ? formatRemainingTime(item.expiresAt) : "";
+        var offerMiniHtml = item.offerText ? ('<div class="ab-ns-offer-mini">🎁 ' + item.offerText + '</div>') : "";
+        var timerMiniHtml = (remStr && remStr !== "EXPIRED") ? ('<div class="ab-ns-timer-mini">' + remStr + '</div>') : "";
+
         card.innerHTML =
           '<div class="ab-ns-ring">' +
             '<div class="ab-ns-ring-inner"><img src="' + (item.img || "") + '" alt=""></div>' +
-            '<span class="ab-ns-badge">' + (item.badge || "جديد") + '</span>' +
+            '<span class="ab-ns-badge">' + (item.badge || (item.isOffer ? "🔥 عرض" : "جديد")) + '</span>' +
           '</div>' +
           '<div class="ab-ns-info">' +
             '<div class="ab-ns-name">' + item.name + '</div>' +
-            buildPriceTagHtml(item.price, item.unit, "") +
+            offerMiniHtml +
+            buildPriceRowHtml(item, false) +
+            timerMiniHtml +
           '</div>';
         card.addEventListener("click", function () { showStatusAt(idx); });
         track.appendChild(card);
       })(i, _activeItems[i]);
     }
     bar.classList.add("show");
+    decorateCatalogOfferCards(_activeItems);
 
-    // فتح تلقائي لمرة واحدة فقط عند وجود منتج جديد أضافه صاحب المتجر يدوياً ولم يشاهده العميل بعد
+    // فتح تلقائي لمرة واحدة فقط لكل منتج جديد أو عرض خاص جديد يُضاف يدوياً
     if (!_autoOpenedOnce && cfg && cfg.autoPopupOnFirstVisit !== false && _activeItems.some(function (x) { return x.isManual; })) {
       _autoOpenedOnce = true;
-      var sig = _activeItems.map(function (x) { return x.id + ":" + x.price; }).join("|");
+      var sig = _activeItems.map(function (x) { return x.id + ":" + x.price + ":" + (x.offerText || ""); }).join("|");
       var lastSeen = "";
       try { lastSeen = localStorage.getItem(SEEN_KEY) || ""; } catch (e) {}
       if (sig && sig !== lastSeen) {
@@ -14628,7 +14834,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   function bootNewStatus() {
     try { renderStatusBar(INLINE_CFG); } catch (e) {}
-    // تحديث صامت بالخلفية من new_arrivals.json إن وجد اتصال
     try {
       fetch("/new_arrivals.json?v=" + Date.now(), { cache: "no-store" })
         .then(function (r) { return r.ok ? r.json() : null; })
@@ -14646,6 +14851,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   setTimeout(function () {
     if (!document.getElementById("abNewStatusBar")) renderStatusBar(INLINE_CFG);
+    else decorateCatalogOfferCards(_activeItems);
   }, 1100);
 })();
 </script>
@@ -14694,7 +14900,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-579732";
+  var TARGET_CACHE = "abudhiya-offline-v4-581416";
 
   function forceReleaseSplash() {
     try {
