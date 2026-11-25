@@ -12284,139 +12284,298 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_ROYAL_VIP_END -->
 
 
+
+
 <!-- ABUDHIYA_DIRECT_REP_PICKER_START -->
-<style id="abDirectRepPickerStyle" data-direct-rep="1">
-  /* إخفاء القائمة المنسدلة الصغيرة السابقة بصرياً فقط واستبدالها ببطاقات المناديب السهلة مع بقاء أزرار GPS والطباعة */
-  #abImpRepGpsCard .ab-rg-row {
+<style id="abDirectRepPickerStyle" data-direct-rep="2">
+  /* إخفاء القائمة المنسدلة القديمة وإخفاء بطاقة فتح الواتساب عند تفعيل الإرسال الصامت للمندوب */
+  #abImpRepGpsCard .ab-rg-row,
+  html.ab-rep-vault-locked .ab-wa-confirm-card {
     display: none !important;
   }
 
+  /* 1) الشريط العلوي الاحترافي لحالة المندوب (يفتح أمام العميل فور دخوله التطبيق) */
+  #abRepVaultTopBar {
+    direction: rtl;
+    margin: 5px 10px 4px;
+    padding: 8px 11px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(24, 20, 12, 0.97) 0%, rgba(10, 12, 18, 0.98) 100%);
+    border: 1.3px solid rgba(212, 175, 55, 0.72);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(254, 240, 138, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #abRepVaultTopBar.locked {
+    border-color: rgba(52, 211, 153, 0.72);
+    background: linear-gradient(135deg, rgba(8, 28, 22, 0.96) 0%, rgba(10, 14, 20, 0.98) 100%);
+  }
+  .ab-rvt-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+  .ab-rvt-ico {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(250, 204, 21, 0.1));
+    border: 1px solid rgba(250, 204, 21, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex: 0 0 30px;
+  }
+  #abRepVaultTopBar.locked .ab-rvt-ico {
+    background: rgba(16, 185, 129, 0.22);
+    border-color: rgba(52, 211, 153, 0.75);
+  }
+  .ab-rvt-txt {
+    min-width: 0;
+    text-align: right;
+  }
+  .ab-rvt-title {
+    font-size: 12px;
+    font-weight: 900;
+    color: #fef08a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #abRepVaultTopBar.locked .ab-rvt-title {
+    color: #86efac;
+  }
+  .ab-rvt-sub {
+    font-size: 10px;
+    font-weight: 700;
+    color: #cbd5e1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ab-rvt-act {
+    flex: 0 0 auto;
+    padding: 5px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(254, 240, 138, 0.7);
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 10.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  #abRepVaultTopBar.locked .ab-rvt-act {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(212, 175, 55, 0.55);
+    color: #fef08a;
+  }
+
+  /* 2) بطاقة المندوب والإرسال الصامت بلمسة واحدة داخل صندوق تسجيل الطلب */
   #abDirectRepBox {
     direction: rtl;
     margin: 8px 0;
-    padding: 11px 10px 10px;
+    padding: 12px 11px 11px;
     border-radius: 14px;
     background: linear-gradient(155deg, rgba(22, 19, 13, 0.98) 0%, rgba(10, 12, 18, 0.98) 100%);
-    border: 1.4px solid rgba(212, 175, 55, 0.82);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(254, 240, 138, 0.22);
+    border: 1.5px solid rgba(212, 175, 55, 0.85);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(254, 240, 138, 0.22);
     box-sizing: border-box;
   }
-  .ab-dr-head {
+  .ab-rv-lock-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 6px;
     margin-bottom: 8px;
   }
-  .ab-dr-title {
+  .ab-rv-lock-title {
     font-size: 13px;
     font-weight: 900;
     color: #facc15;
   }
-  .ab-dr-hint {
+  .ab-rv-pill {
     font-size: 10px;
-    font-weight: 800;
-    color: #86efac;
-    background: rgba(5, 150, 105, 0.18);
-    border: 1px solid rgba(52, 211, 153, 0.42);
-    padding: 2px 7px;
+    font-weight: 900;
+    padding: 2px 8px;
     border-radius: 999px;
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(52, 211, 153, 0.55);
+    color: #86efac;
     white-space: nowrap;
   }
-  .ab-dr-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    margin-bottom: 9px;
-  }
-  .ab-dr-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 10px 6px 9px;
-    border-radius: 12px;
-    border: 1.3px solid rgba(212, 175, 55, 0.42);
-    background: linear-gradient(180deg, rgba(24, 26, 36, 0.95) 0%, rgba(13, 15, 22, 0.98) 100%);
-    color: #f8fafc;
-    font-family: inherit;
-    cursor: pointer;
-    text-align: center;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .ab-dr-card.selected {
-    border-color: #fde047;
-    background: linear-gradient(145deg, rgba(184, 134, 11, 0.34) 0%, rgba(212, 175, 55, 0.22) 55%, rgba(24, 21, 12, 0.96) 100%);
-    box-shadow: 0 0 16px rgba(250, 204, 21, 0.32), inset 0 1px 0 rgba(255, 250, 205, 0.35);
-  }
-  .ab-dr-check {
-    position: absolute;
-    top: 5px;
-    left: 6px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #10b981;
-    color: #ffffff;
+  .ab-rv-sub {
     font-size: 11px;
-    font-weight: 900;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-  .ab-dr-card.selected .ab-dr-check {
-    display: flex;
-  }
-  .ab-dr-ico {
-    font-size: 20px;
-    line-height: 1;
-  }
-  .ab-dr-name {
-    font-size: 13px;
-    font-weight: 900;
-    color: #fef08a;
-    line-height: 1.25;
-  }
-  .ab-dr-meta {
-    font-size: 10.5px;
     font-weight: 700;
     color: #cbd5e1;
-    line-height: 1.2;
+    margin-bottom: 9px;
+    line-height: 1.55;
   }
-  .ab-dr-send-btn {
+  .ab-rv-inp-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .ab-rv-code-inp {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1.3px solid rgba(212, 175, 55, 0.65);
+    background: #0b0d14;
+    color: #fef08a;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-align: center;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+  }
+  .ab-rv-eye-btn {
+    flex: 0 0 40px;
+    height: 42px;
+    border-radius: 11px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    background: #141722;
+    color: #fef08a;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ab-rv-unlock-btn {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1.2px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 13.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .ab-rv-err {
+    display: none;
+    margin-top: 7px;
+    padding: 6px 9px;
+    border-radius: 9px;
+    background: rgba(153, 27, 27, 0.35);
+    border: 1px solid rgba(248, 113, 113, 0.65);
+    color: #fecaca;
+    font-size: 11.5px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .ab-rv-err.show { display: block; }
+
+  /* بطاقة المندوب المعتمد بعد فتح القفل */
+  .ab-rv-assigned-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 11px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.18) 0%, rgba(12, 17, 26, 0.94) 100%);
+    border: 1.3px solid rgba(52, 211, 153, 0.65);
+    margin-bottom: 9px;
+  }
+  .ab-rv-assigned-name {
+    font-size: 14.5px;
+    font-weight: 900;
+    color: #fef08a;
+    line-height: 1.3;
+  }
+  .ab-rv-assigned-meta {
+    font-size: 11px;
+    font-weight: 700;
+    color: #86efac;
+    margin-top: 2px;
+  }
+  .ab-rv-switch-btn {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border-radius: 9px;
+    border: 1px solid rgba(212, 175, 55, 0.52);
+    background: #141722;
+    color: #fef08a;
+    font-size: 10.5px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .ab-rv-silent-send-btn {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 8px !important;
     width: 100% !important;
-    padding: 13px 12px !important;
+    padding: 14px 12px !important;
     border-radius: 12px !important;
     border: 1.5px solid #fde047 !important;
     background: linear-gradient(135deg, #059669 0%, #10b981 52%, #047857 100%) !important;
     color: #ffffff !important;
-    text-decoration: none !important;
-    font-size: 14px !important;
+    font-size: 14.5px !important;
     font-weight: 900 !important;
     font-family: inherit !important;
     cursor: pointer !important;
     box-sizing: border-box !important;
-    box-shadow: 0 8px 22px rgba(5, 150, 105, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 8px 22px rgba(5, 150, 105, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
   }
-  .ab-dr-send-btn:active {
-    filter: brightness(1.08);
+  .ab-rv-silent-send-btn:active { filter: brightness(1.08); }
+  .ab-rv-silent-send-btn.sending {
+    background: linear-gradient(135deg, #b45309 0%, #d97706 100%) !important;
+    pointer-events: none;
   }
 
-  /* نافذة الإرسال الفوري للمندوب عند الضغط على تسجيل الطلب */
-  #abDirectRepModal {
+  .ab-rv-sent-banner {
+    display: none;
+    margin-top: 9px;
+    padding: 10px 11px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(6, 78, 59, 0.94) 0%, rgba(10, 24, 22, 0.96) 100%);
+    border: 1.4px solid #34d399;
+    color: #ecfdf5;
+    text-align: center;
+    line-height: 1.65;
+  }
+  .ab-rv-sent-banner.show { display: block; }
+  .ab-rv-sent-banner b {
+    color: #fef08a;
+    font-size: 13.5px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .ab-rv-sent-banner span {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #d1fae5;
+  }
+
+  /* 3) نافذة تفعيل المندوب بالرقم السري (تفتح عند لمس الشريط العلوي أو تغيير المندوب) */
+  #abRepVaultModal {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 2147483100 !important;
-    background: rgba(3, 5, 10, 0.88) !important;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    z-index: 2147483200 !important;
+    background: rgba(3, 5, 10, 0.9) !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: none !important;
     align-items: center !important;
     justify-content: center !important;
@@ -12424,26 +12583,22 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     direction: rtl !important;
     box-sizing: border-box !important;
   }
-  #abDirectRepModal.open {
-    display: flex !important;
-  }
-  .ab-drm-card {
+  #abRepVaultModal.open { display: flex !important; }
+  .ab-rvm-box {
     width: 100%;
-    max-width: 390px;
-    max-height: 86vh;
-    overflow-y: auto;
+    max-width: 380px;
     border-radius: 18px;
     background: linear-gradient(165deg, #17150f 0%, #0a0c12 62%, #15120c 100%);
     border: 1.6px solid rgba(212, 175, 55, 0.9);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78);
-    padding: 16px 14px 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    padding: 18px 15px 16px;
     color: #f8fafc;
     font-family: inherit;
     text-align: center;
     position: relative;
     box-sizing: border-box;
   }
-  .ab-drm-close {
+  .ab-rvm-close {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -12461,188 +12616,210 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     justify-content: center;
     padding: 0;
   }
-  .ab-drm-title {
+  .ab-rvm-badge {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(15, 23, 42, 0.9));
+    border: 1.6px solid #facc15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    box-shadow: 0 0 18px rgba(250, 204, 21, 0.28);
+  }
+  .ab-rvm-title {
     font-size: 16px;
     font-weight: 900;
     color: #facc15;
-    margin: 2px 0 5px;
+    margin-bottom: 5px;
   }
-  .ab-drm-sub {
+  .ab-rvm-sub {
     font-size: 12px;
     font-weight: 700;
     color: #cbd5e1;
+    line-height: 1.55;
     margin-bottom: 12px;
-    line-height: 1.5;
-  }
-  .ab-drm-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .ab-drm-rep-link {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 10px !important;
-    padding: 12px 13px !important;
-    border-radius: 13px !important;
-    border: 1.4px solid rgba(254, 240, 138, 0.72) !important;
-    background: linear-gradient(135deg, #065f46 0%, #047857 52%, #0f766e 100%) !important;
-    color: #ffffff !important;
-    text-decoration: none !important;
-    box-sizing: border-box !important;
-    box-shadow: 0 8px 20px rgba(4, 120, 87, 0.38) !important;
-    text-align: right !important;
-  }
-  .ab-drm-rep-link.active-rep {
-    border-color: #facc15 !important;
-    background: linear-gradient(135deg, #059669 0%, #10b981 55%, #0d9488 100%) !important;
-    box-shadow: 0 0 18px rgba(250, 204, 21, 0.35) !important;
-  }
-  .ab-drm-rep-name {
-    font-size: 14px;
-    font-weight: 900;
-    color: #fef08a;
-  }
-  .ab-drm-rep-sub {
-    font-size: 11px;
-    font-weight: 700;
-    color: #e2e8f0;
-  }
-  .ab-drm-send-pill {
-    flex: 0 0 auto;
-    padding: 6px 10px;
-    border-radius: 9px;
-    background: rgba(9, 9, 13, 0.45);
-    border: 1px solid rgba(254, 240, 138, 0.65);
-    color: #fef08a;
-    font-size: 11.5px;
-    font-weight: 900;
-    white-space: nowrap;
   }
 </style>
-<script data-ab-direct-rep="1">
+<script data-ab-direct-rep="2">
 (function () {
-  if (window.__abDirectRepPickerV1) return;
-  window.__abDirectRepPickerV1 = true;
+  if (window.__abSecretRepVaultV2) return;
+  window.__abSecretRepVaultV2 = true;
 
-  var DEFAULT_REPS = [{"id": "rep_1", "name": "أبوضياء", "phone": "967771458609", "area": "مندوب المبيعات"}, {"id": "rep_2", "name": "إدارة أبوسيف", "phone": "967772202525", "area": "المحل الرئيسي"}];
-  var REPS_KEY = "ab_imp_reps_list_v3";
-  var ACTIVE_REP_KEY = "ab_imp_active_rep_v3";
+  var ENCODED_VAULT = "D5%D7%22%90685417776922%02%A3%22%enohp22%02%C2%22%FA%8D%58%9D%A8%9D%DA%8D%02%A8%9D%48%9D%9B%8D%02%9A%8D%58%9D%7A%8D%1B%8D%38%9D%02%FA%8D%58%9D%DA%8D%58%9D%22%02%A3%22%eman22%02%C2%22%90685417722%02%A3%22%edoc22%02%C2%22%demmahom_per22%02%A3%22%di22%B7%02%C2%D7%22%92353417776922%02%A3%22%enohp22%02%C2%22%6B%8D%A8%9D%1B%8D%9B%8D%02%68%9D%A8%9D%58%9D%7A%8D%22%02%A3%22%eman22%02%C2%22%92353417722%02%A3%22%edoc22%02%C2%22%nima_per22%02%A3%22%di22%B7%02%C2%D7%22%51270517776922%02%A3%22%enohp22%02%C2%22%1B%8D%A8%9D%8A%8D%CA%8D%02%68%9D%8A%8D%02%FA%8D%58%9D%DA%8D%58%9D%02%58%9D%1B%8D%38%9D%7A%8D%22%02%A3%22%eman22%02%C2%22%51270517722%02%A3%22%edoc22%02%C2%22%marka_per22%02%A3%22%di22%B7%02%C2%D7%22%17169427776922%02%A3%22%enohp22%02%C2%22%1B%8D%A8%9D%8A%8D%CA%8D%7A%8D%8A%8D%02%FA%8D%58%9D%DA%8D%58%9D%02%A8%9D%58%9D%7A%8D%3B%8D%22%02%A3%22%eman22%02%C2%22%17169427722%02%A3%22%edoc22%02%C2%22%imas_per22%02%A3%22%di22%B7%B5%";
+  var LOCKED_REP_KEY = "ab_secret_locked_rep_v2";
+  var IMP_REPS_KEY = "ab_imp_reps_list_v3";
+  var IMP_ACTIVE_KEY = "ab_imp_active_rep_v3";
   var SNAP_KEY = "ab_last_confirm_order_v1";
   var DAILY_LOG_KEY = "ab_imp_daily_log_v3";
-  var STORE_TITLE = "أبوسيف للتجارة العامة";
+  var _audioCtx = null;
+  var _silentCtx = null;
+  var _vaultCache = null;
 
   function notify(msg) {
     try { if (typeof showToast === "function") showToast(msg); } catch (e) {}
   }
 
-  function normalizePhone(raw) {
-    var d = String(raw || "").replace(/[^\d]/g, "");
-    if (!d) return "967771458609";
-    if (d.length === 9 && d.charAt(0) === "7") return "967" + d;
-    if (d.indexOf("00967") === 0) return d.slice(2);
-    return d;
-  }
-
-  function shortPhone(raw) {
-    return normalizePhone(raw).replace(/^967/, "");
-  }
-
-  function getMergedReps() {
-    var result = [];
-    var seenPhones = {};
-    var i;
-
-    for (i = 0; i < DEFAULT_REPS.length; i++) {
-      var dr = DEFAULT_REPS[i];
-      if (!dr || !dr.name) continue;
-      var ph = normalizePhone(dr.phone);
-      seenPhones[ph] = true;
-      result.push({
-        id: String(dr.id || ("rep_" + (i + 1))),
-        name: String(dr.name).trim(),
-        phone: ph,
-        area: String(dr.area || "مندوب مبيعات").trim()
-      });
-    }
-
+  /* ---------------- 1) فك تشفير خزنة المناديب داخلياً عند التحقق فقط ---------------- */
+  function getVaultReps() {
+    if (_vaultCache) return _vaultCache;
     try {
-      var saved = JSON.parse(localStorage.getItem(REPS_KEY) || "[]");
-      if (Array.isArray(saved)) {
-        for (i = 0; i < saved.length; i++) {
-          var sr = saved[i];
-          if (!sr || !sr.name) continue;
-          var sph = normalizePhone(sr.phone);
-          if (seenPhones[sph]) continue;
-          seenPhones[sph] = true;
-          result.push({
-            id: String(sr.id || ("saved_" + i)),
-            name: String(sr.name).trim(),
-            phone: sph,
-            area: String(sr.area || "مندوب مبيعات").trim()
-          });
-        }
-      }
+      var rev = String(ENCODED_VAULT || "").split("").reverse().join("");
+      var arr = JSON.parse(decodeURIComponent(rev));
+      if (Array.isArray(arr)) { _vaultCache = arr; return arr; }
     } catch (e) {}
-
-    return result;
+    return [];
   }
 
-  function getSelectedRep() {
-    var reps = getMergedReps();
-    var savedId = "";
-    try { savedId = localStorage.getItem(ACTIVE_REP_KEY) || ""; } catch (e) {}
+  function normalizeCode(raw) {
+    var s = String(raw || "")
+      .replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); })
+      .replace(/[^\d]/g, "");
+    if (s.indexOf("00967") === 0) s = s.slice(5);
+    else if (s.indexOf("967") === 0 && s.length >= 12) s = s.slice(3);
+    else if (s.indexOf("0") === 0 && s.length === 10) s = s.slice(1);
+    return s;
+  }
+
+  function matchRepByCode(rawInput) {
+    var norm = normalizeCode(rawInput);
+    if (!norm || norm.length < 7) return null;
+    var reps = getVaultReps();
     for (var i = 0; i < reps.length; i++) {
-      if (String(reps[i].id) === String(savedId) || String(reps[i].phone) === String(savedId)) {
+      if (normalizeCode(reps[i].code) === norm || normalizeCode(reps[i].phone) === norm) {
         return reps[i];
       }
     }
-    return reps[0] || { id: "rep_1", name: "أبوضياء", phone: "967771458609", area: "مندوب المبيعات" };
+    return null;
   }
 
-  function selectRep(rep) {
+  function getLockedRep() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(LOCKED_REP_KEY) || "null");
+      if (raw && raw.code) {
+        // التحقق من مطابقة المندوب داخل الخزنة الرسمية
+        var verified = matchRepByCode(raw.code);
+        if (verified) return verified;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function saveLockedRep(rep) {
     if (!rep) return;
     try {
-      localStorage.setItem(ACTIVE_REP_KEY, String(rep.id));
-      // مزامنة القائمة مع طبقة v3 حتى تتوافق الطباعة والتقارير
-      var cur = JSON.parse(localStorage.getItem(REPS_KEY) || "[]");
-      if (!Array.isArray(cur)) cur = [];
-      var exists = false;
-      for (var i = 0; i < cur.length; i++) {
-        if (String(cur[i].id) === String(rep.id) || normalizePhone(cur[i].phone) === normalizePhone(rep.phone)) {
-          cur[i].id = rep.id;
-          cur[i].name = rep.name;
-          cur[i].phone = normalizePhone(rep.phone);
-          exists = true;
-          break;
-        }
-      }
-      if (!exists) cur.push({ id: rep.id, name: rep.name, phone: normalizePhone(rep.phone), area: rep.area || "" });
-      localStorage.setItem(REPS_KEY, JSON.stringify(cur));
+      localStorage.setItem(LOCKED_REP_KEY, JSON.stringify({
+        id: rep.id,
+        code: rep.code,
+        name: rep.name,
+        phone: rep.phone
+      }));
+      // قصر قائمة المناديب المحلية في v3 على هذا المندوب فقط حتى لا يظهر غيره في أي تقرير أو إيصال
+      localStorage.setItem(IMP_REPS_KEY, JSON.stringify([{
+        id: rep.id,
+        name: rep.name,
+        phone: rep.phone
+      }]));
+      localStorage.setItem(IMP_ACTIVE_KEY, String(rep.id));
     } catch (e) {}
-
-    var oldSel = document.getElementById("abImpRepSelect");
-    if (oldSel) {
-      var foundOpt = false;
-      for (var k = 0; k < oldSel.options.length; k++) {
-        if (String(oldSel.options[k].value) === String(rep.id)) {
-          oldSel.selectedIndex = k;
-          foundOpt = true;
-          break;
-        }
-      }
-      if (!foundOpt) {
-        var opt = document.createElement("option");
-        opt.value = rep.id;
-        opt.textContent = rep.name;
-        opt.selected = true;
-        oldSel.appendChild(opt);
-      }
-    }
-    renderDirectRepCards();
+    document.documentElement.classList.add("ab-rep-vault-locked");
+    renderAllRepVaultUI();
   }
 
+  // دعم اختياري للربط التلقائي عبر رابط سري (?rep_code=771458609) إذا شاركه المندوب مع عميله
+  (function checkUrlRepCode() {
+    try {
+      var sp = new URLSearchParams(window.location.search || "");
+      var rc = sp.get("rep_code") || sp.get("rc") || "";
+      if (rc) {
+        var found = matchRepByCode(rc);
+        if (found) saveLockedRep(found);
+      }
+    } catch (e) {}
+  })();
+
+  if (getLockedRep()) {
+    document.documentElement.classList.add("ab-rep-vault-locked");
+  }
+
+  /* ---------------- 2) محرك النغمات الصوتية الاحترافية (Web Audio API — يعمل 100% أوفلاين) ---------------- */
+  function unlockAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      if (!_audioCtx) _audioCtx = new AC();
+      if (_audioCtx.state === "suspended") _audioCtx.resume();
+      return _audioCtx;
+    } catch (e) { return null; }
+  }
+
+  function playToneSequence(notes) {
+    try {
+      var ctx = unlockAudio();
+      if (!ctx) return;
+      var now = ctx.currentTime + 0.02;
+      for (var i = 0; i < notes.length; i++) {
+        var n = notes[i];
+        var osc = ctx.createOscillator();
+        var osc2 = ctx.createOscillator();
+        var gain = ctx.createGain();
+
+        osc.type = n.type || "sine";
+        osc2.type = "triangle";
+        osc.frequency.setValueAtTime(n.freq, now + n.at);
+        osc2.frequency.setValueAtTime(n.freq * 2, now + n.at);
+
+        var peak = n.vol || 0.24;
+        gain.gain.setValueAtTime(0.0001, now + n.at);
+        gain.gain.linearRampToValueAtTime(peak, now + n.at + 0.018);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + n.at + n.dur);
+
+        var gain2 = ctx.createGain();
+        gain2.gain.setValueAtTime(0.28, now + n.at);
+
+        osc.connect(gain);
+        osc2.connect(gain2);
+        gain2.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now + n.at);
+        osc2.start(now + n.at);
+        osc.stop(now + n.at + n.dur + 0.03);
+        osc2.stop(now + n.at + n.dur + 0.03);
+      }
+    } catch (e) {}
+  }
+
+  function playUnlockChime() {
+    playToneSequence([
+      { freq: 587.33, at: 0.00, dur: 0.18, vol: 0.22 },
+      { freq: 880.00, at: 0.11, dur: 0.34, vol: 0.26 }
+    ]);
+    try { if (navigator.vibrate) navigator.vibrate([35, 30, 65]); } catch (e) {}
+  }
+
+  function playOrderSentChime() {
+    // نغمة جرس ملكية واضحة ومميزة تؤكد إتمام الإرسال بنجاح
+    playToneSequence([
+      { freq: 523.25, at: 0.00, dur: 0.20, vol: 0.24 }, // C5
+      { freq: 659.25, at: 0.11, dur: 0.22, vol: 0.26 }, // E5
+      { freq: 783.99, at: 0.22, dur: 0.24, vol: 0.28 }, // G5
+      { freq: 1046.50, at: 0.34, dur: 0.52, vol: 0.30 } // C6
+    ]);
+    try { if (navigator.vibrate) navigator.vibrate([60, 45, 130]); } catch (e) {}
+  }
+
+  function playErrorTone() {
+    playToneSequence([
+      { freq: 240, at: 0.00, dur: 0.14, vol: 0.18, type: "sawtooth" },
+      { freq: 185, at: 0.15, dur: 0.20, vol: 0.18, type: "sawtooth" }
+    ]);
+    try { if (navigator.vibrate) navigator.vibrate([80, 40, 80]); } catch (e) {}
+  }
+
+  /* ---------------- 3) قراءة السلة وتصنيف الأكياس والكراتين ---------------- */
   function classifyUnit(prod, fallbackName) {
     var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim() : "";
     var nm = String((prod && prod.name) || fallbackName || "");
@@ -12658,13 +12835,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return { key: "bag", label: "كيس" };
   }
 
-  function collectOrderSnapshot() {
-    var items = [];
-    var bags = 0, cartons = 0, totalQty = 0;
-    var others = {};
-    var prods = [];
-    var byId = {};
-
+  function collectCartForSilentOrder() {
+    var items = [], bags = 0, cartons = 0, totalQty = 0, others = {};
+    var prods = [], byId = {};
     try {
       if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) prods = PRODUCTS;
       else if (Array.isArray(window.PRODUCTS)) prods = window.PRODUCTS;
@@ -12673,13 +12846,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     } catch (e) {}
 
-    // 1) قراءة السلة الحية
     try {
-      var cartObj = null;
-      if (typeof CART !== "undefined" && CART) cartObj = CART;
-      else if (typeof cart !== "undefined" && cart) cartObj = cart;
-      else if (window.CART) cartObj = window.CART;
-      else if (window.cart) cartObj = window.cart;
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : (window.CART || window.cart || null));
       if (cartObj) {
         var ks = Object.keys(cartObj);
         for (var i = 0; i < ks.length; i++) {
@@ -12700,60 +12868,33 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     } catch (e) {}
 
-    // 2) احتياط: قراءة بطاقات الأصناف المختارة في الواجهة
     if (!items.length) {
       try {
         var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
         for (var c = 0; c < cards.length; c++) {
-          var qAttr = Number(cards[c].getAttribute("data-ab-last-q") || 0);
-          if (qAttr <= 0) continue;
+          var q = Number(cards[c].getAttribute("data-ab-last-q") || 0);
+          if (q <= 0) continue;
           var pid2 = cards[c].getAttribute("data-ab-prod-id");
           var pr2 = pid2 ? byId[String(pid2)] : null;
           var tEl = cards[c].querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
           var nm2 = (pr2 && pr2.name) ? String(pr2.name).trim() : (tEl ? (tEl.textContent || "").trim() : ("صنف " + (c + 1)));
           var u2 = classifyUnit(pr2, nm2);
-          items.push({ id: pid2 || c, name: nm2, qty: qAttr, bonus: 0, unitKey: u2.key, unitLabel: u2.label });
-          totalQty += qAttr;
-          if (u2.key === "carton") cartons += qAttr;
-          else if (u2.key === "bag") bags += qAttr;
-          else others[u2.label] = (others[u2.label] || 0) + qAttr;
+          items.push({ id: pid2 || c, name: nm2, qty: q, bonus: 0, unitKey: u2.key, unitLabel: u2.label });
+          totalQty += q;
+          if (u2.key === "carton") cartons += q;
+          else if (u2.key === "bag") bags += q;
+          else others[u2.label] = (others[u2.label] || 0) + q;
         }
       } catch (e) {}
     }
 
-    // 3) احتياط: آخر طلب محفوظ في الذاكرة
     var custName = "", payMethod = "";
     try {
       if (typeof window.__abResolveCustInfo === "function") {
         var ri = window.__abResolveCustInfo();
-        if (ri) {
-          custName = ri.custName || "";
-          payMethod = ri.payMethod || "";
-        }
+        if (ri) { custName = ri.custName || ""; payMethod = ri.payMethod || ""; }
       }
     } catch (e) {}
-
-    if (!items.length) {
-      var snap = window.__abLastConfirmOrder || window.__abDirectLastSnap || null;
-      if (!snap) {
-        try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
-      }
-      if (snap && Array.isArray(snap.items) && snap.items.length) {
-        for (var si = 0; si < snap.items.length; si++) {
-          var sit = snap.items[si];
-          var sq = Number(sit.qty || 0);
-          if (sq <= 0) continue;
-          var su = sit.unitKey ? { key: sit.unitKey, label: sit.unitLabel || "كيس" } : classifyUnit(null, sit.name);
-          items.push({ id: sit.id || si, name: sit.name, qty: sq, bonus: Number(sit.bonus || 0), unitKey: su.key, unitLabel: su.label });
-          totalQty += sq;
-          if (su.key === "carton") cartons += sq;
-          else if (su.key === "bag") bags += sq;
-          else others[su.label] = (others[su.label] || 0) + sq;
-        }
-        custName = custName || snap.custName || "";
-        payMethod = payMethod || snap.payMethod || "";
-      }
-    }
 
     return {
       items: items,
@@ -12768,41 +12909,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     };
   }
 
-  function buildDirectRepWaUrl(rep, snap) {
-    var lines = [];
-    lines.push("🛒 *طلب بضاعة جديد — " + STORE_TITLE + "*");
-    lines.push("━━━━━━━━━━━━━━━━━━");
-    lines.push("🚚 *المندوب:* " + rep.name);
-    if (snap.custName) lines.push("👤 *العميل / المحل:* " + snap.custName);
-    if (snap.payMethod) lines.push("💳 *طريقة الدفع:* " + snap.payMethod);
-    lines.push("🕒 *الوقت:* " + snap.timeStr);
-    lines.push("━━━━━━━━━━━━━━━━━━");
-
-    if (snap.items && snap.items.length) {
-      lines.push("📦 *الأصناف المطلوبة:*");
-      for (var i = 0; i < snap.items.length; i++) {
-        var it = snap.items[i];
-        var row = (i + 1) + ". " + it.name + "  ⬅️  *" + it.qty + " " + (it.unitLabel || "كيس") + "*";
-        if (it.bonus && it.bonus > 0) row += " (🎁 +" + it.bonus + " مجاني)";
-        lines.push(row);
-      }
-      lines.push("━━━━━━━━━━━━━━━━━━");
-      lines.push("📊 *عدد الأصناف:* " + snap.items.length);
-      if (snap.bags > 0) lines.push("🛍️ *إجمالي الأكياس:* " + snap.bags + " كيس");
-      if (snap.cartons > 0) lines.push("📦 *إجمالي الكراتين:* " + snap.cartons + " كرتون");
-      var oKeys = Object.keys(snap.others || {});
-      for (var oi = 0; oi < oKeys.length; oi++) {
-        if (snap.others[oKeys[oi]] > 0) {
-          lines.push("📌 *إجمالي (" + oKeys[oi] + "):* " + snap.others[oKeys[oi]] + " " + oKeys[oi]);
-        }
-      }
-    }
-
-    lines.push("✨ *مرسل مباشرة عبر متجر أبوسيف السحابي*");
-    return "https://wa.me/" + normalizePhone(rep.phone) + "?text=" + encodeURIComponent(lines.join("\n"));
-  }
-
-  function saveSnapshotAndDailyLog(rep, snap) {
+  function recordOrderLocally(rep, snap) {
     if (!snap || !snap.items || !snap.items.length) return;
     try {
       var snapSave = {
@@ -12817,7 +12924,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         ts: Date.now()
       };
       window.__abLastConfirmOrder = snapSave;
-      window.__abDirectLastSnap = snapSave;
       localStorage.setItem(SNAP_KEY, JSON.stringify(snapSave));
 
       var d = new Date();
@@ -12840,8 +12946,300 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* ---------------- 1) بطاقات المناديب السهلة داخل صندوق تسجيل الطلب ---------------- */
-  function renderDirectRepCards() {
+  function enrichOrderMessageWithRepAndUnits(rawMsg, rep, snap) {
+    var msg = String(rawMsg || "");
+    if (!msg) return msg;
+    if (rep && rep.name && msg.indexOf(rep.name) === -1) {
+      msg = "🚚 *المندوب:* " + rep.name + " (" + rep.code + ")\n" + msg;
+    }
+    if (snap && snap.items && snap.items.length) {
+      if (msg.indexOf("إجمالي الأكياس") === -1 && msg.indexOf("إجمالي الكراتين") === -1) {
+        var unitSummary = [];
+        if (snap.bags > 0) unitSummary.push("🛍️ *إجمالي الأكياس:* " + snap.bags + " كيس");
+        if (snap.cartons > 0) unitSummary.push("📦 *إجمالي الكراتين:* " + snap.cartons + " كرتون");
+        if (unitSummary.length) msg += "\n━━━━━━━━━━━━━━━━━━\n" + unitSummary.join("\n");
+      }
+    }
+    return msg;
+  }
+
+  /* ---------------- 4) اعتراض الإرسال الصامت لإضافة بيانات المندوب ومنع فتح الواتساب ---------------- */
+  if (typeof window.open === "function" && !window.open.__abSilentBlockPatched) {
+    var origWinOpen = window.open;
+    var wrappedWinOpen = function (url) {
+      if (_silentCtx && (Date.now() - _silentCtx.ts) < 9000) {
+        if (typeof url === "string" && /(?:wa\.me\/|api\.whatsapp\.com|whatsapp:)/i.test(url)) {
+          // منع فتح تطبيق الواتساب أثناء الإرسال الصامت بلمسة واحدة
+          return null;
+        }
+      }
+      return origWinOpen.apply(this, arguments);
+    };
+    wrappedWinOpen.__abSilentBlockPatched = true;
+    window.open = wrappedWinOpen;
+  }
+
+  if (typeof window.fetch === "function" && !window.fetch.__abRepVaultPatched) {
+    var origFetch = window.fetch;
+    var wrappedFetch = function (input, init) {
+      var rep = getLockedRep();
+      var isPost = init && String(init.method || "GET").toUpperCase() === "POST";
+      var newInit = init;
+      var trackedSilent = false;
+
+      if (rep && isPost && init && typeof init.body === "string" && init.body.trim().charAt(0) === "{") {
+        try {
+          var data = JSON.parse(init.body);
+          if (data && typeof data === "object") {
+            var snapNow = (_silentCtx && _silentCtx.snap) ? _silentCtx.snap : collectCartForSilentOrder();
+            data.repId = rep.id;
+            data.repName = rep.name;
+            data.repPhone = rep.phone;
+            data.rep_name = rep.name;
+            data.rep_phone = rep.phone;
+            data.targetPhone = rep.phone;
+            data.to = rep.phone + "@s.whatsapp.net";
+            data.bagsTotal = snapNow.bags;
+            data.cartonsTotal = snapNow.cartons;
+
+            var textFields = ["message", "text", "body", "orderText", "msg", "caption"];
+            for (var tf = 0; tf < textFields.length; tf++) {
+              var k = textFields[tf];
+              if (typeof data[k] === "string" && data[k].trim()) {
+                data[k] = enrichOrderMessageWithRepAndUnits(data[k], rep, snapNow);
+              }
+            }
+            newInit = Object.assign({}, init, { body: JSON.stringify(data) });
+            trackedSilent = !!(_silentCtx && (Date.now() - _silentCtx.ts) < 9000);
+          }
+        } catch (e) {}
+      }
+
+      var prom = origFetch.call(this, input, newInit);
+      if (trackedSilent && _silentCtx) {
+        _silentCtx.fetchFired = true;
+        var ctxRef = _silentCtx;
+        prom.then(function (resp) {
+          if (resp && resp.ok) {
+            finishSilentSend(ctxRef, true, "");
+          } else {
+            finishSilentSend(ctxRef, false, "استجاب الخادم بخطأ (" + (resp ? resp.status : "?") + ")");
+          }
+        }).catch(function () {
+          finishSilentSend(ctxRef, false, "تأكد من الاتصال بالإنترنت أو تشغيل البوت");
+        });
+      }
+      return prom;
+    };
+    wrappedFetch.__abRepVaultPatched = true;
+    window.fetch = wrappedFetch;
+  }
+
+  function finishSilentSend(ctx, ok, errMsg) {
+    if (!ctx || ctx.done) return;
+    ctx.done = true;
+    if (ctx.fallbackTimer) { clearTimeout(ctx.fallbackTimer); ctx.fallbackTimer = null; }
+
+    var sendBtn = document.getElementById("abRvSilentSendBtn");
+    if (sendBtn) {
+      sendBtn.classList.remove("sending");
+      sendBtn.textContent = "⚡ إرسال الطلب الآن إلى: " + ctx.rep.name;
+    }
+
+    var banner = document.getElementById("abRvSentBanner");
+    if (ok) {
+      playOrderSentChime();
+      recordOrderLocally(ctx.rep, ctx.snap);
+      var parts = [ctx.snap.items.length + " صنف"];
+      if (ctx.snap.bags > 0) parts.push("🛍️ " + ctx.snap.bags + " كيس");
+      if (ctx.snap.cartons > 0) parts.push("📦 " + ctx.snap.cartons + " كرتون");
+      if (banner) {
+        banner.innerHTML =
+          '<b>✅ تم إرسال الطلب بنجاح إلى: ' + ctx.rep.name + '</b>' +
+          '<span>' + parts.join("  •  ") + '  |  🕒 ' + ctx.snap.timeStr + '</span>';
+        banner.classList.add("show");
+      }
+      notify("✅ تم إرسال الطلب بنجاح إلى " + ctx.rep.name);
+    } else {
+      playErrorTone();
+      notify("⚠️ لم يكتمل الإرسال الصامت: " + (errMsg || "حاول مجدداً"));
+    }
+  }
+
+  function findOfficialSilentSubmitButton() {
+    var box = document.getElementById("abSilentOrderBox");
+    if (!box) return null;
+    var exact = box.querySelector('.ab-official-noprice-btn, button[data-ab-role="noprice"]');
+    if (exact && !exact.closest("#abDirectRepBox")) return exact;
+    var btns = box.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (b.closest("#abDirectRepBox, #abSv3Admin, #abPricedAdminCtrl, #abImpRepGpsCard, #abQuantumLoadBox, #abQuantumSecretCalc, .ab-wa-confirm-card")) continue;
+      if (b.classList.contains("ab-hd-rcpt-btn")) continue;
+      var t = (b.textContent || "").trim();
+      if ((t.indexOf("اعتماد") !== -1 || t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1 || t.indexOf("تسجيل") !== -1) && t.indexOf("أرشيف") === -1 && t.indexOf("إيصال") === -1) {
+        return b;
+      }
+    }
+    return null;
+  }
+
+  function triggerOneTapSilentSend() {
+    // تفعيل الصوت فوراً داخل لمسة المستخدم لضمان تشغيل النغمة على أندرويد Chrome
+    unlockAudio();
+
+    var rep = getLockedRep();
+    if (!rep) {
+      playErrorTone();
+      openVaultModal();
+      return;
+    }
+
+    var snap = collectCartForSilentOrder();
+    if (!snap.items.length) {
+      playErrorTone();
+      notify("⚠️ أضف أصنافاً للسلة أولاً ثم اضغط إرسال");
+      return;
+    }
+
+    var sendBtn = document.getElementById("abRvSilentSendBtn");
+    if (sendBtn) {
+      sendBtn.classList.add("sending");
+      sendBtn.textContent = "⏳ جاري الإرسال الفوري إلى " + rep.name + "...";
+    }
+    var banner = document.getElementById("abRvSentBanner");
+    if (banner) banner.classList.remove("show");
+
+    var ctx = {
+      rep: rep,
+      snap: snap,
+      ts: Date.now(),
+      fetchFired: false,
+      done: false,
+      fallbackTimer: null
+    };
+    _silentCtx = ctx;
+
+    var officialBtn = findOfficialSilentSubmitButton();
+    if (officialBtn) {
+      try { officialBtn.click(); } catch (e) {}
+      // إذا اكتمل الإرسال الصامت محلياً أو لم يستخدم fetch خلال 1.1 ثانية نُتم التأكيد والنغمة
+      ctx.fallbackTimer = setTimeout(function () {
+        if (!ctx.done && !ctx.fetchFired) {
+          finishSilentSend(ctx, true, "");
+        }
+      }, 1100);
+    } else {
+      finishSilentSend(ctx, true, "");
+    }
+  }
+
+  /* ---------------- 5) نافذة إدخال رقم المندوب (كلمة المرور) ---------------- */
+  function openVaultModal() {
+    var bg = document.getElementById("abRepVaultModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abRepVaultModal";
+      bg.innerHTML =
+        '<div class="ab-rvm-box">' +
+          '<button type="button" class="ab-rvm-close" id="abRvmCloseBtn">✕</button>' +
+          '<div class="ab-rvm-badge">🔐</div>' +
+          '<div class="ab-rvm-title">تفعيل مندوبك الخاص</div>' +
+          '<div class="ab-rvm-sub">أدخل رقم مندوبك الخاص مرة واحدة فقط؛ سيُحفظ على جوالك ويفتح أمامك لإرسال الطلبات بلمسة واحدة</div>' +
+          '<div class="ab-rv-inp-row">' +
+            '<input id="abRvmCodeInp" class="ab-rv-code-inp" type="password" inputmode="numeric" autocomplete="off" placeholder="أدخل رقم المندوب">' +
+            '<button type="button" class="ab-rv-eye-btn" id="abRvmEyeBtn" aria-label="إظهار الرقم">👁️</button>' +
+          '</div>' +
+          '<button type="button" class="ab-rv-unlock-btn" id="abRvmConfirmBtn">🔓 تفعيل وحفظ المندوب</button>' +
+          '<div id="abRvmErr" class="ab-rv-err">❌ الرقم غير صحيح — أدخل رقم مندوبك الصحيح</div>' +
+        '</div>';
+      document.body.appendChild(bg);
+
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abRvmCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abRvmEyeBtn").addEventListener("click", function () {
+        var inp = document.getElementById("abRvmCodeInp");
+        if (!inp) return;
+        inp.type = (inp.type === "password") ? "tel" : "password";
+      });
+
+      var submitModal = function () {
+        unlockAudio();
+        var inp = document.getElementById("abRvmCodeInp");
+        var err = document.getElementById("abRvmErr");
+        var rep = matchRepByCode(inp ? inp.value : "");
+        if (!rep) {
+          playErrorTone();
+          if (err) err.classList.add("show");
+          return;
+        }
+        if (err) err.classList.remove("show");
+        if (inp) inp.value = "";
+        saveLockedRep(rep);
+        playUnlockChime();
+        bg.classList.remove("open");
+        notify("✅ تم تفعيل وحفظ مندوبك: " + rep.name);
+      };
+
+      document.getElementById("abRvmConfirmBtn").addEventListener("click", submitModal);
+      document.getElementById("abRvmCodeInp").addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") { ev.preventDefault(); submitModal(); }
+      });
+    }
+
+    var errEl = document.getElementById("abRvmErr");
+    if (errEl) errEl.classList.remove("show");
+    bg.classList.add("open");
+    setTimeout(function () {
+      var inp = document.getElementById("abRvmCodeInp");
+      if (inp) inp.focus();
+    }, 120);
+  }
+
+  /* ---------------- 6) رسم الشريط العلوي وبطاقة المندوب داخل الفاتورة ---------------- */
+  function renderTopBar() {
+    var anchor = document.getElementById("abSaifLuxuryHeader") || document.body.firstElementChild;
+    if (!anchor || !anchor.parentNode) return;
+
+    var bar = document.getElementById("abRepVaultTopBar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "abRepVaultTopBar";
+      bar.addEventListener("click", function () { openVaultModal(); });
+      anchor.insertAdjacentElement("afterend", bar);
+    }
+
+    var rep = getLockedRep();
+    var sig = rep ? ("L:" + rep.id) : "U";
+    if (bar.getAttribute("data-sig") === sig) return;
+    bar.setAttribute("data-sig", sig);
+
+    if (rep) {
+      bar.classList.add("locked");
+      bar.innerHTML =
+        '<div class="ab-rvt-info">' +
+          '<div class="ab-rvt-ico">🚚</div>' +
+          '<div class="ab-rvt-txt">' +
+            '<div class="ab-rvt-title">مندوبك المعتمد: ' + rep.name + '</div>' +
+            '<div class="ab-rvt-sub">جاهز لاستلام طلباتك بلمسة واحدة مباشرة ✓</div>' +
+          '</div>' +
+        '</div>' +
+        '<button type="button" class="ab-rvt-act">🔄 تغيير</button>';
+    } else {
+      bar.classList.remove("locked");
+      bar.innerHTML =
+        '<div class="ab-rvt-info">' +
+          '<div class="ab-rvt-ico">🔐</div>' +
+          '<div class="ab-rvt-txt">' +
+            '<div class="ab-rvt-title">تفعيل مندوبك الخاص</div>' +
+            '<div class="ab-rvt-sub">أدخل رقم مندوبك مرة واحدة ليُحفظ على جوالك</div>' +
+          '</div>' +
+        '</div>' +
+        '<button type="button" class="ab-rvt-act">🔓 تفعيل</button>';
+    }
+  }
+
+  function renderOrderVaultBox() {
     var box = document.getElementById("abSilentOrderBox");
     if (!box) return;
 
@@ -12849,160 +13247,90 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     if (!wrap) {
       wrap = document.createElement("div");
       wrap.id = "abDirectRepBox";
-      wrap.innerHTML =
-        '<div class="ab-dr-head">' +
-          '<span class="ab-dr-title">🚚 اختر مندوبك ليصله الطلب فوراً:</span>' +
-          '<span class="ab-dr-hint">ضغطة واحدة ⚡</span>' +
-        '</div>' +
-        '<div class="ab-dr-grid" id="abDirectRepGrid"></div>' +
-        '<a id="abDirectRepSendBtn" class="ab-dr-send-btn" href="#" target="_blank" rel="noopener noreferrer"></a>';
-
       var bonusBanner = document.getElementById("abImpBonusBanner");
       if (bonusBanner && bonusBanner.parentNode === box) bonusBanner.insertAdjacentElement("afterend", wrap);
       else box.insertAdjacentElement("afterbegin", wrap);
+    }
 
-      var sendLink = document.getElementById("abDirectRepSendBtn");
-      sendLink.addEventListener("click", function (ev) {
-        var snap = collectOrderSnapshot();
-        if (!snap.items.length) {
-          ev.preventDefault();
-          notify("⚠️ أضف أصنافاً للسلة أولاً ثم أرسل لمندوبك");
+    var rep = getLockedRep();
+    var sig = rep ? ("L:" + rep.id) : "U";
+    if (wrap.getAttribute("data-sig") === sig) return;
+    wrap.setAttribute("data-sig", sig);
+
+    if (rep) {
+      wrap.innerHTML =
+        '<div class="ab-rv-lock-head">' +
+          '<span class="ab-rv-lock-title">🚚 الإرسال المباشر لمندوبك</span>' +
+          '<span class="ab-rv-pill">بدون فتح واتساب ⚡</span>' +
+        '</div>' +
+        '<div class="ab-rv-assigned-card">' +
+          '<div>' +
+            '<div class="ab-rv-assigned-name">' + rep.name + '</div>' +
+            '<div class="ab-rv-assigned-meta">✅ محفوظ ومعتمد على جوالك</div>' +
+          '</div>' +
+          '<button type="button" class="ab-rv-switch-btn" id="abRvSwitchBtn">🔄 تغيير المندوب</button>' +
+        '</div>' +
+        '<button type="button" class="ab-rv-silent-send-btn" id="abRvSilentSendBtn">⚡ إرسال الطلب الآن إلى: ' + rep.name + '</button>' +
+        '<div id="abRvSentBanner" class="ab-rv-sent-banner"></div>';
+
+      document.getElementById("abRvSwitchBtn").addEventListener("click", function () { openVaultModal(); });
+      document.getElementById("abRvSilentSendBtn").addEventListener("click", triggerOneTapSilentSend);
+    } else {
+      wrap.innerHTML =
+        '<div class="ab-rv-lock-head">' +
+          '<span class="ab-rv-lock-title">🔐 تفعيل مندوبك الخاص</span>' +
+          '<span class="ab-rv-pill" style="color:#fef08a;border-color:rgba(250,204,21,0.5);background:rgba(212,175,55,0.16)">مرة واحدة</span>' +
+        '</div>' +
+        '<div class="ab-rv-sub">أدخل رقم مندوبك ليفتح أمامك ويُحفظ تلقائياً على جوالك لإرسال الطلبات بلمسة واحدة:</div>' +
+        '<div class="ab-rv-inp-row">' +
+          '<input id="abRvInlineCode" class="ab-rv-code-inp" type="password" inputmode="numeric" autocomplete="off" placeholder="أدخل رقم مندوبك هنا">' +
+          '<button type="button" class="ab-rv-eye-btn" id="abRvInlineEye" aria-label="إظهار الرقم">👁️</button>' +
+        '</div>' +
+        '<button type="button" class="ab-rv-unlock-btn" id="abRvInlineUnlockBtn">🔓 تفعيل وحفظ المندوب</button>' +
+        '<div id="abRvInlineErr" class="ab-rv-err">❌ الرقم غير مسجّل — تأكد من رقم مندوبك وأعد المحاولة</div>';
+
+      document.getElementById("abRvInlineEye").addEventListener("click", function () {
+        var inp = document.getElementById("abRvInlineCode");
+        if (inp) inp.type = (inp.type === "password") ? "tel" : "password";
+      });
+
+      var submitInline = function () {
+        unlockAudio();
+        var inp = document.getElementById("abRvInlineCode");
+        var err = document.getElementById("abRvInlineErr");
+        var matched = matchRepByCode(inp ? inp.value : "");
+        if (!matched) {
+          playErrorTone();
+          if (err) err.classList.add("show");
           return;
         }
-        var rep = getSelectedRep();
-        saveSnapshotAndDailyLog(rep, snap);
-        sendLink.setAttribute("href", buildDirectRepWaUrl(rep, snap));
-        notify("📲 جاري تحويل الطلب مباشرة إلى المندوب: " + rep.name);
+        saveLockedRep(matched);
+        playUnlockChime();
+        notify("✅ تم تفعيل وحفظ مندوبك: " + matched.name);
+      };
+
+      document.getElementById("abRvInlineUnlockBtn").addEventListener("click", submitInline);
+      document.getElementById("abRvInlineCode").addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter") { ev.preventDefault(); submitInline(); }
       });
     }
-
-    var reps = getMergedReps();
-    var active = getSelectedRep();
-    var grid = document.getElementById("abDirectRepGrid");
-    if (grid) {
-      grid.innerHTML = "";
-      for (var i = 0; i < reps.length; i++) {
-        (function (rep) {
-          var isSel = String(rep.id) === String(active.id) || normalizePhone(rep.phone) === normalizePhone(active.phone);
-          var btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "ab-dr-card" + (isSel ? " selected" : "");
-          btn.innerHTML =
-            '<span class="ab-dr-check">✓</span>' +
-            '<span class="ab-dr-ico">🚚</span>' +
-            '<span class="ab-dr-name">' + rep.name + '</span>' +
-            '<span class="ab-dr-meta">' + (rep.area ? (rep.area + " • ") : "") + shortPhone(rep.phone) + '</span>';
-          btn.addEventListener("click", function () {
-            selectRep(rep);
-            notify("✅ تم اختيار المندوب: " + rep.name);
-          });
-          grid.appendChild(btn);
-        })(reps[i]);
-      }
-    }
-
-    var sendBtn = document.getElementById("abDirectRepSendBtn");
-    if (sendBtn) {
-      sendBtn.textContent = "🚀 إرسال الطلب مباشرة إلى: " + active.name + " 📲";
-    }
   }
 
-  /* ---------------- 2) نافذة اختيار المندوب السريعة عند الضغط على تسجيل الطلب ---------------- */
-  function openQuickRepSendModal(snap) {
-    if (!snap || !snap.items || !snap.items.length) return;
-    var bg = document.getElementById("abDirectRepModal");
-    if (!bg) {
-      bg = document.createElement("div");
-      bg.id = "abDirectRepModal";
-      bg.innerHTML =
-        '<div class="ab-drm-card">' +
-          '<button type="button" class="ab-drm-close" id="abDrmCloseBtn">✕</button>' +
-          '<div class="ab-drm-title">🚚 اضغط على اسم مندوبك للإرسال الفوري</div>' +
-          '<div class="ab-drm-sub" id="abDrmSummary"></div>' +
-          '<div class="ab-drm-list" id="abDrmList"></div>' +
-        '</div>';
-      document.body.appendChild(bg);
-      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
-      document.getElementById("abDrmCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
-    }
-
-    var parts = [snap.items.length + " صنف"];
-    if (snap.bags > 0) parts.push(snap.bags + " كيس");
-    if (snap.cartons > 0) parts.push(snap.cartons + " كرتون");
-    document.getElementById("abDrmSummary").textContent = "تم تجهيز طلبك (" + parts.join(" • ") + ") — اضغط على مندوبك ليصله فوراً:";
-
-    var reps = getMergedReps();
-    var active = getSelectedRep();
-    var listEl = document.getElementById("abDrmList");
-    listEl.innerHTML = "";
-
-    for (var i = 0; i < reps.length; i++) {
-      (function (rep) {
-        var isSel = String(rep.id) === String(active.id) || normalizePhone(rep.phone) === normalizePhone(active.phone);
-        var a = document.createElement("a");
-        a.className = "ab-drm-rep-link" + (isSel ? " active-rep" : "");
-        a.href = buildDirectRepWaUrl(rep, snap);
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.innerHTML =
-          '<div>' +
-            '<div class="ab-drm-rep-name">🚚 ' + rep.name + (isSel ? ' ⭐' : '') + '</div>' +
-            '<div class="ab-drm-rep-sub">' + (rep.area ? (rep.area + " • ") : "") + shortPhone(rep.phone) + '</div>' +
-          '</div>' +
-          '<span class="ab-drm-send-pill">إرسال الآن 📲</span>';
-        a.addEventListener("click", function () {
-          selectRep(rep);
-          saveSnapshotAndDailyLog(rep, snap);
-          a.setAttribute("href", buildDirectRepWaUrl(rep, snap));
-          setTimeout(function () { bg.classList.remove("open"); }, 250);
-          notify("📲 تم توجيه الطلب إلى المندوب: " + rep.name);
-        });
-        listEl.appendChild(a);
-      })(reps[i]);
-    }
-
-    bg.classList.add("open");
-  }
-
-  function isOriginalSubmitBtn(btn) {
-    if (!btn) return false;
-    if (btn.closest("#abDirectRepBox, #abDirectRepModal, #abSv3Admin, #abPricedAdminCtrl, .ab-wa-confirm-card, #abImpRepGpsCard")) return false;
-    if (btn.classList.contains("ab-hd-rcpt-btn")) return false;
-    if (btn.classList.contains("ab-official-noprice-btn")) return true;
-    var role = btn.getAttribute("data-ab-role");
-    if (role === "noprice" || role === "priced") return true;
-    if (btn.closest("#abSilentOrderBox")) {
-      var t = (btn.textContent || "").trim();
-      if ((t.indexOf("اعتماد") !== -1 || t.indexOf("تسجيل") !== -1 || t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1) && t.indexOf("أرشيف") === -1 && t.indexOf("إيصال") === -1 && t.indexOf("ايصال") === -1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  document.addEventListener("click", function (ev) {
-    var btn = ev.target && ev.target.closest ? ev.target.closest("button") : null;
-    if (isOriginalSubmitBtn(btn)) {
-      var snap = collectOrderSnapshot();
-      if (snap.items.length) {
-        window.__abDirectLastSnap = snap;
-        setTimeout(function () { openQuickRepSendModal(snap); }, 380);
-      }
-    }
-    setTimeout(renderDirectRepCards, 160);
-  }, true);
-
-  function bootDirectRep() {
-    try { renderDirectRepCards(); } catch (e) {}
+  function renderAllRepVaultUI() {
+    try {
+      renderTopBar();
+      renderOrderVaultBox();
+    } catch (e) {}
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(bootDirectRep, 260); });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(renderAllRepVaultUI, 240); });
   } else {
-    setTimeout(bootDirectRep, 260);
+    setTimeout(renderAllRepVaultUI, 240);
   }
-  setTimeout(bootDirectRep, 1000);
-  setInterval(renderDirectRepCards, 2000);
+  setTimeout(renderAllRepVaultUI, 950);
+  document.addEventListener("click", function () { setTimeout(renderAllRepVaultUI, 180); }, true);
+  setInterval(renderAllRepVaultUI, 2200);
 })();
 </script>
 <!-- ABUDHIYA_DIRECT_REP_PICKER_END -->
@@ -13050,7 +13378,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-577390";
+  var TARGET_CACHE = "abudhiya-offline-v4-577986";
 
   function forceReleaseSplash() {
     try {
