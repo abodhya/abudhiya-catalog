@@ -339,11 +339,11 @@ button,.btn-primary,.add-btn,.send-btn,.qty-btn{background:#000000 !important;ba
 input,select,textarea{background:#FFFFFF !important;color:#000000 !important;border:1.5px solid #000000 !important;font-weight:600 !important;}
 </style>
 <!-- ABUSAIF_APP_ICONS_START -->
-<link rel="manifest" href="/manifest-v1795604314.json">
-<link rel="icon" type="image/png" sizes="192x192" href="/abusaif-app-1795604314-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/abusaif-app-1795604314-512.png">
-<link rel="shortcut icon" href="/abusaif-app-1795604314-64.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/abusaif-app-1795604314-180.png">
+<link rel="manifest" href="/manifest.json?v=1795604381">
+<link rel="icon" type="image/png" sizes="192x192" href="/abusaif-app-1795604381-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/abusaif-app-1795604381-512.png">
+<link rel="shortcut icon" href="/abusaif-app-1795604381-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/abusaif-app-1795604381-180.png">
 <!-- ABUSAIF_APP_ICONS_END -->
 </head>
 <body>
@@ -13580,7 +13580,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '<div class="ab-nsv-bars" id="abNsvBars"></div>' +
         '<div class="ab-nsv-header">' +
           '<div class="ab-nsv-brand">' +
-            '<div class="ab-nsv-avatar"><img id="abNsvLogoImg" src="/abusaif-3d-192.png?v=1795604314" alt=""></div>' +
+            '<div class="ab-nsv-avatar"><img id="abNsvLogoImg" src="/abusaif-3d-192.png?v=1795604381" alt=""></div>' +
             '<div>' +
               '<div class="ab-nsv-btitle">أبوسيف للتجارة العامة</div>' +
               '<div class="ab-nsv-bsub" id="abNsvCounter">✨ جديدنا وعروضنا</div>' +
@@ -15668,7 +15668,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       ov.id = "abAccessGateOverlay";
       ov.innerHTML =
         '<div class="ab-gate-card">' +
-          '<div class="ab-gate-logo"><img id="abGateLogoImg" src="/abusaif-3d-192.png?v=1795604314" alt="أبوسيف"></div>' +
+          '<div class="ab-gate-logo"><img id="abGateLogoImg" src="/abusaif-3d-192.png?v=1795604381" alt="أبوسيف"></div>' +
           '<div class="ab-gate-title">أبوسيف للتجارة العامة</div>' +
           '<div class="ab-gate-sub">بوابة الدخول والصلاحيات • اختر طريقة الدخول للمتجر</div>' +
           '<div class="ab-gate-tabs">' +
@@ -16143,7 +16143,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
             '<label class="ab-adm-lbl">🖼️ صورة المنتج (من المعرض أو من الصنف المختار):</label>' +
             '<input id="abAdmFileInp" class="ab-adm-inp" type="file" accept="image/*">' +
-            '<img id="abAdmImgPrev" class="ab-adm-img-prev" src="/abusaif-3d-192.png?v=1795604314" alt="معاينة">' +
+            '<img id="abAdmImgPrev" class="ab-adm-img-prev" src="/abusaif-3d-192.png?v=1795604381" alt="معاينة">' +
 
             '<button type="button" class="ab-adm-btn-gold" id="abAdmPublishBtn">🚀 حفظ وإظهار الحالة الآن</button>' +
             '<div id="abAdmSaveStatus" style="margin-top:7px;font-size:11px;font-weight:800;color:#86efac;text-align:center"></div>' +
@@ -16283,7 +16283,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           expiresAt: computedExpires,
           displaySec: isFinite(slideSec) ? slideSec : 10,
           quickQtys: quickQtys,
-          img: _uploadedImgDataUrl || "/abusaif-3d-512.png?v=1795604314",
+          img: _uploadedImgDataUrl || "/abusaif-3d-512.png?v=1795604381",
           active: true
         };
         var pickedPid = document.getElementById("abAdmPickProd").value;
@@ -17261,6 +17261,194 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+<!-- ABUDHIYA_PWA_INSTALL_BTN_START -->
+<style id="abPwaInstallBtnStyle" data-pwa-install="1">
+  #abPwaInstallFloatBtn {
+    position: fixed !important;
+    bottom: 14px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 2147483550 !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 11px 18px !important;
+    border-radius: 999px !important;
+    border: 1.5px solid #fef08a !important;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%) !important;
+    color: #09090b !important;
+    font-size: 13.5px !important;
+    font-weight: 900 !important;
+    font-family: inherit !important;
+    cursor: pointer !important;
+    direction: rtl !important;
+    white-space: nowrap !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 22px rgba(250, 204, 21, 0.45) !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  #abPwaInstallFloatBtn.show {
+    display: inline-flex !important;
+  }
+  #abPwaInstallFloatBtn:active {
+    filter: brightness(1.08);
+  }
+  .ab-pwa-x {
+    margin-right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(9, 9, 11, 0.22);
+    color: #09090b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  #abGateInstallBtn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1.3px solid rgba(250, 204, 21, 0.8);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(250, 204, 21, 0.1));
+    color: #fef08a;
+    font-size: 12.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: none;
+  }
+  #abGateInstallBtn.show {
+    display: block;
+  }
+</style>
+<script data-ab-pwa-install="1">
+(function () {
+  if (window.__abPwaInstallBtnV1) return;
+  window.__abPwaInstallBtnV1 = true;
+
+  var _deferredPrompt = null;
+  var _dismissed = false;
+
+  function isAlreadyStandalone() {
+    try {
+      return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+             window.navigator.standalone === true;
+    } catch (e) { return false; }
+  }
+
+  // ضمان تسجيل Service Worker للـ PWA فوراً
+  try {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistration("/").then(function (reg) {
+        if (!reg) navigator.serviceWorker.register("/sw.js").catch(function () {});
+        else reg.update().catch(function () {});
+      }).catch(function () {});
+    }
+  } catch (e) {}
+
+  function notify(msg) {
+    try { if (typeof showToast === "function") showToast(msg); } catch (e) {}
+  }
+
+  function triggerInstallPrompt() {
+    if (_deferredPrompt) {
+      var dp = _deferredPrompt;
+      _deferredPrompt = null;
+      try {
+        dp.prompt();
+        if (dp.userChoice && typeof dp.userChoice.then === "function") {
+          dp.userChoice.then(function (res) {
+            if (res && res.outcome === "accepted") {
+              hideInstallButtons();
+              notify("✅ جاري تثبيت تطبيق أبوسيف بالأيقونة الجديدة...");
+            }
+          }).catch(function () {});
+        }
+      } catch (e) {}
+      return;
+    }
+    notify("📲 من قائمة Chrome (⋮) اختر «إضافة إلى الشاشة الرئيسية» ثم «تثبيت»");
+  }
+
+  function hideInstallButtons() {
+    var fl = document.getElementById("abPwaInstallFloatBtn");
+    if (fl) fl.classList.remove("show");
+    var gb = document.getElementById("abGateInstallBtn");
+    if (gb) gb.classList.remove("show");
+  }
+
+  function renderInstallButtons() {
+    if (isAlreadyStandalone()) {
+      hideInstallButtons();
+      return;
+    }
+
+    // 1) زر عائم يظهر فوراً عندما يكون التثبيت المباشر جاهزاً في Chrome
+    var fl = document.getElementById("abPwaInstallFloatBtn");
+    if (!fl && document.body) {
+      fl = document.createElement("button");
+      fl.type = "button";
+      fl.id = "abPwaInstallFloatBtn";
+      fl.innerHTML = '<span>📲 تثبيت تطبيق أبوسيف الآن</span><span class="ab-pwa-x" id="abPwaCloseX" title="إخفاء">✕</span>';
+      fl.addEventListener("click", function (ev) {
+        if (ev.target && ev.target.id === "abPwaCloseX") {
+          _dismissed = true;
+          fl.classList.remove("show");
+          return;
+        }
+        triggerInstallPrompt();
+      });
+      document.body.appendChild(fl);
+    }
+    if (fl) {
+      fl.classList.toggle("show", !!_deferredPrompt && !_dismissed);
+    }
+
+    // 2) زر تثبيت أنيق داخل بوابة الدخول أيضاً
+    var gateCard = document.querySelector("#abAccessGateOverlay .ab-gate-card");
+    if (gateCard) {
+      var gb = document.getElementById("abGateInstallBtn");
+      if (!gb) {
+        gb = document.createElement("button");
+        gb.type = "button";
+        gb.id = "abGateInstallBtn";
+        gb.textContent = "📲 تثبيت التطبيق على الشاشة الرئيسية";
+        gb.addEventListener("click", triggerInstallPrompt);
+        var foot = gateCard.querySelector(".ab-gate-foot");
+        if (foot) foot.insertAdjacentElement("beforebegin", gb);
+        else gateCard.appendChild(gb);
+      }
+      gb.classList.toggle("show", !!_deferredPrompt);
+    }
+  }
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    _deferredPrompt = e;
+    renderInstallButtons();
+  });
+
+  window.addEventListener("appinstalled", function () {
+    _deferredPrompt = null;
+    hideInstallButtons();
+    notify("✅ تم تثبيت تطبيق أبوسيف بنجاح!");
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(renderInstallButtons, 300); });
+  } else {
+    setTimeout(renderInstallButtons, 300);
+  }
+  setInterval(renderInstallButtons, 2000);
+})();
+</script>
+<!-- ABUDHIYA_PWA_INSTALL_BTN_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -17304,7 +17492,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-604322";
+  var TARGET_CACHE = "abudhiya-offline-v4-604389";
 
   function forceReleaseSplash() {
     try {
