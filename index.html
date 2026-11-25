@@ -17612,6 +17612,806 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_ORDER_LOCK_111_END -->
 
+
+<!-- ABUDHIYA_CUSTOMER_PROFILE_AUTOFILL_START -->
+<style id="abCustomerProfileStyle" data-cust-profile="1">
+  /* 1) صندوق بيانات العميل داخل بوابة الدخول (يظهر فقط لتبويبي العميل والزائر) */
+  #abGateCustBox {
+    direction: rtl;
+    margin: 0 0 10px;
+    padding: 10px;
+    border-radius: 13px;
+    background: rgba(16, 19, 29, 0.94);
+    border: 1.2px solid rgba(212, 175, 55, 0.52);
+    text-align: right;
+    box-sizing: border-box;
+  }
+  .ab-gc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+  .ab-gc-title {
+    font-size: 11.5px;
+    font-weight: 900;
+    color: #fef08a;
+  }
+  .ab-gc-tag {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #86efac;
+    background: rgba(16, 185, 129, 0.16);
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    border-radius: 999px;
+    padding: 1.5px 7px;
+    white-space: nowrap;
+  }
+  .ab-gc-inp {
+    width: 100%;
+    padding: 9px 11px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    border: 1.1px solid rgba(212, 175, 55, 0.48);
+    background: #090b12;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+  }
+  .ab-gc-inp:focus {
+    border-color: #facc15;
+    box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.16);
+  }
+  .ab-gc-loc-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ab-gc-loc-row .ab-gc-inp {
+    margin-bottom: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .ab-gc-gps-btn {
+    flex: 0 0 auto;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(56, 189, 248, 0.6);
+    background: rgba(14, 165, 233, 0.18);
+    color: #bae6fd;
+    font-size: 11.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .ab-gc-gps-btn.ok {
+    background: rgba(5, 150, 105, 0.25);
+    border-color: #34d399;
+    color: #86efac;
+  }
+  .ab-gc-err {
+    display: none;
+    margin-top: 7px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(153, 27, 27, 0.38);
+    border: 1px solid rgba(248, 113, 113, 0.65);
+    color: #fecaca;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+  }
+  .ab-gc-err.show { display: block; }
+
+  /* 2) بطاقة بيانات العميل المحفوظة داخل الفاتورة وصفحة اعتماد الطلب */
+  #abSavedCustBadgeCard {
+    direction: rtl;
+    margin: 8px 0 8px;
+    padding: 10px 11px;
+    border-radius: 13px;
+    background: linear-gradient(145deg, rgba(10, 30, 24, 0.96) 0%, rgba(11, 14, 22, 0.98) 100%);
+    border: 1.3px solid rgba(52, 211, 153, 0.65);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    box-sizing: border-box;
+    text-align: right;
+  }
+  .ab-scb-info {
+    min-width: 0;
+    flex: 1 1 auto;
+    line-height: 1.55;
+  }
+  .ab-scb-name {
+    font-size: 13px;
+    font-weight: 900;
+    color: #fef08a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ab-scb-meta {
+    font-size: 11px;
+    font-weight: 700;
+    color: #d1fae5;
+    word-break: break-word;
+  }
+  .ab-scb-edit-btn {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(250, 204, 21, 0.65);
+    background: rgba(20, 23, 34, 0.92);
+    color: #fef08a;
+    font-size: 11px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* 3) نافذة تسجيل/تعديل بيانات العميل المستقلة */
+  #abCustProfileModal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483580 !important;
+    background: rgba(3, 5, 10, 0.92) !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 14px !important;
+    direction: rtl !important;
+    box-sizing: border-box !important;
+  }
+  #abCustProfileModal.open { display: flex !important; }
+  .ab-cpm-box {
+    width: 100%;
+    max-width: 390px;
+    border-radius: 18px;
+    background: linear-gradient(165deg, #18140e 0%, #0a0c12 64%, #15110b 100%);
+    border: 1.6px solid rgba(250, 204, 21, 0.9);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+    padding: 18px 15px 16px;
+    color: #f8fafc;
+    font-family: inherit;
+    text-align: right;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .ab-cpm-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    padding: 0;
+  }
+  .ab-cpm-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: #facc15;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .ab-cpm-sub {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #cbd5e1;
+    text-align: center;
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .ab-cpm-lbl {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fef08a;
+    margin: 7px 0 4px;
+  }
+  .ab-cpm-save {
+    width: 100%;
+    margin-top: 11px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.3px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 14px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+</style>
+<script data-ab-cust-profile="1">
+(function () {
+  if (window.__abCustomerProfileAutoV1) return;
+  window.__abCustomerProfileAutoV1 = true;
+
+  var PROFILE_KEY = "ab_saved_customer_profile_v1";
+  var ROLE_KEY = "ab_app_role_v1";
+  var _pendingGpsUrl = "";
+  var _promptedOnce = false;
+
+  function notify(msg) {
+    try { if (typeof showToast === "function") showToast(msg); } catch (e) {}
+  }
+
+  function toAsciiDigits(s) {
+    return String(s || "").replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); });
+  }
+
+  function getSavedProfile() {
+    try {
+      var p = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null");
+      if (p && typeof p === "object") {
+        return {
+          name: String(p.name || "").trim(),
+          phone: String(p.phone || "").trim(),
+          location: String(p.location || "").trim(),
+          gpsUrl: String(p.gpsUrl || "").trim()
+        };
+      }
+    } catch (e) {}
+    return { name: "", phone: "", location: "", gpsUrl: "" };
+  }
+
+  function hasValidProfile(p) {
+    p = p || getSavedProfile();
+    var digits = toAsciiDigits(p.phone).replace(/[^\d]/g, "");
+    return p.name.length >= 2 && digits.length >= 7 && (p.location.length >= 2 || p.gpsUrl.length > 10);
+  }
+
+  function saveProfile(name, phone, location, gpsUrl) {
+    var clean = {
+      name: String(name || "").trim(),
+      phone: toAsciiDigits(phone || "").replace(/[^\d+\-\s]/g, "").trim(),
+      location: String(location || "").trim(),
+      gpsUrl: String(gpsUrl || "").trim(),
+      updatedAt: Date.now()
+    };
+    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(clean)); } catch (e) {}
+    // تحديث فوري لكل خانات الفاتورة وبطاقة العميل
+    autoFillInvoiceFields(true);
+    renderSavedCustBadge();
+    return clean;
+  }
+
+  window.__abGetSavedCustomerProfile = getSavedProfile;
+  window.__abOpenCustomerProfileModal = openProfileModal;
+
+  /* ---------------- 1) التقاط إحداثيات GPS بلمسة واحدة ---------------- */
+  function captureGpsInto(locInput, btnEl, onGotUrl) {
+    if (!navigator.geolocation) {
+      notify("⚠️ جهازك لا يدعم تحديد الموقع التلقائي — اكتب عنوانك يدوياً");
+      return;
+    }
+    var origTxt = btnEl ? btnEl.textContent : "";
+    if (btnEl) btnEl.textContent = "⏳ جاري...";
+    navigator.geolocation.getCurrentPosition(
+      function (pos) {
+        var lat = pos.coords.latitude.toFixed(6);
+        var lng = pos.coords.longitude.toFixed(6);
+        var url = "https://maps.google.com/?q=" + lat + "," + lng;
+        if (typeof onGotUrl === "function") onGotUrl(url);
+        if (locInput && !locInput.value.trim()) {
+          locInput.value = "موقع GPS محفوظ (" + lat + ", " + lng + ")";
+        }
+        if (btnEl) {
+          btnEl.textContent = "✅ تم GPS";
+          btnEl.classList.add("ok");
+        }
+        notify("✅ تم التقاط موقعك الجغرافي بنجاح");
+      },
+      function () {
+        if (btnEl) btnEl.textContent = origTxt || "📍 GPS";
+        notify("⚠️ تعذر التقاط GPS — اكتب اسم المنطقة أو المحل يدوياً");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }
+
+  /* ---------------- 2) دمج خانات العميل داخل بوابة الدخول (للعميل والزائر فقط) ---------------- */
+  function syncGateBoxVisibility(ov) {
+    var box = document.getElementById("abGateCustBox");
+    if (!ov || !box) return;
+    var activeTab = ov.querySelector(".ab-gate-tab.active");
+    var gtab = activeTab ? (activeTab.getAttribute("data-gtab") || "") : "rep";
+    var showForCustomer = (gtab === "rep" || gtab === "guest");
+    box.style.display = showForCustomer ? "block" : "none";
+  }
+
+  function mountInsideAccessGate() {
+    var ov = document.getElementById("abAccessGateOverlay");
+    if (!ov) return;
+    var card = ov.querySelector(".ab-gate-card");
+    var tabs = ov.querySelector(".ab-gate-tabs");
+    if (!card || !tabs) return;
+
+    var box = document.getElementById("abGateCustBox");
+    if (!box) {
+      var saved = getSavedProfile();
+      _pendingGpsUrl = saved.gpsUrl || "";
+
+      box = document.createElement("div");
+      box.id = "abGateCustBox";
+      box.innerHTML =
+        '<div class="ab-gc-head">' +
+          '<span class="ab-gc-title">🪪 بياناتك للطلب المباشر</span>' +
+          '<span class="ab-gc-tag">تُحفظ مرة واحدة فقط ✓</span>' +
+        '</div>' +
+        '<input id="abGcName" class="ab-gc-inp" type="text" autocomplete="name" placeholder="👤 اسم العميل أو المحل (مثلاً: بقالة الأمانة)">' +
+        '<input id="abGcPhone" class="ab-gc-inp" type="tel" inputmode="tel" autocomplete="tel" placeholder="📱 رقم الجوال / الواتساب (مثلاً: 77xxxxxxx)">' +
+        '<div class="ab-gc-loc-row">' +
+          '<input id="abGcLoc" class="ab-gc-inp" type="text" autocomplete="street-address" placeholder="📍 الموقع / العنوان (مثلاً: سيئون - السوق العام)">' +
+          '<button type="button" class="ab-gc-gps-btn' + (_pendingGpsUrl ? ' ok' : '') + '" id="abGcGpsBtn">' + (_pendingGpsUrl ? '✅ GPS' : '📍 GPS') + '</button>' +
+        '</div>' +
+        '<div id="abGcErr" class="ab-gc-err"></div>';
+
+      tabs.insertAdjacentElement("afterend", box);
+
+      document.getElementById("abGcName").value = saved.name || "";
+      document.getElementById("abGcPhone").value = saved.phone || "";
+      document.getElementById("abGcLoc").value = saved.location || "";
+
+      document.getElementById("abGcGpsBtn").addEventListener("click", function () {
+        captureGpsInto(document.getElementById("abGcLoc"), this, function (url) {
+          _pendingGpsUrl = url;
+        });
+      });
+
+      var tabBtns = ov.querySelectorAll(".ab-gate-tab");
+      for (var i = 0; i < tabBtns.length; i++) {
+        tabBtns[i].addEventListener("click", function () {
+          setTimeout(function () { syncGateBoxVisibility(ov); }, 20);
+        });
+      }
+    }
+
+    syncGateBoxVisibility(ov);
+  }
+
+  // التحقق من بيانات العميل وحفظها تلقائياً لحظة الضغط على زر الدخول (عميل بمندوب أو زائر)
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target && ev.target.closest ? ev.target.closest("#abGateRepGo, #abGateGuestGo") : null;
+    if (!btn) return;
+    var box = document.getElementById("abGateCustBox");
+    if (!box || box.style.display === "none") return;
+
+    var nameEl = document.getElementById("abGcName");
+    var phoneEl = document.getElementById("abGcPhone");
+    var locEl = document.getElementById("abGcLoc");
+    var errEl = document.getElementById("abGcErr");
+
+    var nm = (nameEl && nameEl.value || "").trim();
+    var ph = toAsciiDigits((phoneEl && phoneEl.value) || "").replace(/[^\d]/g, "");
+    var lc = (locEl && locEl.value || "").trim();
+
+    if (nm.length < 2) {
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      if (errEl) { errEl.textContent = "⚠️ أدخل اسم العميل أو المحل أولاً ليُحفظ في جميع طلباتك"; errEl.classList.add("show"); }
+      if (nameEl) nameEl.focus();
+      return;
+    }
+    if (ph.length < 7) {
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      if (errEl) { errEl.textContent = "⚠️ أدخل رقم الجوال الصحيح (7 أرقام على الأقل)"; errEl.classList.add("show"); }
+      if (phoneEl) phoneEl.focus();
+      return;
+    }
+    if (lc.length < 2 && !_pendingGpsUrl) {
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      if (errEl) { errEl.textContent = "⚠️ اكتب موقعك / عنوانك أو اضغط زر 📍 GPS"; errEl.classList.add("show"); }
+      if (locEl) locEl.focus();
+      return;
+    }
+
+    if (errEl) errEl.classList.remove("show");
+    saveProfile(nm, (phoneEl && phoneEl.value) || ph, lc || "موقع GPS محفوظ", _pendingGpsUrl);
+  }, true);
+
+  /* ---------------- 3) نافذة حفظ/تعديل البيانات المستقلة (لمن دخل برابط مندوب أو مسجل سابقاً) ---------------- */
+  function openProfileModal(isMandatoryWelcome) {
+    var modal = document.getElementById("abCustProfileModal");
+    var saved = getSavedProfile();
+    var modalGps = saved.gpsUrl || "";
+
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "abCustProfileModal";
+      modal.innerHTML =
+        '<div class="ab-cpm-box">' +
+          '<button type="button" class="ab-cpm-close" id="abCpmCloseBtn">✕</button>' +
+          '<div class="ab-cpm-title" id="abCpmTitle">🪪 حفظ بياناتك للطلب السريع</div>' +
+          '<div class="ab-cpm-sub" id="abCpmSub">سجّل اسمك ورقمك وموقعك مرة واحدة فقط، وسيتم إرسال كل طلباتك القادمة باسمك تلقائياً دون كتابتها كل مرة</div>' +
+          '<label class="ab-cpm-lbl">👤 اسم العميل أو المحل:</label>' +
+          '<input id="abCpmName" class="ab-gc-inp" type="text" autocomplete="name" placeholder="مثلاً: سوبرماركت النجاح">' +
+          '<label class="ab-cpm-lbl">📱 رقم الجوال / الواتساب:</label>' +
+          '<input id="abCpmPhone" class="ab-gc-inp" type="tel" inputmode="tel" autocomplete="tel" placeholder="مثلاً: 77xxxxxxx">' +
+          '<label class="ab-cpm-lbl">📍 الموقع / العنوان:</label>' +
+          '<div class="ab-gc-loc-row">' +
+            '<input id="abCpmLoc" class="ab-gc-inp" type="text" autocomplete="street-address" placeholder="مثلاً: سيئون - السوق العام">' +
+            '<button type="button" class="ab-gc-gps-btn" id="abCpmGpsBtn">📍 GPS</button>' +
+          '</div>' +
+          '<div id="abCpmErr" class="ab-gc-err"></div>' +
+          '<button type="button" class="ab-cpm-save" id="abCpmSaveBtn">💾 حفظ بياناتي والمتابعة</button>' +
+        '</div>';
+      document.body.appendChild(modal);
+
+      document.getElementById("abCpmCloseBtn").addEventListener("click", function () {
+        modal.classList.remove("open");
+      });
+      modal.addEventListener("click", function (ev) {
+        if (ev.target === modal && !modal.getAttribute("data-mandatory")) {
+          modal.classList.remove("open");
+        }
+      });
+
+      document.getElementById("abCpmGpsBtn").addEventListener("click", function () {
+        var btnRef = this;
+        captureGpsInto(document.getElementById("abCpmLoc"), btnRef, function (url) {
+          modal.setAttribute("data-gps-url", url);
+        });
+      });
+
+      document.getElementById("abCpmSaveBtn").addEventListener("click", function () {
+        var nm = (document.getElementById("abCpmName").value || "").trim();
+        var phRaw = (document.getElementById("abCpmPhone").value || "").trim();
+        var phDigits = toAsciiDigits(phRaw).replace(/[^\d]/g, "");
+        var lc = (document.getElementById("abCpmLoc").value || "").trim();
+        var gps = modal.getAttribute("data-gps-url") || "";
+        var err = document.getElementById("abCpmErr");
+
+        if (nm.length < 2) { err.textContent = "⚠️ أدخل اسم العميل أو المحل"; err.classList.add("show"); return; }
+        if (phDigits.length < 7) { err.textContent = "⚠️ أدخل رقم جوال صحيح"; err.classList.add("show"); return; }
+        if (lc.length < 2 && !gps) { err.textContent = "⚠️ اكتب الموقع أو اضغط 📍 GPS"; err.classList.add("show"); return; }
+
+        err.classList.remove("show");
+        saveProfile(nm, phRaw, lc || "موقع GPS محفوظ", gps);
+        modal.classList.remove("open");
+        notify("✅ تم حفظ بياناتك بنجاح — ستُرسل جميع طلباتك باسمك تلقائياً");
+      });
+    }
+
+    modal.setAttribute("data-gps-url", modalGps);
+    if (isMandatoryWelcome) modal.setAttribute("data-mandatory", "1");
+    else modal.removeAttribute("data-mandatory");
+
+    var closeB = document.getElementById("abCpmCloseBtn");
+    if (closeB) closeB.style.display = isMandatoryWelcome ? "none" : "block";
+    document.getElementById("abCpmName").value = saved.name || "";
+    document.getElementById("abCpmPhone").value = saved.phone || "";
+    document.getElementById("abCpmLoc").value = saved.location || "";
+    var gpsB = document.getElementById("abCpmGpsBtn");
+    if (gpsB) {
+      gpsB.textContent = modalGps ? "✅ GPS" : "📍 GPS";
+      gpsB.classList.toggle("ok", !!modalGps);
+    }
+    var errB = document.getElementById("abCpmErr");
+    if (errB) errB.classList.remove("show");
+    modal.classList.add("open");
+  }
+
+  /* ---------------- 4) تعبئة خانات الفاتورة تلقائياً وعرض بطاقة العميل المحفوظة ---------------- */
+  var SKIP_INPUT_IDS = {
+    abRvInlineCode: 1, abRvmCodeInp: 1, abL111Input: 1, abGateRepInp: 1,
+    abGateStaffInp: 1, abGateAdminInp: 1, abGcName: 1, abGcPhone: 1, abGcLoc: 1,
+    abCpmName: 1, abCpmPhone: 1, abCpmLoc: 1
+  };
+
+  function setInputValueSilently(el, val) {
+    if (!el || !val) return;
+    if (el.value === val) return;
+    el.value = val;
+    try { el.dispatchEvent(new Event("input", { bubbles: true })); } catch (e) {}
+    try { el.dispatchEvent(new Event("change", { bubbles: true })); } catch (e) {}
+  }
+
+  function autoFillInvoiceFields(forceUpdate) {
+    var p = getSavedProfile();
+    if (!p.name && !p.phone && !p.location) return;
+
+    var scopes = [document.getElementById("abSilentOrderBox"), document.getElementById("invoiceView")];
+    for (var s = 0; s < scopes.length; s++) {
+      var root = scopes[s];
+      if (!root) continue;
+      var inputs = root.querySelectorAll("input, textarea");
+      for (var i = 0; i < inputs.length; i++) {
+        var inp = inputs[i];
+        if (!inp || SKIP_INPUT_IDS[inp.id]) continue;
+        var typ = String(inp.type || "text").toLowerCase();
+        if (typ === "password" || typ === "hidden" || typ === "checkbox" || typ === "radio" || typ === "file" || typ === "submit" || typ === "button") continue;
+        if (inp.closest("#abLock111Box, #abDirectRepBox, #abSv3Admin, #abPricedAdminCtrl, #abQuantumSecretCalc")) continue;
+
+        if (!inp.__abProfileEditListener) {
+          inp.__abProfileEditListener = true;
+          inp.addEventListener("input", function (ev) {
+            if (ev && ev.isTrusted) this.setAttribute("data-ab-user-edited", "1");
+          });
+        }
+        if (!forceUpdate && inp.getAttribute("data-ab-user-edited") === "1" && inp.value.trim()) continue;
+
+        var meta = (
+          (inp.id || "") + " " + (inp.name || "") + " " +
+          (inp.placeholder || "") + " " + (inp.getAttribute("aria-label") || "")
+        ).toLowerCase();
+        var prevTxt = (inp.previousElementSibling && inp.previousElementSibling.textContent) ? inp.previousElementSibling.textContent : "";
+        var allHint = meta + " " + prevTxt;
+
+        var isPhone = typ === "tel" || /رقم|جوال|هاتف|تلفون|واتس|موبايل|phone|mobile|tel/.test(allHint);
+        var isLoc = /موقع|عنوان|منطق|شارع|حارة|حي|مدين|address|location|loc|area|city|gps/.test(allHint);
+        var isName = /عميل|محل|بقال|الاسم|اسم|تاجر|سوبر|customer|client|shop|store|cust|name/.test(allHint);
+
+        if (isPhone && p.phone) {
+          if (forceUpdate || !inp.value.trim()) setInputValueSilently(inp, p.phone);
+        } else if (isLoc && (p.location || p.gpsUrl)) {
+          var locVal = p.location || p.gpsUrl;
+          if (forceUpdate || !inp.value.trim()) setInputValueSilently(inp, locVal);
+        } else if (isName && p.name) {
+          if (forceUpdate || !inp.value.trim()) setInputValueSilently(inp, p.name);
+        }
+      }
+    }
+  }
+
+  function renderSavedCustBadge() {
+    var p = getSavedProfile();
+    var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView");
+    if (!box) return;
+
+    var card = document.getElementById("abSavedCustBadgeCard");
+    if (!p.name && !p.phone && !p.location) {
+      if (card) card.style.display = "none";
+      return;
+    }
+
+    if (!card) {
+      card = document.createElement("div");
+      card.id = "abSavedCustBadgeCard";
+      box.insertAdjacentElement("afterbegin", card);
+    }
+    card.style.display = "flex";
+
+    var sig = p.name + "|" + p.phone + "|" + p.location + "|" + p.gpsUrl;
+    if (card.getAttribute("data-sig") === sig) return;
+    card.setAttribute("data-sig", sig);
+
+    var details = [];
+    if (p.phone) details.push("📱 " + p.phone);
+    if (p.location) details.push("📍 " + p.location);
+    if (p.gpsUrl && p.location.indexOf("http") === -1) details.push("🗺️ GPS محفوظ ✓");
+
+    card.innerHTML =
+      '<div class="ab-scb-info">' +
+        '<div class="ab-scb-name">👤 ' + (p.name || "عميلنا العزيز") + ' <span style="font-size:10px;color:#86efac">(محفوظ للطلب الفوري ✓)</span></div>' +
+        '<div class="ab-scb-meta">' + details.join("  •  ") + '</div>' +
+      '</div>' +
+      '<button type="button" class="ab-scb-edit-btn" id="abScbEditBtn">✏️ تعديل</button>';
+
+    document.getElementById("abScbEditBtn").addEventListener("click", function () {
+      openProfileModal(false);
+    });
+  }
+
+  /* ---------------- 5) دمج بيانات العميل المحفوظة تلقائياً في كل رسائل وإيصالات الطلبات ---------------- */
+  function wrapResolveCustInfo() {
+    if (typeof window.__abResolveCustInfo === "function" && !window.__abResolveCustInfo.__abProfileWrapped) {
+      var origResolve = window.__abResolveCustInfo;
+      var wrapped = function () {
+        var res = {};
+        try { res = origResolve.apply(this, arguments) || {}; } catch (e) {}
+        var p = getSavedProfile();
+        if (!res.custName && p.name) res.custName = p.name;
+        if (!res.custPhone && p.phone) res.custPhone = p.phone;
+        if (!res.custLocation && p.location) res.custLocation = p.location;
+        if (!res.custGps && p.gpsUrl) res.custGps = p.gpsUrl;
+        return res;
+      };
+      wrapped.__abProfileWrapped = true;
+      window.__abResolveCustInfo = wrapped;
+    } else if (typeof window.__abResolveCustInfo !== "function") {
+      var fallbackFn = function () {
+        var p = getSavedProfile();
+        return { custName: p.name, custPhone: p.phone, custLocation: p.location, custGps: p.gpsUrl, payMethod: "" };
+      };
+      fallbackFn.__abProfileWrapped = true;
+      window.__abResolveCustInfo = fallbackFn;
+    }
+  }
+
+  function injectProfileIntoOrderText(rawText) {
+    if (!rawText || typeof rawText !== "string") return rawText;
+    if (rawText.indexOf("رابط المتجر المباشر") !== -1 || rawText.indexOf("كشف جرد طلبات اليوم") !== -1) return rawText;
+
+    // التأكد أنها رسالة طلب فعلية
+    var isOrderMsg =
+      rawText.indexOf("طلب بضاعة") !== -1 ||
+      rawText.indexOf("عدد الأكياس") !== -1 ||
+      rawText.indexOf("عدد الكراتين") !== -1 ||
+      rawText.indexOf("عدد الاكياس") !== -1 ||
+      rawText.indexOf("فاتورة") !== -1 ||
+      rawText.indexOf("⬅️") !== -1;
+    if (!isOrderMsg) return rawText;
+
+    var p = getSavedProfile();
+    if (!p.name && !p.phone && !p.location) return rawText;
+
+    var addLines = [];
+    var hasNameLine = /(?:العميل|المحل|الاسم)\s*[:：]/.test(rawText) && (p.name ? rawText.indexOf(p.name) !== -1 : true);
+    if (p.name && !hasNameLine && rawText.indexOf(p.name) === -1) {
+      addLines.push("👤 *العميل / المحل:* " + p.name);
+    }
+    var phoneDigits = toAsciiDigits(p.phone).replace(/[^\d]/g, "");
+    if (p.phone && rawText.indexOf(p.phone) === -1 && (!phoneDigits || rawText.indexOf(phoneDigits) === -1)) {
+      addLines.push("📱 *رقم الجوال:* " + p.phone);
+    }
+    if (p.location && rawText.indexOf(p.location) === -1) {
+      addLines.push("📍 *الموقع:* " + p.location);
+    }
+    if (p.gpsUrl && rawText.indexOf(p.gpsUrl) === -1) {
+      addLines.push("🗺️ *خريطة الموقع:* " + p.gpsUrl);
+    }
+    if (!addLines.length) return rawText;
+
+    var lines = rawText.split(/\r?\n/);
+    var insertAt = -1;
+    for (var i = 0; i < Math.min(lines.length, 10); i++) {
+      if (/(?:العميل|المحل|طريقة الدفع|الوقت)/.test(lines[i])) {
+        insertAt = i + 1;
+      }
+    }
+    if (insertAt !== -1) {
+      lines.splice.apply(lines, [insertAt, 0].concat(addLines));
+      return lines.join("\n");
+    }
+    // إدراج بعد السطر الأول أو الفاصل العلوي
+    if (lines.length >= 2 && /[━─═\-_]{3,}/.test(lines[1])) {
+      lines.splice.apply(lines, [2, 0].concat(addLines));
+      return lines.join("\n");
+    }
+    return addLines.join("\n") + "\n" + rawText;
+  }
+
+  function wrapOrderDispatchers() {
+    // 1) ربط مع دالة تقسيم الإرسال الموحدة
+    if (typeof window.__abSplitSendText === "function" && !window.__abSplitSendText.__abProfileWrapped) {
+      var origSplit = window.__abSplitSendText;
+      var wSplit = function (t) {
+        var out = origSplit.apply(this, arguments);
+        return injectProfileIntoOrderText(out);
+      };
+      wSplit.__abProfileWrapped = true;
+      window.__abSplitSendText = wSplit;
+    }
+
+    // 2) ربط مع navigator.share (لمشاركة الطلب مباشرة)
+    if (navigator && typeof navigator.share === "function" && !navigator.share.__abProfileWrapped) {
+      var origShare = navigator.share.bind(navigator);
+      var wShare = function (data) {
+        if (data && typeof data.text === "string") {
+          return origShare(Object.assign({}, data, { text: injectProfileIntoOrderText(data.text) }));
+        }
+        return origShare(data);
+      };
+      wShare.__abProfileWrapped = true;
+      try { navigator.share = wShare; } catch (e) {}
+    }
+
+    // 3) ربط مع fetch (للإرسال الصامت للبوت والمندوب)
+    if (typeof window.fetch === "function" && !window.fetch.__abProfileWrapped) {
+      var origFetch = window.fetch;
+      var wFetch = function (input, init) {
+        var nextInit = init;
+        if (init && typeof init.body === "string" && init.body.trim().charAt(0) === "{") {
+          try {
+            var d = JSON.parse(init.body);
+            var p = getSavedProfile();
+            if (d && typeof d === "object" && (p.name || p.phone || p.location)) {
+              var changed = false;
+              if (!d.customerName && !d.custName && p.name) { d.customerName = p.name; d.custName = p.name; changed = true; }
+              if (!d.customerPhone && !d.custPhone && p.phone) { d.customerPhone = p.phone; d.custPhone = p.phone; changed = true; }
+              if (!d.customerLocation && !d.location && p.location) { d.customerLocation = p.location; d.location = p.location; changed = true; }
+              if (!d.customerGps && p.gpsUrl) { d.customerGps = p.gpsUrl; changed = true; }
+              var fields = ["message", "text", "body", "orderText", "msg", "caption"];
+              for (var i = 0; i < fields.length; i++) {
+                var k = fields[i];
+                if (typeof d[k] === "string" && d[k].trim()) {
+                  var fx = injectProfileIntoOrderText(d[k]);
+                  if (fx !== d[k]) { d[k] = fx; changed = true; }
+                }
+              }
+              if (changed) nextInit = Object.assign({}, init, { body: JSON.stringify(d) });
+            }
+          } catch (e) {}
+        }
+        return origFetch.call(this, input, nextInit);
+      };
+      wFetch.__abProfileWrapped = true;
+      window.fetch = wFetch;
+    }
+
+    // 4) ربط مع window.open لروابط واتساب المباشرة
+    if (typeof window.open === "function" && !window.open.__abProfileWrapped) {
+      var origOpen = window.open;
+      var wOpen = function (url) {
+        var args = Array.prototype.slice.call(arguments);
+        if (typeof url === "string" && /(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(url)) {
+          try {
+            var u = new URL(url, window.location.origin);
+            var txt = u.searchParams.get("text");
+            if (txt) {
+              var fx = injectProfileIntoOrderText(txt);
+              if (fx !== txt) {
+                var parts = [];
+                u.searchParams.forEach(function (val, key) {
+                  parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(key === "text" ? fx : val));
+                });
+                args[0] = u.origin + u.pathname + "?" + parts.join("&");
+              }
+            }
+          } catch (e) {}
+        }
+        return origOpen.apply(this, args);
+      };
+      wOpen.__abProfileWrapped = true;
+      window.open = wOpen;
+    }
+  }
+
+  /* ---------------- 6) التهيئة المستمرة وفحص الحاجة لحفظ البيانات لمرة واحدة ---------------- */
+  function syncCustomerProfileSystem() {
+    try {
+      wrapResolveCustInfo();
+      wrapOrderDispatchers();
+      mountInsideAccessGate();
+      autoFillInvoiceFields(false);
+      renderSavedCustBadge();
+
+      // إذا كان المستخدم داخلاً كعميل أو زائر (وليس مديراً ولا مندوب 000) وبوابة الدخول مغلقة ولم يحفظ بياناته بعد
+      if (!_promptedOnce) {
+        var role = "";
+        try { role = localStorage.getItem(ROLE_KEY) || ""; } catch (e) {}
+        var ov = document.getElementById("abAccessGateOverlay");
+        var gateOpen = !!(ov && ov.classList.contains("open"));
+        if ((role === "rep" || role === "guest") && !gateOpen && !hasValidProfile()) {
+          _promptedOnce = true;
+          openProfileModal(true);
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(syncCustomerProfileSystem, 160); });
+  } else {
+    setTimeout(syncCustomerProfileSystem, 160);
+  }
+  setTimeout(syncCustomerProfileSystem, 750);
+  document.addEventListener("click", function () { setTimeout(syncCustomerProfileSystem, 150); }, true);
+  setInterval(syncCustomerProfileSystem, 1200);
+})();
+</script>
+<!-- ABUDHIYA_CUSTOMER_PROFILE_AUTOFILL_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -17655,7 +18455,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-639187";
+  var TARGET_CACHE = "abudhiya-offline-v4-639543";
 
   function forceReleaseSplash() {
     try {
