@@ -10,30 +10,30 @@
   "lang": "ar",
   "icons": [
     {
-      "src": "/abusaif-legend-192.png?v=1795602847",
+      "src": "/abusaif-app-1795604314-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/abusaif-legend-mask-192.png?v=1795602847",
+      "src": "/abusaif-app-1795604314-mask-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/abusaif-legend-512.png?v=1795602847",
+      "src": "/abusaif-app-1795604314-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/abusaif-legend-mask-512.png?v=1795602847",
+      "src": "/abusaif-app-1795604314-mask-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
   "scope": "/",
-  "id": "/?app=abusaif-order-v12"
+  "id": "/?app=abusaif-1795604314"
 }
