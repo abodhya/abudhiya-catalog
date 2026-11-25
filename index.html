@@ -7197,272 +7197,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
-<!-- ABUDHIYA_SPLIT_UNITS_WA_START -->
-<script data-ab-split-units-wa="1">
-(function () {
-  if (window.__abSplitUnitsWaV1) return;
-  window.__abSplitUnitsWaV1 = true;
-
-  var SNAP_KEY = "ab_last_confirm_order_v1";
-
-  function classifyUnit(prod, fallbackName, lineHint) {
-    var rawU = "";
-    if (prod) {
-      rawU = String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim();
-    }
-    var nameStr = String((prod && prod.name) || fallbackName || "");
-    var catStr = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
-    var lnStr = String(lineHint || "");
-
-    if (rawU) {
-      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
-      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
-      return { key: "other:" + rawU, label: rawU };
-    }
-    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nameStr) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(catStr)) {
-      return { key: "carton", label: "كرتون" };
-    }
-    if (/كيس|أكياس|اكياس|شوال|bag/i.test(nameStr)) {
-      return { key: "bag", label: "كيس" };
-    }
-    if (/كرتون|كراتين/i.test(lnStr)) return { key: "carton", label: "كرتون" };
-    if (/كيس|أكياس|اكياس/i.test(lnStr)) return { key: "bag", label: "كيس" };
-    return { key: "bag", label: "كيس" };
-  }
-
-  function snapshotCurrentCartItems() {
-    var items = [];
-    try {
-      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
-      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
-      var byId = {};
-      for (var p = 0; p < prods.length; p++) {
-        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
-      }
-      if (cartObj) {
-        var keys = Object.keys(cartObj);
-        for (var i = 0; i < keys.length; i++) {
-          var pid = keys[i];
-          var qty = Number(cartObj[pid] || 0);
-          if (qty <= 0) continue;
-          var pr = byId[String(pid)];
-          var nm = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
-          var u = classifyUnit(pr, nm, "");
-          items.push({ name: nm, qty: qty, unitKey: u.key, unitLabel: u.label });
-        }
-      }
-    } catch (e) {}
-    return items;
-  }
-
-  // التقاط نسخة فورية من السلة قبل أي ضغط على زر إرسال/واتساب حتى لو تم تفريغ السلة
-  document.addEventListener("click", function () {
-    var live = snapshotCurrentCartItems();
-    if (live.length) {
-      window.__abUnitSplitSnap = { items: live, ts: Date.now() };
-    }
-  }, true);
-
-  function getActiveOrderItems(rawText) {
-    var live = snapshotCurrentCartItems();
-    if (live.length) return live;
-
-    if (window.__abUnitSplitSnap && window.__abUnitSplitSnap.items && window.__abUnitSplitSnap.items.length && (Date.now() - window.__abUnitSplitSnap.ts) < 180000) {
-      return window.__abUnitSplitSnap.items;
-    }
-
-    var last = window.__abLastConfirmOrder;
-    if (!last) {
-      try { last = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
-    }
-    if (last && Array.isArray(last.items) && last.items.length && (Date.now() - (last.ts || 0)) < 180000) {
-      var normalized = [];
-      for (var i = 0; i < last.items.length; i++) {
-        var it = last.items[i];
-        var u = it.unitKey ? { key: it.unitKey, label: it.unitLabel || "كيس" } : classifyUnit(null, it.name, "");
-        normalized.push({ name: it.name, qty: Number(it.qty || 0), unitKey: u.key, unitLabel: u.label });
-      }
-      return normalized;
-    }
-
-    // احتياط: مطابقة أسماء الأصناف من نص الرسالة نفسها مع قائمة PRODUCTS
-    var matched = [];
-    try {
-      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
-      var lines = String(rawText || "").split(/\r?\n/);
-      for (var li = 0; li < lines.length; li++) {
-        var ln = lines[li];
-        for (var pi = 0; pi < prods.length; pi++) {
-          var pr = prods[pi];
-          if (!pr || !pr.name) continue;
-          var pname = String(pr.name).trim();
-          if (pname.length < 3 || ln.indexOf(pname) === -1) continue;
-          var after = ln.slice(ln.indexOf(pname) + pname.length);
-          var qm = after.match(/(?:×|x|X|الكمية[:\s]*|⬅️|\*)\s*(\d+)/) || after.match(/(\d+)/);
-          var q = qm ? Number(qm[1]) : 0;
-          if (q > 0) {
-            var u3 = classifyUnit(pr, pname, ln);
-            matched.push({ name: pname, qty: q, unitKey: u3.key, unitLabel: u3.label });
-          }
-          break;
-        }
-      }
-    } catch (e) {}
-    return matched;
-  }
-
-  function rewriteOrderText(rawText) {
-    if (!rawText || typeof rawText !== "string") return rawText;
-    // لا نمس رسائل مشاركة رابط المتجر ولا الرسائل المفصولة مسبقاً
-    if (rawText.indexOf("رابط المتجر المباشر") !== -1) return rawText;
-    if (rawText.indexOf("🛍️ *إجمالي الأكياس:*") !== -1 || rawText.indexOf("📦 *إجمالي الكراتين:*") !== -1) {
-      return rawText;
-    }
-
-    var items = getActiveOrderItems(rawText);
-    if (!items.length) return rawText;
-
-    // التأكد أنها رسالة طلب فعلاً
-    var looksLikeOrder = /(?:طلب|فاتورة|الأصناف|الاصناف|الأكياس|الاكياس|الكميات|الكراتين)/.test(rawText);
-    if (!looksLikeOrder) {
-      for (var c = 0; c < items.length; c++) {
-        if (items[c].name && rawText.indexOf(items[c].name) !== -1) {
-          looksLikeOrder = true;
-          break;
-        }
-      }
-    }
-    if (!looksLikeOrder) return rawText;
-
-    var bags = 0;
-    var cartons = 0;
-    var others = {};
-    for (var i = 0; i < items.length; i++) {
-      var it = items[i];
-      var q = Number(it.qty || 0);
-      if (q <= 0) continue;
-      if (it.unitKey === "carton") cartons += q;
-      else if (it.unitKey === "bag") bags += q;
-      else {
-        var lbl = it.unitLabel || "وحدة";
-        others[lbl] = (others[lbl] || 0) + q;
-      }
-    }
-
-    var sumLines = [];
-    if (bags > 0) sumLines.push("🛍️ *إجمالي الأكياس:* " + bags + " كيس");
-    if (cartons > 0) sumLines.push("📦 *إجمالي الكراتين:* " + cartons + " كرتون");
-    var oKeys = Object.keys(others);
-    for (var oi = 0; oi < oKeys.length; oi++) {
-      if (others[oKeys[oi]] > 0) {
-        sumLines.push("📌 *إجمالي (" + oKeys[oi] + "):* " + others[oKeys[oi]] + " " + oKeys[oi]);
-      }
-    }
-    if (!sumLines.length) return rawText;
-
-    var lines = rawText.split(/\r?\n/);
-    var out = [];
-    var replacedTotal = false;
-
-    var MERGED_TOTAL_RE = /(?:عدد|إجمالي|اجمالي|مجموع)\s*(?:ال)?(?:أكياس|اكياس|كميات|الكميات|كمية|الكمية|كميه|الكميه|قطع|القطع|كراتين|الكراتين|عبوات|العبوات)/;
-
-    for (var li = 0; li < lines.length; li++) {
-      var line = lines[li];
-
-      // 1) تصحيح وحدة الصنف داخل سطر الصنف نفسه إذا كتب الكود الأصلي "كيس" لصنف وحدته "كرتون"
-      for (var j = 0; j < items.length; j++) {
-        var item = items[j];
-        if (!item.name || item.unitKey === "bag") continue;
-        if (line.indexOf(item.name) !== -1 && line.indexOf("كيس") !== -1 && line.indexOf(item.unitLabel) === -1) {
-          line = line.replace(/كيس/g, item.unitLabel);
-        }
-      }
-
-      // 2) استبدال سطر الإجمالي المدموج بسطور مفصولة (الأكياس لحالها والكراتين لحالها)
-      if (MERGED_TOTAL_RE.test(line)) {
-        if (!replacedTotal) {
-          // إذا كان نفس السطر يحتوي على "عدد الأصناف" نحتفظ به في سطر مستقل ثم نضع الأكياس والكراتين تحته
-          var prodCntMatch = line.match(/([^|•]*عدد\s*(?:ال)?(?:أصناف|اصناف)[^|•]*)/);
-          if (prodCntMatch) {
-            out.push(prodCntMatch[1].trim());
-          }
-          for (var s = 0; s < sumLines.length; s++) out.push(sumLines[s]);
-          replacedTotal = true;
-        }
-        continue;
-      }
-
-      out.push(line);
-    }
-
-    if (!replacedTotal) {
-      out.push("━━━━━━━━━━━━━━━━━━");
-      for (var s2 = 0; s2 < sumLines.length; s2++) out.push(sumLines[s2]);
-    }
-
-    return out.join("\n");
-  }
-
-  function rewriteWaUrl(rawUrl) {
-    if (!rawUrl || typeof rawUrl !== "string") return rawUrl;
-    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(rawUrl)) return rawUrl;
-    try {
-      var u = new URL(rawUrl, window.location.origin);
-      var txt = u.searchParams.get("text");
-      if (!txt) return rawUrl;
-      var fixed = rewriteOrderText(txt);
-      if (!fixed || fixed === txt) return rawUrl;
-      var parts = [];
-      u.searchParams.forEach(function (val, key) {
-        if (key === "text") parts.push("text=" + encodeURIComponent(fixed));
-        else parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(val));
-      });
-      return u.origin + u.pathname + "?" + parts.join("&");
-    } catch (e) {}
-    return rawUrl;
-  }
-
-  // أ) اعتراض window.open لأي زر يرسل الطلب للواتساب
-  if (typeof window.open === "function" && !window.open.__abSplitUnitsPatched) {
-    var origOpen = window.open;
-    var wrappedOpen = function (url) {
-      var args = Array.prototype.slice.call(arguments);
-      if (typeof url === "string") args[0] = rewriteWaUrl(url);
-      return origOpen.apply(this, args);
-    };
-    wrappedOpen.__abSplitUnitsPatched = true;
-    window.open = wrappedOpen;
-  }
-
-  // ب) اعتراض الروابط البرمجية (a.click())
-  if (typeof HTMLAnchorElement !== "undefined" && HTMLAnchorElement.prototype && HTMLAnchorElement.prototype.click && !HTMLAnchorElement.prototype.click.__abSplitUnitsPatched) {
-    var origAnchorClick = HTMLAnchorElement.prototype.click;
-    var wrappedAnchorClick = function () {
-      try {
-        var h = this.getAttribute && this.getAttribute("href");
-        if (h && /(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) {
-          var nh = rewriteWaUrl(h);
-          if (nh !== h) this.setAttribute("href", nh);
-        }
-      } catch (e) {}
-      return origAnchorClick.apply(this, arguments);
-    };
-    wrappedAnchorClick.__abSplitUnitsPatched = true;
-    HTMLAnchorElement.prototype.click = wrappedAnchorClick;
-  }
-
-  // ج) اعتراض الضغط المباشر على أي رابط <a> متجه للواتساب
-  document.addEventListener("click", function (ev) {
-    var a = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
-    if (!a) return;
-    var h = a.getAttribute("href") || "";
-    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) return;
-    var nh = rewriteWaUrl(h);
-    if (nh !== h) a.setAttribute("href", nh);
-  }, true);
-})();
-</script>
-<!-- ABUDHIYA_SPLIT_UNITS_WA_END -->
 
 
 
@@ -9317,6 +9051,1802 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_ORDER_CONFIRM_WA_END -->
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ABUDHIYA_RECEIPT_UNIT_SPLIT_START -->
+<style id="abReceiptUnitSplitStyle" data-receipt-unit-split="1">
+  /* بطاقة تفصيل الكميات المفصولة داخل الإيصال الرسمي والفاتورة والأرشيف */
+  .ab-rcpt-split-box {
+    direction: rtl !important;
+    margin: 10px 0 8px !important;
+    padding: 10px 10px 9px !important;
+    border-radius: 13px !important;
+    background: linear-gradient(150deg, rgba(20, 18, 12, 0.97) 0%, rgba(10, 13, 20, 0.98) 100%) !important;
+    border: 1.4px solid rgba(212, 175, 55, 0.82) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(254, 240, 138, 0.22) !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+  }
+  .ab-rs-head {
+    font-size: 11.5px !important;
+    font-weight: 900 !important;
+    color: #facc15 !important;
+    margin-bottom: 7px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+  }
+  .ab-rs-items-cnt {
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    color: #cbd5e1 !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    padding: 2px 8px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  }
+  .ab-rs-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+  .ab-rs-card {
+    padding: 8px 6px !important;
+    border-radius: 10px !important;
+    background: rgba(212, 175, 55, 0.14) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.62) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+  }
+  .ab-rs-card.carton {
+    background: rgba(14, 165, 233, 0.16) !important;
+    border-color: rgba(56, 189, 248, 0.68) !important;
+  }
+  .ab-rs-card.other {
+    grid-column: 1 / -1 !important;
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-color: rgba(52, 211, 153, 0.62) !important;
+  }
+  .ab-rs-card.zero {
+    opacity: 0.45 !important;
+    border-style: dashed !important;
+  }
+  .ab-rs-lbl {
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    color: #e2e8f0 !important;
+    line-height: 1.25 !important;
+  }
+  .ab-rs-val {
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    color: #fef08a !important;
+    line-height: 1.25 !important;
+  }
+  .ab-rs-card.carton .ab-rs-val {
+    color: #7dd3fc !important;
+  }
+  .ab-rs-card.other .ab-rs-val {
+    color: #86efac !important;
+  }
+</style>
+<script data-ab-receipt-unit-split="1">
+(function () {
+  if (window.__abReceiptUnitSplitV1) return;
+  window.__abReceiptUnitSplitV1 = true;
+
+  var STATIC_UNIT_MAP = {"byId": {"2": {"key": "bag", "label": "كيس"}, "7": {"key": "bag", "label": "كيس"}, "8": {"key": "bag", "label": "كيس"}, "17": {"key": "bag", "label": "كيس"}, "9": {"key": "bag", "label": "كيس"}, "10": {"key": "bag", "label": "كيس"}, "11": {"key": "bag", "label": "كيس"}, "12": {"key": "bag", "label": "كيس"}, "13": {"key": "bag", "label": "كيس"}, "14": {"key": "bag", "label": "كيس"}, "15": {"key": "bag", "label": "كيس"}, "23": {"key": "bag", "label": "كيس"}, "18": {"key": "bag", "label": "كيس"}, "21": {"key": "bag", "label": "كيس"}, "22": {"key": "bag", "label": "كيس"}, "24": {"key": "bag", "label": "كيس"}, "16": {"key": "bag", "label": "كيس"}, "6": {"key": "carton", "label": "كرتون"}, "5": {"key": "carton", "label": "كرتون"}, "19": {"key": "carton", "label": "كرتون"}, "25": {"key": "carton", "label": "كرتون"}, "26": {"key": "carton", "label": "كرتون"}, "27": {"key": "carton", "label": "كرتون"}, "28": {"key": "carton", "label": "كرتون"}, "29": {"key": "carton", "label": "كرتون"}, "30": {"key": "carton", "label": "كرتون"}, "31": {"key": "carton", "label": "كرتون"}, "44": {"key": "carton", "label": "كرتون"}, "32": {"key": "carton", "label": "كرتون"}, "33": {"key": "carton", "label": "كرتون"}, "34": {"key": "carton", "label": "كرتون"}, "35": {"key": "carton", "label": "كرتون"}, "36": {"key": "carton", "label": "كرتون"}, "37": {"key": "carton", "label": "كرتون"}, "38": {"key": "carton", "label": "كرتون"}, "39": {"key": "carton", "label": "كرتون"}, "40": {"key": "carton", "label": "كرتون"}, "41": {"key": "carton", "label": "كرتون"}, "42": {"key": "carton", "label": "كرتون"}, "43": {"key": "carton", "label": "كرتون"}}, "byName": {"جامبو رنجو برتقالي 1*30": {"key": "bag", "label": "كيس"}, "ريلاكس اخضر 1*50": {"key": "bag", "label": "كيس"}, "ريلاكس احمر 1*50": {"key": "bag", "label": "كيس"}, "ريلاكس اصفر 1*50": {"key": "bag", "label": "كيس"}, "جامبو المكلا 1*50": {"key": "bag", "label": "كيس"}, "رنجو برتقالي صغير1*50": {"key": "bag", "label": "كيس"}, "مينو رنجو 1*50": {"key": "bag", "label": "كيس"}, "شبس نيوجلز 1*50": {"key": "bag", "label": "كيس"}, "حبيبات رنجو طويل 1*50": {"key": "bag", "label": "كيس"}, "حار مولع احمر 1*50": {"key": "bag", "label": "كيس"}, "حار مولع ازرق 1*10*50": {"key": "bag", "label": "كيس"}, "حار مولع اخضر 1*10*50": {"key": "bag", "label": "كيس"}, "اصابع رنجو ليمون 1*50": {"key": "bag", "label": "كيس"}, "اصابع رنجو برتقالي 1*10*50": {"key": "bag", "label": "كيس"}, "اصابع رنجو كاتشاب 1*10*50": {"key": "bag", "label": "كيس"}, "كراتشي 1*10*50": {"key": "bag", "label": "كيس"}, "اصابع بسام 1*50": {"key": "bag", "label": "كيس"}, "شراب وطني 1*60": {"key": "carton", "label": "كرتون"}, "شطه هلابينو جامبو 1*60": {"key": "carton", "label": "كرتون"}, "غوار ايس لولي 1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو بالجبن صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو ملح صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو كاتشب صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو خل وملح صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو فلفل حار صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو مشاوي صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو شطه وليمون صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو بابريكا صغير1*50": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو ملح وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو كاتشب وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو خل وملح وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو جبن وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو فلفل حار وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو شطه وليمون وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو مشاوي وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو زبادي وسط 1*12": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو جبن كبير 1*6": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو كاتشب كبير 1*6": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو خل وملح كبير 1*6": {"key": "carton", "label": "كرتون"}, "بطاطس طبيعي رنجو فلفل حار كبير 1*6": {"key": "carton", "label": "كرتون"}}};
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+  var CARTON_RE = /كرتون|كراتين|كارتون|صندوق|كرت\b|carton|ctn|شراب|عصير|جيلي|مشروب|بسكويت|بسكوت|ويفر|كيك|حلاو|مصاص|لبان|علك|شوكولا|توفي|مياه|ماء|حليب|قشط|تونة|صلص|زيت|مكرون|معكرون|شعيري|شاي|قهو|كابتشينو/i;
+  var BAG_RE = /كيس|أكياس|اكياس|شوال|رنجو|ريلاكس|جامبو|بطاطس|شبس|شيبس|مقرمش|كراتشي|مينو|حبيبات|اصابع|أصابع|حار\s*مولع|فشار|بفك|سناك|bag/i;
+  var MERGED_LINE_RE = /(?:إجمالي|اجمالي|مجموع|عدد)\s*(?:ال)?(?:كميات|الكميات|كمية|الكمية|كميه|الكميه|أكياس|اكياس|قطع|القطع|عبوات|العبوات)/;
+
+  function normAr(s) {
+    return String(s || "")
+      .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+      .replace(/[أإآٱ]/g, "ا")
+      .replace(/ة/g, "ه")
+      .replace(/ى/g, "ي")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function detectUnitFromDomCard(pid, nameStr) {
+    try {
+      var card = null;
+      if (pid !== undefined && pid !== null && String(pid) !== "") {
+        card = document.querySelector('[data-ab-pro-card="1"][data-ab-prod-id="' + String(pid).replace(/"/g, "") + '"]');
+      }
+      if (!card && nameStr) {
+        var nTarget = normAr(nameStr);
+        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+        for (var i = 0; i < cards.length; i++) {
+          var tEl = cards[i].querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+          if (tEl && normAr(tEl.textContent || "") === nTarget) {
+            card = cards[i];
+            break;
+          }
+        }
+      }
+      if (card) {
+        var pill = card.querySelector('[data-ab-price-pill="1"]');
+        var txt = pill ? (pill.textContent || "") : (card.textContent || "");
+        if (/\/\s*(?:كرتون|كارتون|صندوق)/i.test(txt)) return { key: "carton", label: "كرتون" };
+        if (/\/\s*(?:كيس|شوال)/i.test(txt)) return { key: "bag", label: "كيس" };
+        var mOther = txt.match(/\/\s*(شدة|شده|بكت|درزن|علبة|علبه|ربطة|ربطه|حبة|حبه)/);
+        if (mOther) return { key: "other:" + mOther[1], label: mOther[1] };
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function classifyUnitUnified(prod, fallbackName, extraHint) {
+    var rawU = "";
+    if (prod) {
+      rawU = String(
+        prod.unit || prod.u || prod.unitName || prod.uom ||
+        prod.packUnit || prod.unit_name || prod.unitType || prod.saleUnit || prod.measure || ""
+      ).trim();
+    }
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+
+    var pid = (prod && prod.id !== undefined) ? String(prod.id) : "";
+    var nm = String((prod && prod.name) || fallbackName || "").trim();
+    var cat = String((prod && (prod.category || prod.cat || prod.section || prod.group || "")) || "").trim();
+
+    // 1) فحص البطاقة الحية في DOM لأن وحدة السعر (/ كيس أو / كرتون) مطبوعة داخلها بدقة
+    var fromDom = detectUnitFromDomCard(pid, nm);
+    if (fromDom) return fromDom;
+
+    // 2) الفحص من خريطة الأصناف المستخرجة مباشرة من قاعدة المتجر
+    if (STATIC_UNIT_MAP) {
+      if (pid && STATIC_UNIT_MAP.byId && STATIC_UNIT_MAP.byId[pid]) return STATIC_UNIT_MAP.byId[pid];
+      var nk = normAr(nm);
+      if (nk && STATIC_UNIT_MAP.byName && STATIC_UNIT_MAP.byName[nk]) return STATIC_UNIT_MAP.byName[nk];
+    }
+
+    // 3) الكلمات المفتاحية على اسم الصنف أو فئته أو نص السطر
+    if (CARTON_RE.test(nm) || CARTON_RE.test(cat)) return { key: "carton", label: "كرتون" };
+    if (BAG_RE.test(nm) || BAG_RE.test(cat)) return { key: "bag", label: "كيس" };
+    if (extraHint) {
+      if (/كرتون|كراتين|كارتون|صندوق/i.test(extraHint)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس/i.test(extraHint)) return { key: "bag", label: "كيس" };
+    }
+    return { key: "bag", label: "كيس" };
+  }
+
+  window.__abClassifyUnit = classifyUnitUnified;
+
+  function getProductsList() {
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) return PRODUCTS;
+      if (Array.isArray(window.PRODUCTS)) return window.PRODUCTS;
+    } catch (e) {}
+    return [];
+  }
+
+  function tallyItems(items) {
+    var bags = 0, cartons = 0, totalQty = 0, others = {};
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var q = Number(it.qty || 0);
+      if (q <= 0) continue;
+      totalQty += q;
+      var u = it.unitKey ? { key: it.unitKey, label: it.unitLabel || "كيس" } : classifyUnitUnified(it.prod || null, it.name, "");
+      if (u.key === "carton") cartons += q;
+      else if (u.key === "bag") bags += q;
+      else others[u.label] = (others[u.label] || 0) + q;
+    }
+    return { count: items.length, bags: bags, cartons: cartons, others: others, totalQty: totalQty };
+  }
+
+  function readLiveCartItems() {
+    var items = [];
+    var prods = getProductsList();
+    var byId = {};
+    for (var p = 0; p < prods.length; p++) {
+      if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+    }
+
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : (window.CART || window.cart || null));
+      if (cartObj) {
+        var ks = Object.keys(cartObj);
+        for (var i = 0; i < ks.length; i++) {
+          var pid = ks[i];
+          var q = Number(cartObj[pid] || 0);
+          if (q <= 0) continue;
+          var pr = byId[String(pid)] || null;
+          var nm = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var u = classifyUnitUnified(pr, nm, "");
+          items.push({ id: pid, prod: pr, name: nm, qty: q, unitKey: u.key, unitLabel: u.label });
+        }
+      }
+    } catch (e) {}
+
+    if (!items.length) {
+      try {
+        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+        for (var c = 0; c < cards.length; c++) {
+          var q2 = Number(cards[c].getAttribute("data-ab-last-q") || 0);
+          if (q2 <= 0) continue;
+          var pid2 = cards[c].getAttribute("data-ab-prod-id");
+          var pr2 = pid2 ? (byId[String(pid2)] || null) : null;
+          var tEl = cards[c].querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+          var nm2 = (pr2 && pr2.name) ? String(pr2.name).trim() : (tEl ? (tEl.textContent || "").trim() : "");
+          if (!nm2) continue;
+          var u2 = classifyUnitUnified(pr2, nm2, cards[c].textContent || "");
+          items.push({ id: pid2 || c, prod: pr2, name: nm2, qty: q2, unitKey: u2.key, unitLabel: u2.label });
+        }
+      } catch (e) {}
+    }
+
+    return items;
+  }
+
+  function extractItemsFromReceiptDom(container) {
+    if (!container) return [];
+    var prods = getProductsList();
+    if (!prods.length) return [];
+
+    // ترتيب الأصناف من الأطول اسماً للأقصر لمنع التطابق الجزئي الخاطئ
+    var sortedProds = prods.slice().sort(function (a, b) {
+      return String((b && b.name) || "").length - String((a && a.name) || "").length;
+    });
+
+    var found = [];
+    var seenNames = {};
+    var rows = container.querySelectorAll("tr, li, .item, .inv-item, .order-item, .rcpt-row, .ab-sv3-row, div");
+    for (var r = 0; r < rows.length; r++) {
+      var el = rows[r];
+      if (!el || el.closest(".ab-rcpt-split-box, #abDirectRepBox, #abImpBonusBanner, #abQuantumLoadBox, #abQuantumSecretCalc")) continue;
+      if (el.tagName === "DIV" && el.children && el.children.length > 5) continue;
+      var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (!txt || txt.length > 180) continue;
+
+      for (var p = 0; p < sortedProds.length; p++) {
+        var pr = sortedProds[p];
+        if (!pr || !pr.name) continue;
+        var pn = String(pr.name).trim();
+        if (pn.length < 3 || seenNames[pn]) continue;
+        var pos = txt.indexOf(pn);
+        if (pos === -1) continue;
+
+        var after = txt.slice(pos + pn.length).replace(/\b\d+\s*[*×x]\s*\d+\b/g, " ");
+        var before = txt.slice(0, pos).replace(/\b\d+\s*[*×x]\s*\d+\b/g, " ");
+        var qm = after.match(/(?:×|x|X|الكمية[:\s]*|⬅️|\*|\s)(\d{1,5})\s*(?:كيس|كرتون|كارتون|حبة|بكت|شدة|درزن)?/) ||
+                 before.match(/(\d{1,5})\s*(?:×|x|X)/);
+        var q = qm ? Number(qm[1]) : 0;
+        if (q > 0 && q < 100000) {
+          var u = classifyUnitUnified(pr, pn, txt);
+          seenNames[pn] = true;
+          found.push({ id: pr.id, prod: pr, name: pn, qty: q, unitKey: u.key, unitLabel: u.label, rowEl: el });
+          break;
+        }
+      }
+    }
+    return found;
+  }
+
+  function getOrderItemsForContainer(container, preferDomParse) {
+    if (preferDomParse) {
+      var parsed = extractItemsFromReceiptDom(container);
+      if (parsed.length) return parsed;
+    }
+
+    var live = readLiveCartItems();
+    if (live.length) return live;
+
+    // إذا تم تفريغ السلة بعد اعتماد الطلب، نعيد تصنيف آخر طلب محفوظ باستخدام الدالة الموحدة
+    var snap = window.__abLastConfirmOrder || window.__abDirectLastSnap || null;
+    if (!snap) {
+      try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+    }
+    if (snap && Array.isArray(snap.items) && snap.items.length) {
+      var prods = getProductsList();
+      var byName = {};
+      for (var p = 0; p < prods.length; p++) {
+        if (prods[p] && prods[p].name) byName[normAr(prods[p].name)] = prods[p];
+      }
+      var out = [];
+      for (var i = 0; i < snap.items.length; i++) {
+        var sit = snap.items[i];
+        var sq = Number(sit.qty || 0);
+        if (sq <= 0) continue;
+        var pr = byName[normAr(sit.name)] || null;
+        var u = classifyUnitUnified(pr, sit.name, "");
+        out.push({ id: sit.id || i, prod: pr, name: sit.name, qty: sq, unitKey: u.key, unitLabel: u.label });
+      }
+      return out;
+    }
+    return [];
+  }
+
+  function formatInlineSplit(t) {
+    var parts = [];
+    if (t.bags > 0) parts.push("🛍️ عدد الأكياس: " + t.bags + " كيس");
+    if (t.cartons > 0) parts.push("📦 عدد الكراتين: " + t.cartons + " كرتون");
+    var ok = Object.keys(t.others || {});
+    for (var i = 0; i < ok.length; i++) {
+      if (t.others[ok[i]] > 0) parts.push("📌 " + ok[i] + ": " + t.others[ok[i]]);
+    }
+    return parts.join("  •  ");
+  }
+
+  function buildSplitCardHtml(t) {
+    var otherHtml = "";
+    var ok = Object.keys(t.others || {});
+    for (var i = 0; i < ok.length; i++) {
+      if (t.others[ok[i]] > 0) {
+        otherHtml +=
+          '<div class="ab-rs-card other">' +
+            '<span class="ab-rs-lbl">📌 وحدات أخرى (' + ok[i] + ')</span>' +
+            '<span class="ab-rs-val">' + t.others[ok[i]] + ' ' + ok[i] + '</span>' +
+          '</div>';
+      }
+    }
+    return (
+      '<div class="ab-rs-head">' +
+        '<span>📊 تفصيل الكميات الرسمي</span>' +
+        '<span class="ab-rs-items-cnt">' + t.count + ' صنف</span>' +
+      '</div>' +
+      '<div class="ab-rs-grid">' +
+        '<div class="ab-rs-card' + (t.bags === 0 ? ' zero' : '') + '">' +
+          '<span class="ab-rs-lbl">🛍️ عدد الأكياس</span>' +
+          '<span class="ab-rs-val">' + t.bags + ' كيس</span>' +
+        '</div>' +
+        '<div class="ab-rs-card carton' + (t.cartons === 0 ? ' zero' : '') + '">' +
+          '<span class="ab-rs-lbl">📦 عدد الكراتين</span>' +
+          '<span class="ab-rs-val">' + t.cartons + ' كرتون</span>' +
+        '</div>' +
+        otherHtml +
+      '</div>'
+    );
+  }
+
+  function fixMergedLinesInContainer(container, items, tally) {
+    var inlineTxt = formatInlineSplit(tally);
+    if (!inlineTxt) return;
+
+    // 1) تصحيح وحدة الأصناف الكرتونية داخل صفوف الإيصال إن كُتبت خطأً "كيس"
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (!it.rowEl || it.unitKey === "bag") continue;
+      var leaves = it.rowEl.querySelectorAll("span, td, b, strong, small");
+      for (var l = 0; l < leaves.length; l++) {
+        if (leaves[l].children && leaves[l].children.length > 0) continue;
+        var lt = leaves[l].textContent || "";
+        if (lt.indexOf("كيس") !== -1 && lt.indexOf(it.unitLabel) === -1) {
+          leaves[l].textContent = lt.replace(/كيس/g, it.unitLabel);
+        }
+      }
+    }
+
+    // 2) تصحيح سطر الإجمالي المدموج داخل الإيصال الرسمي (مثل "إجمالي الكميات: 50" أو "عدد الأكياس: 50")
+    var nodes = container.querySelectorAll("div, p, span, td, li, strong, b");
+    for (var j = 0; j < nodes.length; j++) {
+      var el = nodes[j];
+      if (!el || el.closest(".ab-rcpt-split-box, #abDirectRepBox, #abImpLiveBar, #abQuantumLoadBox, #abQuantumSecretCalc, button")) continue;
+      if (el.children && el.children.length > 2) continue;
+      var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+      if (!txt || txt.length > 90) continue;
+      if (txt.indexOf("عدد الكراتين") !== -1) continue;
+      if (MERGED_LINE_RE.test(txt) && /\d+/.test(txt)) {
+        if (el.getAttribute("data-ab-split-rewritten") === inlineTxt) continue;
+        el.setAttribute("data-ab-split-rewritten", inlineTxt);
+        el.textContent = inlineTxt;
+      }
+    }
+  }
+
+  function enhanceReceiptContainer(container, boxId, preferDomParse, mountAfterSelector) {
+    if (!container) return;
+    var st = window.getComputedStyle(container);
+    if (st.display === "none" || st.visibility === "hidden" || st.opacity === "0") return;
+
+    var items = getOrderItemsForContainer(container, preferDomParse);
+    var box = container.querySelector("#" + boxId);
+    if (!items.length) {
+      if (box) box.style.display = "none";
+      return;
+    }
+
+    var t = tallyItems(items);
+    var sig = t.count + "|" + t.bags + "|" + t.cartons + "|" + JSON.stringify(t.others);
+
+    if (!box) {
+      box = document.createElement("div");
+      box.id = boxId;
+      box.className = "ab-rcpt-split-box";
+      var anchor = mountAfterSelector ? container.querySelector(mountAfterSelector) : null;
+      if (anchor && anchor.parentNode) {
+        anchor.insertAdjacentElement("beforebegin", box);
+      } else {
+        container.appendChild(box);
+      }
+    }
+    box.style.display = "block";
+    if (box.getAttribute("data-ab-split-sig") !== sig) {
+      box.setAttribute("data-ab-split-sig", sig);
+      box.innerHTML = buildSplitCardHtml(t);
+    }
+
+    fixMergedLinesInContainer(container, items, t);
+  }
+
+  var _syncRunning = false;
+  function syncAllOfficialReceipts() {
+    if (_syncRunning) return;
+    _syncRunning = true;
+    try {
+      // 1) شاشة الفاتورة وصندوق تسجيل الطلب
+      var orderBox = document.getElementById("abSilentOrderBox");
+      if (orderBox) {
+        enhanceReceiptContainer(orderBox, "abSplitBox_orderBox", false, "#abDirectRepBox");
+      }
+
+      // 2) نوافذ الإيصال الرسمي المنبثقة (بعد اعتماد الطلب أو من الأرشيف)
+      var modalIds = ["abSv3ModalBg", "abRcptPreviewModal", "abSv3ArchModalBg", "abFallbackArchBg"];
+      for (var m = 0; m < modalIds.length; m++) {
+        var mod = document.getElementById(modalIds[m]);
+        if (!mod) continue;
+        var mst = window.getComputedStyle(mod);
+        if (mst.display === "none" || mst.visibility === "hidden" || mst.opacity === "0") continue;
+        var inner = mod.querySelector(".ab-sv3-modal, .modal-card, .modal-content, .ab-rcpt-box, > div") || mod;
+        var isArch = modalIds[m].indexOf("Arch") !== -1;
+        enhanceReceiptContainer(inner, "abSplitBox_" + modalIds[m], true, isArch ? null : ".ab-wa-confirm-card");
+      }
+
+      // 3) أي نافذة إيصال رسمي أخرى مفتوحة في الصفحة (اكتشاف تلقائي شامل)
+      var allFixed = document.querySelectorAll('[id*="receipt" i], [id*="rcpt" i], [class*="receipt" i], [class*="modal" i]');
+      for (var k = 0; k < allFixed.length; k++) {
+        var nd = allFixed[k];
+        if (!nd || nd.closest("#abRoyalReceiptModal, #abImpThermalModal, #abRoyalQrModal, #abRepVaultModal, #abQuantumAiModal, #abQuantumTplModal, #abQuantumCrmModal, #abQuantumScanModal, #abImpDailyModal, #abImpRepsModal, #abImpStoryModal, #abSv3ModalBg, #abRcptPreviewModal, #abSv3ArchModalBg, #abFallbackArchBg, .ab-sleek-numpad-box")) continue;
+        var nst = window.getComputedStyle(nd);
+        if (nst.display === "none" || nst.visibility === "hidden" || nst.opacity === "0") continue;
+        var ntxt = nd.textContent || "";
+        if (ntxt.indexOf("إيصال") !== -1 || ntxt.indexOf("ايصال") !== -1 || ntxt.indexOf("تفاصيل الطلب") !== -1) {
+          var host = nd.querySelector(".modal-content, .modal-card, .modal-box, > div") || nd;
+          if (!host.querySelector(".ab-rcpt-split-box")) {
+            enhanceReceiptContainer(host, "abSplitBox_auto_" + k, true, null);
+          }
+        }
+      }
+    } catch (e) {}
+    _syncRunning = false;
+  }
+
+  window.__abSyncReceiptSplit = syncAllOfficialReceipts;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(syncAllOfficialReceipts, 260); });
+  } else {
+    setTimeout(syncAllOfficialReceipts, 260);
+  }
+  setTimeout(syncAllOfficialReceipts, 900);
+  document.addEventListener("click", function () {
+    setTimeout(syncAllOfficialReceipts, 140);
+    setTimeout(syncAllOfficialReceipts, 550);
+  }, true);
+  setInterval(syncAllOfficialReceipts, 1500);
+})();
+</script>
+<!-- ABUDHIYA_RECEIPT_UNIT_SPLIT_END -->
+
+<!-- ABUDHIYA_ROYAL_VIP_START -->
+<style id="abRoyalVipStyle" data-royal-vip="4">
+  #abAlwaysArchTopWrap {
+    display: none !important;
+  }
+
+  /* 1) لوحة القيادة الملكية الزجاجية العلوية */
+  #abRoyalDock {
+    direction: rtl;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 6px 10px 6px;
+    padding: 6px;
+    border-radius: 14px;
+    background: linear-gradient(150deg, rgba(22, 20, 15, 0.96) 0%, rgba(10, 11, 16, 0.98) 100%);
+    border: 1.2px solid rgba(212, 175, 55, 0.62);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 248, 214, 0.22);
+    box-sizing: border-box;
+  }
+  .ab-rd-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 7px 3px 6px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.34);
+    background: linear-gradient(180deg, rgba(28, 27, 24, 0.92) 0%, rgba(13, 14, 19, 0.96) 100%);
+    color: #f8fafc;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    min-width: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-rd-btn:active,
+  .ab-rd-btn.active {
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    border-color: #fef08a;
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.35);
+  }
+  .ab-rd-btn.listening {
+    background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
+    color: #ffffff;
+    border-color: #fca5a5;
+  }
+  .ab-rd-ico { font-size: 16px; line-height: 1; }
+  .ab-rd-lbl {
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    color: #fef08a;
+  }
+  .ab-rd-btn.active .ab-rd-lbl,
+  .ab-rd-btn:active .ab-rd-lbl { color: #09090b; }
+  .ab-rd-btn.listening .ab-rd-lbl { color: #ffffff; }
+  .ab-rd-badge {
+    position: absolute;
+    top: -4px;
+    left: -3px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d4af37, #facc15);
+    color: #09090b;
+    font-size: 9.5px;
+    font-weight: 900;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #09090b;
+    line-height: 1;
+  }
+  .ab-rd-badge.show { display: inline-flex; }
+
+  /* 2) نجمة المفضلة داخل الزاوية السفلية اليسرى لصورة الصنف */
+  .ab-hd-img-wrap .ab-fav-star {
+    position: absolute !important;
+    bottom: 4px !important;
+    left: 4px !important;
+    z-index: 10 !important;
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    border: 1px solid rgba(212, 175, 55, 0.55) !important;
+    background: rgba(9, 9, 13, 0.80) !important;
+    color: #cbd5e1 !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45) !important;
+  }
+  .ab-hd-img-wrap .ab-fav-star.on {
+    background: linear-gradient(135deg, #1c1917 0%, #09090b 100%) !important;
+    border-color: #facc15 !important;
+    color: #facc15 !important;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.45) !important;
+  }
+
+  html.ab-fav-filter-on [data-ab-pro-card="1"]:not([data-ab-fav="1"]) {
+    display: none !important;
+  }
+  #abFavEmptyBanner {
+    display: none;
+    direction: rtl;
+    margin: 10px 12px;
+    padding: 16px 14px;
+    border-radius: 14px;
+    background: linear-gradient(155deg, #16140f, #0d0e14);
+    border: 1.2px dashed rgba(212, 175, 55, 0.65);
+    color: #fef08a;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 800;
+    line-height: 1.75;
+  }
+  #abFavEmptyBanner.show { display: block; }
+
+  /* 3) زر الإيصال المصوّر الفاخر HD */
+  .ab-hd-rcpt-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+    padding: 11px 12px !important;
+    border-radius: 11px !important;
+    border: 1.3px solid rgba(254, 240, 138, 0.78) !important;
+    background: linear-gradient(135deg, #272011 0%, #161410 55%, #241d0f 100%) !important;
+    color: #fef08a !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    font-family: inherit !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 248, 214, 0.25) !important;
+    position: relative !important;
+    z-index: 5 !important;
+    pointer-events: auto !important;
+  }
+  .ab-hd-rcpt-btn:active {
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%) !important;
+    color: #09090b !important;
+  }
+
+  /* 4) نافذة باركود QR + نافذة معاينة الإيصال المصوّر HD (أعلى z-index مطلق فوق كل النوافذ) */
+  .ab-royal-modal-bg {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483000 !important;
+    background: rgba(4, 5, 9, 0.88) !important;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 14px !important;
+    direction: rtl !important;
+    box-sizing: border-box !important;
+  }
+  .ab-royal-modal-bg.open {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .ab-royal-modal-card {
+    width: 100%;
+    max-width: 390px;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    background: linear-gradient(165deg, #171510 0%, #0b0c10 62%, #15120c 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.86);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.72), 0 0 24px rgba(212, 175, 55, 0.22);
+    padding: 15px 14px 14px;
+    color: #f8fafc;
+    font-family: inherit;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .ab-royal-modal-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .ab-royal-modal-title {
+    font-size: 15.5px;
+    font-weight: 900;
+    color: #facc15;
+    margin: 2px 0 4px;
+  }
+  .ab-royal-modal-sub {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .ab-qr-frame {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 2.5px solid #d4af37;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), 0 0 18px rgba(212, 175, 55, 0.32);
+    margin-bottom: 10px;
+  }
+  .ab-qr-frame img { width: 196px; height: 196px; display: block; border-radius: 8px; }
+  .ab-qr-link-pill {
+    display: block;
+    margin: 0 auto 12px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: #fef08a;
+    font-size: 11.5px;
+    font-weight: 800;
+    direction: ltr;
+    word-break: break-all;
+  }
+  .ab-royal-act-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 8px;
+  }
+  .ab-royal-btn-gold {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-royal-btn-wa {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(134, 239, 172, 0.65);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    display: block;
+    box-sizing: border-box;
+  }
+  .ab-royal-btn-dark {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: #14161e;
+    color: #fef08a;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .ab-rcpt-preview-img {
+    width: 100%;
+    border-radius: 12px;
+    border: 1.5px solid rgba(212, 175, 55, 0.72);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+    display: block;
+    margin-bottom: 10px;
+  }
+  #abRoyalSafeToast {
+    position: fixed;
+    left: 50%;
+    bottom: 84px;
+    transform: translateX(-50%);
+    z-index: 2147483640;
+    max-width: 90vw;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(15, 14, 10, 0.96);
+    border: 1.3px solid #facc15;
+    color: #fef08a;
+    font-size: 12.5px;
+    font-weight: 900;
+    text-align: center;
+    direction: rtl;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+    display: none;
+  }
+
+  .bottom-nav,
+  .bottom-bar {
+    background: linear-gradient(180deg, rgba(16, 15, 13, 0.97) 0%, rgba(7, 8, 12, 0.99) 100%) !important;
+    border-top: 1.2px solid rgba(212, 175, 55, 0.58) !important;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55) !important;
+  }
+</style>
+<script data-ab-royal-vip="4">
+(function () {
+  if (window.__abRoyalVipV4) return;
+  window.__abRoyalVipV4 = true;
+
+  var STORE_URL = "https://abudhiya-catalog.vercel.app";
+  var HAS_LOCAL_QR = true;
+  var KNOWN_CUST_IDS = ["custNameInp"];
+  var FAV_KEY = "ab_vip_favs_v1";
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+  var DAILY_LOG_KEY = "ab_imp_daily_log_v3";
+  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
+  var _lastReceiptDataUrl = "";
+  var _lastReceiptFileName = "Abusaif-Order.png";
+  var _voiceActive = false;
+  var _lastOpenTriggerTs = 0;
+  var _safeToastTimer = null;
+
+  function notify(msg) {
+    try {
+      if (typeof showToast === "function") {
+        showToast(msg);
+      }
+    } catch (e) {}
+    try {
+      var el = document.getElementById("abRoyalSafeToast");
+      if (!el && document.body) {
+        el = document.createElement("div");
+        el.id = "abRoyalSafeToast";
+        document.body.appendChild(el);
+      }
+      if (el) {
+        el.textContent = String(msg || "");
+        el.style.display = "block";
+        if (_safeToastTimer) clearTimeout(_safeToastTimer);
+        _safeToastTimer = setTimeout(function () { el.style.display = "none"; }, 2800);
+      }
+    } catch (e) {}
+  }
+
+  /* ---------------- 1) نظام المفضلة الذكية ---------------- */
+  function loadFavMap() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
+      var map = {};
+      if (Array.isArray(arr)) {
+        for (var i = 0; i < arr.length; i++) map[String(arr[i])] = 1;
+      }
+      return map;
+    } catch (e) { return {}; }
+  }
+  function saveFavMap(map) {
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(Object.keys(map))); } catch (e) {}
+  }
+  function getCardFavId(card, idx) {
+    var pid = card.getAttribute("data-ab-prod-id");
+    if (pid) return "id:" + pid;
+    var tEl = card.querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+    var t = tEl ? (tEl.textContent || "").trim() : "";
+    return t ? ("nm:" + t) : ("idx:" + idx);
+  }
+  function updateFavEmptyState() {
+    var banner = document.getElementById("abFavEmptyBanner");
+    if (!banner) return;
+    var isOn = document.documentElement.classList.contains("ab-fav-filter-on");
+    if (!isOn) { banner.classList.remove("show"); return; }
+    var favCards = document.querySelectorAll('[data-ab-pro-card="1"][data-ab-fav="1"]');
+    banner.classList.toggle("show", favCards.length === 0);
+  }
+  function syncFavButtons() {
+    var map = loadFavMap();
+    var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+    var favCount = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      if (!c || c.closest(".ab-sleek-numpad-box, #invoiceView, #abSv3ModalBg")) continue;
+      var wrap = c.querySelector(".ab-hd-img-wrap");
+      if (!wrap) continue;
+
+      var fid = getCardFavId(c, i);
+      var isFav = !!map[fid];
+      if (isFav) {
+        favCount++;
+        if (c.getAttribute("data-ab-fav") !== "1") c.setAttribute("data-ab-fav", "1");
+      } else {
+        if (c.hasAttribute("data-ab-fav")) c.removeAttribute("data-ab-fav");
+      }
+
+      var star = wrap.querySelector(".ab-fav-star");
+      if (!star) {
+        star = document.createElement("button");
+        star.type = "button";
+        star.className = "ab-fav-star";
+        star.setAttribute("aria-label", "إضافة للمفضلة");
+        (function (cardEl, favKeyId, starEl) {
+          starEl.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            var m = loadFavMap();
+            if (m[favKeyId]) {
+              delete m[favKeyId];
+              cardEl.removeAttribute("data-ab-fav");
+              starEl.classList.remove("on");
+              starEl.textContent = "☆";
+              notify("☆ تمت الإزالة من المفضلة");
+            } else {
+              m[favKeyId] = 1;
+              cardEl.setAttribute("data-ab-fav", "1");
+              starEl.classList.add("on");
+              starEl.textContent = "★";
+              notify("⭐ تمت الإضافة إلى أصنافك المفضلة");
+            }
+            saveFavMap(m);
+            refreshDockBadges();
+            updateFavEmptyState();
+          });
+        })(c, fid, star);
+        wrap.appendChild(star);
+      }
+      var nextTxt = isFav ? "★" : "☆";
+      if (star.textContent !== nextTxt) star.textContent = nextTxt;
+      star.classList.toggle("on", isFav);
+    }
+
+    var badge = document.getElementById("abDockFavBadge");
+    if (badge) {
+      var txt = String(favCount);
+      if (badge.textContent !== txt) badge.textContent = txt;
+      badge.classList.toggle("show", favCount > 0);
+    }
+    updateFavEmptyState();
+  }
+  function refreshDockBadges() {
+    var origArchBadge = document.querySelector("#abAlwaysArchTopBtn .ab-always-arch-badge");
+    var dockArchBadge = document.getElementById("abDockArchBadge");
+    if (origArchBadge && dockArchBadge) {
+      var v = (origArchBadge.textContent || "0").trim();
+      if (dockArchBadge.textContent !== v) dockArchBadge.textContent = v;
+      dockArchBadge.classList.toggle("show", Number(v) > 0);
+    }
+    var favLen = Object.keys(loadFavMap()).length;
+    var dockFavBadge = document.getElementById("abDockFavBadge");
+    if (dockFavBadge) {
+      var fv = String(favLen);
+      if (dockFavBadge.textContent !== fv) dockFavBadge.textContent = fv;
+      dockFavBadge.classList.toggle("show", favLen > 0);
+    }
+  }
+
+  /* ---------------- 2) البحث الصوتي العربي الفوري ---------------- */
+  function findNativeSearchInput() {
+    var sels = [
+      '#searchInput', '#search', '#prodSearch', '#catalogSearch',
+      'input[type="search"]',
+      'input[placeholder*="بحث"]',
+      'input[placeholder*="ابحث"]',
+      'input[placeholder*="صنف"]'
+    ];
+    for (var i = 0; i < sels.length; i++) {
+      var el = document.querySelector(sels[i]);
+      if (el && !el.closest("#invoiceView, #abSv3ModalBg, #abRoyalQrModal")) return el;
+    }
+    return null;
+  }
+  function startVoiceSearch(btn) {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      notify("🎙️ البحث الصوتي يعمل في متصفح Chrome على الجوال");
+      var inp = findNativeSearchInput();
+      if (inp) { inp.focus(); inp.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      return;
+    }
+    if (_voiceActive) return;
+    try {
+      var rec = new SR();
+      rec.lang = "ar-SA";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      _voiceActive = true;
+      btn.classList.add("listening");
+      notify("🎙️ تكلّم الآن باسم الصنف...");
+      rec.onresult = function (ev) {
+        var spoken = "";
+        try { spoken = String(ev.results[0][0].transcript || "").trim(); } catch (e) {}
+        if (!spoken) return;
+        document.documentElement.classList.remove("ab-fav-filter-on");
+        var fBtn = document.getElementById("abDockFavBtn");
+        if (fBtn) fBtn.classList.remove("active");
+        updateFavEmptyState();
+        var inp = findNativeSearchInput();
+        if (inp) {
+          inp.value = spoken;
+          inp.dispatchEvent(new Event("input", { bubbles: true }));
+          inp.dispatchEvent(new Event("keyup", { bubbles: true }));
+          inp.dispatchEvent(new Event("change", { bubbles: true }));
+          notify("🔎 تم البحث عن: " + spoken);
+        }
+      };
+      rec.onerror = function () { notify("⚠️ لم أتمكن من سماع الصوت"); };
+      rec.onend = function () { _voiceActive = false; btn.classList.remove("listening"); };
+      rec.start();
+    } catch (e) {
+      _voiceActive = false;
+      btn.classList.remove("listening");
+    }
+  }
+
+  /* ---------------- 3) نافذة باركود QR والمشاركة ---------------- */
+  function openQrShareModal() {
+    var bg = document.getElementById("abRoyalQrModal");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.id = "abRoyalQrModal";
+      bg.className = "ab-royal-modal-bg";
+      var shareMsg =
+        "✨ *المتجر السحابي الرسمي — أبوسيف للتجارة العامة* ✨\n" +
+        "تصفح الأصناف واطلب الكميات بضغطة واحدة (يعمل حتى بدون نت) 🛒⚡\n\n" +
+        "🔗 *رابط المتجر المباشر:*\n" + STORE_URL + "\n\n" +
+        "📍 حضرموت - سيئون - شارع المطار غربي محطة السلطان\n" +
+        "☎️ تلفون: 05492417 | 📱 جوال: 772202525\n" +
+        "🚚 مندوب المبيعات: 771458609\n" +
+        "🏦 حساب المشقاص: 254025903";
+      var waShareHref = "https://wa.me/?text=" + encodeURIComponent(shareMsg);
+      var qrHtml = HAS_LOCAL_QR
+        ? '<div class="ab-qr-frame"><img src="/store-qr.png" alt="باركود متجر أبوسيف للتجارة العامة"></div>'
+        : '<div class="ab-qr-frame" style="padding:18px;color:#09090b;font-weight:900">📲 أبوسيف للتجارة العامة</div>';
+
+      bg.innerHTML =
+        '<div class="ab-royal-modal-card">' +
+          '<button type="button" class="ab-royal-modal-close" id="abQrCloseBtn">✕</button>' +
+          '<div class="ab-royal-modal-title">📲 باركود متجر أبوسيف السحابي</div>' +
+          '<div class="ab-royal-modal-sub">وجّه كاميرا جوال التاجر نحو الباركود لفتح المتجر مباشرة (يعمل بدون نت)</div>' +
+          qrHtml +
+          '<div class="ab-qr-link-pill">' + STORE_URL + '</div>' +
+          '<div class="ab-royal-act-stack">' +
+            '<a class="ab-royal-btn-wa" href="' + waShareHref + '" target="_blank" rel="noopener noreferrer">📤 إرسال رابط المتجر عبر الواتساب</a>' +
+            '<button type="button" class="ab-royal-btn-gold" id="abQrCopyBtn">📋 نسخ رابط المتجر</button>' +
+            '<button type="button" class="ab-royal-btn-dark" id="abQrNativeShareBtn">🔗 مشاركة سريعة عبر التطبيقات</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(bg);
+      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+      document.getElementById("abQrCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+      document.getElementById("abQrCopyBtn").addEventListener("click", function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(STORE_URL).then(function () { notify("✅ تم نسخ رابط متجر أبوسيف"); }).catch(function () { notify("🔗 " + STORE_URL); });
+        } else { notify("🔗 " + STORE_URL); }
+      });
+      document.getElementById("abQrNativeShareBtn").addEventListener("click", function () {
+        if (navigator.share) {
+          navigator.share({ title: "أبوسيف للتجارة العامة — المتجر السحابي", text: "تصفح الأصناف واطلب بضغطة واحدة من متجر أبوسيف للتجارة العامة", url: STORE_URL }).catch(function () {});
+        } else { window.open(waShareHref, "_blank", "noopener,noreferrer"); }
+      });
+    }
+    bg.classList.add("open");
+  }
+
+  /* ---------------- 4) قارئ اسم العميل الشامل (مُشترك مع الإيصال الحراري والواتساب) ---------------- */
+  function isExcludedCustField(el) {
+    if (!el) return true;
+    var tag = (el.tagName || "").toUpperCase();
+    if (tag !== "INPUT" && tag !== "TEXTAREA") return true;
+    var tp = (el.type || "text").toLowerCase();
+    if (tag === "INPUT" && /^(?:hidden|checkbox|radio|number|search|password|tel|file|button|submit|range|date|time)$/.test(tp)) return true;
+    if (el.closest && el.closest("#abQuantumAiModal, #abQuantumTplModal, #abQuantumCrmModal, #abQuantumScanModal, #abImpRepsModal, #abImpStoryModal, #abQuantumSecretCalc, #abSv3Admin, #abPricedAdminCtrl, .ab-sleek-numpad-box, #abRoyalQrModal, #abRoyalReceiptModal, #abImpThermalModal, #abImpDailyModal, #abFallbackArchBg, #abSv3ArchModalBg")) {
+      return true;
+    }
+    return false;
+  }
+  function getCustFieldHint(el) {
+    var parts = [
+      el.id || "",
+      el.name || "",
+      el.placeholder || "",
+      el.getAttribute ? (el.getAttribute("aria-label") || "") : "",
+      typeof el.className === "string" ? el.className : ""
+    ];
+    try {
+      if (el.id) {
+        var safeId = String(el.id).replace(/"/g, "");
+        var lbl = document.querySelector('label[for="' + safeId + '"]');
+        if (lbl) parts.push(lbl.textContent || "");
+      }
+      var pLbl = el.closest ? el.closest("label") : null;
+      if (pLbl) parts.push(pLbl.textContent || "");
+      var prev = el.previousElementSibling;
+      if (prev && (prev.textContent || "").length <= 50) parts.push(prev.textContent || "");
+      if (el.parentElement) {
+        var firstLbl = el.parentElement.querySelector("label, .lbl, .label, span, p");
+        if (firstLbl && firstLbl !== el && (firstLbl.textContent || "").length <= 50) parts.push(firstLbl.textContent || "");
+      }
+    } catch (e) {}
+    return parts.join(" ").replace(/\s+/g, " ").trim().toLowerCase();
+  }
+  function isNonNameHint(hint) {
+    return /(?:search|بحث|ابحث|صنف|phone|mobile|\btel\b|جوال|رقم|هاتف|واتس|note|ملاحظ|عنوان|address|disc|خصم|صرف|rate|pass|سري|رمز|code|barcode|باركود|قالب|tpl|مندوب|\brep\b)/.test(hint);
+  }
+  function isNameHint(hint) {
+    return /(?:name|cust|client|shop|store|buyer|اسم|الاسم|عميل|العميل|محل|المحل|بقال|تاجر|زبون|سوبر|مشتري|صاحب|الجهة|الجهه|مركز|تموين)/.test(hint);
+  }
+  function resolveRealCustomerInfo() {
+    var custName = "";
+    var payMethod = "";
+    try {
+      var idPool = (Array.isArray(KNOWN_CUST_IDS) ? KNOWN_CUST_IDS : []).concat([
+        "custName", "customerName", "clientName", "shopName", "buyerName", "storeName",
+        "abSv3Name", "abSv3CustName", "abCustName", "invCustName", "orderCustName", "cName"
+      ]);
+      for (var i = 0; i < idPool.length; i++) {
+        var byId = document.getElementById(idPool[i]);
+        if (!byId || isExcludedCustField(byId)) continue;
+        var v0 = (byId.value || "").trim();
+        if (v0) { custName = v0; break; }
+      }
+      var scopes = [document.getElementById("abSilentOrderBox"), document.getElementById("invoiceView"), document];
+      var fallbackCandidate = "";
+      for (var s = 0; s < scopes.length; s++) {
+        var root = scopes[s];
+        if (!root) continue;
+        var fields = root.querySelectorAll("input, textarea, select");
+        for (var k = 0; k < fields.length; k++) {
+          var el = fields[k];
+          if (!el) continue;
+          if (el.tagName === "SELECT") {
+            if (!payMethod && !(el.closest && el.closest("#abImpRepGpsCard, #abSv3Admin, #abImpRepsModal"))) {
+              var sh = getCustFieldHint(el);
+              if (sh.indexOf("pay") !== -1 || sh.indexOf("دفع") !== -1 || sh.indexOf("سداد") !== -1 || root !== document) {
+                var sv = (el.options && el.selectedIndex >= 0) ? (el.options[el.selectedIndex].text || el.value || "").trim() : (el.value || "").trim();
+                if (sv) payMethod = sv;
+              }
+            }
+            continue;
+          }
+          if (isExcludedCustField(el)) continue;
+          var val = (el.value || "").trim();
+          if (!val) continue;
+          var hint = getCustFieldHint(el);
+          if (!payMethod && (hint.indexOf("pay") !== -1 || hint.indexOf("دفع") !== -1)) { payMethod = val; continue; }
+          if (!custName && !isNonNameHint(hint)) {
+            if (isNameHint(hint)) custName = val;
+            else if (!fallbackCandidate && root !== document && !/^[\d\s+\-().]+$/.test(val) && val.length >= 2 && val.length <= 75) fallbackCandidate = val;
+          }
+        }
+        if (custName && payMethod) break;
+      }
+      if (!custName && fallbackCandidate) custName = fallbackCandidate;
+      if (!custName && window.__abLiveCustName && (Date.now() - (window.__abLiveCustTs || 0)) < 900000) custName = window.__abLiveCustName;
+      if (!payMethod) {
+        var actP = document.querySelector(".ab-pay-btn.active, [data-pay].active, .pay-opt.active, .pay-btn.active");
+        if (actP) payMethod = (actP.textContent || "").trim();
+      }
+    } catch (e) {}
+    return { custName: custName, payMethod: payMethod };
+  }
+  window.__abResolveCustInfo = resolveRealCustomerInfo;
+
+  if (!window.__abCustNameListenerV4) {
+    window.__abCustNameListenerV4 = true;
+    var captureCustInput = function (ev) {
+      var el = ev.target;
+      if (!el || isExcludedCustField(el)) return;
+      var val = (el.value || "").trim();
+      if (!val || /^[\d\s+\-().]+$/.test(val)) return;
+      var hint = getCustFieldHint(el);
+      if (isNonNameHint(hint)) return;
+      if (isNameHint(hint) || (el.closest && el.closest("#abSilentOrderBox, #invoiceView"))) {
+        window.__abLiveCustName = val;
+        window.__abLiveCustTs = Date.now();
+      }
+    };
+    document.addEventListener("input", captureCustInput, true);
+    document.addEventListener("change", captureCustInput, true);
+  }
+
+  /* ---------------- 5) مولّد الإيصال المصوّر الفاخر HD (فصل الأكياس والكراتين + 5 مصادر احتياطية) ---------------- */
+  function drawRoundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function classifyUnitForReceipt(prod, fallbackName) {
+    if (typeof window.__abClassifyUnit === "function") return window.__abClassifyUnit(prod, fallbackName, "");
+    var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim() : "";
+    var nameStr = String((prod && prod.name) || fallbackName || "");
+    var catStr = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nameStr) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(catStr)) {
+      return { key: "carton", label: "كرتون" };
+    }
+    return { key: "bag", label: "كيس" };
+  }
+
+  function tallyReceiptUnits(items) {
+    var bags = 0, cartons = 0, others = {};
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var q = Number(it.qty || 0);
+      if (q <= 0) continue;
+      if (it.unitKey === "carton") cartons += q;
+      else if (it.unitKey === "bag") bags += q;
+      else {
+        var lbl = it.unitLabel || "وحدة";
+        others[lbl] = (others[lbl] || 0) + q;
+      }
+    }
+    return { bags: bags, cartons: cartons, others: others };
+  }
+
+  function collectLiveOrderForReceipt() {
+    var showPrices = false;
+    try { showPrices = localStorage.getItem(PRICE_SECRET_KEY) === "1"; } catch (e) {}
+
+    var items = [];
+    var totalQty = 0;
+    var totalPrice = 0;
+    var prods = [];
+    var byId = {};
+    var byName = {};
+
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) prods = PRODUCTS;
+      else if (Array.isArray(window.PRODUCTS)) prods = window.PRODUCTS;
+      for (var p = 0; p < prods.length; p++) {
+        if (!prods[p]) continue;
+        if (prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+        if (prods[p].name) byName[String(prods[p].name).trim()] = prods[p];
+      }
+    } catch (e) {}
+
+    // المصدر 1: السلة الحية في الذاكرة (CART / cart)
+    try {
+      var cartObj = null;
+      if (typeof CART !== "undefined" && CART) cartObj = CART;
+      else if (typeof cart !== "undefined" && cart) cartObj = cart;
+      else if (window.CART) cartObj = window.CART;
+      else if (window.cart) cartObj = window.cart;
+
+      if (cartObj) {
+        var keys = Object.keys(cartObj);
+        for (var i = 0; i < keys.length; i++) {
+          var pid = keys[i];
+          var qty = Number(cartObj[pid] || 0);
+          if (qty <= 0) continue;
+          var pr = byId[String(pid)];
+          var name = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var u = classifyUnitForReceipt(pr, name);
+          var unitP = pr ? Number(pr.wholesalePrice || pr.price || pr.p || 0) : 0;
+          var bonus = 0;
+          try { if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, qty) || 0); } catch (e) {}
+          items.push({ name: name, qty: qty, bonus: bonus, unitKey: u.key, unitLabel: u.label, price: unitP, sub: unitP * qty });
+          totalQty += qty;
+          totalPrice += (unitP * qty);
+        }
+      }
+    } catch (e) {}
+
+    // المصدر 2: بطاقات الأصناف المختارة في الواجهة (data-ab-last-q)
+    if (!items.length) {
+      try {
+        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+        for (var c = 0; c < cards.length; c++) {
+          var qAttr = Number(cards[c].getAttribute("data-ab-last-q") || 0);
+          if (qAttr <= 0) {
+            var bEl = cards[c].querySelector(".ab-instant-qty-badge");
+            if (bEl) {
+              var bm = (bEl.textContent || "").match(/\d+/);
+              if (bm) qAttr = Number(bm[0]);
+            }
+          }
+          if (qAttr <= 0) continue;
+          var pid2 = cards[c].getAttribute("data-ab-prod-id");
+          var pr2 = pid2 ? byId[String(pid2)] : null;
+          var tEl = cards[c].querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+          var nm2 = (pr2 && pr2.name) ? String(pr2.name).trim() : (tEl ? (tEl.textContent || "").trim() : ("صنف " + (c + 1)));
+          if (!pr2 && nm2) pr2 = byName[nm2] || null;
+          var u2 = classifyUnitForReceipt(pr2, nm2);
+          var up2 = pr2 ? Number(pr2.wholesalePrice || pr2.price || pr2.p || 0) : 0;
+          var b2 = 0;
+          try { if (pr2 && typeof calcBonus === "function") b2 = Number(calcBonus(pr2, qAttr) || 0); } catch (e) {}
+          items.push({ name: nm2, qty: qAttr, bonus: b2, unitKey: u2.key, unitLabel: u2.label, price: up2, sub: up2 * qAttr });
+          totalQty += qAttr;
+          totalPrice += (up2 * qAttr);
+        }
+      } catch (e) {}
+    }
+
+    // المصدر 3 و4: آخر طلب محفوظ في الذاكرة أو الأرشيف أو سجل اليوم
+    var liveInfo = resolveRealCustomerInfo();
+    var custName = liveInfo.custName || "";
+    var payMethod = liveInfo.payMethod || "";
+
+    if (!items.length) {
+      var snap = window.__abLastConfirmOrder || window.__abUnitSplitSnap || null;
+      if (!snap) {
+        try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+      }
+      if (!snap || !Array.isArray(snap.items) || !snap.items.length) {
+        try {
+          var dlog = JSON.parse(localStorage.getItem(DAILY_LOG_KEY) || "[]");
+          if (Array.isArray(dlog) && dlog.length && dlog[0] && Array.isArray(dlog[0].items)) snap = dlog[0];
+        } catch (e) {}
+      }
+      if (snap && Array.isArray(snap.items) && snap.items.length) {
+        for (var si = 0; si < snap.items.length; si++) {
+          var sit = snap.items[si];
+          var su = sit.unitKey ? { key: sit.unitKey, label: sit.unitLabel || "كيس" } : classifyUnitForReceipt(byName[String(sit.name || "").trim()] || null, sit.name);
+          var sq = Number(sit.qty || 0);
+          if (sq <= 0) continue;
+          items.push({
+            name: String(sit.name || "صنف"),
+            qty: sq,
+            bonus: Number(sit.bonus || 0),
+            unitKey: su.key,
+            unitLabel: su.label,
+            price: Number(sit.price || 0),
+            sub: Number(sit.sub || 0)
+          });
+          totalQty += sq;
+          totalPrice += Number(sit.sub || 0);
+        }
+        custName = custName || snap.custName || "";
+        payMethod = payMethod || snap.payMethod || "";
+      }
+    }
+
+    var tallied = tallyReceiptUnits(items);
+    return {
+      items: items,
+      totalQty: totalQty,
+      bagsTotal: tallied.bags,
+      cartonsTotal: tallied.cartons,
+      otherTotals: tallied.others,
+      totalPrice: totalPrice,
+      showPrices: showPrices && totalPrice > 0,
+      custName: custName || "عميل كريم",
+      payMethod: payMethod || "حسب الاتفاق",
+      refNo: "AB-" + String(Date.now()).slice(-6),
+      dateStr: new Date().toLocaleString("ar-YE", { hour12: true })
+    };
+  }
+
+  function renderLuxuryReceiptPng(order) {
+    var W = 900;
+    var rowH = 54;
+    var itemsCount = order.items.length;
+    var H = 400 + (itemsCount * rowH) + 275;
+    if (H < 700) H = 700;
+
+    var canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    var ctx = canvas.getContext("2d");
+    try { ctx.direction = "rtl"; } catch (e) {}
+
+    var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, "#12110e");
+    bgGrad.addColorStop(0.5, "#090a0e");
+    bgGrad.addColorStop(1, "#14110b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = "#d4af37";
+    ctx.lineWidth = 4;
+    drawRoundRect(ctx, 20, 20, W - 40, H - 40, 24);
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(254, 240, 138, 0.35)";
+    ctx.lineWidth = 1.5;
+    drawRoundRect(ctx, 32, 32, W - 64, H - 64, 18);
+    ctx.stroke();
+
+    ctx.fillStyle = "#facc15";
+    ctx.font = "900 42px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("أبوسيف للتجارة العامة", W / 2, 96);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "700 21px sans-serif";
+    ctx.fillText("لبيع المواد الغذائية والحلويات بالجملة  •  سيئون", W / 2, 134);
+
+    drawRoundRect(ctx, W / 2 - 170, 152, 340, 40, 20);
+    ctx.fillStyle = "rgba(212, 175, 55, 0.16)";
+    ctx.fill();
+    ctx.strokeStyle = "#d4af37";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "800 20px sans-serif";
+    ctx.fillText("إيصال تسجيل طلب رسمي  #" + order.refNo, W / 2, 179);
+
+    drawRoundRect(ctx, 50, 212, W - 100, 96, 14);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(212, 175, 55, 0.35)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "800 21px sans-serif";
+    ctx.fillText("العميل / المحل: " + order.custName, W - 74, 248);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "700 18px sans-serif";
+    ctx.fillText("طريقة الدفع: " + order.payMethod, W - 74, 286);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "700 18px sans-serif";
+    ctx.fillText(order.dateStr, 74, 248);
+    ctx.fillStyle = "#86efac";
+    ctx.font = "800 18px sans-serif";
+    ctx.fillText("الحالة: تم التسجيل بنجاح ✓", 74, 286);
+
+    var y = 328;
+    drawRoundRect(ctx, 50, y, W - 100, 44, 10);
+    ctx.fillStyle = "#d4af37";
+    ctx.fill();
+
+    var qtyColX = order.showPrices ? 310 : 195;
+    ctx.fillStyle = "#09090b";
+    ctx.font = "900 20px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("#  الصنف", W - 72, y + 29);
+    ctx.textAlign = "center";
+    ctx.fillText("الكمية والوحدة", qtyColX, y + 29);
+    if (order.showPrices) {
+      ctx.textAlign = "left";
+      ctx.fillText("الإجمالي", 74, y + 29);
+    }
+
+    y += 52;
+    var maxNameLen = order.showPrices ? 31 : 35;
+    for (var i = 0; i < order.items.length; i++) {
+      var it = order.items[i];
+      if (i % 2 === 0) {
+        drawRoundRect(ctx, 50, y, W - 100, rowH - 6, 8);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.035)";
+        ctx.fill();
+      }
+      var dispName = (i + 1) + ". " + String(it.name || "");
+      if (dispName.length > maxNameLen) dispName = dispName.slice(0, maxNameLen - 1) + "…";
+
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "800 20px sans-serif";
+      ctx.fillText(dispName, W - 72, y + 32);
+
+      var uLbl = it.unitLabel || "كيس";
+      var qTxt = String(it.qty || 0) + " " + uLbl;
+      if (it.bonus && it.bonus > 0) qTxt += " (+" + it.bonus + " مجاني)";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#fef08a";
+      ctx.font = "900 19.5px sans-serif";
+      ctx.fillText(qTxt, qtyColX, y + 32);
+
+      if (order.showPrices) {
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#86efac";
+        ctx.font = "800 19px sans-serif";
+        ctx.fillText(Number(it.sub || 0).toLocaleString("en-US") + " ر.ي", 74, y + 32);
+      }
+      y += rowH;
+    }
+
+    y += 14;
+    var splitParts = [];
+    splitParts.push("عدد الأكياس: " + (order.bagsTotal || 0) + " كيس");
+    splitParts.push("عدد الكراتين: " + (order.cartonsTotal || 0) + " كرتون");
+    var oKeys = Object.keys(order.otherTotals || {});
+    for (var oi = 0; oi < oKeys.length; oi++) {
+      if (order.otherTotals[oKeys[oi]] > 0) splitParts.push(oKeys[oi] + ": " + order.otherTotals[oKeys[oi]]);
+    }
+    var splitLineText = splitParts.length ? splitParts.join("   |   ") : ("إجمالي الكميات: " + order.totalQty);
+
+    drawRoundRect(ctx, 50, y, W - 100, 92, 13);
+    ctx.fillStyle = "rgba(5, 150, 105, 0.22)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(52, 211, 153, 0.68)";
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 21px sans-serif";
+    ctx.fillText("عدد الأصناف: " + order.items.length, W - 74, y + 34);
+
+    if (order.showPrices) {
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#86efac";
+      ctx.font = "900 22px sans-serif";
+      ctx.fillText(Number(order.totalPrice || 0).toLocaleString("en-US") + " ر.ي", 74, y + 34);
+    }
+
+    ctx.strokeStyle = "rgba(254, 240, 138, 0.28)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(74, y + 48);
+    ctx.lineTo(W - 74, y + 48);
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "900 22px sans-serif";
+    ctx.fillText(splitLineText, W / 2, y + 78);
+
+    y += 122;
+    ctx.strokeStyle = "rgba(212, 175, 55, 0.45)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(80, y);
+    ctx.lineTo(W - 80, y);
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fef08a";
+    ctx.font = "800 19px sans-serif";
+    ctx.fillText("حضرموت - سيئون - شارع المطار غربي محطة السلطان", W / 2, y + 36);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "700 18px sans-serif";
+    ctx.fillText("تلفون: 05492417  •  جوال: 772202525  •  مندوب المبيعات: 771458609", W / 2, y + 70);
+
+    ctx.fillStyle = "#93c5fd";
+    ctx.font = "800 18px sans-serif";
+    ctx.fillText("حساب المشقاص للصرافة: 254025903 (سالم عمر محمد هويدي باجابر)", W / 2, y + 102);
+
+    return canvas.toDataURL("image/png");
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var parts = dataUrl.split(",");
+    var mime = (parts[0].match(/:(.*?);/) || ["", "image/png"])[1];
+    var bin = atob(parts[1]);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+
+  function triggerSafeDownload(dataUrl, fileName) {
+    try {
+      var blob = dataUrlToBlob(dataUrl);
+      var objUrl = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = objUrl;
+      a.download = fileName;
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () {
+        try { a.remove(); URL.revokeObjectURL(objUrl); } catch (e) {}
+      }, 1500);
+      notify("✅ تم حفظ الإيصال المصوّر على جهازك");
+    } catch (e) {
+      try {
+        var a2 = document.createElement("a");
+        a2.href = dataUrl;
+        a2.download = fileName;
+        document.body.appendChild(a2);
+        a2.click();
+        a2.remove();
+        notify("✅ تم حفظ الإيصال المصوّر");
+      } catch (e2) {
+        notify("⚠️ اضغط مطوّلاً على صورة الإيصال لحفظها");
+      }
+    }
+  }
+
+  function openHdReceiptModal() {
+    var now = Date.now();
+    if (now - _lastOpenTriggerTs < 250) return;
+    _lastOpenTriggerTs = now;
+
+    try {
+      var order = collectLiveOrderForReceipt();
+      if (!order || !order.items || !order.items.length) {
+        notify("⚠️ أضف أصنافاً أولاً لتوليد الإيصال المصوّر");
+        return;
+      }
+
+      _lastReceiptDataUrl = renderLuxuryReceiptPng(order);
+      _lastReceiptFileName = "Abusaif-" + order.refNo + ".png";
+
+      var bg = document.getElementById("abRoyalReceiptModal");
+      if (!bg) {
+        bg = document.createElement("div");
+        bg.id = "abRoyalReceiptModal";
+        bg.className = "ab-royal-modal-bg";
+        bg.innerHTML =
+          '<div class="ab-royal-modal-card">' +
+            '<button type="button" class="ab-royal-modal-close" id="abRcptCloseBtn">✕</button>' +
+            '<div class="ab-royal-modal-title">🧾 إيصال الطلب المصوّر (HD)</div>' +
+            '<div class="ab-royal-modal-sub">إيصال رسمي جاهز للحفظ أو الإرسال المباشر على الواتساب</div>' +
+            '<img id="abRcptImgPreview" class="ab-rcpt-preview-img" alt="إيصال أبوسيف">' +
+            '<div class="ab-royal-act-stack">' +
+              '<button type="button" class="ab-royal-btn-wa" id="abRcptShareImgBtn">📤 مشاركة الإيصال كصورة عبر الواتساب</button>' +
+              '<button type="button" class="ab-royal-btn-gold" id="abRcptDownloadBtn">⬇️ حفظ الإيصال في الاستوديو</button>' +
+            '</div>' +
+          '</div>';
+        document.body.appendChild(bg);
+
+        bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
+        document.getElementById("abRcptCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
+        document.getElementById("abRcptDownloadBtn").addEventListener("click", function () {
+          triggerSafeDownload(_lastReceiptDataUrl, _lastReceiptFileName);
+        });
+        document.getElementById("abRcptShareImgBtn").addEventListener("click", function () {
+          try {
+            var blob = dataUrlToBlob(_lastReceiptDataUrl);
+            var file = new File([blob], _lastReceiptFileName, { type: "image/png" });
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+              navigator.share({
+                title: "إيصال طلب — أبوسيف للتجارة العامة",
+                text: "إيصال الطلب الرسمي من متجر أبوسيف للتجارة العامة",
+                files: [file]
+              }).catch(function () {});
+              return;
+            }
+          } catch (e) {}
+          triggerSafeDownload(_lastReceiptDataUrl, _lastReceiptFileName);
+        });
+      }
+
+      var imgEl = document.getElementById("abRcptImgPreview");
+      if (imgEl) imgEl.src = _lastReceiptDataUrl;
+      bg.classList.add("open");
+    } catch (err) {
+      notify("⚠️ تعذر توليد الإيصال: " + (err && err.message ? err.message : "حاول مجدداً"));
+    }
+  }
+  window.__abOpenHdReceipt = openHdReceiptModal;
+
+  // التقاط نقر شامل ومحصّن لا يتأثر بإعادة رسم الفاتورة أبداً
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target && ev.target.closest ? ev.target.closest("#abBoxHdRcptBtn, .ab-hd-rcpt-btn") : null;
+    if (!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    openHdReceiptModal();
+  }, true);
+
+  function injectReceiptButtons() {
+    var box = document.getElementById("abSilentOrderBox");
+    if (box && !document.getElementById("abBoxHdRcptBtn")) {
+      var b1 = document.createElement("button");
+      b1.type = "button";
+      b1.id = "abBoxHdRcptBtn";
+      b1.className = "ab-hd-rcpt-btn";
+      b1.textContent = "🧾 معاينة وحفظ الإيصال كصورة فاخرة (HD)";
+      box.appendChild(b1);
+    }
+
+    var cards = document.querySelectorAll(".ab-wa-confirm-card");
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].querySelector(".ab-hd-rcpt-btn")) continue;
+      var b2 = document.createElement("button");
+      b2.type = "button";
+      b2.className = "ab-hd-rcpt-btn";
+      b2.textContent = "🧾 حفظ / مشاركة الإيصال كصورة فاخرة (HD)";
+      cards[i].appendChild(b2);
+    }
+  }
+
+  /* ---------------- 6) تركيب لوحة القيادة الملكية العلوية ---------------- */
+  function mountRoyalDock() {
+    if (document.getElementById("abRoyalDock")) return;
+    var anchor = document.getElementById("abSaifLuxuryHeader") || document.body.firstElementChild;
+    if (!anchor || !anchor.parentNode) return;
+
+    var dock = document.createElement("div");
+    dock.id = "abRoyalDock";
+    dock.innerHTML =
+      '<button type="button" class="ab-rd-btn" id="abDockArchBtn">' +
+        '<span class="ab-rd-badge" id="abDockArchBadge">0</span>' +
+        '<span class="ab-rd-ico">📂</span>' +
+        '<span class="ab-rd-lbl">الأرشيف</span>' +
+      '</button>' +
+      '<button type="button" class="ab-rd-btn" id="abDockFavBtn">' +
+        '<span class="ab-rd-badge" id="abDockFavBadge">0</span>' +
+        '<span class="ab-rd-ico">⭐</span>' +
+        '<span class="ab-rd-lbl">المفضلة</span>' +
+      '</button>' +
+      '<button type="button" class="ab-rd-btn" id="abDockVoiceBtn">' +
+        '<span class="ab-rd-ico">🎙️</span>' +
+        '<span class="ab-rd-lbl">بحث صوتي</span>' +
+      '</button>' +
+      '<button type="button" class="ab-rd-btn" id="abDockQrBtn">' +
+        '<span class="ab-rd-ico">📲</span>' +
+        '<span class="ab-rd-lbl">باركود QR</span>' +
+      '</button>';
+
+    anchor.insertAdjacentElement("afterend", dock);
+
+    var emptyFav = document.createElement("div");
+    emptyFav.id = "abFavEmptyBanner";
+    emptyFav.innerHTML =
+      '⭐ لم تختر أصنافاً مفضلة بعد!<br>' +
+      'اضغط على النجمة <b>(☆)</b> أسفل صورة أي صنف ليظهر هنا فوراً للطلب السريع.';
+    dock.insertAdjacentElement("afterend", emptyFav);
+
+    document.getElementById("abDockArchBtn").addEventListener("click", function () {
+      var origBtn = document.getElementById("abAlwaysArchTopBtn");
+      if (origBtn) origBtn.click();
+    });
+    document.getElementById("abDockFavBtn").addEventListener("click", function () {
+      var nextOn = !document.documentElement.classList.contains("ab-fav-filter-on");
+      document.documentElement.classList.toggle("ab-fav-filter-on", nextOn);
+      this.classList.toggle("active", nextOn);
+      syncFavButtons();
+      updateFavEmptyState();
+      if (nextOn) {
+        var cnt = document.querySelectorAll('[data-ab-pro-card="1"][data-ab-fav="1"]').length;
+        notify(cnt > 0 ? ("⭐ عرض أصنافك المفضلة (" + cnt + ")") : "⭐ اضغط (☆) على أي صنف لإضافته للمفضلة");
+      } else {
+        notify("📦 عرض جميع الأصناف");
+      }
+    });
+    document.getElementById("abDockVoiceBtn").addEventListener("click", function () { startVoiceSearch(this); });
+    document.getElementById("abDockQrBtn").addEventListener("click", openQrShareModal);
+  }
+
+  function runRoyalSync() {
+    try {
+      mountRoyalDock();
+      syncFavButtons();
+      refreshDockBadges();
+      injectReceiptButtons();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(runRoyalSync, 200); });
+  } else {
+    setTimeout(runRoyalSync, 200);
+  }
+  setTimeout(runRoyalSync, 850);
+  document.addEventListener("click", function () {
+    setTimeout(refreshDockBadges, 320);
+    setTimeout(injectReceiptButtons, 480);
+    setTimeout(syncFavButtons, 180);
+  }, true);
+  setInterval(function () {
+    refreshDockBadges();
+    injectReceiptButtons();
+  }, 2200);
+})();
+</script>
+<!-- ABUDHIYA_ROYAL_VIP_END -->
+
 <!-- ABUDHIYA_IMPERIAL_V3_START -->
 <style id="abImperialV3Style" data-imperial-v3="1">
   /* 1) شريط دوائر الحالات والعروض الملكية أعلى الأصناف */
@@ -9873,6 +11403,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   function classifyUnit(prod, fallbackName) {
+    if (typeof window.__abClassifyUnit === "function") return window.__abClassifyUnit(prod, fallbackName || "", "");
     var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim() : "";
     var nm = String((prod && prod.name) || fallbackName || "");
     var cat = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
@@ -10984,1308 +12515,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_IMPERIAL_V3_END -->
 
-
-
-
-
-
-
-<!-- ABUDHIYA_ROYAL_VIP_START -->
-<style id="abRoyalVipStyle" data-royal-vip="4">
-  #abAlwaysArchTopWrap {
-    display: none !important;
-  }
-
-  /* 1) لوحة القيادة الملكية الزجاجية العلوية */
-  #abRoyalDock {
-    direction: rtl;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-    margin: 6px 10px 6px;
-    padding: 6px;
-    border-radius: 14px;
-    background: linear-gradient(150deg, rgba(22, 20, 15, 0.96) 0%, rgba(10, 11, 16, 0.98) 100%);
-    border: 1.2px solid rgba(212, 175, 55, 0.62);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 248, 214, 0.22);
-    box-sizing: border-box;
-  }
-  .ab-rd-btn {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    padding: 7px 3px 6px;
-    border-radius: 10px;
-    border: 1px solid rgba(212, 175, 55, 0.34);
-    background: linear-gradient(180deg, rgba(28, 27, 24, 0.92) 0%, rgba(13, 14, 19, 0.96) 100%);
-    color: #f8fafc;
-    font-family: inherit;
-    cursor: pointer;
-    box-sizing: border-box;
-    min-width: 0;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .ab-rd-btn:active,
-  .ab-rd-btn.active {
-    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
-    color: #09090b;
-    border-color: #fef08a;
-    box-shadow: 0 0 14px rgba(250, 204, 21, 0.35);
-  }
-  .ab-rd-btn.listening {
-    background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
-    color: #ffffff;
-    border-color: #fca5a5;
-  }
-  .ab-rd-ico { font-size: 16px; line-height: 1; }
-  .ab-rd-lbl {
-    font-size: 10px;
-    font-weight: 900;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    color: #fef08a;
-  }
-  .ab-rd-btn.active .ab-rd-lbl,
-  .ab-rd-btn:active .ab-rd-lbl { color: #09090b; }
-  .ab-rd-btn.listening .ab-rd-lbl { color: #ffffff; }
-  .ab-rd-badge {
-    position: absolute;
-    top: -4px;
-    left: -3px;
-    min-width: 17px;
-    height: 17px;
-    padding: 0 4px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #d4af37, #facc15);
-    color: #09090b;
-    font-size: 9.5px;
-    font-weight: 900;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #09090b;
-    line-height: 1;
-  }
-  .ab-rd-badge.show { display: inline-flex; }
-
-  /* 2) نجمة المفضلة داخل الزاوية السفلية اليسرى لصورة الصنف */
-  .ab-hd-img-wrap .ab-fav-star {
-    position: absolute !important;
-    bottom: 4px !important;
-    left: 4px !important;
-    z-index: 10 !important;
-    width: 24px !important;
-    height: 24px !important;
-    border-radius: 50% !important;
-    border: 1px solid rgba(212, 175, 55, 0.55) !important;
-    background: rgba(9, 9, 13, 0.80) !important;
-    color: #cbd5e1 !important;
-    font-size: 13px !important;
-    line-height: 1 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45) !important;
-  }
-  .ab-hd-img-wrap .ab-fav-star.on {
-    background: linear-gradient(135deg, #1c1917 0%, #09090b 100%) !important;
-    border-color: #facc15 !important;
-    color: #facc15 !important;
-    box-shadow: 0 0 10px rgba(250, 204, 21, 0.45) !important;
-  }
-
-  html.ab-fav-filter-on [data-ab-pro-card="1"]:not([data-ab-fav="1"]) {
-    display: none !important;
-  }
-  #abFavEmptyBanner {
-    display: none;
-    direction: rtl;
-    margin: 10px 12px;
-    padding: 16px 14px;
-    border-radius: 14px;
-    background: linear-gradient(155deg, #16140f, #0d0e14);
-    border: 1.2px dashed rgba(212, 175, 55, 0.65);
-    color: #fef08a;
-    text-align: center;
-    font-size: 12.5px;
-    font-weight: 800;
-    line-height: 1.75;
-  }
-  #abFavEmptyBanner.show { display: block; }
-
-  /* 3) زر الإيصال المصوّر الفاخر HD */
-  .ab-hd-rcpt-btn {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 7px !important;
-    width: 100% !important;
-    margin-top: 8px !important;
-    padding: 11px 12px !important;
-    border-radius: 11px !important;
-    border: 1.3px solid rgba(254, 240, 138, 0.78) !important;
-    background: linear-gradient(135deg, #272011 0%, #161410 55%, #241d0f 100%) !important;
-    color: #fef08a !important;
-    font-size: 13px !important;
-    font-weight: 900 !important;
-    font-family: inherit !important;
-    cursor: pointer !important;
-    box-sizing: border-box !important;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 248, 214, 0.25) !important;
-    position: relative !important;
-    z-index: 5 !important;
-    pointer-events: auto !important;
-  }
-  .ab-hd-rcpt-btn:active {
-    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%) !important;
-    color: #09090b !important;
-  }
-
-  /* 4) نافذة باركود QR + نافذة معاينة الإيصال المصوّر HD (أعلى z-index مطلق فوق كل النوافذ) */
-  .ab-royal-modal-bg {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 2147483000 !important;
-    background: rgba(4, 5, 9, 0.88) !important;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    display: none !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 14px !important;
-    direction: rtl !important;
-    box-sizing: border-box !important;
-  }
-  .ab-royal-modal-bg.open {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  .ab-royal-modal-card {
-    width: 100%;
-    max-width: 390px;
-    max-height: 88vh;
-    overflow-y: auto;
-    border-radius: 18px;
-    background: linear-gradient(165deg, #171510 0%, #0b0c10 62%, #15120c 100%);
-    border: 1.5px solid rgba(212, 175, 55, 0.86);
-    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.72), 0 0 24px rgba(212, 175, 55, 0.22);
-    padding: 15px 14px 14px;
-    color: #f8fafc;
-    font-family: inherit;
-    text-align: center;
-    position: relative;
-    box-sizing: border-box;
-  }
-  .ab-royal-modal-close {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 1px solid rgba(212, 175, 55, 0.55);
-    background: #14161f;
-    color: #fef08a;
-    font-size: 13px;
-    font-weight: 900;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .ab-royal-modal-title {
-    font-size: 15.5px;
-    font-weight: 900;
-    color: #facc15;
-    margin: 2px 0 4px;
-  }
-  .ab-royal-modal-sub {
-    font-size: 11.5px;
-    font-weight: 700;
-    color: #cbd5e1;
-    margin-bottom: 12px;
-    line-height: 1.5;
-  }
-  .ab-qr-frame {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border-radius: 16px;
-    background: #ffffff;
-    border: 2.5px solid #d4af37;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), 0 0 18px rgba(212, 175, 55, 0.32);
-    margin-bottom: 10px;
-  }
-  .ab-qr-frame img { width: 196px; height: 196px; display: block; border-radius: 8px; }
-  .ab-qr-link-pill {
-    display: block;
-    margin: 0 auto 12px;
-    padding: 7px 10px;
-    border-radius: 9px;
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    color: #fef08a;
-    font-size: 11.5px;
-    font-weight: 800;
-    direction: ltr;
-    word-break: break-all;
-  }
-  .ab-royal-act-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    margin-top: 8px;
-  }
-  .ab-royal-btn-gold {
-    width: 100%;
-    padding: 11px 12px;
-    border-radius: 11px;
-    border: 1px solid #fef08a;
-    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
-    color: #09090b;
-    font-size: 13px;
-    font-weight: 900;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ab-royal-btn-wa {
-    width: 100%;
-    padding: 11px 12px;
-    border-radius: 11px;
-    border: 1px solid rgba(134, 239, 172, 0.65);
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 900;
-    cursor: pointer;
-    font-family: inherit;
-    text-decoration: none;
-    display: block;
-    box-sizing: border-box;
-  }
-  .ab-royal-btn-dark {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 11px;
-    border: 1px solid rgba(212, 175, 55, 0.45);
-    background: #14161e;
-    color: #fef08a;
-    font-size: 12.5px;
-    font-weight: 800;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ab-rcpt-preview-img {
-    width: 100%;
-    border-radius: 12px;
-    border: 1.5px solid rgba(212, 175, 55, 0.72);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
-    display: block;
-    margin-bottom: 10px;
-  }
-  #abRoyalSafeToast {
-    position: fixed;
-    left: 50%;
-    bottom: 84px;
-    transform: translateX(-50%);
-    z-index: 2147483640;
-    max-width: 90vw;
-    padding: 10px 16px;
-    border-radius: 12px;
-    background: rgba(15, 14, 10, 0.96);
-    border: 1.3px solid #facc15;
-    color: #fef08a;
-    font-size: 12.5px;
-    font-weight: 900;
-    text-align: center;
-    direction: rtl;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
-    display: none;
-  }
-
-  .bottom-nav,
-  .bottom-bar {
-    background: linear-gradient(180deg, rgba(16, 15, 13, 0.97) 0%, rgba(7, 8, 12, 0.99) 100%) !important;
-    border-top: 1.2px solid rgba(212, 175, 55, 0.58) !important;
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55) !important;
-  }
-</style>
-<script data-ab-royal-vip="4">
-(function () {
-  if (window.__abRoyalVipV4) return;
-  window.__abRoyalVipV4 = true;
-
-  var STORE_URL = "https://abudhiya-catalog.vercel.app";
-  var HAS_LOCAL_QR = true;
-  var KNOWN_CUST_IDS = ["custNameInp"];
-  var FAV_KEY = "ab_vip_favs_v1";
-  var SNAP_KEY = "ab_last_confirm_order_v1";
-  var DAILY_LOG_KEY = "ab_imp_daily_log_v3";
-  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
-  var _lastReceiptDataUrl = "";
-  var _lastReceiptFileName = "Abusaif-Order.png";
-  var _voiceActive = false;
-  var _lastOpenTriggerTs = 0;
-  var _safeToastTimer = null;
-
-  function notify(msg) {
-    try {
-      if (typeof showToast === "function") {
-        showToast(msg);
-      }
-    } catch (e) {}
-    try {
-      var el = document.getElementById("abRoyalSafeToast");
-      if (!el && document.body) {
-        el = document.createElement("div");
-        el.id = "abRoyalSafeToast";
-        document.body.appendChild(el);
-      }
-      if (el) {
-        el.textContent = String(msg || "");
-        el.style.display = "block";
-        if (_safeToastTimer) clearTimeout(_safeToastTimer);
-        _safeToastTimer = setTimeout(function () { el.style.display = "none"; }, 2800);
-      }
-    } catch (e) {}
-  }
-
-  /* ---------------- 1) نظام المفضلة الذكية ---------------- */
-  function loadFavMap() {
-    try {
-      var arr = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
-      var map = {};
-      if (Array.isArray(arr)) {
-        for (var i = 0; i < arr.length; i++) map[String(arr[i])] = 1;
-      }
-      return map;
-    } catch (e) { return {}; }
-  }
-  function saveFavMap(map) {
-    try { localStorage.setItem(FAV_KEY, JSON.stringify(Object.keys(map))); } catch (e) {}
-  }
-  function getCardFavId(card, idx) {
-    var pid = card.getAttribute("data-ab-prod-id");
-    if (pid) return "id:" + pid;
-    var tEl = card.querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
-    var t = tEl ? (tEl.textContent || "").trim() : "";
-    return t ? ("nm:" + t) : ("idx:" + idx);
-  }
-  function updateFavEmptyState() {
-    var banner = document.getElementById("abFavEmptyBanner");
-    if (!banner) return;
-    var isOn = document.documentElement.classList.contains("ab-fav-filter-on");
-    if (!isOn) { banner.classList.remove("show"); return; }
-    var favCards = document.querySelectorAll('[data-ab-pro-card="1"][data-ab-fav="1"]');
-    banner.classList.toggle("show", favCards.length === 0);
-  }
-  function syncFavButtons() {
-    var map = loadFavMap();
-    var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
-    var favCount = 0;
-    for (var i = 0; i < cards.length; i++) {
-      var c = cards[i];
-      if (!c || c.closest(".ab-sleek-numpad-box, #invoiceView, #abSv3ModalBg")) continue;
-      var wrap = c.querySelector(".ab-hd-img-wrap");
-      if (!wrap) continue;
-
-      var fid = getCardFavId(c, i);
-      var isFav = !!map[fid];
-      if (isFav) {
-        favCount++;
-        if (c.getAttribute("data-ab-fav") !== "1") c.setAttribute("data-ab-fav", "1");
-      } else {
-        if (c.hasAttribute("data-ab-fav")) c.removeAttribute("data-ab-fav");
-      }
-
-      var star = wrap.querySelector(".ab-fav-star");
-      if (!star) {
-        star = document.createElement("button");
-        star.type = "button";
-        star.className = "ab-fav-star";
-        star.setAttribute("aria-label", "إضافة للمفضلة");
-        (function (cardEl, favKeyId, starEl) {
-          starEl.addEventListener("click", function (ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            var m = loadFavMap();
-            if (m[favKeyId]) {
-              delete m[favKeyId];
-              cardEl.removeAttribute("data-ab-fav");
-              starEl.classList.remove("on");
-              starEl.textContent = "☆";
-              notify("☆ تمت الإزالة من المفضلة");
-            } else {
-              m[favKeyId] = 1;
-              cardEl.setAttribute("data-ab-fav", "1");
-              starEl.classList.add("on");
-              starEl.textContent = "★";
-              notify("⭐ تمت الإضافة إلى أصنافك المفضلة");
-            }
-            saveFavMap(m);
-            refreshDockBadges();
-            updateFavEmptyState();
-          });
-        })(c, fid, star);
-        wrap.appendChild(star);
-      }
-      var nextTxt = isFav ? "★" : "☆";
-      if (star.textContent !== nextTxt) star.textContent = nextTxt;
-      star.classList.toggle("on", isFav);
-    }
-
-    var badge = document.getElementById("abDockFavBadge");
-    if (badge) {
-      var txt = String(favCount);
-      if (badge.textContent !== txt) badge.textContent = txt;
-      badge.classList.toggle("show", favCount > 0);
-    }
-    updateFavEmptyState();
-  }
-  function refreshDockBadges() {
-    var origArchBadge = document.querySelector("#abAlwaysArchTopBtn .ab-always-arch-badge");
-    var dockArchBadge = document.getElementById("abDockArchBadge");
-    if (origArchBadge && dockArchBadge) {
-      var v = (origArchBadge.textContent || "0").trim();
-      if (dockArchBadge.textContent !== v) dockArchBadge.textContent = v;
-      dockArchBadge.classList.toggle("show", Number(v) > 0);
-    }
-    var favLen = Object.keys(loadFavMap()).length;
-    var dockFavBadge = document.getElementById("abDockFavBadge");
-    if (dockFavBadge) {
-      var fv = String(favLen);
-      if (dockFavBadge.textContent !== fv) dockFavBadge.textContent = fv;
-      dockFavBadge.classList.toggle("show", favLen > 0);
-    }
-  }
-
-  /* ---------------- 2) البحث الصوتي العربي الفوري ---------------- */
-  function findNativeSearchInput() {
-    var sels = [
-      '#searchInput', '#search', '#prodSearch', '#catalogSearch',
-      'input[type="search"]',
-      'input[placeholder*="بحث"]',
-      'input[placeholder*="ابحث"]',
-      'input[placeholder*="صنف"]'
-    ];
-    for (var i = 0; i < sels.length; i++) {
-      var el = document.querySelector(sels[i]);
-      if (el && !el.closest("#invoiceView, #abSv3ModalBg, #abRoyalQrModal")) return el;
-    }
-    return null;
-  }
-  function startVoiceSearch(btn) {
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) {
-      notify("🎙️ البحث الصوتي يعمل في متصفح Chrome على الجوال");
-      var inp = findNativeSearchInput();
-      if (inp) { inp.focus(); inp.scrollIntoView({ behavior: "smooth", block: "center" }); }
-      return;
-    }
-    if (_voiceActive) return;
-    try {
-      var rec = new SR();
-      rec.lang = "ar-SA";
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      _voiceActive = true;
-      btn.classList.add("listening");
-      notify("🎙️ تكلّم الآن باسم الصنف...");
-      rec.onresult = function (ev) {
-        var spoken = "";
-        try { spoken = String(ev.results[0][0].transcript || "").trim(); } catch (e) {}
-        if (!spoken) return;
-        document.documentElement.classList.remove("ab-fav-filter-on");
-        var fBtn = document.getElementById("abDockFavBtn");
-        if (fBtn) fBtn.classList.remove("active");
-        updateFavEmptyState();
-        var inp = findNativeSearchInput();
-        if (inp) {
-          inp.value = spoken;
-          inp.dispatchEvent(new Event("input", { bubbles: true }));
-          inp.dispatchEvent(new Event("keyup", { bubbles: true }));
-          inp.dispatchEvent(new Event("change", { bubbles: true }));
-          notify("🔎 تم البحث عن: " + spoken);
-        }
-      };
-      rec.onerror = function () { notify("⚠️ لم أتمكن من سماع الصوت"); };
-      rec.onend = function () { _voiceActive = false; btn.classList.remove("listening"); };
-      rec.start();
-    } catch (e) {
-      _voiceActive = false;
-      btn.classList.remove("listening");
-    }
-  }
-
-  /* ---------------- 3) نافذة باركود QR والمشاركة ---------------- */
-  function openQrShareModal() {
-    var bg = document.getElementById("abRoyalQrModal");
-    if (!bg) {
-      bg = document.createElement("div");
-      bg.id = "abRoyalQrModal";
-      bg.className = "ab-royal-modal-bg";
-      var shareMsg =
-        "✨ *المتجر السحابي الرسمي — أبوسيف للتجارة العامة* ✨\n" +
-        "تصفح الأصناف واطلب الكميات بضغطة واحدة (يعمل حتى بدون نت) 🛒⚡\n\n" +
-        "🔗 *رابط المتجر المباشر:*\n" + STORE_URL + "\n\n" +
-        "📍 حضرموت - سيئون - شارع المطار غربي محطة السلطان\n" +
-        "☎️ تلفون: 05492417 | 📱 جوال: 772202525\n" +
-        "🚚 مندوب المبيعات: 771458609\n" +
-        "🏦 حساب المشقاص: 254025903";
-      var waShareHref = "https://wa.me/?text=" + encodeURIComponent(shareMsg);
-      var qrHtml = HAS_LOCAL_QR
-        ? '<div class="ab-qr-frame"><img src="/store-qr.png" alt="باركود متجر أبوسيف للتجارة العامة"></div>'
-        : '<div class="ab-qr-frame" style="padding:18px;color:#09090b;font-weight:900">📲 أبوسيف للتجارة العامة</div>';
-
-      bg.innerHTML =
-        '<div class="ab-royal-modal-card">' +
-          '<button type="button" class="ab-royal-modal-close" id="abQrCloseBtn">✕</button>' +
-          '<div class="ab-royal-modal-title">📲 باركود متجر أبوسيف السحابي</div>' +
-          '<div class="ab-royal-modal-sub">وجّه كاميرا جوال التاجر نحو الباركود لفتح المتجر مباشرة (يعمل بدون نت)</div>' +
-          qrHtml +
-          '<div class="ab-qr-link-pill">' + STORE_URL + '</div>' +
-          '<div class="ab-royal-act-stack">' +
-            '<a class="ab-royal-btn-wa" href="' + waShareHref + '" target="_blank" rel="noopener noreferrer">📤 إرسال رابط المتجر عبر الواتساب</a>' +
-            '<button type="button" class="ab-royal-btn-gold" id="abQrCopyBtn">📋 نسخ رابط المتجر</button>' +
-            '<button type="button" class="ab-royal-btn-dark" id="abQrNativeShareBtn">🔗 مشاركة سريعة عبر التطبيقات</button>' +
-          '</div>' +
-        '</div>';
-      document.body.appendChild(bg);
-      bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
-      document.getElementById("abQrCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
-      document.getElementById("abQrCopyBtn").addEventListener("click", function () {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(STORE_URL).then(function () { notify("✅ تم نسخ رابط متجر أبوسيف"); }).catch(function () { notify("🔗 " + STORE_URL); });
-        } else { notify("🔗 " + STORE_URL); }
-      });
-      document.getElementById("abQrNativeShareBtn").addEventListener("click", function () {
-        if (navigator.share) {
-          navigator.share({ title: "أبوسيف للتجارة العامة — المتجر السحابي", text: "تصفح الأصناف واطلب بضغطة واحدة من متجر أبوسيف للتجارة العامة", url: STORE_URL }).catch(function () {});
-        } else { window.open(waShareHref, "_blank", "noopener,noreferrer"); }
-      });
-    }
-    bg.classList.add("open");
-  }
-
-  /* ---------------- 4) قارئ اسم العميل الشامل (مُشترك مع الإيصال الحراري والواتساب) ---------------- */
-  function isExcludedCustField(el) {
-    if (!el) return true;
-    var tag = (el.tagName || "").toUpperCase();
-    if (tag !== "INPUT" && tag !== "TEXTAREA") return true;
-    var tp = (el.type || "text").toLowerCase();
-    if (tag === "INPUT" && /^(?:hidden|checkbox|radio|number|search|password|tel|file|button|submit|range|date|time)$/.test(tp)) return true;
-    if (el.closest && el.closest("#abQuantumAiModal, #abQuantumTplModal, #abQuantumCrmModal, #abQuantumScanModal, #abImpRepsModal, #abImpStoryModal, #abQuantumSecretCalc, #abSv3Admin, #abPricedAdminCtrl, .ab-sleek-numpad-box, #abRoyalQrModal, #abRoyalReceiptModal, #abImpThermalModal, #abImpDailyModal, #abFallbackArchBg, #abSv3ArchModalBg")) {
-      return true;
-    }
-    return false;
-  }
-  function getCustFieldHint(el) {
-    var parts = [
-      el.id || "",
-      el.name || "",
-      el.placeholder || "",
-      el.getAttribute ? (el.getAttribute("aria-label") || "") : "",
-      typeof el.className === "string" ? el.className : ""
-    ];
-    try {
-      if (el.id) {
-        var safeId = String(el.id).replace(/"/g, "");
-        var lbl = document.querySelector('label[for="' + safeId + '"]');
-        if (lbl) parts.push(lbl.textContent || "");
-      }
-      var pLbl = el.closest ? el.closest("label") : null;
-      if (pLbl) parts.push(pLbl.textContent || "");
-      var prev = el.previousElementSibling;
-      if (prev && (prev.textContent || "").length <= 50) parts.push(prev.textContent || "");
-      if (el.parentElement) {
-        var firstLbl = el.parentElement.querySelector("label, .lbl, .label, span, p");
-        if (firstLbl && firstLbl !== el && (firstLbl.textContent || "").length <= 50) parts.push(firstLbl.textContent || "");
-      }
-    } catch (e) {}
-    return parts.join(" ").replace(/\s+/g, " ").trim().toLowerCase();
-  }
-  function isNonNameHint(hint) {
-    return /(?:search|بحث|ابحث|صنف|phone|mobile|\btel\b|جوال|رقم|هاتف|واتس|note|ملاحظ|عنوان|address|disc|خصم|صرف|rate|pass|سري|رمز|code|barcode|باركود|قالب|tpl|مندوب|\brep\b)/.test(hint);
-  }
-  function isNameHint(hint) {
-    return /(?:name|cust|client|shop|store|buyer|اسم|الاسم|عميل|العميل|محل|المحل|بقال|تاجر|زبون|سوبر|مشتري|صاحب|الجهة|الجهه|مركز|تموين)/.test(hint);
-  }
-  function resolveRealCustomerInfo() {
-    var custName = "";
-    var payMethod = "";
-    try {
-      var idPool = (Array.isArray(KNOWN_CUST_IDS) ? KNOWN_CUST_IDS : []).concat([
-        "custName", "customerName", "clientName", "shopName", "buyerName", "storeName",
-        "abSv3Name", "abSv3CustName", "abCustName", "invCustName", "orderCustName", "cName"
-      ]);
-      for (var i = 0; i < idPool.length; i++) {
-        var byId = document.getElementById(idPool[i]);
-        if (!byId || isExcludedCustField(byId)) continue;
-        var v0 = (byId.value || "").trim();
-        if (v0) { custName = v0; break; }
-      }
-      var scopes = [document.getElementById("abSilentOrderBox"), document.getElementById("invoiceView"), document];
-      var fallbackCandidate = "";
-      for (var s = 0; s < scopes.length; s++) {
-        var root = scopes[s];
-        if (!root) continue;
-        var fields = root.querySelectorAll("input, textarea, select");
-        for (var k = 0; k < fields.length; k++) {
-          var el = fields[k];
-          if (!el) continue;
-          if (el.tagName === "SELECT") {
-            if (!payMethod && !(el.closest && el.closest("#abImpRepGpsCard, #abSv3Admin, #abImpRepsModal"))) {
-              var sh = getCustFieldHint(el);
-              if (sh.indexOf("pay") !== -1 || sh.indexOf("دفع") !== -1 || sh.indexOf("سداد") !== -1 || root !== document) {
-                var sv = (el.options && el.selectedIndex >= 0) ? (el.options[el.selectedIndex].text || el.value || "").trim() : (el.value || "").trim();
-                if (sv) payMethod = sv;
-              }
-            }
-            continue;
-          }
-          if (isExcludedCustField(el)) continue;
-          var val = (el.value || "").trim();
-          if (!val) continue;
-          var hint = getCustFieldHint(el);
-          if (!payMethod && (hint.indexOf("pay") !== -1 || hint.indexOf("دفع") !== -1)) { payMethod = val; continue; }
-          if (!custName && !isNonNameHint(hint)) {
-            if (isNameHint(hint)) custName = val;
-            else if (!fallbackCandidate && root !== document && !/^[\d\s+\-().]+$/.test(val) && val.length >= 2 && val.length <= 75) fallbackCandidate = val;
-          }
-        }
-        if (custName && payMethod) break;
-      }
-      if (!custName && fallbackCandidate) custName = fallbackCandidate;
-      if (!custName && window.__abLiveCustName && (Date.now() - (window.__abLiveCustTs || 0)) < 900000) custName = window.__abLiveCustName;
-      if (!payMethod) {
-        var actP = document.querySelector(".ab-pay-btn.active, [data-pay].active, .pay-opt.active, .pay-btn.active");
-        if (actP) payMethod = (actP.textContent || "").trim();
-      }
-    } catch (e) {}
-    return { custName: custName, payMethod: payMethod };
-  }
-  window.__abResolveCustInfo = resolveRealCustomerInfo;
-
-  if (!window.__abCustNameListenerV4) {
-    window.__abCustNameListenerV4 = true;
-    var captureCustInput = function (ev) {
-      var el = ev.target;
-      if (!el || isExcludedCustField(el)) return;
-      var val = (el.value || "").trim();
-      if (!val || /^[\d\s+\-().]+$/.test(val)) return;
-      var hint = getCustFieldHint(el);
-      if (isNonNameHint(hint)) return;
-      if (isNameHint(hint) || (el.closest && el.closest("#abSilentOrderBox, #invoiceView"))) {
-        window.__abLiveCustName = val;
-        window.__abLiveCustTs = Date.now();
-      }
-    };
-    document.addEventListener("input", captureCustInput, true);
-    document.addEventListener("change", captureCustInput, true);
-  }
-
-  /* ---------------- 5) مولّد الإيصال المصوّر الفاخر HD (فصل الأكياس والكراتين + 5 مصادر احتياطية) ---------------- */
-  function drawRoundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-  }
-
-  function classifyUnitForReceipt(prod, fallbackName) {
-    var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim() : "";
-    var nameStr = String((prod && prod.name) || fallbackName || "");
-    var catStr = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
-    if (rawU) {
-      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
-      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
-      return { key: "other:" + rawU, label: rawU };
-    }
-    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nameStr) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(catStr)) {
-      return { key: "carton", label: "كرتون" };
-    }
-    return { key: "bag", label: "كيس" };
-  }
-
-  function tallyReceiptUnits(items) {
-    var bags = 0, cartons = 0, others = {};
-    for (var i = 0; i < items.length; i++) {
-      var it = items[i];
-      var q = Number(it.qty || 0);
-      if (q <= 0) continue;
-      if (it.unitKey === "carton") cartons += q;
-      else if (it.unitKey === "bag") bags += q;
-      else {
-        var lbl = it.unitLabel || "وحدة";
-        others[lbl] = (others[lbl] || 0) + q;
-      }
-    }
-    return { bags: bags, cartons: cartons, others: others };
-  }
-
-  function collectLiveOrderForReceipt() {
-    var showPrices = false;
-    try { showPrices = localStorage.getItem(PRICE_SECRET_KEY) === "1"; } catch (e) {}
-
-    var items = [];
-    var totalQty = 0;
-    var totalPrice = 0;
-    var prods = [];
-    var byId = {};
-    var byName = {};
-
-    try {
-      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) prods = PRODUCTS;
-      else if (Array.isArray(window.PRODUCTS)) prods = window.PRODUCTS;
-      for (var p = 0; p < prods.length; p++) {
-        if (!prods[p]) continue;
-        if (prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
-        if (prods[p].name) byName[String(prods[p].name).trim()] = prods[p];
-      }
-    } catch (e) {}
-
-    // المصدر 1: السلة الحية في الذاكرة (CART / cart)
-    try {
-      var cartObj = null;
-      if (typeof CART !== "undefined" && CART) cartObj = CART;
-      else if (typeof cart !== "undefined" && cart) cartObj = cart;
-      else if (window.CART) cartObj = window.CART;
-      else if (window.cart) cartObj = window.cart;
-
-      if (cartObj) {
-        var keys = Object.keys(cartObj);
-        for (var i = 0; i < keys.length; i++) {
-          var pid = keys[i];
-          var qty = Number(cartObj[pid] || 0);
-          if (qty <= 0) continue;
-          var pr = byId[String(pid)];
-          var name = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
-          var u = classifyUnitForReceipt(pr, name);
-          var unitP = pr ? Number(pr.wholesalePrice || pr.price || pr.p || 0) : 0;
-          var bonus = 0;
-          try { if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, qty) || 0); } catch (e) {}
-          items.push({ name: name, qty: qty, bonus: bonus, unitKey: u.key, unitLabel: u.label, price: unitP, sub: unitP * qty });
-          totalQty += qty;
-          totalPrice += (unitP * qty);
-        }
-      }
-    } catch (e) {}
-
-    // المصدر 2: بطاقات الأصناف المختارة في الواجهة (data-ab-last-q)
-    if (!items.length) {
-      try {
-        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
-        for (var c = 0; c < cards.length; c++) {
-          var qAttr = Number(cards[c].getAttribute("data-ab-last-q") || 0);
-          if (qAttr <= 0) {
-            var bEl = cards[c].querySelector(".ab-instant-qty-badge");
-            if (bEl) {
-              var bm = (bEl.textContent || "").match(/\d+/);
-              if (bm) qAttr = Number(bm[0]);
-            }
-          }
-          if (qAttr <= 0) continue;
-          var pid2 = cards[c].getAttribute("data-ab-prod-id");
-          var pr2 = pid2 ? byId[String(pid2)] : null;
-          var tEl = cards[c].querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
-          var nm2 = (pr2 && pr2.name) ? String(pr2.name).trim() : (tEl ? (tEl.textContent || "").trim() : ("صنف " + (c + 1)));
-          if (!pr2 && nm2) pr2 = byName[nm2] || null;
-          var u2 = classifyUnitForReceipt(pr2, nm2);
-          var up2 = pr2 ? Number(pr2.wholesalePrice || pr2.price || pr2.p || 0) : 0;
-          var b2 = 0;
-          try { if (pr2 && typeof calcBonus === "function") b2 = Number(calcBonus(pr2, qAttr) || 0); } catch (e) {}
-          items.push({ name: nm2, qty: qAttr, bonus: b2, unitKey: u2.key, unitLabel: u2.label, price: up2, sub: up2 * qAttr });
-          totalQty += qAttr;
-          totalPrice += (up2 * qAttr);
-        }
-      } catch (e) {}
-    }
-
-    // المصدر 3 و4: آخر طلب محفوظ في الذاكرة أو الأرشيف أو سجل اليوم
-    var liveInfo = resolveRealCustomerInfo();
-    var custName = liveInfo.custName || "";
-    var payMethod = liveInfo.payMethod || "";
-
-    if (!items.length) {
-      var snap = window.__abLastConfirmOrder || window.__abUnitSplitSnap || null;
-      if (!snap) {
-        try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
-      }
-      if (!snap || !Array.isArray(snap.items) || !snap.items.length) {
-        try {
-          var dlog = JSON.parse(localStorage.getItem(DAILY_LOG_KEY) || "[]");
-          if (Array.isArray(dlog) && dlog.length && dlog[0] && Array.isArray(dlog[0].items)) snap = dlog[0];
-        } catch (e) {}
-      }
-      if (snap && Array.isArray(snap.items) && snap.items.length) {
-        for (var si = 0; si < snap.items.length; si++) {
-          var sit = snap.items[si];
-          var su = sit.unitKey ? { key: sit.unitKey, label: sit.unitLabel || "كيس" } : classifyUnitForReceipt(byName[String(sit.name || "").trim()] || null, sit.name);
-          var sq = Number(sit.qty || 0);
-          if (sq <= 0) continue;
-          items.push({
-            name: String(sit.name || "صنف"),
-            qty: sq,
-            bonus: Number(sit.bonus || 0),
-            unitKey: su.key,
-            unitLabel: su.label,
-            price: Number(sit.price || 0),
-            sub: Number(sit.sub || 0)
-          });
-          totalQty += sq;
-          totalPrice += Number(sit.sub || 0);
-        }
-        custName = custName || snap.custName || "";
-        payMethod = payMethod || snap.payMethod || "";
-      }
-    }
-
-    var tallied = tallyReceiptUnits(items);
-    return {
-      items: items,
-      totalQty: totalQty,
-      bagsTotal: tallied.bags,
-      cartonsTotal: tallied.cartons,
-      otherTotals: tallied.others,
-      totalPrice: totalPrice,
-      showPrices: showPrices && totalPrice > 0,
-      custName: custName || "عميل كريم",
-      payMethod: payMethod || "حسب الاتفاق",
-      refNo: "AB-" + String(Date.now()).slice(-6),
-      dateStr: new Date().toLocaleString("ar-YE", { hour12: true })
-    };
-  }
-
-  function renderLuxuryReceiptPng(order) {
-    var W = 900;
-    var rowH = 54;
-    var itemsCount = order.items.length;
-    var H = 400 + (itemsCount * rowH) + 275;
-    if (H < 700) H = 700;
-
-    var canvas = document.createElement("canvas");
-    canvas.width = W;
-    canvas.height = H;
-    var ctx = canvas.getContext("2d");
-    try { ctx.direction = "rtl"; } catch (e) {}
-
-    var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-    bgGrad.addColorStop(0, "#12110e");
-    bgGrad.addColorStop(0.5, "#090a0e");
-    bgGrad.addColorStop(1, "#14110b");
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.strokeStyle = "#d4af37";
-    ctx.lineWidth = 4;
-    drawRoundRect(ctx, 20, 20, W - 40, H - 40, 24);
-    ctx.stroke();
-
-    ctx.strokeStyle = "rgba(254, 240, 138, 0.35)";
-    ctx.lineWidth = 1.5;
-    drawRoundRect(ctx, 32, 32, W - 64, H - 64, 18);
-    ctx.stroke();
-
-    ctx.fillStyle = "#facc15";
-    ctx.font = "900 42px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("أبوسيف للتجارة العامة", W / 2, 96);
-
-    ctx.fillStyle = "#e2e8f0";
-    ctx.font = "700 21px sans-serif";
-    ctx.fillText("لبيع المواد الغذائية والحلويات بالجملة  •  سيئون", W / 2, 134);
-
-    drawRoundRect(ctx, W / 2 - 170, 152, 340, 40, 20);
-    ctx.fillStyle = "rgba(212, 175, 55, 0.16)";
-    ctx.fill();
-    ctx.strokeStyle = "#d4af37";
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = "#fef08a";
-    ctx.font = "800 20px sans-serif";
-    ctx.fillText("إيصال تسجيل طلب رسمي  #" + order.refNo, W / 2, 179);
-
-    drawRoundRect(ctx, 50, 212, W - 100, 96, 14);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(212, 175, 55, 0.35)";
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#fef08a";
-    ctx.font = "800 21px sans-serif";
-    ctx.fillText("العميل / المحل: " + order.custName, W - 74, 248);
-    ctx.fillStyle = "#cbd5e1";
-    ctx.font = "700 18px sans-serif";
-    ctx.fillText("طريقة الدفع: " + order.payMethod, W - 74, 286);
-
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#cbd5e1";
-    ctx.font = "700 18px sans-serif";
-    ctx.fillText(order.dateStr, 74, 248);
-    ctx.fillStyle = "#86efac";
-    ctx.font = "800 18px sans-serif";
-    ctx.fillText("الحالة: تم التسجيل بنجاح ✓", 74, 286);
-
-    var y = 328;
-    drawRoundRect(ctx, 50, y, W - 100, 44, 10);
-    ctx.fillStyle = "#d4af37";
-    ctx.fill();
-
-    var qtyColX = order.showPrices ? 310 : 195;
-    ctx.fillStyle = "#09090b";
-    ctx.font = "900 20px sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText("#  الصنف", W - 72, y + 29);
-    ctx.textAlign = "center";
-    ctx.fillText("الكمية والوحدة", qtyColX, y + 29);
-    if (order.showPrices) {
-      ctx.textAlign = "left";
-      ctx.fillText("الإجمالي", 74, y + 29);
-    }
-
-    y += 52;
-    var maxNameLen = order.showPrices ? 31 : 35;
-    for (var i = 0; i < order.items.length; i++) {
-      var it = order.items[i];
-      if (i % 2 === 0) {
-        drawRoundRect(ctx, 50, y, W - 100, rowH - 6, 8);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.035)";
-        ctx.fill();
-      }
-      var dispName = (i + 1) + ". " + String(it.name || "");
-      if (dispName.length > maxNameLen) dispName = dispName.slice(0, maxNameLen - 1) + "…";
-
-      ctx.textAlign = "right";
-      ctx.fillStyle = "#f8fafc";
-      ctx.font = "800 20px sans-serif";
-      ctx.fillText(dispName, W - 72, y + 32);
-
-      var uLbl = it.unitLabel || "كيس";
-      var qTxt = String(it.qty || 0) + " " + uLbl;
-      if (it.bonus && it.bonus > 0) qTxt += " (+" + it.bonus + " مجاني)";
-      ctx.textAlign = "center";
-      ctx.fillStyle = "#fef08a";
-      ctx.font = "900 19.5px sans-serif";
-      ctx.fillText(qTxt, qtyColX, y + 32);
-
-      if (order.showPrices) {
-        ctx.textAlign = "left";
-        ctx.fillStyle = "#86efac";
-        ctx.font = "800 19px sans-serif";
-        ctx.fillText(Number(it.sub || 0).toLocaleString("en-US") + " ر.ي", 74, y + 32);
-      }
-      y += rowH;
-    }
-
-    y += 14;
-    var splitParts = [];
-    if (order.bagsTotal > 0) splitParts.push("الأكياس: " + order.bagsTotal + " كيس");
-    if (order.cartonsTotal > 0) splitParts.push("الكراتين: " + order.cartonsTotal + " كرتون");
-    var oKeys = Object.keys(order.otherTotals || {});
-    for (var oi = 0; oi < oKeys.length; oi++) {
-      if (order.otherTotals[oKeys[oi]] > 0) splitParts.push(oKeys[oi] + ": " + order.otherTotals[oKeys[oi]]);
-    }
-    var splitLineText = splitParts.length ? splitParts.join("   |   ") : ("إجمالي الكميات: " + order.totalQty);
-
-    drawRoundRect(ctx, 50, y, W - 100, 92, 13);
-    ctx.fillStyle = "rgba(5, 150, 105, 0.22)";
-    ctx.fill();
-    ctx.strokeStyle = "rgba(52, 211, 153, 0.68)";
-    ctx.lineWidth = 1.6;
-    ctx.stroke();
-
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "900 21px sans-serif";
-    ctx.fillText("عدد الأصناف: " + order.items.length, W - 74, y + 34);
-
-    if (order.showPrices) {
-      ctx.textAlign = "left";
-      ctx.fillStyle = "#86efac";
-      ctx.font = "900 22px sans-serif";
-      ctx.fillText(Number(order.totalPrice || 0).toLocaleString("en-US") + " ر.ي", 74, y + 34);
-    }
-
-    ctx.strokeStyle = "rgba(254, 240, 138, 0.28)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(74, y + 48);
-    ctx.lineTo(W - 74, y + 48);
-    ctx.stroke();
-
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#fef08a";
-    ctx.font = "900 22px sans-serif";
-    ctx.fillText(splitLineText, W / 2, y + 78);
-
-    y += 122;
-    ctx.strokeStyle = "rgba(212, 175, 55, 0.45)";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(80, y);
-    ctx.lineTo(W - 80, y);
-    ctx.stroke();
-
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#fef08a";
-    ctx.font = "800 19px sans-serif";
-    ctx.fillText("حضرموت - سيئون - شارع المطار غربي محطة السلطان", W / 2, y + 36);
-
-    ctx.fillStyle = "#e2e8f0";
-    ctx.font = "700 18px sans-serif";
-    ctx.fillText("تلفون: 05492417  •  جوال: 772202525  •  مندوب المبيعات: 771458609", W / 2, y + 70);
-
-    ctx.fillStyle = "#93c5fd";
-    ctx.font = "800 18px sans-serif";
-    ctx.fillText("حساب المشقاص للصرافة: 254025903 (سالم عمر محمد هويدي باجابر)", W / 2, y + 102);
-
-    return canvas.toDataURL("image/png");
-  }
-
-  function dataUrlToBlob(dataUrl) {
-    var parts = dataUrl.split(",");
-    var mime = (parts[0].match(/:(.*?);/) || ["", "image/png"])[1];
-    var bin = atob(parts[1]);
-    var arr = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-    return new Blob([arr], { type: mime });
-  }
-
-  function triggerSafeDownload(dataUrl, fileName) {
-    try {
-      var blob = dataUrlToBlob(dataUrl);
-      var objUrl = URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = objUrl;
-      a.download = fileName;
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function () {
-        try { a.remove(); URL.revokeObjectURL(objUrl); } catch (e) {}
-      }, 1500);
-      notify("✅ تم حفظ الإيصال المصوّر على جهازك");
-    } catch (e) {
-      try {
-        var a2 = document.createElement("a");
-        a2.href = dataUrl;
-        a2.download = fileName;
-        document.body.appendChild(a2);
-        a2.click();
-        a2.remove();
-        notify("✅ تم حفظ الإيصال المصوّر");
-      } catch (e2) {
-        notify("⚠️ اضغط مطوّلاً على صورة الإيصال لحفظها");
-      }
-    }
-  }
-
-  function openHdReceiptModal() {
-    var now = Date.now();
-    if (now - _lastOpenTriggerTs < 250) return;
-    _lastOpenTriggerTs = now;
-
-    try {
-      var order = collectLiveOrderForReceipt();
-      if (!order || !order.items || !order.items.length) {
-        notify("⚠️ أضف أصنافاً أولاً لتوليد الإيصال المصوّر");
-        return;
-      }
-
-      _lastReceiptDataUrl = renderLuxuryReceiptPng(order);
-      _lastReceiptFileName = "Abusaif-" + order.refNo + ".png";
-
-      var bg = document.getElementById("abRoyalReceiptModal");
-      if (!bg) {
-        bg = document.createElement("div");
-        bg.id = "abRoyalReceiptModal";
-        bg.className = "ab-royal-modal-bg";
-        bg.innerHTML =
-          '<div class="ab-royal-modal-card">' +
-            '<button type="button" class="ab-royal-modal-close" id="abRcptCloseBtn">✕</button>' +
-            '<div class="ab-royal-modal-title">🧾 إيصال الطلب المصوّر (HD)</div>' +
-            '<div class="ab-royal-modal-sub">إيصال رسمي جاهز للحفظ أو الإرسال المباشر على الواتساب</div>' +
-            '<img id="abRcptImgPreview" class="ab-rcpt-preview-img" alt="إيصال أبوسيف">' +
-            '<div class="ab-royal-act-stack">' +
-              '<button type="button" class="ab-royal-btn-wa" id="abRcptShareImgBtn">📤 مشاركة الإيصال كصورة عبر الواتساب</button>' +
-              '<button type="button" class="ab-royal-btn-gold" id="abRcptDownloadBtn">⬇️ حفظ الإيصال في الاستوديو</button>' +
-            '</div>' +
-          '</div>';
-        document.body.appendChild(bg);
-
-        bg.addEventListener("click", function (ev) { if (ev.target === bg) bg.classList.remove("open"); });
-        document.getElementById("abRcptCloseBtn").addEventListener("click", function () { bg.classList.remove("open"); });
-        document.getElementById("abRcptDownloadBtn").addEventListener("click", function () {
-          triggerSafeDownload(_lastReceiptDataUrl, _lastReceiptFileName);
-        });
-        document.getElementById("abRcptShareImgBtn").addEventListener("click", function () {
-          try {
-            var blob = dataUrlToBlob(_lastReceiptDataUrl);
-            var file = new File([blob], _lastReceiptFileName, { type: "image/png" });
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-              navigator.share({
-                title: "إيصال طلب — أبوسيف للتجارة العامة",
-                text: "إيصال الطلب الرسمي من متجر أبوسيف للتجارة العامة",
-                files: [file]
-              }).catch(function () {});
-              return;
-            }
-          } catch (e) {}
-          triggerSafeDownload(_lastReceiptDataUrl, _lastReceiptFileName);
-        });
-      }
-
-      var imgEl = document.getElementById("abRcptImgPreview");
-      if (imgEl) imgEl.src = _lastReceiptDataUrl;
-      bg.classList.add("open");
-    } catch (err) {
-      notify("⚠️ تعذر توليد الإيصال: " + (err && err.message ? err.message : "حاول مجدداً"));
-    }
-  }
-  window.__abOpenHdReceipt = openHdReceiptModal;
-
-  // التقاط نقر شامل ومحصّن لا يتأثر بإعادة رسم الفاتورة أبداً
-  document.addEventListener("click", function (ev) {
-    var btn = ev.target && ev.target.closest ? ev.target.closest("#abBoxHdRcptBtn, .ab-hd-rcpt-btn") : null;
-    if (!btn) return;
-    ev.preventDefault();
-    ev.stopPropagation();
-    openHdReceiptModal();
-  }, true);
-
-  function injectReceiptButtons() {
-    var box = document.getElementById("abSilentOrderBox");
-    if (box && !document.getElementById("abBoxHdRcptBtn")) {
-      var b1 = document.createElement("button");
-      b1.type = "button";
-      b1.id = "abBoxHdRcptBtn";
-      b1.className = "ab-hd-rcpt-btn";
-      b1.textContent = "🧾 معاينة وحفظ الإيصال كصورة فاخرة (HD)";
-      box.appendChild(b1);
-    }
-
-    var cards = document.querySelectorAll(".ab-wa-confirm-card");
-    for (var i = 0; i < cards.length; i++) {
-      if (cards[i].querySelector(".ab-hd-rcpt-btn")) continue;
-      var b2 = document.createElement("button");
-      b2.type = "button";
-      b2.className = "ab-hd-rcpt-btn";
-      b2.textContent = "🧾 حفظ / مشاركة الإيصال كصورة فاخرة (HD)";
-      cards[i].appendChild(b2);
-    }
-  }
-
-  /* ---------------- 6) تركيب لوحة القيادة الملكية العلوية ---------------- */
-  function mountRoyalDock() {
-    if (document.getElementById("abRoyalDock")) return;
-    var anchor = document.getElementById("abSaifLuxuryHeader") || document.body.firstElementChild;
-    if (!anchor || !anchor.parentNode) return;
-
-    var dock = document.createElement("div");
-    dock.id = "abRoyalDock";
-    dock.innerHTML =
-      '<button type="button" class="ab-rd-btn" id="abDockArchBtn">' +
-        '<span class="ab-rd-badge" id="abDockArchBadge">0</span>' +
-        '<span class="ab-rd-ico">📂</span>' +
-        '<span class="ab-rd-lbl">الأرشيف</span>' +
-      '</button>' +
-      '<button type="button" class="ab-rd-btn" id="abDockFavBtn">' +
-        '<span class="ab-rd-badge" id="abDockFavBadge">0</span>' +
-        '<span class="ab-rd-ico">⭐</span>' +
-        '<span class="ab-rd-lbl">المفضلة</span>' +
-      '</button>' +
-      '<button type="button" class="ab-rd-btn" id="abDockVoiceBtn">' +
-        '<span class="ab-rd-ico">🎙️</span>' +
-        '<span class="ab-rd-lbl">بحث صوتي</span>' +
-      '</button>' +
-      '<button type="button" class="ab-rd-btn" id="abDockQrBtn">' +
-        '<span class="ab-rd-ico">📲</span>' +
-        '<span class="ab-rd-lbl">باركود QR</span>' +
-      '</button>';
-
-    anchor.insertAdjacentElement("afterend", dock);
-
-    var emptyFav = document.createElement("div");
-    emptyFav.id = "abFavEmptyBanner";
-    emptyFav.innerHTML =
-      '⭐ لم تختر أصنافاً مفضلة بعد!<br>' +
-      'اضغط على النجمة <b>(☆)</b> أسفل صورة أي صنف ليظهر هنا فوراً للطلب السريع.';
-    dock.insertAdjacentElement("afterend", emptyFav);
-
-    document.getElementById("abDockArchBtn").addEventListener("click", function () {
-      var origBtn = document.getElementById("abAlwaysArchTopBtn");
-      if (origBtn) origBtn.click();
-    });
-    document.getElementById("abDockFavBtn").addEventListener("click", function () {
-      var nextOn = !document.documentElement.classList.contains("ab-fav-filter-on");
-      document.documentElement.classList.toggle("ab-fav-filter-on", nextOn);
-      this.classList.toggle("active", nextOn);
-      syncFavButtons();
-      updateFavEmptyState();
-      if (nextOn) {
-        var cnt = document.querySelectorAll('[data-ab-pro-card="1"][data-ab-fav="1"]').length;
-        notify(cnt > 0 ? ("⭐ عرض أصنافك المفضلة (" + cnt + ")") : "⭐ اضغط (☆) على أي صنف لإضافته للمفضلة");
-      } else {
-        notify("📦 عرض جميع الأصناف");
-      }
-    });
-    document.getElementById("abDockVoiceBtn").addEventListener("click", function () { startVoiceSearch(this); });
-    document.getElementById("abDockQrBtn").addEventListener("click", openQrShareModal);
-  }
-
-  function runRoyalSync() {
-    try {
-      mountRoyalDock();
-      syncFavButtons();
-      refreshDockBadges();
-      injectReceiptButtons();
-    } catch (e) {}
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(runRoyalSync, 200); });
-  } else {
-    setTimeout(runRoyalSync, 200);
-  }
-  setTimeout(runRoyalSync, 850);
-  document.addEventListener("click", function () {
-    setTimeout(refreshDockBadges, 320);
-    setTimeout(injectReceiptButtons, 480);
-    setTimeout(syncFavButtons, 180);
-  }, true);
-  setInterval(function () {
-    refreshDockBadges();
-    injectReceiptButtons();
-  }, 2200);
-})();
-</script>
-<!-- ABUDHIYA_ROYAL_VIP_END -->
-
-
-
-
 <!-- ABUDHIYA_DIRECT_REP_PICKER_START -->
 <style id="abDirectRepPickerStyle" data-direct-rep="2">
   /* إخفاء القائمة المنسدلة القديمة وإخفاء بطاقة فتح الواتساب عند تفعيل الإرسال الصامت للمندوب */
@@ -12821,6 +13050,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   /* ---------------- 3) قراءة السلة وتصنيف الأكياس والكراتين ---------------- */
   function classifyUnit(prod, fallbackName) {
+    if (typeof window.__abClassifyUnit === "function") return window.__abClassifyUnit(prod, fallbackName || "", "");
     var rawU = prod ? String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim() : "";
     var nm = String((prod && prod.name) || fallbackName || "");
     var cat = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
@@ -13335,6 +13565,274 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_DIRECT_REP_PICKER_END -->
 
+<!-- ABUDHIYA_SPLIT_UNITS_WA_START -->
+<script data-ab-split-units-wa="1">
+(function () {
+  if (window.__abSplitUnitsWaV1) return;
+  window.__abSplitUnitsWaV1 = true;
+
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+
+  function classifyUnit(prod, fallbackName, lineHint) {
+    if (typeof window.__abClassifyUnit === "function") return window.__abClassifyUnit(prod, fallbackName || "", "");
+    var rawU = "";
+    if (prod) {
+      rawU = String(prod.unit || prod.u || prod.unitName || prod.uom || prod.packUnit || prod.unit_name || "").trim();
+    }
+    var nameStr = String((prod && prod.name) || fallbackName || "");
+    var catStr = String((prod && (prod.category || prod.cat || prod.section || "")) || "");
+    var lnStr = String(lineHint || "");
+
+    if (rawU) {
+      if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(rawU)) return { key: "carton", label: "كرتون" };
+      if (/كيس|أكياس|اكياس|شوال|bag/i.test(rawU)) return { key: "bag", label: "كيس" };
+      return { key: "other:" + rawU, label: rawU };
+    }
+    if (/كرتون|كراتين|كارتون|صندوق|carton|ctn/i.test(nameStr) || /كرتون|كراتين|مشروب|شراب|عصير|جيلي/i.test(catStr)) {
+      return { key: "carton", label: "كرتون" };
+    }
+    if (/كيس|أكياس|اكياس|شوال|bag/i.test(nameStr)) {
+      return { key: "bag", label: "كيس" };
+    }
+    if (/كرتون|كراتين/i.test(lnStr)) return { key: "carton", label: "كرتون" };
+    if (/كيس|أكياس|اكياس/i.test(lnStr)) return { key: "bag", label: "كيس" };
+    return { key: "bag", label: "كيس" };
+  }
+
+  function snapshotCurrentCartItems() {
+    var items = [];
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+      var byId = {};
+      for (var p = 0; p < prods.length; p++) {
+        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      }
+      if (cartObj) {
+        var keys = Object.keys(cartObj);
+        for (var i = 0; i < keys.length; i++) {
+          var pid = keys[i];
+          var qty = Number(cartObj[pid] || 0);
+          if (qty <= 0) continue;
+          var pr = byId[String(pid)];
+          var nm = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var u = classifyUnit(pr, nm, "");
+          items.push({ name: nm, qty: qty, unitKey: u.key, unitLabel: u.label });
+        }
+      }
+    } catch (e) {}
+    return items;
+  }
+
+  // التقاط نسخة فورية من السلة قبل أي ضغط على زر إرسال/واتساب حتى لو تم تفريغ السلة
+  document.addEventListener("click", function () {
+    var live = snapshotCurrentCartItems();
+    if (live.length) {
+      window.__abUnitSplitSnap = { items: live, ts: Date.now() };
+    }
+  }, true);
+
+  function getActiveOrderItems(rawText) {
+    var live = snapshotCurrentCartItems();
+    if (live.length) return live;
+
+    if (window.__abUnitSplitSnap && window.__abUnitSplitSnap.items && window.__abUnitSplitSnap.items.length && (Date.now() - window.__abUnitSplitSnap.ts) < 180000) {
+      return window.__abUnitSplitSnap.items;
+    }
+
+    var last = window.__abLastConfirmOrder;
+    if (!last) {
+      try { last = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+    }
+    if (last && Array.isArray(last.items) && last.items.length && (Date.now() - (last.ts || 0)) < 180000) {
+      var normalized = [];
+      for (var i = 0; i < last.items.length; i++) {
+        var it = last.items[i];
+        var u = it.unitKey ? { key: it.unitKey, label: it.unitLabel || "كيس" } : classifyUnit(null, it.name, "");
+        normalized.push({ name: it.name, qty: Number(it.qty || 0), unitKey: u.key, unitLabel: u.label });
+      }
+      return normalized;
+    }
+
+    // احتياط: مطابقة أسماء الأصناف من نص الرسالة نفسها مع قائمة PRODUCTS
+    var matched = [];
+    try {
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : [];
+      var lines = String(rawText || "").split(/\r?\n/);
+      for (var li = 0; li < lines.length; li++) {
+        var ln = lines[li];
+        for (var pi = 0; pi < prods.length; pi++) {
+          var pr = prods[pi];
+          if (!pr || !pr.name) continue;
+          var pname = String(pr.name).trim();
+          if (pname.length < 3 || ln.indexOf(pname) === -1) continue;
+          var after = ln.slice(ln.indexOf(pname) + pname.length);
+          var qm = after.match(/(?:×|x|X|الكمية[:\s]*|⬅️|\*)\s*(\d+)/) || after.match(/(\d+)/);
+          var q = qm ? Number(qm[1]) : 0;
+          if (q > 0) {
+            var u3 = classifyUnit(pr, pname, ln);
+            matched.push({ name: pname, qty: q, unitKey: u3.key, unitLabel: u3.label });
+          }
+          break;
+        }
+      }
+    } catch (e) {}
+    return matched;
+  }
+
+  function rewriteOrderText(rawText) {
+    if (!rawText || typeof rawText !== "string") return rawText;
+    // لا نمس رسائل مشاركة رابط المتجر ولا الرسائل المفصولة مسبقاً
+    if (rawText.indexOf("رابط المتجر المباشر") !== -1) return rawText;
+    if (rawText.indexOf("🛍️ *إجمالي الأكياس:*") !== -1 || rawText.indexOf("📦 *إجمالي الكراتين:*") !== -1) {
+      return rawText;
+    }
+
+    var items = getActiveOrderItems(rawText);
+    if (!items.length) return rawText;
+
+    // التأكد أنها رسالة طلب فعلاً
+    var looksLikeOrder = /(?:طلب|فاتورة|الأصناف|الاصناف|الأكياس|الاكياس|الكميات|الكراتين)/.test(rawText);
+    if (!looksLikeOrder) {
+      for (var c = 0; c < items.length; c++) {
+        if (items[c].name && rawText.indexOf(items[c].name) !== -1) {
+          looksLikeOrder = true;
+          break;
+        }
+      }
+    }
+    if (!looksLikeOrder) return rawText;
+
+    var bags = 0;
+    var cartons = 0;
+    var others = {};
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var q = Number(it.qty || 0);
+      if (q <= 0) continue;
+      if (it.unitKey === "carton") cartons += q;
+      else if (it.unitKey === "bag") bags += q;
+      else {
+        var lbl = it.unitLabel || "وحدة";
+        others[lbl] = (others[lbl] || 0) + q;
+      }
+    }
+
+    var sumLines = [];
+    if (bags > 0) sumLines.push("🛍️ *إجمالي الأكياس:* " + bags + " كيس");
+    if (cartons > 0) sumLines.push("📦 *إجمالي الكراتين:* " + cartons + " كرتون");
+    var oKeys = Object.keys(others);
+    for (var oi = 0; oi < oKeys.length; oi++) {
+      if (others[oKeys[oi]] > 0) {
+        sumLines.push("📌 *إجمالي (" + oKeys[oi] + "):* " + others[oKeys[oi]] + " " + oKeys[oi]);
+      }
+    }
+    if (!sumLines.length) return rawText;
+
+    var lines = rawText.split(/\r?\n/);
+    var out = [];
+    var replacedTotal = false;
+
+    var MERGED_TOTAL_RE = /(?:عدد|إجمالي|اجمالي|مجموع)\s*(?:ال)?(?:أكياس|اكياس|كميات|الكميات|كمية|الكمية|كميه|الكميه|قطع|القطع|كراتين|الكراتين|عبوات|العبوات)/;
+
+    for (var li = 0; li < lines.length; li++) {
+      var line = lines[li];
+
+      // 1) تصحيح وحدة الصنف داخل سطر الصنف نفسه إذا كتب الكود الأصلي "كيس" لصنف وحدته "كرتون"
+      for (var j = 0; j < items.length; j++) {
+        var item = items[j];
+        if (!item.name || item.unitKey === "bag") continue;
+        if (line.indexOf(item.name) !== -1 && line.indexOf("كيس") !== -1 && line.indexOf(item.unitLabel) === -1) {
+          line = line.replace(/كيس/g, item.unitLabel);
+        }
+      }
+
+      // 2) استبدال سطر الإجمالي المدموج بسطور مفصولة (الأكياس لحالها والكراتين لحالها)
+      if (MERGED_TOTAL_RE.test(line)) {
+        if (!replacedTotal) {
+          // إذا كان نفس السطر يحتوي على "عدد الأصناف" نحتفظ به في سطر مستقل ثم نضع الأكياس والكراتين تحته
+          var prodCntMatch = line.match(/([^|•]*عدد\s*(?:ال)?(?:أصناف|اصناف)[^|•]*)/);
+          if (prodCntMatch) {
+            out.push(prodCntMatch[1].trim());
+          }
+          for (var s = 0; s < sumLines.length; s++) out.push(sumLines[s]);
+          replacedTotal = true;
+        }
+        continue;
+      }
+
+      out.push(line);
+    }
+
+    if (!replacedTotal) {
+      out.push("━━━━━━━━━━━━━━━━━━");
+      for (var s2 = 0; s2 < sumLines.length; s2++) out.push(sumLines[s2]);
+    }
+
+    return out.join("\n");
+  }
+
+  function rewriteWaUrl(rawUrl) {
+    if (!rawUrl || typeof rawUrl !== "string") return rawUrl;
+    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(rawUrl)) return rawUrl;
+    try {
+      var u = new URL(rawUrl, window.location.origin);
+      var txt = u.searchParams.get("text");
+      if (!txt) return rawUrl;
+      var fixed = rewriteOrderText(txt);
+      if (!fixed || fixed === txt) return rawUrl;
+      var parts = [];
+      u.searchParams.forEach(function (val, key) {
+        if (key === "text") parts.push("text=" + encodeURIComponent(fixed));
+        else parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(val));
+      });
+      return u.origin + u.pathname + "?" + parts.join("&");
+    } catch (e) {}
+    return rawUrl;
+  }
+
+  // أ) اعتراض window.open لأي زر يرسل الطلب للواتساب
+  if (typeof window.open === "function" && !window.open.__abSplitUnitsPatched) {
+    var origOpen = window.open;
+    var wrappedOpen = function (url) {
+      var args = Array.prototype.slice.call(arguments);
+      if (typeof url === "string") args[0] = rewriteWaUrl(url);
+      return origOpen.apply(this, args);
+    };
+    wrappedOpen.__abSplitUnitsPatched = true;
+    window.open = wrappedOpen;
+  }
+
+  // ب) اعتراض الروابط البرمجية (a.click())
+  if (typeof HTMLAnchorElement !== "undefined" && HTMLAnchorElement.prototype && HTMLAnchorElement.prototype.click && !HTMLAnchorElement.prototype.click.__abSplitUnitsPatched) {
+    var origAnchorClick = HTMLAnchorElement.prototype.click;
+    var wrappedAnchorClick = function () {
+      try {
+        var h = this.getAttribute && this.getAttribute("href");
+        if (h && /(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) {
+          var nh = rewriteWaUrl(h);
+          if (nh !== h) this.setAttribute("href", nh);
+        }
+      } catch (e) {}
+      return origAnchorClick.apply(this, arguments);
+    };
+    wrappedAnchorClick.__abSplitUnitsPatched = true;
+    HTMLAnchorElement.prototype.click = wrappedAnchorClick;
+  }
+
+  // ج) اعتراض الضغط المباشر على أي رابط <a> متجه للواتساب
+  document.addEventListener("click", function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
+    if (!a) return;
+    var h = a.getAttribute("href") || "";
+    if (!/(?:wa\.me\/|api\.whatsapp\.com\/send)/i.test(h)) return;
+    var nh = rewriteWaUrl(h);
+    if (nh !== h) a.setAttribute("href", nh);
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_SPLIT_UNITS_WA_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -13378,7 +13876,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-577986";
+  var TARGET_CACHE = "abudhiya-offline-v4-578720";
 
   function forceReleaseSplash() {
     try {
