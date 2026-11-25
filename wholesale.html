@@ -16278,6 +16278,664 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_DIRECT_REP_PICKER_END -->
 
+
+<!-- ABUDHIYA_ORDER_LOCK_111_START -->
+<style id="abOrderLock111Style" data-order-lock-111="1">
+  /* 1) إخفاء جميع أزرار اعتماد وإرسال الطلب افتراضياً حتى إدخال كلمة السر 111 */
+  html.ab-submit-locked-111 #abDirectRepBox #abRvSilentSendBtn.ab-rv-silent-send-btn,
+  html.ab-submit-locked-111 #abDirectRepBox #abDirectRepSendBtn,
+  html.ab-submit-locked-111 #abSilentOrderBox [data-ab-submit-111="1"],
+  html.ab-submit-locked-111 #invoiceView [data-ab-submit-111="1"],
+  html.ab-submit-locked-111 #abSilentOrderBox [data-ab-warehouse-submit="1"],
+  html.ab-submit-locked-111 #invoiceView [data-ab-warehouse-submit="1"],
+  html.ab-submit-locked-111 .ab-official-noprice-btn,
+  html.ab-submit-locked-111 button[data-ab-role="noprice"],
+  html.ab-submit-locked-111 button[data-ab-role="priced"] {
+    display: none !important;
+  }
+
+  /* منع تكرار زر الحفظ كصورة القديم داخل الصندوق لأن الزر الجديد المدمج بجانب المشاركة يقوم بنفس الوظيفة */
+  #abSilentOrderBox #abBoxHdRcptBtn {
+    display: none !important;
+  }
+
+  /* 2) إخفاء صارم للأسعار والمبالغ داخل صفحة الفاتورة واعتماد الطلب عند فتحها */
+  html.ab-inv-prices-hidden #invoiceView [data-ab-inv-price-el="1"],
+  html.ab-inv-prices-hidden #abSilentOrderBox [data-ab-inv-price-el="1"],
+  html.ab-inv-prices-hidden #abQuantumSecretCalc,
+  html.ab-inv-prices-hidden #invoiceView .inv-price,
+  html.ab-inv-prices-hidden #invoiceView .inv-total,
+  html.ab-inv-prices-hidden #invoiceView .item-price,
+  html.ab-inv-prices-hidden #invoiceView .item-total,
+  html.ab-inv-prices-hidden #invoiceView .subtotal,
+  html.ab-inv-prices-hidden #invoiceView .grand-total,
+  html.ab-inv-prices-hidden #invoiceView .total-price,
+  html.ab-inv-prices-hidden #invoiceView .price-col,
+  html.ab-inv-prices-hidden #invoiceView .total-col,
+  html.ab-inv-prices-hidden #invoiceView [id*="totalPrice" i],
+  html.ab-inv-prices-hidden #invoiceView [id*="grandTotal" i],
+  html.ab-inv-prices-hidden #invoiceView [id*="invTotal" i],
+  html.ab-inv-prices-hidden #invoiceView [id*="priceTotal" i] {
+    display: none !important;
+  }
+
+  /* 3) شريط الإجراءات الدائم (مشاركة الطلب + حفظ الطلب كصورة) */
+  #abOrder111ActionBar {
+    direction: rtl;
+    margin: 10px 0 8px;
+    padding: 10px;
+    border-radius: 14px;
+    background: linear-gradient(155deg, rgba(22, 19, 13, 0.98) 0%, rgba(10, 12, 18, 0.99) 100%);
+    border: 1.4px solid rgba(212, 175, 55, 0.85);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(254, 240, 138, 0.22);
+    box-sizing: border-box;
+  }
+  .ab-o111-act-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .ab-o111-btn-share {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border-radius: 11px;
+    border: 1.3px solid rgba(134, 239, 172, 0.78);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: 0 5px 15px rgba(5, 150, 105, 0.35);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-o111-btn-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border-radius: 11px;
+    border: 1.3px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 13px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.35);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ab-o111-btn-share:active,
+  .ab-o111-btn-img:active {
+    filter: brightness(1.08);
+  }
+
+  /* 4) شريط قفل وفتح زر اعتماد وإرسال الطلب بكلمة السر 111 */
+  #abLock111Box {
+    margin-top: 9px;
+    padding-top: 9px;
+    border-top: 1px dashed rgba(212, 175, 55, 0.35);
+  }
+  .ab-l111-trigger {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    background: rgba(16, 19, 28, 0.92);
+    color: #fef08a;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+  .ab-l111-panel {
+    display: none;
+    margin-top: 8px;
+    padding: 9px;
+    border-radius: 11px;
+    background: rgba(9, 11, 18, 0.94);
+    border: 1px solid rgba(250, 204, 21, 0.55);
+    box-sizing: border-box;
+  }
+  .ab-l111-panel.open { display: block; }
+  .ab-l111-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ab-l111-inp {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 1.2px solid rgba(212, 175, 55, 0.65);
+    background: #0d1018;
+    color: #fef08a;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .ab-l111-go {
+    flex: 0 0 auto;
+    padding: 9px 15px;
+    border-radius: 9px;
+    border: 1px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 12.5px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .ab-l111-err {
+    display: none;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fca5a5;
+    text-align: center;
+  }
+  .ab-l111-err.show { display: block; }
+
+  .ab-l111-unlocked-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    background: rgba(5, 150, 105, 0.18);
+    border: 1px solid rgba(52, 211, 153, 0.6);
+    color: #86efac;
+    font-size: 11.5px;
+    font-weight: 800;
+  }
+  html:not(.ab-submit-locked-111) #abLock111Box .ab-l111-trigger,
+  html:not(.ab-submit-locked-111) #abLock111Box .ab-l111-panel {
+    display: none !important;
+  }
+  html:not(.ab-submit-locked-111) #abLock111Box .ab-l111-unlocked-bar {
+    display: flex !important;
+  }
+  .ab-l111-relock {
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(248, 113, 113, 0.65);
+    background: rgba(127, 29, 29, 0.55);
+    color: #fecaca;
+    font-size: 11px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+</style>
+<script data-ab-order-lock-111="1">
+(function () {
+  if (window.__abOrderLock111V1) return;
+  window.__abOrderLock111V1 = true;
+
+  var PASS_111 = "111";
+  var SESSION_UNLOCK_KEY = "ab_submit_unlocked_111_sess";
+  var PRICE_SECRET_KEY = "ab_show_prices_secret_v2";
+  var SNAP_KEY = "ab_last_confirm_order_v1";
+  var _wasInvoiceVisible = false;
+
+  // القفل التلقائي عند فتح التطبيق (اعتماد الطلب مخفي بكلمة سر 111 + أسعار الفاتورة مخفية)
+  function isUnlocked111() {
+    try { return sessionStorage.getItem(SESSION_UNLOCK_KEY) === "1"; } catch (e) { return false; }
+  }
+
+  function applyLockState111() {
+    var unlocked = isUnlocked111();
+    document.documentElement.classList.toggle("ab-submit-locked-111", !unlocked);
+  }
+  applyLockState111();
+  document.documentElement.classList.add("ab-inv-prices-hidden");
+
+  function notify(msg) {
+    try { if (typeof showToast === "function") showToast(msg); } catch (e) {}
+  }
+
+  function toAsciiDigits(s) {
+    return String(s || "").replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); });
+  }
+
+  /* ---------------- 1) وسم جميع أزرار اعتماد وإرسال الطلب لإخفائها بقفل 111 ---------------- */
+  function tagSubmitButtonsFor111() {
+    var scopes = [document.getElementById("abSilentOrderBox"), document.getElementById("invoiceView")];
+    for (var s = 0; s < scopes.length; s++) {
+      var root = scopes[s];
+      if (!root) continue;
+      var btns = root.querySelectorAll("button, a");
+      for (var i = 0; i < btns.length; i++) {
+        var b = btns[i];
+        if (!b) continue;
+        if (b.closest("#abOrder111ActionBar, #abLock111Box, #abSv3Admin, #abPricedAdminCtrl, #abImpRepGpsCard, #abQuantumLoadBox, #abQuantumSecretCalc, #abSplitBox_orderBox, #abImpBonusBanner")) {
+          continue;
+        }
+        if (b.id === "abRvSwitchBtn" || b.id === "abBoxHdRcptBtn" || b.classList.contains("ab-hd-rcpt-btn")) continue;
+
+        var t = (b.textContent || "").replace(/\s+/g, " ").trim();
+        if (t.indexOf("أرشيف") !== -1 || t.indexOf("ارشيف") !== -1 || t.indexOf("إيصال") !== -1 || t.indexOf("ايصال") !== -1 || t.indexOf("معاينة") !== -1 || t.indexOf("حراري") !== -1 || t.indexOf("موقع") !== -1 || t.indexOf("تغيير") !== -1 || t.indexOf("تفعيل") !== -1) {
+          continue;
+        }
+
+        var isSubmit =
+          b.id === "abRvSilentSendBtn" ||
+          b.id === "abDirectRepSendBtn" ||
+          b.getAttribute("data-ab-warehouse-submit") === "1" ||
+          b.classList.contains("ab-official-noprice-btn") ||
+          b.getAttribute("data-ab-role") === "noprice" ||
+          b.getAttribute("data-ab-role") === "priced" ||
+          t.indexOf("اعتماد") !== -1 ||
+          ((t.indexOf("إرسال") !== -1 || t.indexOf("ارسال") !== -1 || t.indexOf("تسجيل") !== -1) && (t.indexOf("الطلب") !== -1 || t.indexOf("مندوبك") !== -1 || t.indexOf("المستودع") !== -1));
+
+        if (isSubmit && b.getAttribute("data-ab-submit-111") !== "1") {
+          b.setAttribute("data-ab-submit-111", "1");
+        }
+      }
+    }
+  }
+
+  /* ---------------- 2) إخفاء الأسعار التلقائي عند فتح صفحة الفاتورة واعتماد الطلب ---------------- */
+  var SAFE_QTY_TEXT_RE = /(?:عدد\s*(?:ال)?(?:أصناف|اصناف|أكياس|اكياس|كراتين|الكراتين)|إجمالي\s*(?:ال)?(?:أكياس|اكياس|كراتين|الكراتين|كميات|الكميات)|اجمالي\s*(?:ال)?(?:أكياس|اكياس|كراتين|الكراتين|كميات|الكميات)|تفصيل\s*الكميات|حمولة|مندوب|بونص|مجاني)/;
+  var PRICE_HEADER_RE = /(?:السعر|سعر|الإجمالي|الاجمالي|المبلغ|القيمة|القيمه|ريال|ر\.ي|ر\.س|price|total|amount|subtotal)/i;
+  var PRICE_CELL_RE = /(?:ر\.ي|ريال|ر\.س|\bYER\b|\bSAR\b|السعر\s*[:：]|سعر\s*(?:الوحدة|الجملة|الكيس|الكرتون)|المبلغ\s*[:：]|المبلغ\s*الإجمالي|المبلغ\s*الاجمالي|إجمالي\s*الفاتورة|اجمالي\s*الفاتورة|الإجمالي\s*الكلي|الاجمالي\s*الكلي|صافي\s*الفاتورة|الإجمالي\s*[:：]\s*[\d٠-٩]|الاجمالي\s*[:：]\s*[\d٠-٩])/i;
+
+  function maskPricesInsideInvoice() {
+    var inv = document.getElementById("invoiceView");
+    var box = document.getElementById("abSilentOrderBox");
+    var roots = [inv, box];
+
+    for (var r = 0; r < roots.length; r++) {
+      var root = roots[r];
+      if (!root) continue;
+
+      // أ) إخفاء أعمدة السعر والإجمالي المالي داخل أي جدول في الفاتورة
+      var tables = root.querySelectorAll("table");
+      for (var t = 0; t < tables.length; t++) {
+        var tbl = tables[t];
+        if (tbl.closest("#abSplitBox_orderBox, .ab-rcpt-split-box, #abOrder111ActionBar")) continue;
+        var priceCols = {};
+        var headRow = tbl.querySelector("thead tr, tr");
+        if (headRow) {
+          var ths = headRow.children;
+          for (var c = 0; c < ths.length; c++) {
+            var ht = (ths[c].textContent || "").replace(/\s+/g, " ").trim();
+            if (ht && PRICE_HEADER_RE.test(ht) && !/كمية|كميه|عدد|صنف|وحدة|وحده|بونص/.test(ht)) {
+              priceCols[c] = true;
+            }
+          }
+        }
+        var allRows = tbl.querySelectorAll("tr");
+        for (var rr = 0; rr < allRows.length; rr++) {
+          var cells = allRows[rr].children;
+          for (var cc = 0; cc < cells.length; cc++) {
+            var cellTxt = (cells[cc].textContent || "").replace(/\s+/g, " ").trim();
+            if (priceCols[cc] || (PRICE_CELL_RE.test(cellTxt) && !SAFE_QTY_TEXT_RE.test(cellTxt))) {
+              if (cells[cc].getAttribute("data-ab-inv-price-el") !== "1") {
+                cells[cc].setAttribute("data-ab-inv-price-el", "1");
+              }
+            }
+          }
+        }
+      }
+
+      // ب) إخفاء بطاقات/سطور الأسعار والمبالغ داخل الفاتورة (بدون لمس الكميات أو الأكياس أو الكراتين)
+      var nodes = root.querySelectorAll("div, p, span, strong, b, small, li");
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (!el) continue;
+        if (el.closest("#abOrder111ActionBar, #abLock111Box, #abDirectRepBox, #abSplitBox_orderBox, .ab-rcpt-split-box, #abImpBonusBanner, #abImpRepGpsCard, #abQuantumLoadBox, button, input, select, textarea")) {
+          continue;
+        }
+        if (el.querySelector && el.querySelector("input, select, textarea, button, table")) continue;
+        if (el.children && el.children.length > 3) continue;
+
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt || txt.length > 120) continue;
+        if (SAFE_QTY_TEXT_RE.test(txt)) continue;
+
+        var clsId = ((el.id || "") + " " + (typeof el.className === "string" ? el.className : "")).toLowerCase();
+        var looksLikePriceAttr = /(?:^|[\s_-])(?:price|subtotal|grand-?total|inv-?total|total-?price|amount|money|cost)(?:$|[\s_-])/.test(clsId) &&
+                                 !/(?:noprice|qty|count|bag|carton|split|item)/.test(clsId);
+
+        if (looksLikePriceAttr || PRICE_CELL_RE.test(txt)) {
+          if (el.getAttribute("data-ab-inv-price-el") !== "1") {
+            el.setAttribute("data-ab-inv-price-el", "1");
+          }
+        }
+      }
+    }
+  }
+
+  function enforceHidePricesOnInvoiceOpen() {
+    var inv = document.getElementById("invoiceView");
+    var isVis = false;
+    if (inv) {
+      var st = window.getComputedStyle(inv);
+      isVis = st.display !== "none" && st.visibility !== "hidden" && inv.offsetHeight > 20;
+    }
+
+    if (isVis && !_wasInvoiceVisible) {
+      // لحظة فتح الفاتورة -> إخفاء الأسعار تلقائياً في صفحة الفاتورة واعتماد الطلب
+      document.documentElement.classList.add("ab-inv-prices-hidden");
+      document.documentElement.classList.add("ab-prices-hidden");
+      try { localStorage.removeItem(PRICE_SECRET_KEY); } catch (e) {}
+      var admPriceBtn = document.getElementById("abAmbPriceBtn");
+      if (admPriceBtn) admPriceBtn.textContent = "💰 إظهار الأسعار";
+      maskPricesInsideInvoice();
+    } else if (isVis) {
+      maskPricesInsideInvoice();
+    }
+    _wasInvoiceVisible = isVis;
+  }
+
+  /* ---------------- 3) جمع بيانات الطلب وبناء نص المشاركة النظيف (بدون أسعار + فصل الأكياس والكراتين) ---------------- */
+  function collectOrderForShare() {
+    var items = [], bags = 0, cartons = 0, others = {}, totalQty = 0;
+    var prods = [], byId = {};
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) prods = PRODUCTS;
+      else if (Array.isArray(window.PRODUCTS)) prods = window.PRODUCTS;
+      for (var p = 0; p < prods.length; p++) {
+        if (prods[p] && prods[p].id !== undefined) byId[String(prods[p].id)] = prods[p];
+      }
+    } catch (e) {}
+
+    function classify(pr, nm) {
+      if (typeof window.__abClassifyUnit === "function") return window.__abClassifyUnit(pr, nm, "");
+      if (/كرتون|كراتين|شراب|غوار|آيس\s*لولي|ايس\s*لولي|عصير|جيلي/i.test(nm || "")) return { key: "carton", label: "كرتون" };
+      return { key: "bag", label: "كيس" };
+    }
+
+    try {
+      var cartObj = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : (window.CART || window.cart || null));
+      if (cartObj) {
+        var ks = Object.keys(cartObj);
+        for (var i = 0; i < ks.length; i++) {
+          var pid = ks[i];
+          var q = Number(cartObj[pid] || 0);
+          if (q <= 0) continue;
+          var pr = byId[String(pid)] || null;
+          var nm = (pr && pr.name) ? String(pr.name).trim() : ("صنف #" + pid);
+          var u = classify(pr, nm);
+          var bonus = 0;
+          try { if (pr && typeof calcBonus === "function") bonus = Number(calcBonus(pr, q) || 0); } catch (e) {}
+          items.push({ name: nm, qty: q, bonus: bonus, unitKey: u.key, unitLabel: u.label });
+          totalQty += q;
+          if (u.key === "carton") cartons += q;
+          else if (u.key === "bag") bags += q;
+          else others[u.label] = (others[u.label] || 0) + q;
+        }
+      }
+    } catch (e) {}
+
+    if (!items.length) {
+      try {
+        var cards = document.querySelectorAll('[data-ab-pro-card="1"]');
+        for (var c = 0; c < cards.length; c++) {
+          var q2 = Number(cards[c].getAttribute("data-ab-last-q") || 0);
+          if (q2 <= 0) continue;
+          var pid2 = cards[c].getAttribute("data-ab-prod-id");
+          var pr2 = pid2 ? byId[String(pid2)] : null;
+          var tEl = cards[c].querySelector(".ab-clean-prod-title, .ab-uni-title, h3, h4, .prod-name, .name");
+          var nm2 = (pr2 && pr2.name) ? String(pr2.name).trim() : (tEl ? (tEl.textContent || "").trim() : "");
+          if (!nm2) continue;
+          var u2 = classify(pr2, nm2);
+          items.push({ name: nm2, qty: q2, bonus: 0, unitKey: u2.key, unitLabel: u2.label });
+          totalQty += q2;
+          if (u2.key === "carton") cartons += q2;
+          else if (u2.key === "bag") bags += q2;
+          else others[u2.label] = (others[u2.label] || 0) + q2;
+        }
+      } catch (e) {}
+    }
+
+    var custName = "", payMethod = "";
+    try {
+      if (typeof window.__abResolveCustInfo === "function") {
+        var ri = window.__abResolveCustInfo();
+        if (ri) { custName = ri.custName || ""; payMethod = ri.payMethod || ""; }
+      }
+    } catch (e) {}
+
+    if (!items.length) {
+      var snap = window.__abLastConfirmOrder || null;
+      if (!snap) {
+        try { snap = JSON.parse(localStorage.getItem(SNAP_KEY) || "null"); } catch (e) {}
+      }
+      if (snap && Array.isArray(snap.items) && snap.items.length) {
+        for (var si = 0; si < snap.items.length; si++) {
+          var sit = snap.items[si];
+          var sq = Number(sit.qty || 0);
+          if (sq <= 0) continue;
+          var su = classify(null, sit.name);
+          items.push({ name: sit.name, qty: sq, bonus: Number(sit.bonus || 0), unitKey: su.key, unitLabel: su.label });
+          totalQty += sq;
+          if (su.key === "carton") cartons += sq;
+          else if (su.key === "bag") bags += sq;
+          else others[su.label] = (others[su.label] || 0) + sq;
+        }
+        custName = custName || snap.custName || "";
+        payMethod = payMethod || snap.payMethod || "";
+      }
+    }
+
+    return { items: items, bags: bags, cartons: cartons, others: others, totalQty: totalQty, custName: custName, payMethod: payMethod };
+  }
+
+  function buildCleanNoPriceShareText(order) {
+    var lines = [];
+    lines.push("🛒 *طلب بضاعة — أبوسيف للتجارة العامة*");
+    lines.push("━━━━━━━━━━━━━━━━━━");
+    if (order.custName) lines.push("👤 *العميل / المحل:* " + order.custName);
+    if (order.payMethod) lines.push("💳 *طريقة الدفع:* " + order.payMethod);
+    lines.push("🕒 *الوقت:* " + new Date().toLocaleString("ar-YE", { hour12: true }));
+    lines.push("━━━━━━━━━━━━━━━━━━");
+
+    var bagItems = order.items.filter(function (x) { return x.unitKey === "bag"; });
+    var cartonItems = order.items.filter(function (x) { return x.unitKey === "carton"; });
+    var otherItems = order.items.filter(function (x) { return x.unitKey !== "bag" && x.unitKey !== "carton"; });
+    var multi = (bagItems.length ? 1 : 0) + (cartonItems.length ? 1 : 0) + (otherItems.length ? 1 : 0) > 1;
+    var num = 1;
+
+    if (bagItems.length) {
+      if (multi) lines.push("🛍️ *الأكياس:*");
+      for (var b = 0; b < bagItems.length; b++) {
+        var bi = bagItems[b];
+        lines.push((num++) + ". " + bi.name + " ⬅️ *" + bi.qty + " كيس*" + (bi.bonus > 0 ? (" (🎁 +" + bi.bonus + " مجاني)") : ""));
+      }
+    }
+    if (cartonItems.length) {
+      if (multi) { if (bagItems.length) lines.push(""); lines.push("📦 *الكراتين:*"); }
+      for (var c = 0; c < cartonItems.length; c++) {
+        var ci = cartonItems[c];
+        lines.push((num++) + ". " + ci.name + " ⬅️ *" + ci.qty + " كرتون*" + (ci.bonus > 0 ? (" (🎁 +" + ci.bonus + " مجاني)") : ""));
+      }
+    }
+    if (otherItems.length) {
+      if (multi) { lines.push(""); lines.push("📌 *أصناف أخرى:*"); }
+      for (var o = 0; o < otherItems.length; o++) {
+        var oi = otherItems[o];
+        lines.push((num++) + ". " + oi.name + " ⬅️ *" + oi.qty + " " + oi.unitLabel + "*" + (oi.bonus > 0 ? (" (🎁 +" + oi.bonus + " مجاني)") : ""));
+      }
+    }
+
+    lines.push("━━━━━━━━━━━━━━━━━━");
+    lines.push("📊 *عدد الأصناف:* " + order.items.length);
+    if (order.bags > 0) lines.push("🛍️ *عدد الأكياس:* " + order.bags + " كيس");
+    if (order.cartons > 0) lines.push("📦 *عدد الكراتين:* " + order.cartons + " كرتون");
+    var ok = Object.keys(order.others || {});
+    for (var k = 0; k < ok.length; k++) {
+      if (order.others[ok[k]] > 0) lines.push("📌 *عدد (" + ok[k] + "):* " + order.others[ok[k]] + " " + ok[k]);
+    }
+    return lines.join("\n");
+  }
+
+  function handleShareOrder() {
+    var order = collectOrderForShare();
+    if (!order.items.length) {
+      notify("⚠️ أضف أصنافاً للسلة أولاً لمشاركة الطلب");
+      return;
+    }
+    var txt = buildCleanNoPriceShareText(order);
+
+    if (navigator.share) {
+      navigator.share({ title: "طلب بضاعة — أبوسيف للتجارة العامة", text: txt }).catch(function () {});
+      return;
+    }
+    try {
+      window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank", "noopener,noreferrer");
+    } catch (e) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function () { notify("✅ تم نسخ نص الطلب للمشاركة"); });
+      }
+    }
+  }
+
+  function handleSaveOrderAsImage() {
+    // ضمان توليد الصورة الفاخرة (HD) بدون أسعار طالما أسعار الفاتورة مخفية
+    var prevVal = null;
+    var hideNow = document.documentElement.classList.contains("ab-inv-prices-hidden");
+    try {
+      if (hideNow) {
+        prevVal = localStorage.getItem(PRICE_SECRET_KEY);
+        localStorage.removeItem(PRICE_SECRET_KEY);
+      }
+      if (typeof window.__abOpenHdReceipt === "function") {
+        window.__abOpenHdReceipt();
+      } else {
+        var oldBtn = document.getElementById("abBoxHdRcptBtn");
+        if (oldBtn) oldBtn.click();
+        else notify("⚠️ تعذر فتح معاينة الإيصال المصوّر");
+      }
+    } finally {
+      try {
+        if (hideNow && prevVal === "1") localStorage.setItem(PRICE_SECRET_KEY, "1");
+      } catch (e) {}
+    }
+  }
+
+  /* ---------------- 4) تركيب شريط المشاركة والحفظ كصورة + قفل كلمة السر 111 ---------------- */
+  function mountOrder111ActionBar() {
+    var box = document.getElementById("abSilentOrderBox") || document.getElementById("invoiceView");
+    if (!box || document.getElementById("abOrder111ActionBar")) return;
+
+    var bar = document.createElement("div");
+    bar.id = "abOrder111ActionBar";
+    bar.innerHTML =
+      '<div class="ab-o111-act-grid">' +
+        '<button type="button" class="ab-o111-btn-share" id="abO111ShareBtn">📤 مشاركة الطلب</button>' +
+        '<button type="button" class="ab-o111-btn-img" id="abO111SaveImgBtn">🖼️ حفظ كصورة</button>' +
+      '</div>' +
+      '<div id="abLock111Box">' +
+        '<button type="button" class="ab-l111-trigger" id="abL111TriggerBtn">🔐 فتح زر اعتماد وإرسال الطلب</button>' +
+        '<div class="ab-l111-panel" id="abL111Panel">' +
+          '<div class="ab-l111-row">' +
+            '<input id="abL111Input" class="ab-l111-inp" type="password" inputmode="numeric" autocomplete="off" placeholder="كلمة السر">' +
+            '<button type="button" class="ab-l111-go" id="abL111GoBtn">🔓 فتح</button>' +
+          '</div>' +
+          '<div class="ab-l111-err" id="abL111Err">❌ كلمة السر غير صحيحة</div>' +
+        '</div>' +
+        '<div class="ab-l111-unlocked-bar">' +
+          '<span>🔓 زر اعتماد وإرسال الطلب مفتوح الآن</span>' +
+          '<button type="button" class="ab-l111-relock" id="abL111RelockBtn">🔒 إقفال</button>' +
+        '</div>' +
+      '</div>';
+
+    var repBox = document.getElementById("abDirectRepBox");
+    if (repBox && repBox.parentNode === box) {
+      repBox.insertAdjacentElement("afterend", bar);
+    } else {
+      box.appendChild(bar);
+    }
+
+    document.getElementById("abO111ShareBtn").addEventListener("click", handleShareOrder);
+    document.getElementById("abO111SaveImgBtn").addEventListener("click", handleSaveOrderAsImage);
+
+    document.getElementById("abL111TriggerBtn").addEventListener("click", function () {
+      var panel = document.getElementById("abL111Panel");
+      if (!panel) return;
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) {
+        var inp = document.getElementById("abL111Input");
+        var err = document.getElementById("abL111Err");
+        if (err) err.classList.remove("show");
+        if (inp) { inp.value = ""; setTimeout(function () { inp.focus(); }, 60); }
+      }
+    });
+
+    function verify111() {
+      var inp = document.getElementById("abL111Input");
+      var err = document.getElementById("abL111Err");
+      var code = toAsciiDigits((inp && inp.value) || "").trim();
+      if (code === PASS_111) {
+        try { sessionStorage.setItem(SESSION_UNLOCK_KEY, "1"); } catch (e) {}
+        applyLockState111();
+        if (err) err.classList.remove("show");
+        if (inp) inp.value = "";
+        var panel = document.getElementById("abL111Panel");
+        if (panel) panel.classList.remove("open");
+        notify("🔓 تم فتح زر اعتماد وإرسال الطلب بنجاح");
+      } else {
+        if (err) err.classList.add("show");
+      }
+    }
+
+    document.getElementById("abL111GoBtn").addEventListener("click", verify111);
+    document.getElementById("abL111Input").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") { ev.preventDefault(); verify111(); }
+    });
+
+    document.getElementById("abL111RelockBtn").addEventListener("click", function () {
+      try { sessionStorage.removeItem(SESSION_UNLOCK_KEY); } catch (e) {}
+      applyLockState111();
+      notify("🔒 تم إخفاء وقفل زر اعتماد وإرسال الطلب");
+    });
+  }
+
+  function runOrderLockSync() {
+    try {
+      applyLockState111();
+      tagSubmitButtonsFor111();
+      mountOrder111ActionBar();
+      enforceHidePricesOnInvoiceOpen();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(runOrderLockSync, 200); });
+  } else {
+    setTimeout(runOrderLockSync, 200);
+  }
+  setTimeout(runOrderLockSync, 850);
+  document.addEventListener("click", function () {
+    setTimeout(runOrderLockSync, 120);
+    setTimeout(runOrderLockSync, 420);
+  }, true);
+  setInterval(runOrderLockSync, 900);
+})();
+</script>
+<!-- ABUDHIYA_ORDER_LOCK_111_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -16321,7 +16979,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-584835";
+  var TARGET_CACHE = "abudhiya-offline-v4-585143";
 
   function forceReleaseSplash() {
     try {
