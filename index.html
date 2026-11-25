@@ -18470,11 +18470,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_OFFICIAL_RECEIPT_IMAGE_SEND_START -->
-<script data-ab-receipt-img-send="1">
+<script data-ab-receipt-img-send="2">
 (function () {
-  if (window.__abOfficialReceiptImgSendV1) return;
-  window.__abOfficialReceiptImgSendV1 = true;
+  if (window.__abOfficialReceiptImgSendV2) return;
+  window.__abOfficialReceiptImgSendV2 = true;
 
   var PROFILE_KEY = "ab_saved_customer_profile_v1";
   var ROLE_KEY = "ab_app_role_v1";
@@ -18924,15 +18926,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
                orderTxt.indexOf("⬅️") !== -1);
 
             if (isOrder) {
-              var imgPack = window.__abBuildOfficialReceiptImage(orderTxt, d);
-              if (imgPack && imgPack.base64) {
-                d.receiptImageBase64 = imgPack.base64;
-                d.imageBase64 = imgPack.base64;
-                d.receiptMime = imgPack.mime;
-                d.sendImageOnly = true;
-                d.caption = imgPack.caption;
-                nextInit = Object.assign({}, init, { body: JSON.stringify(d) });
-              }
+              // ترك الإرسال خفيفاً لقناة ntfy.sh بينما يرسم البوت صورة الإيصال HD محلياً ويرسلها للواتساب
+              d.sendImageOnly = true;
+              delete d.receiptImageBase64;
+              delete d.imageBase64;
+              nextInit = Object.assign({}, init, { body: JSON.stringify(d) });
             }
           }
         } catch (e) {}
@@ -19040,7 +19038,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-641416";
+  var TARGET_CACHE = "abudhiya-offline-v4-642358";
 
   function forceReleaseSplash() {
     try {
