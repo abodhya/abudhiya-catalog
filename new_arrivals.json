@@ -1,5 +1,26 @@
 {
   "autoPopupOnFirstVisit": true,
   "autoFallbackNewest": true,
-  "items": []
+  "items": [
+    {
+      "id": "offer_jalapeno_1795583489",
+      "type": "offer",
+      "name": "شطة هالابينو حجم 50 جرام سفري",
+      "badge": "🔥 عرض لفترة محدودة",
+      "offerText": "100 كرتون ⬅️ 7 كرتون مجاني\n60 كرتون ⬅️ 4 كرتون مجاني",
+      "note": "🎊 سارع بطلبك قبل نفاد الكمية — شطة هالابينو جودة لا تُقارن بغيرها",
+      "unit": "كرتون",
+      "price": 0,
+      "oldPrice": 0,
+      "quickQtys": [
+        10,
+        20,
+        60,
+        100
+      ],
+      "img": "img/p_fbeb144efc2083.jpg",
+      "active": true,
+      "productId": "5"
+    }
+  ]
 }

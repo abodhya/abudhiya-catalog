@@ -13836,6 +13836,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_NEW_ARRIVAL_STATUS_START -->
 <style id="abNewArrivalStatusStyle" data-new-status="2">
   /* 1) شريط حالات العروض الخاصة والمنتجات الجديدة أعلى المتجر فور الدخول */
@@ -14272,6 +14274,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-size: 13.5px;
     font-weight: 900;
     text-align: center;
+    white-space: pre-line;
+    line-height: 1.65;
     box-shadow: 0 6px 18px rgba(5, 150, 105, 0.32);
   }
   .ab-nsv-offer-callout.show { display: block; }
@@ -14324,7 +14328,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abNewArrivalStatusV2) return;
   window.__abNewArrivalStatusV2 = true;
 
-  var INLINE_CFG = {"autoPopupOnFirstVisit": true, "autoFallbackNewest": true, "items": []};
+  var INLINE_CFG = {"autoPopupOnFirstVisit": true, "autoFallbackNewest": true, "items": [{"id": "offer_jalapeno_1795583489", "type": "offer", "name": "شطة هالابينو حجم 50 جرام سفري", "badge": "🔥 عرض لفترة محدودة", "offerText": "100 كرتون ⬅️ 7 كرتون مجاني\n60 كرتون ⬅️ 4 كرتون مجاني", "note": "🎊 سارع بطلبك قبل نفاد الكمية — شطة هالابينو جودة لا تُقارن بغيرها", "unit": "كرتون", "price": 0, "oldPrice": 0, "quickQtys": [10, 20, 60, 100], "img": "img/p_fbeb144efc2083.jpg", "active": true, "productId": "5"}]};
   var SEEN_KEY = "ab_new_status_seen_sig_v2";
   var _activeItems = [];
   var _curIdx = 0;
@@ -14458,7 +14462,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       var name = String(it.name || (matchedProd && matchedProd.name) || "").trim();
       var img = String(it.img || it.image || (matchedProd && (matchedProd.img || matchedProd.image || matchedProd.imageUrl)) || "").trim();
       var basePrice = matchedProd ? Number(matchedProd.wholesalePrice || matchedProd.price || matchedProd.p || 0) : 0;
-      var price = Number(it.price || basePrice || 0);
+      var price = (it.price !== undefined && it.price !== null) ? Number(it.price || 0) : basePrice;
       var oldPrice = Number(it.oldPrice || 0);
       var offerText = String(it.offerText || "").trim();
       var kind = String(it.type || ((oldPrice > price || offerText) ? "offer" : "new")).toLowerCase();
@@ -14476,6 +14480,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         oldPrice: oldPrice,
         offerText: offerText,
         expiresAt: it.expiresAt || null,
+        quickQtys: Array.isArray(it.quickQtys) ? it.quickQtys : null,
         unit: detectUnitLabel(it, matchedProd),
         badge: String(it.badge || (isOffer ? "🔥 عرض" : "جديد")).trim(),
         note: String(it.note || (isOffer ? "🔥 عرض خاص لفترة محدودة من أبوسيف للتجارة العامة — استفد منه الآن!" : "🆕 وصل حديثاً إلى أبوسيف للتجارة العامة — اطلب كميتك الآن بلمسة واحدة")).trim(),
@@ -14722,7 +14727,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     var qgrid = document.getElementById("abNsvQgrid");
     qgrid.innerHTML = "";
     var isCarton = /كرتون|كراتين|صندوق/i.test(item.unit || "");
-    var steps = isCarton ? [5, 10, 20, 50] : [10, 20, 50, 100];
+    var steps = (Array.isArray(item.quickQtys) && item.quickQtys.length) ? item.quickQtys : (isCarton ? [5, 10, 20, 50] : [10, 20, 50, 100]);
     for (var s = 0; s < steps.length; s++) {
       (function (amt) {
         var b = document.createElement("button");
@@ -14798,7 +14803,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         card.className = "ab-ns-card" + (item.isOffer ? " is-offer" : "") + (isSingle ? " single-hero" : "");
 
         var remStr = item.expiresAt ? formatRemainingTime(item.expiresAt) : "";
-        var offerMiniHtml = item.offerText ? ('<div class="ab-ns-offer-mini">🎁 ' + item.offerText + '</div>') : "";
+        var offerMiniHtml = item.offerText ? ('<div class="ab-ns-offer-mini">🎁 ' + item.offerText.replace(/\s*\n+\s*/g, ' • ') + '</div>') : "";
         var timerMiniHtml = (remStr && remStr !== "EXPIRED") ? ('<div class="ab-ns-timer-mini">' + remStr + '</div>') : "";
 
         card.innerHTML =
@@ -14900,7 +14905,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-581416";
+  var TARGET_CACHE = "abudhiya-offline-v4-583489";
 
   function forceReleaseSplash() {
     try {
