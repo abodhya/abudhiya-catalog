@@ -17262,8 +17262,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_PWA_INSTALL_BTN_START -->
-<style id="abPwaInstallBtnStyle" data-pwa-install="1">
+<style id="abPwaInstallBtnStyle" data-pwa-install="2">
   #abPwaInstallFloatBtn {
     position: fixed !important;
     bottom: 14px !important;
@@ -17274,26 +17276,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     align-items: center !important;
     justify-content: center !important;
     gap: 8px !important;
-    padding: 11px 18px !important;
+    padding: 10px 16px !important;
     border-radius: 999px !important;
     border: 1.5px solid #fef08a !important;
     background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%) !important;
     color: #09090b !important;
-    font-size: 13.5px !important;
+    font-size: 13px !important;
     font-weight: 900 !important;
     font-family: inherit !important;
     cursor: pointer !important;
     direction: rtl !important;
     white-space: nowrap !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 22px rgba(250, 204, 21, 0.45) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.72), 0 0 22px rgba(250, 204, 21, 0.45) !important;
     -webkit-tap-highlight-color: transparent !important;
   }
-  #abPwaInstallFloatBtn.show {
-    display: inline-flex !important;
-  }
-  #abPwaInstallFloatBtn:active {
-    filter: brightness(1.08);
-  }
+  #abPwaInstallFloatBtn.show { display: inline-flex !important; }
   .ab-pwa-x {
     margin-right: 4px;
     width: 20px;
@@ -17312,8 +17309,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     margin-top: 10px;
     padding: 10px 12px;
     border-radius: 12px;
-    border: 1.3px solid rgba(250, 204, 21, 0.8);
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(250, 204, 21, 0.1));
+    border: 1.3px solid rgba(250, 204, 21, 0.85);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.24), rgba(250, 204, 21, 0.1));
     color: #fef08a;
     font-size: 12.5px;
     font-weight: 900;
@@ -17322,15 +17319,108 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-sizing: border-box;
     display: none;
   }
-  #abGateInstallBtn.show {
+  #abGateInstallBtn.show { display: block; }
+
+  #abPwaGuideModal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483600 !important;
+    background: rgba(3, 5, 10, 0.92) !important;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 14px !important;
+    direction: rtl !important;
+    box-sizing: border-box !important;
+  }
+  #abPwaGuideModal.open { display: flex !important; }
+  .ab-pg-box {
+    width: 100%;
+    max-width: 380px;
+    border-radius: 18px;
+    background: linear-gradient(165deg, #18140e 0%, #0a0c12 65%, #15110b 100%);
+    border: 1.6px solid rgba(250, 204, 21, 0.9);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.82);
+    padding: 18px 15px 16px;
+    color: #f8fafc;
+    font-family: inherit;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .ab-pg-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    background: #14161f;
+    color: #fef08a;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    padding: 0;
+  }
+  .ab-pg-icon {
+    width: 82px;
+    height: 82px;
+    border-radius: 20px;
+    border: 2px solid #facc15;
+    margin: 0 auto 10px;
     display: block;
+    object-fit: cover;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.65), 0 0 18px rgba(250, 204, 21, 0.3);
+  }
+  .ab-pg-title { font-size: 16px; font-weight: 900; color: #facc15; margin-bottom: 6px; }
+  .ab-pg-steps {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
+    color: #e2e8f0;
+    line-height: 1.75;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .ab-pg-steps b { color: #fef08a; }
+  .ab-pg-btn-gold {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 11px;
+    border: 1.2px solid #fef08a;
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 52%, #facc15 100%);
+    color: #09090b;
+    font-size: 13px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 7px;
+  }
+  .ab-pg-btn-dark {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 11px;
+    border: 1px solid rgba(56, 189, 248, 0.55);
+    background: rgba(14, 165, 233, 0.16);
+    color: #bae6fd;
+    font-size: 12px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
   }
 </style>
-<script data-ab-pwa-install="1">
+<script data-ab-pwa-install="2">
 (function () {
-  if (window.__abPwaInstallBtnV1) return;
-  window.__abPwaInstallBtnV1 = true;
+  if (window.__abPwaInstallBtnV2) return;
+  window.__abPwaInstallBtnV2 = true;
 
+  var ICON_SRC = "/abusaif-app-1795604381-512.png";
   var _deferredPrompt = null;
   var _dismissed = false;
 
@@ -17341,18 +17431,78 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) { return false; }
   }
 
-  // ضمان تسجيل Service Worker للـ PWA فوراً
+  // تسجيل وتحديث Service Worker لضمان جاهزية التثبيت
   try {
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistration("/").then(function (reg) {
-        if (!reg) navigator.serviceWorker.register("/sw.js").catch(function () {});
-        else reg.update().catch(function () {});
+      navigator.serviceWorker.register("/sw.js").then(function (reg) {
+        if (reg && reg.update) reg.update().catch(function () {});
       }).catch(function () {});
     }
   } catch (e) {}
 
   function notify(msg) {
     try { if (typeof showToast === "function") showToast(msg); } catch (e) {}
+  }
+
+  function hideInstallButtons() {
+    var fl = document.getElementById("abPwaInstallFloatBtn");
+    if (fl) fl.classList.remove("show");
+    var gb = document.getElementById("abGateInstallBtn");
+    if (gb) gb.classList.remove("show");
+  }
+
+  function forceClearCacheAndReload() {
+    notify("🧹 جاري تنظيف الكاش القديم وتحديث التطبيق...");
+    var tasks = [];
+    try {
+      if ("caches" in window) {
+        tasks.push(caches.keys().then(function (ks) {
+          return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+        }));
+      }
+    } catch (e) {}
+    try {
+      if ("serviceWorker" in navigator) {
+        tasks.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+          return Promise.all(regs.map(function (r) { return r.unregister(); }));
+        }));
+      }
+    } catch (e) {}
+    Promise.all(tasks).finally(function () {
+      window.location.replace(window.location.origin + "/?fresh=" + Date.now());
+    });
+  }
+
+  function openGuideModal() {
+    var m = document.getElementById("abPwaGuideModal");
+    if (!m) {
+      m = document.createElement("div");
+      m.id = "abPwaGuideModal";
+      m.innerHTML =
+        '<div class="ab-pg-box">' +
+          '<button type="button" class="ab-pg-close" id="abPgClose">✕</button>' +
+          '<img class="ab-pg-icon" src="' + ICON_SRC + '" alt="أيقونة أبوسيف">' +
+          '<div class="ab-pg-title">📲 تثبيت تطبيق أبوسيف بالأيقونة الجديدة</div>' +
+          '<div class="ab-pg-steps" id="abPgSteps">' +
+            '1) تأكد من حذف أي نسخة قديمة من <b>إعدادات الجوال ⬅️ التطبيقات</b>.<br>' +
+            '2) افتح المتجر في متصفح <b>Chrome</b> (وليس من داخل واتساب).<br>' +
+            '3) اضغط الثلاث نقاط <b>(⋮)</b> أعلى اليسار ⬅️ اختر <b>«إضافة إلى الشاشة الرئيسية»</b> ⬅️ ثم اضغط <b>«تثبيت»</b>.' +
+          '</div>' +
+          '<button type="button" class="ab-pg-btn-gold" id="abPgNativeBtn" style="display:none">⚡ تثبيت فوري بلمسة واحدة الآن</button>' +
+          '<button type="button" class="ab-pg-btn-dark" id="abPgResetBtn">🧹 تنظيف الكاش القديم وتحديث الأيقونة الآن</button>' +
+        '</div>';
+      document.body.appendChild(m);
+      m.addEventListener("click", function (ev) { if (ev.target === m) m.classList.remove("open"); });
+      document.getElementById("abPgClose").addEventListener("click", function () { m.classList.remove("open"); });
+      document.getElementById("abPgResetBtn").addEventListener("click", forceClearCacheAndReload);
+      document.getElementById("abPgNativeBtn").addEventListener("click", function () {
+        m.classList.remove("open");
+        triggerInstallPrompt();
+      });
+    }
+    var nb = document.getElementById("abPgNativeBtn");
+    if (nb) nb.style.display = _deferredPrompt ? "block" : "none";
+    m.classList.add("open");
   }
 
   function triggerInstallPrompt() {
@@ -17369,17 +17519,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
             }
           }).catch(function () {});
         }
+        return;
       } catch (e) {}
-      return;
     }
-    notify("📲 من قائمة Chrome (⋮) اختر «إضافة إلى الشاشة الرئيسية» ثم «تثبيت»");
-  }
-
-  function hideInstallButtons() {
-    var fl = document.getElementById("abPwaInstallFloatBtn");
-    if (fl) fl.classList.remove("show");
-    var gb = document.getElementById("abGateInstallBtn");
-    if (gb) gb.classList.remove("show");
+    openGuideModal();
   }
 
   function renderInstallButtons() {
@@ -17388,13 +17531,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       return;
     }
 
-    // 1) زر عائم يظهر فوراً عندما يكون التثبيت المباشر جاهزاً في Chrome
+    // 1) زر عائم ظاهر دائماً داخل المتصفح حتى يستطيع المستخدم التثبيت أو تنظيف الكاش بلمسة
     var fl = document.getElementById("abPwaInstallFloatBtn");
     if (!fl && document.body) {
       fl = document.createElement("button");
       fl.type = "button";
       fl.id = "abPwaInstallFloatBtn";
-      fl.innerHTML = '<span>📲 تثبيت تطبيق أبوسيف الآن</span><span class="ab-pwa-x" id="abPwaCloseX" title="إخفاء">✕</span>';
+      fl.innerHTML = '<span id="abPwaFlTxt">📲 تثبيت تطبيق أبوسيف</span><span class="ab-pwa-x" id="abPwaCloseX" title="إخفاء">✕</span>';
       fl.addEventListener("click", function (ev) {
         if (ev.target && ev.target.id === "abPwaCloseX") {
           _dismissed = true;
@@ -17406,10 +17549,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       document.body.appendChild(fl);
     }
     if (fl) {
-      fl.classList.toggle("show", !!_deferredPrompt && !_dismissed);
+      var flTxt = document.getElementById("abPwaFlTxt");
+      if (flTxt) flTxt.textContent = _deferredPrompt ? "⚡ تثبيت تطبيق أبوسيف الآن" : "📲 تثبيت التطبيق / تحديث الأيقونة";
+      fl.classList.toggle("show", !_dismissed);
     }
 
-    // 2) زر تثبيت أنيق داخل بوابة الدخول أيضاً
+    // 2) زر واضح داخل بوابة الدخول أيضاً
     var gateCard = document.querySelector("#abAccessGateOverlay .ab-gate-card");
     if (gateCard) {
       var gb = document.getElementById("abGateInstallBtn");
@@ -17417,13 +17562,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         gb = document.createElement("button");
         gb.type = "button";
         gb.id = "abGateInstallBtn";
-        gb.textContent = "📲 تثبيت التطبيق على الشاشة الرئيسية";
         gb.addEventListener("click", triggerInstallPrompt);
         var foot = gateCard.querySelector(".ab-gate-foot");
         if (foot) foot.insertAdjacentElement("beforebegin", gb);
         else gateCard.appendChild(gb);
       }
-      gb.classList.toggle("show", !!_deferredPrompt);
+      gb.textContent = _deferredPrompt ? "⚡ تثبيت تطبيق أبوسيف الآن" : "📲 تثبيت التطبيق على الشاشة الرئيسية";
+      gb.classList.add("show");
     }
   }
 
@@ -17440,11 +17585,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(renderInstallButtons, 300); });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(renderInstallButtons, 250); });
   } else {
-    setTimeout(renderInstallButtons, 300);
+    setTimeout(renderInstallButtons, 250);
   }
-  setInterval(renderInstallButtons, 2000);
+  setInterval(renderInstallButtons, 1800);
 })();
 </script>
 <!-- ABUDHIYA_PWA_INSTALL_BTN_END -->
@@ -17492,7 +17637,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-604389";
+  var TARGET_CACHE = "abudhiya-offline-v4-610228";
 
   function forceReleaseSplash() {
     try {
