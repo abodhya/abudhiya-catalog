@@ -13840,8 +13840,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
+
 <!-- ABUDHIYA_NEW_ARRIVAL_STATUS_START -->
-<style id="abNewArrivalStatusStyle" data-new-status="2">
+<style id="abNewArrivalStatusStyle" data-new-status="3">
   /* 1) شريط حالات العروض الخاصة والمنتجات الجديدة أعلى المتجر فور الدخول */
   #abNewStatusBar {
     direction: rtl;
@@ -14325,10 +14328,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   .ab-nsv-qbtn:active { background: linear-gradient(135deg, #d4af37, #facc15); color: #09090b; }
 </style>
-<script data-ab-new-status="2">
+<script data-ab-new-status="3">
 (function () {
-  if (window.__abNewArrivalStatusV2) return;
-  window.__abNewArrivalStatusV2 = true;
+  if (window.__abNewArrivalStatusV3) return;
+  window.__abNewArrivalStatusV3 = true;
 
   var INLINE_CFG = {"autoPopupOnFirstVisit": true, "autoFallbackNewest": true, "items": [{"id": "offer_jalapeno_1795583489", "type": "offer", "name": "شطة هالابينو حجم 50 جرام سفري", "badge": "🔥 عرض لفترة محدودة", "offerText": "100 كرتون ⬅️ 7 كرتون مجاني\n60 كرتون ⬅️ 4 كرتون مجاني", "note": "🎊 سارع بطلبك قبل نفاد الكمية — شطة هالابينو جودة لا تُقارن بغيرها", "unit": "كرتون", "price": 0, "oldPrice": 0, "quickQtys": [10, 20, 60, 100], "img": "img/p_fbeb144efc2083.jpg", "active": true, "productId": "5"}]};
   var SEEN_KEY = "ab_new_status_seen_sig_v2";
@@ -14482,6 +14485,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         oldPrice: oldPrice,
         offerText: offerText,
         expiresAt: it.expiresAt || null,
+        displaySec: (it.displaySec !== undefined && it.displaySec !== null) ? Number(it.displaySec) : 10,
         quickQtys: Array.isArray(it.quickQtys) ? it.quickQtys : null,
         unit: detectUnitLabel(it, matchedProd),
         badge: String(it.badge || (isOffer ? "🔥 عرض" : "جديد")).trim(),
@@ -14744,21 +14748,26 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     v.classList.add("open");
 
     clearStoryTimers();
-    var durationMs = 10000;
-    var startedAt = Date.now();
+    var secVal = (item.displaySec !== undefined && item.displaySec !== null) ? Number(item.displaySec) : 10;
     var curFill = document.getElementById("abNsvCurFill");
-    function tick() {
-      if (!v.classList.contains("open")) return;
-      var pct = Math.min(100, ((Date.now() - startedAt) / durationMs) * 100);
-      if (curFill) curFill.style.width = pct + "%";
-      if (pct < 100) _progressRaf = requestAnimationFrame(tick);
+    if (secVal <= 0) {
+      if (curFill) curFill.style.width = "100%";
+    } else {
+      var durationMs = Math.max(3, secVal) * 1000;
+      var startedAt = Date.now();
+      function tick() {
+        if (!v.classList.contains("open")) return;
+        var pct = Math.min(100, ((Date.now() - startedAt) / durationMs) * 100);
+        if (curFill) curFill.style.width = pct + "%";
+        if (pct < 100) _progressRaf = requestAnimationFrame(tick);
+      }
+      _progressRaf = requestAnimationFrame(tick);
+      _autoTimer = setTimeout(function () {
+        if (!v.classList.contains("open")) return;
+        if (_curIdx < _activeItems.length - 1) showStatusAt(_curIdx + 1);
+        else closeViewer();
+      }, durationMs);
     }
-    _progressRaf = requestAnimationFrame(tick);
-    _autoTimer = setTimeout(function () {
-      if (!v.classList.contains("open")) return;
-      if (_curIdx < _activeItems.length - 1) showStatusAt(_curIdx + 1);
-      else closeViewer();
-    }, durationMs);
   }
 
   var _lastRenderedCfg = INLINE_CFG;
@@ -14879,6 +14888,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   } else {
     setTimeout(bootNewStatus, 260);
   }
+  window.__abNsAutoExpiryTick = setInterval(function () {
+    try {
+      var vEl = document.getElementById("abNewStatusViewer");
+      if ((!vEl || !vEl.classList.contains("open")) && typeof _lastRenderedCfg !== "undefined") {
+        renderStatusBar(_lastRenderedCfg);
+      }
+    } catch (e) {}
+  }, 60000);
+
   setTimeout(function () {
     if (!document.getElementById("abNewStatusBar")) renderStatusBar(INLINE_CFG);
     else decorateCatalogOfferCards(_activeItems);
@@ -14888,7 +14906,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_NEW_ARRIVAL_STATUS_END -->
 
 <!-- ABUDHIYA_ACCESS_ROLES_ADMIN_START -->
-<style id="abAccessRolesStyle" data-access-roles="1">
+<style id="abAccessRolesStyle" data-access-roles="2">
   /* قفل التمرير عند إظهار بوابة الدخول */
   html.ab-gate-locked,
   html.ab-gate-locked body {
@@ -15366,11 +15384,87 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #bae6fd;
     line-height: 1.55;
   }
+
+  .ab-dur-panel {
+    margin-top: 8px;
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    box-sizing: border-box;
+  }
+  .ab-dur-chips {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    margin: 5px 0 4px;
+  }
+  .ab-dur-chip {
+    padding: 6px 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.42);
+    background: #121520;
+    color: #e2e8f0;
+    font-size: 10.5px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .ab-dur-chip.active {
+    background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #facc15 100%);
+    color: #09090b;
+    border-color: #fef08a;
+  }
+  .ab-adm-dur-tag {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 1.5px 7px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 900;
+    background: rgba(249, 115, 22, 0.22);
+    border: 1px solid rgba(251, 146, 60, 0.55);
+    color: #fed7aa;
+  }
+  .ab-adm-dur-tag.open {
+    background: rgba(16, 185, 129, 0.18);
+    border-color: rgba(52, 211, 153, 0.5);
+    color: #86efac;
+  }
+  .ab-adm-dur-tag.expired {
+    background: rgba(220, 38, 38, 0.26);
+    border-color: rgba(248, 113, 113, 0.65);
+    color: #fecaca;
+  }
+  .ab-adm-mini-edit {
+    padding: 5px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(250, 204, 21, 0.65);
+    background: rgba(184, 134, 11, 0.3);
+    color: #fef08a;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .ab-adm-dur-editor {
+    display: none;
+    margin-top: 9px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #10131e;
+    border: 1.4px solid #facc15;
+    box-sizing: border-box;
+  }
+  .ab-adm-dur-editor.open { display: block; }
 </style>
-<script data-ab-access-roles="1">
+<script data-ab-access-roles="2">
 (function () {
-  if (window.__abAccessRolesAdminV1) return;
-  window.__abAccessRolesAdminV1 = true;
+  if (window.__abAccessRolesAdminV2) return;
+  window.__abAccessRolesAdminV2 = true;
 
   var ENCODED_VAULT = "D5%D7%22%90685417776922%02%A3%22%enohp22%02%C2%22%FA%8D%58%9D%A8%9D%DA%8D%02%A8%9D%48%9D%9B%8D%02%9A%8D%58%9D%7A%8D%1B%8D%38%9D%02%FA%8D%58%9D%DA%8D%58%9D%22%02%A3%22%eman22%02%C2%22%90685417722%02%A3%22%edoc22%02%C2%22%demmahom_per22%02%A3%22%di22%B7%02%C2%D7%22%92353417776922%02%A3%22%enohp22%02%C2%22%6B%8D%A8%9D%1B%8D%9B%8D%02%68%9D%A8%9D%58%9D%7A%8D%22%02%A3%22%eman22%02%C2%22%92353417722%02%A3%22%edoc22%02%C2%22%nima_per22%02%A3%22%di22%B7%02%C2%D7%22%51270517776922%02%A3%22%enohp22%02%C2%22%1B%8D%A8%9D%8A%8D%CA%8D%02%68%9D%8A%8D%02%FA%8D%58%9D%DA%8D%58%9D%02%58%9D%1B%8D%38%9D%7A%8D%22%02%A3%22%eman22%02%C2%22%51270517722%02%A3%22%edoc22%02%C2%22%marka_per22%02%A3%22%di22%B7%02%C2%D7%22%17169427776922%02%A3%22%enohp22%02%C2%22%1B%8D%A8%9D%8A%8D%CA%8D%7A%8D%8A%8D%02%FA%8D%58%9D%DA%8D%58%9D%02%A8%9D%58%9D%7A%8D%3B%8D%22%02%A3%22%eman22%02%C2%22%17169427722%02%A3%22%edoc22%02%C2%22%imas_per22%02%A3%22%di22%B7%B5%";
   var GH_REPO = "abodhya/abudhiya-catalog";
@@ -15779,6 +15873,47 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     reader.readAsDataURL(file);
   }
 
+  function calcExpiresFromInputs(mode, customNum, customUnit, exactStr) {
+    if (mode === "open") return null;
+    if (mode === "6h") return Date.now() + (6 * 3600000);
+    if (mode === "12h") return Date.now() + (12 * 3600000);
+    if (mode === "24h") return Date.now() + (24 * 3600000);
+    if (mode === "48h") return Date.now() + (48 * 3600000);
+    if (mode === "3d") return Date.now() + (3 * 86400000);
+    if (mode === "7d") return Date.now() + (7 * 86400000);
+    if (mode === "custom") {
+      if (exactStr) {
+        var parsedTs = Date.parse(exactStr);
+        if (isFinite(parsedTs) && parsedTs > Date.now()) return parsedTs;
+      }
+      var n = Number(customNum || 0);
+      if (n > 0) return Date.now() + n * (customUnit === "d" ? 86400000 : 3600000);
+    }
+    return null;
+  }
+
+  function describeItemDuration(it) {
+    var sec = (it && it.displaySec !== undefined && it.displaySec !== null) ? Number(it.displaySec) : 10;
+    var secLbl = sec <= 0 ? "شريحة ثابتة" : ("شريحة " + sec + "ث");
+    if (!it || !it.expiresAt) {
+      return { cls: "open", text: "♾️ فترة مفتوحة • " + secLbl };
+    }
+    var ts = typeof it.expiresAt === "number" ? it.expiresAt : Date.parse(it.expiresAt);
+    if (!isFinite(ts)) return { cls: "open", text: "♾️ فترة مفتوحة • " + secLbl };
+    var diff = ts - Date.now();
+    if (diff <= 0) return { cls: "expired", text: "⛔ منتهية (اضغط المدة للتجديد)" };
+    var mins = Math.floor(diff / 60000);
+    var days = Math.floor(mins / 1440);
+    var hrs = Math.floor((mins % 1440) / 60);
+    var remM = mins % 60;
+    var remStr = days > 0
+      ? (days + " يوم" + (hrs > 0 ? (" و " + hrs + " س") : ""))
+      : (hrs > 0 ? (hrs + " س" + (remM > 0 ? (" و " + remM + " د") : "")) : (Math.max(1, remM) + " دقيقة"));
+    return { cls: "", text: "⏳ متبقي: " + remStr + " • " + secLbl };
+  }
+
+  var _editingDurIdx = -1;
+
   function openAdminStudio(initialTab) {
     if (getRole() !== "admin") {
       openAccessGate();
@@ -15823,7 +15958,29 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
             '<div class="ab-adm-row2">' +
               '<div><label class="ab-adm-lbl">📏 الوحدة:</label><select id="abAdmUnit" class="ab-adm-sel"><option value="كرتون">كرتون</option><option value="كيس">كيس</option><option value="شدة">شدة</option><option value="بكت">بكت</option></select></div>' +
-              '<div><label class="ab-adm-lbl">⏳ مدة العرض (أيام):</label><input id="abAdmDays" class="ab-adm-inp" type="number" placeholder="اختياري مثلاً 3"></div>' +
+              '<div><label class="ab-adm-lbl">⏱️ عرض الشريحة:</label><select id="abAdmSlideSec" class="ab-adm-sel"><option value="10" selected>10 ثوانٍ</option><option value="6">6 ثوانٍ (سريع)</option><option value="15">15 ثانية</option><option value="25">25 ثانية</option><option value="0">ثابتة (يدوي)</option></select></div>' +
+            '</div>' +
+            '<div class="ab-dur-panel">' +
+              '<label class="ab-adm-lbl" style="margin-top:0">⏳ فترة بقاء الحالة (تختفي تلقائياً عند الانتهاء):</label>' +
+              '<div class="ab-dur-chips" id="abAdmDurChips">' +
+                '<button type="button" class="ab-dur-chip" data-dur="6h">6 ساعات</button>' +
+                '<button type="button" class="ab-dur-chip" data-dur="12h">12 ساعة</button>' +
+                '<button type="button" class="ab-dur-chip active" data-dur="24h">24 ساعة</button>' +
+                '<button type="button" class="ab-dur-chip" data-dur="48h">48 ساعة</button>' +
+                '<button type="button" class="ab-dur-chip" data-dur="3d">3 أيام</button>' +
+                '<button type="button" class="ab-dur-chip" data-dur="7d">أسبوع</button>' +
+                '<button type="button" class="ab-dur-chip" data-dur="open">مفتوحة ♾️</button>' +
+                '<button type="button" class="ab-dur-chip" data-dur="custom">مخصّص ⚙️</button>' +
+              '</div>' +
+              '<input type="hidden" id="abAdmDurMode" value="24h">' +
+              '<div id="abAdmCustomDurWrap" style="display:none;margin-top:6px">' +
+                '<div class="ab-adm-row2">' +
+                  '<input id="abAdmCustomNum" class="ab-adm-inp" type="number" min="1" placeholder="العدد (مثلاً 5)">' +
+                  '<select id="abAdmCustomUnit" class="ab-adm-sel"><option value="h">ساعة</option><option value="d">يوم</option></select>' +
+                '</div>' +
+                '<label class="ab-adm-lbl" style="font-size:10px;color:#cbd5e1">أو تاريخ ووقت انتهاء محدد:</label>' +
+                '<input id="abAdmExactEnd" class="ab-adm-inp" type="datetime-local">' +
+              '</div>' +
             '</div>' +
 
             '<div class="ab-adm-row2">' +
@@ -15846,6 +16003,33 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           '<div class="ab-adm-pane" id="abAdmPane_manage">' +
             '<div style="font-size:11.5px;color:#cbd5e1;margin-bottom:6px">الحالات والعروض النشطة حالياً في أعلى المتجر:</div>' +
             '<div id="abAdmCurList" class="ab-adm-list"></div>' +
+            '<div id="abAdmDurEditor" class="ab-adm-dur-editor">' +
+              '<div id="abAdmEditTitle" style="font-size:12px;font-weight:900;color:#facc15;margin-bottom:6px">⏱️ تعديل فترة الحالة</div>' +
+              '<div class="ab-dur-chips" id="abAdmEditChips">' +
+                '<button type="button" class="ab-dur-chip" data-edur="6h">6 ساعات</button>' +
+                '<button type="button" class="ab-dur-chip" data-edur="12h">12 ساعة</button>' +
+                '<button type="button" class="ab-dur-chip active" data-edur="24h">24 ساعة</button>' +
+                '<button type="button" class="ab-dur-chip" data-edur="48h">48 ساعة</button>' +
+                '<button type="button" class="ab-dur-chip" data-edur="3d">3 أيام</button>' +
+                '<button type="button" class="ab-dur-chip" data-edur="7d">أسبوع</button>' +
+                '<button type="button" class="ab-dur-chip" data-edur="open">مفتوحة ♾️</button>' +
+                '<button type="button" class="ab-dur-chip" data-edur="custom">مخصّص ⚙️</button>' +
+              '</div>' +
+              '<input type="hidden" id="abAdmEditMode" value="24h">' +
+              '<div id="abAdmEditCustomWrap" style="display:none;margin-top:6px">' +
+                '<div class="ab-adm-row2">' +
+                  '<input id="abAdmEditCustomNum" class="ab-adm-inp" type="number" min="1" placeholder="العدد">' +
+                  '<select id="abAdmEditCustomUnit" class="ab-adm-sel"><option value="h">ساعة</option><option value="d">يوم</option></select>' +
+                '</div>' +
+                '<input id="abAdmEditExactEnd" class="ab-adm-inp" type="datetime-local" style="margin-top:5px">' +
+              '</div>' +
+              '<label class="ab-adm-lbl">⏱️ مدة عرض الشريحة:</label>' +
+              '<select id="abAdmEditSlideSec" class="ab-adm-sel"><option value="10">10 ثوانٍ</option><option value="6">6 ثوانٍ (سريع)</option><option value="15">15 ثانية</option><option value="25">25 ثانية</option><option value="0">ثابتة (يدوي)</option></select>' +
+              '<div class="ab-adm-row2" style="margin-top:8px">' +
+                '<button type="button" class="ab-adm-btn-gold" id="abAdmEditApplyBtn" style="margin:0;padding:8px">✅ حفظ الفترة</button>' +
+                '<button type="button" class="ab-adm-btn-dark" id="abAdmEditCancelBtn" style="margin:0;padding:8px">إلغاء</button>' +
+              '</div>' +
+            '</div>' +
             '<div class="ab-adm-cloud-box">' +
               '<b>☁️ النشر السحابي المباشر لكل العملاء (اختياري):</b><br>' +
               'اربط مفتاح GitHub (Personal Access Token) مرة واحدة على جوالك ليصل أي عرض تضيفه هنا لجميع عملاء المتجر خلال 20 ثانية تلقائياً بدون فتح Termux:' +
@@ -15921,7 +16105,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         var price = Number(document.getElementById("abAdmPrice").value || 0);
         var oldPrice = Number(document.getElementById("abAdmOldPrice").value || 0);
         var unit = document.getElementById("abAdmUnit").value || "كرتون";
-        var days = Number(document.getElementById("abAdmDays").value || 0);
+        var durMode = (document.getElementById("abAdmDurMode") && document.getElementById("abAdmDurMode").value) || "24h";
+        var cNum = document.getElementById("abAdmCustomNum") ? document.getElementById("abAdmCustomNum").value : "";
+        var cUnit = document.getElementById("abAdmCustomUnit") ? document.getElementById("abAdmCustomUnit").value : "h";
+        var exactEnd = document.getElementById("abAdmExactEnd") ? document.getElementById("abAdmExactEnd").value : "";
+        var computedExpires = calcExpiresFromInputs(durMode, cNum, cUnit, exactEnd);
+        var slideSec = document.getElementById("abAdmSlideSec") ? Number(document.getElementById("abAdmSlideSec").value) : 10;
         var badge = (document.getElementById("abAdmBadge").value || "").trim() || (kind === "offer" ? "🔥 عرض لفترة محدودة" : "🆕 جديد");
         var note = (document.getElementById("abAdmNote").value || "").trim() || (kind === "offer" ? "🔥 عرض خاص لفترة محدودة من أبوسيف للتجارة العامة" : "🆕 وصل حديثاً إلى أبوسيف للتجارة العامة");
         var qtysRaw = (document.getElementById("abAdmQtys").value || "").trim();
@@ -15941,7 +16130,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           unit: unit,
           badge: badge,
           note: note,
-          expiresAt: days > 0 ? (Date.now() + days * 86400000) : null,
+          expiresAt: computedExpires,
+          displaySec: isFinite(slideSec) ? slideSec : 10,
           quickQtys: quickQtys,
           img: _uploadedImgDataUrl || "/abusaif-3d-512.png",
           active: true
@@ -16132,7 +16322,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-583929";
+  var TARGET_CACHE = "abudhiya-offline-v4-584451";
 
   function forceReleaseSplash() {
     try {
