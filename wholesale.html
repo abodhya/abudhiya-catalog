@@ -566,6 +566,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4843,7 +4844,81 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         card.appendChild(qbar);
       }
     }
-    applyCategoryFilter();
+    
+      // دعم الكروت التي لا تحتوي على <img> (مثل أصناف بطاطس طبيعي رنجو) بالأرقام المختصرة وزر الحذف
+      var __noImgCards = document.querySelectorAll("#prodGrid .card, #abPotInnerGrid .card, .ab-pot-grid .card");
+      for (var __ni = 0; __ni < __noImgCards.length; __ni++) {
+        var __c2 = __noImgCards[__ni];
+        if (!__c2 || __c2 === document.body || __c2.getAttribute("data-ab-pro-card") === "1") continue;
+        var __m2 = findProductForCard(__c2, byName);
+        if (!__m2) continue;
+        __c2.setAttribute("data-ab-pro-card", "1");
+        __c2.setAttribute("data-ab-prod-id", String(__m2.id));
+        __c2.setAttribute("data-ab-cat", getCategoryForProduct(__m2));
+
+        var __hb2 = false;
+        if (typeof calcBonus === "function") {
+          try {
+            if (Number(calcBonus(__m2, 10) || 0) > 0 || Number(calcBonus(__m2, 25) || 0) > 0 || Number(calcBonus(__m2, 50) || 0) > 0 || Number(calcBonus(__m2, 100) || 0) > 0) __hb2 = true;
+          } catch (e) {}
+        }
+        __c2.setAttribute("data-ab-has-bonus", __hb2 ? "1" : "0");
+        if (__hb2 && !__c2.querySelector(".ab-bonus-tag")) {
+          var __bt2 = document.createElement("div");
+          __bt2.className = "ab-bonus-tag";
+          __bt2.textContent = "🎁 عرض بونص";
+          __c2.appendChild(__bt2);
+        }
+
+        if (!__c2.querySelector(".ab-clear-qty-btn")) {
+          var __clr2 = document.createElement("button");
+          __clr2.type = "button";
+          __clr2.className = "ab-clear-qty-btn";
+          __clr2.title = "حذف الكمية";
+          __clr2.setAttribute("aria-label", "حذف الكمية");
+          __clr2.textContent = "✕";
+          try {
+            var __co2 = (typeof CART !== "undefined" && CART) ? CART : ((typeof cart !== "undefined" && cart) ? cart : null);
+            if (__co2 && Number(__co2[__m2.id] || 0) > 0) __clr2.classList.add("show");
+          } catch (e) {}
+          (function (pObj, cEl, bEl) {
+            bEl.addEventListener("click", function (ev) {
+              ev.preventDefault();
+              ev.stopPropagation();
+              addQuickQty(pObj, -999999999, cEl);
+              if (typeof showToast === "function") showToast("🗑️ تم حذف كمية " + pObj.name);
+            });
+          })(__m2, __c2, __clr2);
+          __c2.appendChild(__clr2);
+        }
+
+        if (!__c2.querySelector(".ab-qbar")) {
+          var __qb2 = document.createElement("div");
+          __qb2.className = "ab-qbar";
+          __qb2.innerHTML =
+            '<button type="button" class="ab-qbtn" data-d="10">10</button>' +
+            '<button type="button" class="ab-qbtn" data-d="20">20</button>' +
+            '<button type="button" class="ab-qbtn" data-d="30">30</button>' +
+            '<button type="button" class="ab-qbtn" data-d="40">40</button>' +
+            '<button type="button" class="ab-qbtn" data-d="50">50</button>' +
+            '<button type="button" class="ab-qbtn" data-d="100">100</button>' +
+            '<button type="button" class="ab-qbtn" data-d="200">200</button>' +
+            '<button type="button" class="ab-qbtn" data-d="300">300</button>';
+          (function (pObj, bar, cEl) {
+            var bs = bar.querySelectorAll(".ab-qbtn");
+            for (var b = 0; b < bs.length; b++) {
+              bs[b].addEventListener("click", function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                addQuickQty(pObj, Number(this.getAttribute("data-d")), cEl);
+              });
+            }
+          })(__m2, __qb2, __c2);
+          __c2.appendChild(__qb2);
+        }
+      }
+
+      applyCategoryFilter();
   }
 
   // 11) إخفاء زر الواتساب القديم أسفل الفاتورة + إضافة خانة تعديل شريط العروض في لوحة الإدارة المخفية + زر الإيصال الرسمي
@@ -19295,8 +19370,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="8">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="9">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -19862,6 +19939,58 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-shadow: none !important;
   }
 
+  /* توحيد إطار قائمة البطاطس المفتوحة وأزرار الأحجام (الكل / صغير / وسط / كبير) وأرقامها المختصرة */
+  html body .ab-pot-panel {
+    background: #ffffff !important;
+    border: 1.4px solid rgba(5, 150, 105, 0.24) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 6px 18px rgba(6, 78, 59, 0.06) !important;
+  }
+  html body .ab-pot-tab {
+    background: #f4f9f6 !important;
+    background-image: none !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.24) !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    box-shadow: none !important;
+  }
+  html body .ab-pot-tab.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    background-image: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.28) !important;
+  }
+  html body .ab-pot-grid .card {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+  }
+  html body .ab-qbar .ab-qbtn,
+  html body .ab-pot-grid .card .ab-qbtn {
+    background: #f0f7f4 !important;
+    background-image: none !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    border: 1px solid rgba(5, 150, 105, 0.22) !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    font-variant-numeric: tabular-nums !important;
+    box-shadow: 0 1px 3px rgba(6, 78, 59, 0.05) !important;
+    text-shadow: none !important;
+  }
+  html body .ab-qbar .ab-qbtn:active,
+  html body .ab-pot-grid .card .ab-qbtn:active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-color: transparent !important;
+  }
+
   /* 9) شاشة الفاتورة */
   html body #viewInvoice,
   html body #invFilledWrap,
@@ -20016,10 +20145,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-weight: 800 !important;
   }
 </style>
-<script data-ab-flagship-ui="8">
+<script data-ab-flagship-ui="9">
 (function () {
-  if (window.__abFlagshipUiV8) return;
-  window.__abFlagshipUiV8 = true;
+  if (window.__abFlagshipUiV9) return;
+  window.__abFlagshipUiV9 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -20545,8 +20674,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v8")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v8", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v9")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v9", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -20627,7 +20756,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-680691";
+  var TARGET_CACHE = "abudhiya-offline-v4-681186";
 
   function forceReleaseSplash() {
     try {
