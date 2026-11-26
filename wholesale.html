@@ -567,6 +567,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19372,8 +19373,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="9">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="10">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -19402,7 +19405,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
   }
 
-  /* 2) زر تبديل الدور العلوي (المدير • تبديل): متناسق بالزمردي ويختفي بسلاسة أثناء النزول حتى لا يغطي المنتجات */
+  /* 2) زر تبديل الدور العلوي (المدير • تبديل): متناسق بالزمردي ويختفي عند التمرير */
   html.ab-has-top-role-pill body #abSaifLuxuryHeader,
   html.ab-has-top-role-pill body .absf-hdr-card {
     margin-top: 46px !important;
@@ -19423,7 +19426,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #fef08a !important;
     -webkit-text-fill-color: #fef08a !important;
   }
-  html.ab-scrolled-down body .ab-top-role-pill {
+  html.ab-scrolled-down body .ab-top-role-pill,
+  html.ab-modal-open body .ab-top-role-pill {
     transform: translateY(-64px) !important;
     opacity: 0 !important;
     pointer-events: none !important;
@@ -19579,12 +19583,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-color: transparent;
   }
   #abQuickDrawerBar .ab-qd-btn[data-qd="admin"] {
-    border-color: rgba(15, 23, 42, 0.14);
-    background: #f8fafc;
-    color: #1e293b;
+    border-color: rgba(5, 150, 105, 0.24);
+    background: #ecfdf5;
+    color: #064e3b;
   }
   #abQuickDrawerBar .ab-qd-btn[data-qd="admin"].active {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(135deg, #042f22 0%, #065f46 100%);
     color: #fef08a;
     border-color: transparent;
   }
@@ -19593,12 +19597,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     transition: transform 0.2s ease;
     display: inline-block;
   }
-  #abQuickDrawerBar .ab-qd-btn.active .ab-qd-chev {
-    transform: rotate(180deg);
-  }
-  #abQuickDrawerBar .ab-qd-btn.ab-qd-hidden {
-    display: none !important;
-  }
+  #abQuickDrawerBar .ab-qd-btn.active .ab-qd-chev { transform: rotate(180deg); }
+  #abQuickDrawerBar .ab-qd-btn.ab-qd-hidden { display: none !important; }
 
   html:not(.ab-tools-open) body [data-ab-panel-kind="tools"] { display: none !important; }
   html:not(.ab-offers-open) body [data-ab-panel-kind="offers"] { display: none !important; }
@@ -19800,7 +19800,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 6px 12px !important;
   }
 
-  /* 8) كروت المنتجات البيضاء + إزالة الفراغ الأبيض الزائد أسفل الشبكة + تفتيح أزرار الكميات السريعة */
+  /* 8) كروت المنتجات البيضاء + أزرار الكميات + بطاقات المجموعات + التذييل */
   html body #viewCatalog {
     padding-bottom: 10px !important;
     min-height: auto !important;
@@ -19831,13 +19831,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-radius: 12px !important;
     object-fit: contain !important;
   }
-  html body #prodGrid .card-body {
-    padding: 8px 8px 10px !important;
+  html body #prodGrid .card-body { padding: 8px 8px 10px !important; }
+  html body .ab-clear-qty-btn {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    border: 1.2px solid #fca5a5 !important;
+    box-shadow: 0 2px 8px rgba(185, 28, 28, 0.18) !important;
   }
 
-  /* تحويل أزرار الكميات السريعة (10 - 300) داخل الكروت من الأسود الثقيل إلى نعناعي فاتح أنيق */
   html body #prodGrid .card button[data-ab-qty-btn="1"],
-  html body .grid .card .shortcuts-grid button {
+  html body .ab-qbar .ab-qbtn,
+  html body .ab-pot-grid .card .ab-qbtn {
     background: #f0f7f4 !important;
     background-image: none !important;
     color: #064e3b !important;
@@ -19850,15 +19855,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     text-shadow: none !important;
   }
   html body #prodGrid .card button[data-ab-qty-btn="1"]:active,
-  html body #prodGrid .card button[data-ab-qty-btn="1"].active,
-  html body .grid .card .shortcuts-grid button.active {
+  html body .ab-qbar .ab-qbtn:active,
+  html body .ab-pot-grid .card .ab-qbtn:active {
     background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
     border-color: transparent !important;
   }
 
-  /* تحويل بطاقات المجموعات السوداء (مثل: بطاطس طبيعي رنجو 20 صنف) إلى أبيض وزمردي متناسق */
+  /* بطاقة مجموعة البطاطس والقائمة المفتوحة */
   html body [data-ab-group-card="1"] {
     background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
     background-image: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
@@ -19923,23 +19928,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
   }
-
-  /* توحيد تذييل أبوضياء للتصميم والبرمجة بنفس التدرّج الزمردي الملكي للترويسة */
-  html body [data-ab-brand-footer="1"] {
-    background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
-    background-image: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
-    border: 1.2px solid rgba(250, 204, 21, 0.48) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 8px 20px rgba(4, 47, 34, 0.20) !important;
-  }
-  html body [data-ab-brand-footer="1"] [data-ab-brand-footer-inner="1"] {
-    background: transparent !important;
-    background-image: none !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
-  }
-
-  /* توحيد إطار قائمة البطاطس المفتوحة وأزرار الأحجام (الكل / صغير / وسط / كبير) وأرقامها المختصرة */
   html body .ab-pot-panel {
     background: #ffffff !important;
     border: 1.4px solid rgba(5, 150, 105, 0.24) !important;
@@ -19970,28 +19958,201 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-radius: 16px !important;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
   }
-  html body .ab-qbar .ab-qbtn,
-  html body .ab-pot-grid .card .ab-qbtn {
+
+  /* تذييل أبوضياء للتصميم والبرمجة بالزمردي الملكي */
+  html body [data-ab-brand-footer="1"] {
+    background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
+    background-image: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.48) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 20px rgba(4, 47, 34, 0.20) !important;
+  }
+  html body [data-ab-brand-footer="1"] [data-ab-brand-footer-inner="1"] {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* 9) توحيد لوحة إدخال الكمية السريعة (.qp-head / .shortcuts-grid / .numpad-grid) بالكامل */
+  html body [data-ab-qp-sheet="1"] {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    border-top: 3px solid #059669 !important;
+    border-radius: 24px 24px 0 0 !important;
+    box-shadow: 0 -12px 36px rgba(4, 47, 34, 0.22) !important;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  html body .qp-head {
+    color: #064e3b !important;
+    font-weight: 900 !important;
+  }
+  html body .qp-head button,
+  html body [data-ab-uni-close="1"] {
+    background: #fef2f2 !important;
+    background-image: none !important;
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    border: 1.2px solid #fecaca !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    font-weight: 900 !important;
+  }
+  html body [data-ab-qp-bar="1"] {
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%) !important;
+    background-image: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%) !important;
+    border: 1.5px solid rgba(5, 150, 105, 0.34) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1px 4px rgba(5, 150, 105, 0.08) !important;
+  }
+  html body [data-ab-qp-bar="1"] span,
+  html body [data-ab-qp-bar="1"] div,
+  html body [data-ab-qp-bar="1"] input,
+  html body [data-ab-qp-bar="1"] strong {
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-qp-bar="1"] button[data-ab-qp-step="plus"] {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    background-image: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 3px 10px rgba(5, 150, 105, 0.28) !important;
+  }
+  html body [data-ab-qp-bar="1"] button[data-ab-qp-step="minus"] {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    border: 1.4px solid rgba(5, 150, 105, 0.35) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05) !important;
+  }
+  html body .shortcuts-grid button {
     background: #f0f7f4 !important;
     background-image: none !important;
     color: #064e3b !important;
     -webkit-text-fill-color: #064e3b !important;
-    border: 1px solid rgba(5, 150, 105, 0.22) !important;
-    border-radius: 10px !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.26) !important;
+    border-radius: 13px !important;
     font-weight: 800 !important;
     font-variant-numeric: tabular-nums !important;
-    box-shadow: 0 1px 3px rgba(6, 78, 59, 0.05) !important;
+    box-shadow: 0 2px 5px rgba(6, 78, 59, 0.05) !important;
     text-shadow: none !important;
   }
-  html body .ab-qbar .ab-qbtn:active,
-  html body .ab-pot-grid .card .ab-qbtn:active {
+  html body .shortcuts-grid button:active,
+  html body .shortcuts-grid button.active {
     background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
     border-color: transparent !important;
   }
+  html body .numpad-grid button {
+    background: #f8fafc !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    border: 1.2px solid #cbd5e1 !important;
+    border-radius: 13px !important;
+    font-weight: 900 !important;
+    font-variant-numeric: tabular-nums !important;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04) !important;
+    text-shadow: none !important;
+  }
+  html body .numpad-grid button:active {
+    background: #ecfdf5 !important;
+    border-color: #059669 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+  }
+  html body .numpad-grid button[data-ab-num-danger="1"] {
+    background: #fef2f2 !important;
+    background-image: none !important;
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    border: 1.2px solid #fecaca !important;
+  }
 
-  /* 9) شاشة الفاتورة */
+  /* 10) توحيد جميع النوافذ المنبثقة والحقول والأزرار السوداء المتبقية في كامل المتجر */
+  html body [data-ab-uni-sheet="1"] {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    border: 1.4px solid rgba(5, 150, 105, 0.24) !important;
+    box-shadow: 0 16px 42px rgba(4, 47, 34, 0.20) !important;
+  }
+  html body [data-ab-uni-sheet="1"] h1,
+  html body [data-ab-uni-sheet="1"] h2,
+  html body [data-ab-uni-sheet="1"] h3,
+  html body [data-ab-uni-sheet="1"] h4,
+  html body [data-ab-uni-sheet="1"] p,
+  html body [data-ab-uni-sheet="1"] label,
+  html body [data-ab-uni-sheet="1"] small,
+  html body [data-ab-uni-sheet="1"] strong {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-uni-card="1"] {
+    background: #f8fbf9 !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(5, 150, 105, 0.18) !important;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04) !important;
+  }
+  html body [data-ab-uni-card="1"] p,
+  html body [data-ab-uni-card="1"] span,
+  html body [data-ab-uni-card="1"] div,
+  html body [data-ab-uni-card="1"] strong,
+  html body [data-ab-uni-card="1"] small,
+  html body [data-ab-uni-card="1"] label {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-uni-btn="1"] {
+    background: #f0f7f4 !important;
+    background-image: none !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.24) !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05) !important;
+    text-shadow: none !important;
+    font-weight: 800 !important;
+  }
+  html body [data-ab-uni-btn="1"] * {
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-uni-inp="1"],
+  html body #viewInvoice input[type="text"],
+  html body #viewInvoice input[type="tel"],
+  html body #viewInvoice input[type="number"],
+  html body #viewInvoice textarea,
+  html body #viewInvoice select {
+    background: #f8fafc !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    border: 1.2px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+  }
+  html body [data-ab-uni-inp="1"]:focus,
+  html body #viewInvoice input:focus,
+  html body #viewInvoice textarea:focus,
+  html body #viewInvoice select:focus {
+    background: #ffffff !important;
+    border-color: #059669 !important;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+  }
+
+  /* 11) شاشة الفاتورة */
   html body #viewInvoice,
   html body #invFilledWrap,
   html body #abSilentOrderBox {
@@ -19999,7 +20160,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   html body .inv-head,
   html body .inv-totals-card,
-  html body #invEmptyState {
+  html body #invEmptyState,
+  html body #directSuccessBox {
     background: #ffffff !important;
     color: #0f172a !important;
     border: 1px solid var(--ab-border) !important;
@@ -20007,8 +20169,45 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
     padding: 14px !important;
   }
+  html body #payPills button {
+    background: #f4f9f6 !important;
+    color: #064e3b !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.24) !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+  }
+  html body #payPills button.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.26) !important;
+  }
 
-  /* 10) الشريط السفلي الموحّد الذكي (مسافة أمان واحدة متوازنة فقط في body) */
+  /* 12) زر تثبيت التطبيق / تحديث الأيقونة: لون زمردي متناسق وموضع فوق الشريط السفلي بلا تداخل */
+  html body [data-ab-install-pill="1"] {
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+    background: linear-gradient(135deg, #033325 0%, #065f46 100%) !important;
+    background-image: linear-gradient(135deg, #033325 0%, #065f46 100%) !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.62) !important;
+    box-shadow: 0 8px 22px rgba(4, 47, 34, 0.26) !important;
+    z-index: 840 !important;
+    transition: transform 0.22s ease, opacity 0.2s ease !important;
+  }
+  html body [data-ab-install-pill="1"] * {
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+  }
+  html.ab-modal-open body [data-ab-install-pill="1"],
+  html.ab-kbd-open body [data-ab-install-pill="1"] {
+    transform: translateY(140px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* 13) الشريط السفلي الموحّد الذكي (أسفل النوافذ المنبثقة ويختفي تلقائياً عند فتح أي نافذة) */
   html body [data-ab-merged-dock="1"] {
     display: none !important;
     visibility: hidden !important;
@@ -20032,7 +20231,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border: 1.2px solid rgba(6, 78, 59, 0.16) !important;
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.15) !important;
     padding: 5px !important;
-    z-index: 9990 !important;
+    z-index: 860 !important;
     transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
                 opacity 0.22s ease,
                 max-width 0.24s ease,
@@ -20132,8 +20331,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-size: 11.8px !important;
     box-shadow: none !important;
   }
-  html.ab-kbd-open body .app-nav {
-    transform: translateY(120px) !important;
+  html.ab-kbd-open body .app-nav,
+  html.ab-modal-open body .app-nav {
+    transform: translateY(130px) !important;
     opacity: 0 !important;
     pointer-events: none !important;
   }
@@ -20143,16 +20343,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border: 1px solid rgba(52, 211, 153, 0.45) !important;
     border-radius: 999px !important;
     font-weight: 800 !important;
+    z-index: 2147483640 !important;
   }
 </style>
-<script data-ab-flagship-ui="9">
+<script data-ab-flagship-ui="10">
 (function () {
-  if (window.__abFlagshipUiV9) return;
-  window.__abFlagshipUiV9 = true;
+  if (window.__abFlagshipUiV10) return;
+  window.__abFlagshipUiV10 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
   var barObserver = null;
+  var syncTimer = null;
 
   function toAsciiDigits(s) {
     return String(s || "").replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); });
@@ -20172,20 +20374,171 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return false;
   }
 
-  /* 1) تفتيح أزرار الكميات السريعة + التقاط بطاقات المجموعات والتذييل بدقة عبر TreeWalker */
-  function isDarkBgStyle(cs) {
+  function isKeepEmeraldOrBrand(el) {
+    if (!el || el.nodeType !== 1) return true;
+    if (el.closest("#abProSplash, #abSaifLuxuryHeader, .absf-hdr-card, #liveTicker, #abAccessGateOverlay, #toastEl, .app-nav, [data-ab-brand-footer='1'], [data-ab-install-pill='1'], .ab-top-role-pill")) return true;
+    if (el.id === "abProSplash" || el.id === "abSaifLuxuryHeader" || el.id === "liveTicker" || el.id === "abAccessGateOverlay" || el.id === "toastEl") return true;
+    return false;
+  }
+
+  /* كشف اللون الأسود أو الكحلي المحايد فقط (مع الحفاظ على الأخضر الزمردي والذهبي والأحمر) */
+  function isNeutralDarkBg(cs) {
     if (!cs) return false;
     var bg = (cs.backgroundColor || "") + " " + (cs.backgroundImage || "");
     var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
     var m;
     while ((m = re.exec(bg)) !== null) {
+      var r = +m[1], g = +m[2], b = +m[3];
       var a = m[4] === undefined ? 1 : parseFloat(m[4]);
-      var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
-      if (a > 0.35 && lum < 75) return true;
+      if (a < 0.35) continue;
+      var lum = (0.299 * r) + (0.587 * g) + (0.114 * b);
+      var sat = Math.max(r, g, b) - Math.min(r, g, b);
+      var isEmerald = (g > r + 14 && g >= b);
+      if (lum < 80 && sat < 50 && !isEmerald) return true;
     }
     return false;
   }
 
+  function isElementVisible(el) {
+    if (!el || el.nodeType !== 1) return false;
+    var cs = window.getComputedStyle(el);
+    if (!cs || cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity || "1") < 0.05) return false;
+    var r = el.getBoundingClientRect();
+    return r.width > 10 && r.height > 10;
+  }
+
+  /* 1) توحيد لوحة إدخال الكمية السريعة + جميع النوافذ المنبثقة والشاشات السوداء في كامل المتجر */
+  function unifyQuantityPickerAndModals() {
+    try {
+      var anyModalOpen = false;
+
+      // أ) لوحة إدخال الكمية السريعة (من خلال .qp-head أو .numpad-grid أو .shortcuts-grid)
+      var qpAnchor = document.querySelector(".qp-head, .numpad-grid, .shortcuts-grid");
+      if (qpAnchor) {
+        var sheet = qpAnchor.parentElement;
+        for (var d = 0; d < 4 && sheet && sheet !== document.body; d++) {
+          if (sheet.querySelector(".qp-head") && (sheet.querySelector(".numpad-grid") || sheet.querySelector(".shortcuts-grid"))) {
+            break;
+          }
+          sheet = sheet.parentElement;
+        }
+        if (sheet && sheet !== document.body) {
+          sheet.setAttribute("data-ab-qp-sheet", "1");
+          if (isElementVisible(sheet)) anyModalOpen = true;
+
+          // العثور على شريط العداد (- / 0 / +)
+          var allBtns = sheet.querySelectorAll("button");
+          for (var i = 0; i < allBtns.length; i++) {
+            var btn = allBtns[i];
+            var bt = (btn.textContent || "").replace(/\s+/g, " ").trim();
+            if (bt === "+" || bt === "＋") {
+              btn.setAttribute("data-ab-qp-step", "plus");
+              if (btn.parentElement && btn.parentElement !== sheet) {
+                btn.parentElement.setAttribute("data-ab-qp-bar", "1");
+              }
+            } else if (bt === "-" || bt === "−" || bt === "–") {
+              btn.setAttribute("data-ab-qp-step", "minus");
+              if (btn.parentElement && btn.parentElement !== sheet) {
+                btn.parentElement.setAttribute("data-ab-qp-bar", "1");
+              }
+            } else if (/^(?:×|✕|✖|x)$/i.test(bt)) {
+              btn.setAttribute("data-ab-uni-close", "1");
+            } else if (btn.closest(".numpad-grid") && (/مسح/.test(bt) || bt === "⌫" || bt === "←" || btn.querySelector("svg"))) {
+              btn.setAttribute("data-ab-num-danger", "1");
+            }
+          }
+        }
+      }
+
+      // ب) فحص جميع العناصر الثابتة/النوافذ المنبثقة والشاشات المفتوحة لاكتشاف حالة فتح نافذة + توحيد ألوانها
+      var topBlocks = document.querySelectorAll("body > div, body > section, body > aside, [role='dialog'], [id*='Modal' i], [id*='modal' i], [id*='Sheet' i], [id*='Overlay' i], [class*='modal'], [class*='sheet'], [class*='dialog'], [class*='overlay']");
+      for (var k = 0; k < topBlocks.length; k++) {
+        var blk = topBlocks[k];
+        if (!blk || isKeepEmeraldOrBrand(blk)) continue;
+        if (blk.id === "viewCatalog" || blk.id === "viewInvoice" || blk.getAttribute("data-ab-merged-dock") === "1") continue;
+
+        var cs = window.getComputedStyle(blk);
+        if (!cs || cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity || "1") < 0.05) continue;
+
+        var rect = blk.getBoundingClientRect();
+        if (rect.width < 40 || rect.height < 30) continue;
+
+        // كشف زر تثبيت التطبيق / تحديث الأيقونة العائم
+        var rawTxt = (blk.textContent || "").replace(/\s+/g, " ").trim();
+        if (cs.position === "fixed" && rawTxt.length > 5 && rawTxt.length < 75 && /تثبيت\s*التطبيق|تحديث\s*الأيقونة/.test(rawTxt)) {
+          blk.setAttribute("data-ab-install-pill", "1");
+          continue;
+        }
+
+        // كشف النوافذ المنبثقة المفتوحة لإخفاء الشريط السفلي أثناء فتحها
+        var isFullBackdrop = (cs.position === "fixed" && rect.width >= window.innerWidth * 0.90 && rect.height >= window.innerHeight * 0.80);
+        if (isFullBackdrop) {
+          anyModalOpen = true;
+          // توحيد اللوحة الداخلية للنافذة
+          var innerKids = blk.querySelectorAll("div, section, form, button, input, select, textarea");
+          for (var j = 0; j < innerKids.length; j++) {
+            var ch = innerKids[j];
+            if (!ch || isKeepEmeraldOrBrand(ch)) continue;
+            if (ch.hasAttribute("data-ab-qp-sheet") || ch.hasAttribute("data-ab-qp-bar") || ch.closest(".shortcuts-grid, .numpad-grid")) continue;
+            var chCs = window.getComputedStyle(ch);
+            if (!chCs || chCs.display === "none") continue;
+            var chRect = ch.getBoundingClientRect();
+            if (chRect.width < 14 || chRect.height < 14) continue;
+
+            var tag = ch.tagName;
+            if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
+              if (isNeutralDarkBg(chCs)) ch.setAttribute("data-ab-uni-inp", "1");
+            } else if (tag === "BUTTON") {
+              var bTxt = (ch.textContent || "").trim();
+              if (/^(?:×|✕|✖|x)$/i.test(bTxt) && isNeutralDarkBg(chCs)) {
+                ch.setAttribute("data-ab-uni-close", "1");
+              } else if (isNeutralDarkBg(chCs)) {
+                ch.setAttribute("data-ab-uni-btn", "1");
+              }
+            } else if (isNeutralDarkBg(chCs)) {
+              // لوحة داخلية كبيرة -> خلفية بيضاء؛ بطاقة فرعية -> خلفية فاتحة ناعمة
+              if (chRect.width >= window.innerWidth * 0.65 && chRect.height >= 130) {
+                ch.setAttribute("data-ab-uni-sheet", "1");
+              } else if (chRect.height >= 26) {
+                ch.setAttribute("data-ab-uni-card", "1");
+              }
+            }
+          }
+        } else if (cs.position === "fixed" && rect.width >= window.innerWidth * 0.65 && rect.height >= 160) {
+          anyModalOpen = true;
+          if (isNeutralDarkBg(cs)) blk.setAttribute("data-ab-uni-sheet", "1");
+        }
+      }
+
+      // ج) توحيد أي بطاقة أو زر أو حقل أسود متبقٍ داخل شاشة الفاتورة #viewInvoice
+      var inv = document.getElementById("viewInvoice");
+      if (inv && isElementVisible(inv)) {
+        var invEls = inv.querySelectorAll("div, section, button, input, select, textarea");
+        for (var v = 0; v < invEls.length; v++) {
+          var ie = invEls[v];
+          if (!ie || isKeepEmeraldOrBrand(ie)) continue;
+          var ics = window.getComputedStyle(ie);
+          if (!ics || ics.display === "none") continue;
+          if (!isNeutralDarkBg(ics)) continue;
+          var itag = ie.tagName;
+          if (itag === "INPUT" || itag === "SELECT" || itag === "TEXTAREA") {
+            ie.setAttribute("data-ab-uni-inp", "1");
+          } else if (itag === "BUTTON") {
+            var ibt = (ie.textContent || "").trim();
+            if (/^(?:×|✕|✖|x)$/i.test(ibt)) ie.setAttribute("data-ab-uni-close", "1");
+            else ie.setAttribute("data-ab-uni-btn", "1");
+          } else {
+            var ir = ie.getBoundingClientRect();
+            if (ir.width > 40 && ir.height > 24) ie.setAttribute("data-ab-uni-card", "1");
+          }
+        }
+      }
+
+      document.documentElement.classList.toggle("ab-modal-open", anyModalOpen);
+    } catch (e) {}
+  }
+
+  /* 2) تفتيح أزرار الكميات السريعة + التقاط بطاقات المجموعات والتذييل وزر التثبيت عبر TreeWalker */
   function styleGroupCardNode(cardEl) {
     if (!cardEl || cardEl.id === "prodGrid" || cardEl.id === "viewCatalog" || cardEl === document.body) return;
     cardEl.setAttribute("data-ab-group-card", "1");
@@ -20206,7 +20559,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         s.setAttribute("data-ab-group-toggle", "1");
         continue;
       }
-      if (s.tagName !== "BUTTON" && isDarkBgStyle(window.getComputedStyle(s))) {
+      if (s.tagName !== "BUTTON" && isNeutralDarkBg(window.getComputedStyle(s))) {
         s.setAttribute("data-ab-group-dark-inner", "1");
       }
     }
@@ -20219,7 +20572,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     for (var i = 0; i < subs.length; i++) {
       var s = subs[i];
       if (!s || s.closest("a, button")) continue;
-      if (isDarkBgStyle(window.getComputedStyle(s))) {
+      if (isNeutralDarkBg(window.getComputedStyle(s))) {
         s.setAttribute("data-ab-brand-footer-inner", "1");
       }
     }
@@ -20227,17 +20580,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   function polishCatalogCardsAndFooter() {
     try {
-      // أ) أزرار الكميات الرقمية داخل كروت المنتجات
       var qtyBtns = document.querySelectorAll("#prodGrid .card button, .grid .card button");
       for (var i = 0; i < qtyBtns.length; i++) {
         var b = qtyBtns[i];
         var t = toAsciiDigits((b.textContent || "").trim());
-        if (/^\d{1,4}$/.test(t)) {
-          b.setAttribute("data-ab-qty-btn", "1");
-        }
+        if (/^\d{1,4}$/.test(t)) b.setAttribute("data-ab-qty-btn", "1");
       }
 
-      // ب) التقاط بطاقات المجموعات السوداء والتذييل عبر TreeWalker مهما كان نوع الوسم أو عمق التداخل
       if (document.createTreeWalker && document.body) {
         var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
         var tn;
@@ -20247,19 +20596,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           var v = (tn.nodeValue || "").trim();
           if (!v || v.length < 4) continue;
 
-          // بطاقة مجموعة قابلة للفتح (مثل: بطاطس طبيعي رنجو - اضغط لعرض الأحجام...)
           if (/اضغط\s*لعرض/.test(v)) {
             var cur = tn.parentElement;
-            var bestDark = null;
-            var bestFit = null;
+            var bestDark = null, bestFit = null;
             for (var d = 0; d < 6 && cur && cur !== document.body && cur.id !== "prodGrid" && cur.id !== "viewCatalog"; d++) {
               if (cur.classList && cur.classList.contains("card")) break;
               var ct = (cur.textContent || "").replace(/\s+/g, " ").trim();
               if (ct.length > 340) break;
               bestFit = cur;
-              if (cur.getAttribute("data-ab-group-card") === "1" || isDarkBgStyle(window.getComputedStyle(cur))) {
-                bestDark = cur;
-              }
+              if (cur.getAttribute("data-ab-group-card") === "1" || isNeutralDarkBg(window.getComputedStyle(cur))) bestDark = cur;
               cur = cur.parentElement;
             }
             var targetG = bestDark || bestFit;
@@ -20270,19 +20615,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
             continue;
           }
 
-          // تذييل أبوضياء للتصميم والبرمجة
           if (/أبوضياء\s*للتصميم\s*والبرمجة|تطوير\s*معتمد/.test(v)) {
             var fCur = tn.parentElement;
-            var fBestDark = null;
-            var fBestFit = null;
+            var fBestDark = null, fBestFit = null;
             for (var fd = 0; fd < 6 && fCur && fCur !== document.body && fCur.id !== "prodGrid" && fCur.id !== "viewCatalog"; fd++) {
               var ft = (fCur.textContent || "").replace(/\s+/g, " ").trim();
               if (ft.length > 220) break;
               if (fCur.querySelector && fCur.querySelector("#prodGrid")) break;
               fBestFit = fCur;
-              if (fCur.getAttribute("data-ab-brand-footer") === "1" || isDarkBgStyle(window.getComputedStyle(fCur))) {
-                fBestDark = fCur;
-              }
+              if (fCur.getAttribute("data-ab-brand-footer") === "1" || isNeutralDarkBg(window.getComputedStyle(fCur))) fBestDark = fCur;
               fCur = fCur.parentElement;
             }
             var targetF = fBestDark || fBestFit;
@@ -20290,11 +20631,23 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
               seenFooters.push(targetF);
               styleBrandFooterNode(targetF);
             }
+            continue;
+          }
+
+          if (/تثبيت\s*التطبيق|تحديث\s*الأيقونة/.test(v)) {
+            var pCur = tn.parentElement;
+            for (var pd = 0; pd < 5 && pCur && pCur !== document.body; pd++) {
+              var pcs = window.getComputedStyle(pCur);
+              if (pcs && pcs.position === "fixed") {
+                pCur.setAttribute("data-ab-install-pill", "1");
+                break;
+              }
+              pCur = pCur.parentElement;
+            }
           }
         }
       }
 
-      // ج) زر تبديل الدور العائم أعلى اليسار
       var roleNodes = document.querySelectorAll("body > button, body > div, body > a, button[id], div[id]");
       for (var r = 0; r < roleNodes.length; r++) {
         var rn = roleNodes[r];
@@ -20314,7 +20667,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 2) إنشاء شريط التحكم القابل للطيّ أسفل الترويسة مباشرة */
+  /* 3) شريط الأدوات السريعة القابل للطيّ */
   function ensureQuickDrawerBar() {
     var bar = document.getElementById("abQuickDrawerBar");
     if (bar) return bar;
@@ -20342,8 +20695,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   function findPanelRoot(startEl, maxChars, forbidRe) {
-    var cur = startEl;
-    var best = startEl;
+    var cur = startEl, best = startEl;
     for (var d = 0; d < 6 && cur && cur.parentElement && cur.parentElement !== document.body; d++) {
       var p = cur.parentElement;
       if (isProtected(p)) break;
@@ -20360,14 +20712,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     try {
       var children = rootEl.querySelectorAll("div, section, article");
       for (var i = 0; i < children.length; i++) {
-        var ch = children[i];
-        var cs = window.getComputedStyle(ch);
-        if (!cs) continue;
-        var m = (cs.backgroundColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-        if (m) {
-          var a = m[4] === undefined ? 1 : parseFloat(m[4]);
-          var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
-          if (a > 0.35 && lum < 75) ch.setAttribute("data-ab-inner-dark", "1");
+        if (isNeutralDarkBg(window.getComputedStyle(children[i]))) {
+          children[i].setAttribute("data-ab-inner-dark", "1");
         }
       }
     } catch (e) {}
@@ -20376,15 +20722,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   function classifyAndUnifyPanels() {
     try {
       var bar = ensureQuickDrawerBar();
-      var hasOffers = false;
-      var hasAdmin = false;
+      var hasOffers = false, hasAdmin = false;
 
       var allNodes = document.querySelectorAll("body > div, body > section, #viewCatalog > div, #viewCatalog > section, div[id], section[id]");
       for (var i = 0; i < allNodes.length; i++) {
         var el = allNodes[i];
-        if (isProtected(el)) continue;
-        if (el.getAttribute("data-ab-merged-dock") === "1") continue;
-
+        if (isProtected(el) || el.getAttribute("data-ab-merged-dock") === "1") continue;
         var raw = (el.textContent || "").replace(/\s+/g, " ").trim();
         if (!raw || raw.length > 650) continue;
 
@@ -20450,7 +20793,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 3) دمج الشريط السفلي المكرر (أكياس/كراتين) حياً داخل الشريط الموحّد */
+  /* 4) دمج الشريط السفلي المكرر (أكياس/كراتين) حياً داخل الشريط الموحّد */
   function syncUnitsIntoUnifiedPill() {
     if (!mergedBarRef) return;
     var invBtn = document.querySelector(".app-nav .nav-inv-btn");
@@ -20468,7 +20811,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       pill.id = "abUnifiedUnitsPill";
       invBtn.appendChild(pill);
     }
-
     var parts = [];
     if (cartons > 0) parts.push("📦 " + cartons);
     if (bags > 0) parts.push("🛍️ " + bags);
@@ -20478,8 +20820,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   function isCandidateExtraBottomBar(el) {
     if (!el || el.nodeType !== 1) return false;
-    if (el.classList.contains("app-nav") || el.closest(".app-nav")) return false;
-    if (el.querySelector(".app-nav")) return false;
+    if (el.classList.contains("app-nav") || el.closest(".app-nav") || el.querySelector(".app-nav")) return false;
     if (isProtected(el)) return false;
 
     var txt = (el.textContent || "").trim();
@@ -20505,7 +20846,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         syncUnitsIntoUnifiedPill();
         return;
       }
-
       var found = null;
       for (var k = 0; k < KNOWN_EXTRA_IDS.length; k++) {
         var byId = document.getElementById(KNOWN_EXTRA_IDS[k]);
@@ -20532,7 +20872,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 4) فاحص تباين الترويسة + تنعيم النقطة الوسطى بالفاصل */
+  /* 5) فاحص تباين الترويسة */
   function hasBrightCssColor(str) {
     if (!str || str === "none" || str === "transparent") return false;
     var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
@@ -20575,7 +20915,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 5) الشريط السفلي الذكي وإخفاء زر المدير أثناء النزول */
+  /* 6) الشريط السفلي الذكي + التمرير + الكيبورد */
   function initSmartBottomDock() {
     var root = document.documentElement;
     var lastY = window.scrollY || 0;
@@ -20620,12 +20960,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       var t = ev.target;
       if (t && t.closest && t.closest(".app-nav, #tabsBar, #prodGrid .card, [data-ab-group-card]")) {
         root.classList.remove("ab-nav-compact");
-        setTimeout(function () {
-          polishCatalogCardsAndFooter();
-          scanAndMergeExtraBottomBar();
-          syncSafeClearance();
-        }, 120);
       }
+      setTimeout(function () {
+        unifyQuantityPickerAndModals();
+        polishCatalogCardsAndFooter();
+        scanAndMergeExtraBottomBar();
+        syncSafeClearance();
+      }, 45);
+      setTimeout(unifyQuantityPickerAndModals, 220);
     }, true);
 
     document.addEventListener("focusin", function (ev) {
@@ -20651,15 +20993,25 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     window.addEventListener("resize", syncSafeClearance, { passive: true });
   }
 
-  /* 6) مراقبة تحديث شبكة المنتجات لتطبيق تفتيح الأزرار فور تبديل الأقسام */
-  function watchGridChanges() {
-    var grid = document.getElementById("prodGrid");
-    if (!grid || typeof MutationObserver === "undefined") return;
+  function scheduleLiveUnify() {
+    if (syncTimer) return;
+    syncTimer = setTimeout(function () {
+      syncTimer = null;
+      unifyQuantityPickerAndModals();
+      polishCatalogCardsAndFooter();
+    }, 80);
+  }
+
+  function watchDomForModals() {
+    if (typeof MutationObserver === "undefined" || !document.body) return;
     try {
-      var obs = new MutationObserver(function () {
-        polishCatalogCardsAndFooter();
+      var obs = new MutationObserver(scheduleLiveUnify);
+      obs.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style", "class"]
       });
-      obs.observe(grid, { childList: true, subtree: true });
     } catch (e) {}
   }
 
@@ -20674,8 +21026,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v9")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v9", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v10")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v10", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -20689,22 +21041,25 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     fixHeaderContrast();
     classifyAndUnifyPanels();
     polishCatalogCardsAndFooter();
+    unifyQuantityPickerAndModals();
     scanAndMergeExtraBottomBar();
-    watchGridChanges();
+    watchDomForModals();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(boot, 90); }, { once: true });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(boot, 80); }, { once: true });
   } else {
-    setTimeout(boot, 90);
+    setTimeout(boot, 80);
   }
   setTimeout(function () {
     classifyAndUnifyPanels();
     polishCatalogCardsAndFooter();
+    unifyQuantityPickerAndModals();
     fixHeaderContrast();
     scanAndMergeExtraBottomBar();
   }, 550);
   setInterval(function () {
+    unifyQuantityPickerAndModals();
     polishCatalogCardsAndFooter();
     scanAndMergeExtraBottomBar();
     classifyAndUnifyPanels();
@@ -20756,7 +21111,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-681186";
+  var TARGET_CACHE = "abudhiya-offline-v4-681742";
 
   function forceReleaseSplash() {
     try {
