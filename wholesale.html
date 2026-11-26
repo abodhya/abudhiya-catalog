@@ -576,6 +576,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20532,8 +20533,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="17">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="18">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -22003,11 +22006,113 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-text-fill-color: #b91c1c !important;
     text-shadow: none !important;
   }
+
+  /* 19) تنظيف وتجميل كروت البطاطس والكتالوج: إزالة الخط الذهبي وضمان ظهور كل الأسماء بمحاذاة موحّدة (v18) */
+  html body [data-ab-pro-card="1"],
+  html body .ab-pot-grid .card,
+  html body #prodGrid .card,
+  html body .grid .card {
+    background: #ffffff !important;
+    background-image: none !important;
+    border: 1.2px solid rgba(6, 78, 59, 0.13) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05) !important;
+  }
+  html body [data-ab-pro-card="1"]::before,
+  html body [data-ab-pro-card="1"]::after,
+  html body .ab-pot-grid .card::before,
+  html body .ab-pot-grid .card::after,
+  html body #prodGrid .card::before,
+  html body #prodGrid .card::after {
+    display: none !important;
+    content: none !important;
+    height: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+  html body [data-ab-pro-card="1"]:active,
+  html body .ab-pot-grid .card:active,
+  html body #prodGrid .card:active {
+    border-color: #059669 !important;
+    box-shadow: 0 5px 15px rgba(5, 150, 105, 0.16) !important;
+  }
+  html body .ab-pot-grid .card {
+    padding: 7px 6px 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+  html body .ab-pot-grid .card .img-box {
+    position: relative !important;
+    z-index: 1 !important;
+    aspect-ratio: auto !important;
+    width: 100% !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    background: #f4f9f6 !important;
+    border: 1px solid rgba(5, 150, 105, 0.14) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 0 5px 0 !important;
+    padding: 0 !important;
+    font-size: 28px !important;
+    line-height: 1 !important;
+    overflow: hidden !important;
+  }
+  html body .ab-pot-grid .card .card-body {
+    position: relative !important;
+    z-index: 2 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 40px !important;
+    max-height: none !important;
+    padding: 2px 4px 5px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+  html body .ab-pot-grid .card .p-name,
+  html body #prodGrid .card .p-name {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: 12.6px !important;
+    font-weight: 800 !important;
+    line-height: 1.38 !important;
+    text-align: center !important;
+    text-indent: 0 !important;
+    text-shadow: none !important;
+    background: transparent !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+  html body .ab-pot-grid .card .ab-qbar {
+    padding: 2px 0 0 !important;
+    margin-top: 2px !important;
+    gap: 4px !important;
+  }
 </style>
-<script data-ab-flagship-ui="17">
+<script data-ab-flagship-ui="18">
 (function () {
-  if (window.__abFlagshipUiV17) return;
-  window.__abFlagshipUiV17 = true;
+  if (window.__abFlagshipUiV18) return;
+  window.__abFlagshipUiV18 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -22660,6 +22765,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         polishCatalogCardsAndFooter();
       collapseEmptyGaps();
       applyFinalPolishV15();
+      restorePotatoCardsV18();
+    restorePotatoCardsV18();
     applyFinalPolishV15();
         scanAndMergeExtraBottomBar();
         syncSafeClearance();
@@ -22723,8 +22830,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v17")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v17", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v18")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v18", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -22886,6 +22993,64 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
+  /* 11) استعادة وتثبيت أسماء جميع الأصناف داخل كروت البطاطس والكتالوج (v18) */
+  function restorePotatoCardsV18() {
+    try {
+      var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : (Array.isArray(window.PRODUCTS) ? window.PRODUCTS : []);
+      var byId = {};
+      for (var i = 0; i < prods.length; i++) {
+        byId[String(prods[i].id)] = prods[i];
+      }
+      var cards = document.querySelectorAll(".ab-pot-grid .card, #prodGrid .card");
+      for (var c = 0; c < cards.length; c++) {
+        var card = cards[c];
+        if (!card) continue;
+        var pid = card.getAttribute("data-ab-prod-id") || "";
+        var prod = pid ? byId[String(pid)] : null;
+        var bodyEl = card.querySelector(".card-body");
+        if (!bodyEl && prod) {
+          bodyEl = document.createElement("div");
+          bodyEl.className = "card-body";
+          var qbar = card.querySelector(".ab-qbar");
+          if (qbar) card.insertBefore(bodyEl, qbar);
+          else card.appendChild(bodyEl);
+        }
+        if (bodyEl) {
+          var csB = window.getComputedStyle(bodyEl);
+          if (csB.display === "none" || csB.visibility === "hidden" || parseFloat(csB.opacity || "1") < 0.9 || bodyEl.hidden) {
+            bodyEl.hidden = false;
+            bodyEl.style.setProperty("display", "flex", "important");
+            bodyEl.style.setProperty("visibility", "visible", "important");
+            bodyEl.style.setProperty("opacity", "1", "important");
+          }
+          var pName = bodyEl.querySelector(".p-name");
+          if (!pName && prod && prod.name) {
+            pName = document.createElement("div");
+            pName.className = "p-name";
+            pName.textContent = prod.name;
+            bodyEl.insertBefore(pName, bodyEl.firstChild);
+          }
+          if (pName) {
+            if (!(pName.textContent || "").trim() && prod && prod.name) {
+              pName.textContent = prod.name;
+            }
+            var csP = window.getComputedStyle(pName);
+            if (csP.display === "none" || csP.visibility === "hidden" || parseFloat(csP.opacity || "1") < 0.9 || pName.hidden || parseFloat(csP.fontSize || "12") < 8 || csP.color === "rgba(0, 0, 0, 0)" || csP.color === "rgb(255, 255, 255)") {
+              pName.hidden = false;
+              pName.style.setProperty("display", "block", "important");
+              pName.style.setProperty("visibility", "visible", "important");
+              pName.style.setProperty("opacity", "1", "important");
+              pName.style.setProperty("font-size", "12.6px", "important");
+              pName.style.setProperty("color", "#0f172a", "important");
+              pName.style.setProperty("-webkit-text-fill-color", "#0f172a", "important");
+              pName.style.setProperty("text-shadow", "none", "important");
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
   function boot() {
     initSmartBottomDock();
     fixHeaderContrast();
@@ -22912,6 +23077,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     scanAndMergeExtraBottomBar();
   }, 550);
   setInterval(function () {
+    restorePotatoCardsV18();
     unifyQuantityPickerAndModals();
     polishCatalogCardsAndFooter();
     scanAndMergeExtraBottomBar();
@@ -22964,7 +23130,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-689464";
+  var TARGET_CACHE = "abudhiya-offline-v4-691244";
 
   function forceReleaseSplash() {
     try {
