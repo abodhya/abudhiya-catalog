@@ -21543,6 +21543,1139 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_END -->
 
+
+<!-- ABUDHIYA_SMART_ALERTS_START -->
+<style id="abSmartAlertsCss" data-smart-alerts="1">
+  /* 1) زر جرس الإشعارات المدمج في شريط الأدوات السريعة */
+  #abQuickDrawerBar #abBellBtn {
+    flex: 0 0 auto !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    padding: 0 !important;
+    position: relative !important;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.34) !important;
+    color: #064e3b !important;
+    font-size: 16px !important;
+  }
+  #abQuickDrawerBar #abBellBtn.has-unread {
+    background: linear-gradient(135deg, #042f22 0%, #065f46 100%) !important;
+    border-color: rgba(250, 204, 21, 0.72) !important;
+    color: #fef08a !important;
+    box-shadow: 0 3px 10px rgba(4, 47, 34, 0.24) !important;
+  }
+  #abBellBadge {
+    position: absolute !important;
+    top: -5px !important;
+    left: -4px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    padding: 0 4px !important;
+    border-radius: 999px !important;
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 10.5px !important;
+    font-weight: 900 !important;
+    line-height: 18px !important;
+    text-align: center !important;
+    border: 1.5px solid #ffffff !important;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.42) !important;
+    pointer-events: none !important;
+  }
+
+  /* شارة «جديد» على الأصناف المضافة حديثاً + وميض التركيز عند الانتقال للصنف */
+  .ab-new-item-badge {
+    position: absolute !important;
+    top: 6px !important;
+    right: 6px !important;
+    z-index: 6 !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    padding: 2px 7px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(254, 240, 138, 0.65) !important;
+    box-shadow: 0 3px 8px rgba(4, 47, 34, 0.24) !important;
+    pointer-events: none !important;
+  }
+  .ab-alert-focus-ring {
+    outline: 3px solid #f59e0b !important;
+    box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.28) !important;
+    transition: box-shadow 0.25s ease !important;
+  }
+
+  /* 2) البطاقة المنبثقة الفخمة للإشعارات والعروض الجديدة */
+  #abAlertPopupBackdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483000 !important;
+    background: rgba(2, 24, 17, 0.62) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    direction: rtl !important;
+    box-sizing: border-box !important;
+  }
+  #abAlertPopupBackdrop.open {
+    display: flex !important;
+  }
+  #abAlertPopupCard {
+    width: 100% !important;
+    max-width: 380px !important;
+    background: #ffffff !important;
+    border-radius: 22px !important;
+    overflow: hidden !important;
+    border: 1.5px solid rgba(5, 150, 105, 0.30) !important;
+    box-shadow: 0 22px 54px rgba(2, 24, 17, 0.38) !important;
+    animation: abAlertPopIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  @keyframes abAlertPopIn {
+    from { opacity: 0; transform: translateY(18px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .ab-ap-head {
+    background: linear-gradient(135deg, #022017 0%, #054a36 60%, #046c4e 100%) !important;
+    padding: 12px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    border-bottom: 1.5px solid rgba(250, 204, 21, 0.50) !important;
+  }
+  .ab-ap-tag {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 3px 10px !important;
+    border-radius: 999px !important;
+    background: rgba(250, 204, 21, 0.16) !important;
+    border: 1px solid rgba(250, 204, 21, 0.65) !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-size: 11.5px !important;
+    font-weight: 900 !important;
+  }
+  .ab-ap-close {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 10px !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .ab-ap-body {
+    padding: 14px 16px 16px !important;
+    text-align: center !important;
+    background: #ffffff !important;
+  }
+  .ab-ap-img-wrap {
+    width: 100% !important;
+    height: 150px !important;
+    border-radius: 16px !important;
+    background: #f4f9f6 !important;
+    border: 1px solid rgba(5, 150, 105, 0.16) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 12px !important;
+    padding: 8px !important;
+  }
+  .ab-ap-img-wrap img {
+    max-width: 100% !important;
+    max-height: 134px !important;
+    object-fit: contain !important;
+    border-radius: 10px !important;
+  }
+  .ab-ap-title {
+    margin: 0 0 6px !important;
+    font-size: 16.5px !important;
+    font-weight: 900 !important;
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+    line-height: 1.45 !important;
+  }
+  .ab-ap-desc {
+    margin: 0 0 14px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    line-height: 1.6 !important;
+    white-space: pre-line !important;
+  }
+  .ab-ap-actions {
+    display: flex !important;
+    gap: 8px !important;
+  }
+  .ab-ap-cta {
+    flex: 1 1 auto !important;
+    height: 44px !important;
+    border-radius: 13px !important;
+    border: none !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 13.5px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.30) !important;
+  }
+  .ab-ap-later {
+    flex: 0 0 auto !important;
+    height: 44px !important;
+    padding: 0 16px !important;
+    border-radius: 13px !important;
+    border: 1.2px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+  }
+
+  /* 3) مركز الإشعارات والعروض + صانع إعلان الواتساب للمدير */
+  #abAlertsDrawerBackdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147482900 !important;
+    background: rgba(2, 24, 17, 0.54) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    display: none;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    direction: rtl !important;
+    box-sizing: border-box !important;
+  }
+  #abAlertsDrawerBackdrop.open {
+    display: flex !important;
+  }
+  #abAlertsDrawerSheet {
+    width: 100% !important;
+    max-width: 520px !important;
+    max-height: 84vh !important;
+    background: #ffffff !important;
+    border-radius: 22px 22px 0 0 !important;
+    border-top: 3px solid #059669 !important;
+    box-shadow: 0 -14px 40px rgba(2, 24, 17, 0.28) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .ab-ad-head {
+    padding: 12px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid rgba(6, 78, 59, 0.12) !important;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+  }
+  .ab-ad-title {
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+  }
+  .ab-ad-close {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 10px !important;
+    background: #fef2f2 !important;
+    border: 1.2px solid #fecaca !important;
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+  }
+  .ab-ad-scroll {
+    padding: 12px 12px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* قسم صانع إعلان الواتساب للمدير */
+  #abAdminPromoToggleBtn {
+    width: 100% !important;
+    height: 42px !important;
+    margin-bottom: 10px !important;
+    border-radius: 13px !important;
+    border: 1.3px solid rgba(250, 204, 21, 0.70) !important;
+    background: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    box-shadow: 0 5px 14px rgba(4, 47, 34, 0.18) !important;
+  }
+  #abAdminPromoBox {
+    display: none;
+    background: #f4f9f6 !important;
+    border: 1.3px solid rgba(5, 150, 105, 0.28) !important;
+    border-radius: 16px !important;
+    padding: 11px !important;
+    margin-bottom: 12px !important;
+  }
+  #abAdminPromoBox.open {
+    display: block !important;
+  }
+  .ab-pm-lbl {
+    display: block !important;
+    font-size: 11.8px !important;
+    font-weight: 800 !important;
+    color: #064e3b !important;
+    margin: 0 0 4px !important;
+  }
+  .ab-pm-inp,
+  .ab-pm-sel,
+  .ab-pm-txt {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+    padding: 9px 11px !important;
+    border-radius: 11px !important;
+    border: 1.2px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: 12.8px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+  }
+  .ab-pm-txt {
+    min-height: 62px !important;
+    resize: vertical !important;
+  }
+  .ab-pm-btns {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+  }
+  .ab-pm-wa {
+    grid-column: 1 / -1 !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+    border: none !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.28) !important;
+  }
+  .ab-pm-sub {
+    height: 38px !important;
+    border-radius: 11px !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.28) !important;
+    background: #ffffff !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    font-size: 12.2px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+  }
+
+  /* كروت قائمة الإشعارات داخل الدرج */
+  .ab-al-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 9px 10px !important;
+    margin-bottom: 8px !important;
+    border-radius: 15px !important;
+    background: #ffffff !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.18) !important;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04) !important;
+  }
+  .ab-al-thumb {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 12px !important;
+    background: #f4f9f6 !important;
+    border: 1px solid rgba(5, 150, 105, 0.16) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+    font-size: 22px !important;
+  }
+  .ab-al-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    padding: 3px !important;
+  }
+  .ab-al-info {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  .ab-al-pill {
+    display: inline-block !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    padding: 1px 7px !important;
+    border-radius: 999px !important;
+    margin-bottom: 3px !important;
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+  }
+  .ab-al-pill.offer {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    -webkit-text-fill-color: #92400e !important;
+  }
+  .ab-al-name {
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    line-height: 1.35 !important;
+    margin-bottom: 2px !important;
+  }
+  .ab-al-meta {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+    line-height: 1.35 !important;
+  }
+  .ab-al-go {
+    flex-shrink: 0 !important;
+    padding: 7px 11px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 11.5px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+  }
+</style>
+<script data-ab-smart-alerts="1">
+(function () {
+  if (window.__abSmartAlertsV1) return;
+  window.__abSmartAlertsV1 = true;
+
+  var CUSTOM_BUILD_ALERTS = [];
+  var SEEN_ALERTS_KEY = "ab_seen_smart_alerts_v1";
+  var SEEN_PRODS_KEY = "ab_seen_prod_ids_v1";
+  var currentPopupAlert = null;
+  var cachedAlerts = [];
+
+  function safeJsonParse(str, fallback) {
+    try { return JSON.parse(str); } catch (e) { return fallback; }
+  }
+
+  function getProductsList() {
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) return PRODUCTS;
+      if (Array.isArray(window.PRODUCTS)) return window.PRODUCTS;
+    } catch (e) {}
+    return [];
+  }
+
+  function getProdImg(p) {
+    if (!p) return "";
+    return p.img || p.image || p.photo || p.thumb || "";
+  }
+
+  function findProdById(pid) {
+    var list = getProductsList();
+    var target = String(pid || "").trim();
+    if (!target) return null;
+    for (var i = 0; i < list.length; i++) {
+      if (String(list[i].id) === target) return list[i];
+    }
+    return null;
+  }
+
+  function isAdminMode() {
+    try {
+      var rp = document.querySelector(".ab-top-role-pill");
+      if (rp && /المدير/.test(rp.textContent || "")) return true;
+      var adm = document.querySelector('[data-ab-panel-kind="admin"]');
+      if (adm) return true;
+      var qAdm = document.querySelector('#abQuickDrawerBar [data-qd="admin"]:not(.ab-qd-hidden)');
+      if (qAdm) return true;
+      var r = String(localStorage.getItem("ab_role") || localStorage.getItem("user_role") || "").toLowerCase();
+      if (r.indexOf("admin") !== -1 || r.indexOf("مدير") !== -1) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function getSeenAlertIds() {
+    var arr = safeJsonParse(localStorage.getItem(SEEN_ALERTS_KEY) || "[]", []);
+    return Array.isArray(arr) ? arr : [];
+  }
+
+  function markAlertSeen(id) {
+    if (!id) return;
+    var arr = getSeenAlertIds();
+    if (arr.indexOf(id) === -1) {
+      arr.push(id);
+      if (arr.length > 80) arr = arr.slice(arr.length - 80);
+      try { localStorage.setItem(SEEN_ALERTS_KEY, JSON.stringify(arr)); } catch (e) {}
+    }
+    updateBellBadge();
+  }
+
+  function markAllAlertsSeen() {
+    var arr = getSeenAlertIds();
+    for (var i = 0; i < cachedAlerts.length; i++) {
+      if (arr.indexOf(cachedAlerts[i].id) === -1) arr.push(cachedAlerts[i].id);
+    }
+    if (arr.length > 80) arr = arr.slice(arr.length - 80);
+    try { localStorage.setItem(SEEN_ALERTS_KEY, JSON.stringify(arr)); } catch (e) {}
+    updateBellBadge();
+  }
+
+  /* 1) قراءة الرابط المباشر القادم من الواتساب (?ab_pid=...&ab_t=...&ab_d=...) */
+  function parseDirectLinkAlert() {
+    try {
+      if (!window.URLSearchParams) return null;
+      var sp = new URLSearchParams(window.location.search || "");
+      var pid = sp.get("ab_pid") || sp.get("pid") || "";
+      var t = sp.get("ab_t") || sp.get("alert_t") || "";
+      var d = sp.get("ab_d") || sp.get("alert_d") || "";
+      if (!pid && !t) return null;
+      var p = pid ? findProdById(pid) : null;
+      return {
+        id: "direct_" + (pid || "gen") + "_" + (t || "").slice(0, 18),
+        kind: "offer",
+        tag: "📣 إعلان مباشر من أبوضياء للتوزيع",
+        title: t || (p ? ("✨ عرض خاص: " + p.name) : "🔥 عرض جديد من أبوضياء للتوزيع"),
+        desc: d || (p ? ("الصنف متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ").") : "اطلب الآن بلمسة واحدة من المتجر."),
+        img: p ? getProdImg(p) : "",
+        pid: p ? String(p.id) : "",
+        isDirectLink: true
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /* 2) جمع الإشعارات تلقائياً: إعلانات مخصصة + العروض الحالية + الأصناف الجديدة */
+  function collectAlerts() {
+    var alerts = [];
+    var seenKeys = {};
+
+    function pushAlert(obj) {
+      if (!obj || !obj.id || seenKeys[obj.id]) return;
+      seenKeys[obj.id] = true;
+      alerts.push(obj);
+    }
+
+    // أ) إعلانات store_alerts.json إن وجدت
+    for (var c = 0; c < CUSTOM_BUILD_ALERTS.length; c++) {
+      var ca = CUSTOM_BUILD_ALERTS[c];
+      if (!ca || !ca.title) continue;
+      var cp = ca.pid ? findProdById(ca.pid) : null;
+      pushAlert({
+        id: String(ca.id || ("custom_" + c + "_" + ca.title.slice(0, 12))),
+        kind: ca.kind || "offer",
+        tag: ca.tag || "🔥 إعلان جديد",
+        title: String(ca.title),
+        desc: String(ca.desc || ""),
+        img: ca.img || (cp ? getProdImg(cp) : ""),
+        pid: cp ? String(cp.id) : String(ca.pid || "")
+      });
+    }
+
+    // ب) العروض النشطة من INLINE_CFG (إن وجدت في الصفحة)
+    try {
+      var cfg = (typeof INLINE_CFG !== "undefined" && INLINE_CFG) ? INLINE_CFG : window.INLINE_CFG;
+      if (cfg && Array.isArray(cfg.items)) {
+        for (var o = 0; o < cfg.items.length; o++) {
+          var it = cfg.items[o];
+          if (!it || it.active === false) continue;
+          var oTitle = it.title || it.name || it.productName || "";
+          if (!oTitle) continue;
+          var oProd = it.productId ? findProdById(it.productId) : null;
+          pushAlert({
+            id: "offer_" + String(it.id || oTitle.slice(0, 18)),
+            kind: "offer",
+            tag: "🔥 عرض لفترة محدودة",
+            title: String(oTitle),
+            desc: String(it.subtitle || it.desc || it.badge || it.bonusText || "عرض خاص متاح الآن داخل المتجر — اطلب قبل نفاد الكمية."),
+            img: it.img || it.image || (oProd ? getProdImg(oProd) : ""),
+            pid: oProd ? String(oProd.id) : String(it.productId || "")
+          });
+        }
+      }
+    } catch (e) {}
+
+    // ج) اكتشاف الأصناف الجديدة المضافة للكتالوج منذ آخر زيارة للعميل
+    var prods = getProductsList();
+    if (prods.length > 0) {
+      var prevIds = safeJsonParse(localStorage.getItem(SEEN_PRODS_KEY) || "null", null);
+      var currentIds = [];
+      for (var i = 0; i < prods.length; i++) currentIds.push(String(prods[i].id));
+
+      var newlyAdded = [];
+      if (Array.isArray(prevIds) && prevIds.length > 0) {
+        var prevMap = {};
+        for (var k = 0; k < prevIds.length; k++) prevMap[String(prevIds[k])] = true;
+        for (var j = 0; j < prods.length; j++) {
+          if (!prevMap[String(prods[j].id)]) newlyAdded.push(prods[j]);
+        }
+      }
+      try { localStorage.setItem(SEEN_PRODS_KEY, JSON.stringify(currentIds)); } catch (e) {}
+
+      // وضع شارة «جديد» على الأصناف الجديدة وإضافتها لقائمة الإشعارات
+      for (var n = 0; n < newlyAdded.length && n < 8; n++) {
+        var np = newlyAdded[n];
+        markCardAsNew(np.id);
+        pushAlert({
+          id: "newprod_" + String(np.id),
+          kind: "new",
+          tag: "✨ وصل حديثاً",
+          title: String(np.name || "صنف جديد"),
+          desc: "صنف جديد أُضيف للتو إلى كتالوج أبوضياء للتوزيع (" + (np.unit || "كرتون") + ").",
+          img: getProdImg(np),
+          pid: String(np.id)
+        });
+      }
+
+      // إذا لم توجد عروض ولا أصناف جديدة، نعرض أحدث 3 أصناف كاقتراحات سريعة داخل مركز الإشعارات فقط (بدون إزعاج بـ Popup)
+      if (alerts.length === 0) {
+        var startIdx = Math.max(0, prods.length - 3);
+        for (var r = prods.length - 1; r >= startIdx; r--) {
+          var rp = prods[r];
+          pushAlert({
+            id: "latest_" + String(rp.id),
+            kind: "new",
+            tag: "⭐ من أحدث الأصناف",
+            title: String(rp.name || ""),
+            desc: "متوفر الآن للطلب السريع (" + (rp.unit || "كرتون") + ").",
+            img: getProdImg(rp),
+            pid: String(rp.id),
+            silentOnly: true
+          });
+        }
+      }
+    }
+
+    cachedAlerts = alerts;
+    return alerts;
+  }
+
+  function markCardAsNew(pid) {
+    try {
+      var card = document.querySelector('[data-ab-prod-id="' + String(pid) + '"]');
+      if (!card || card.querySelector(".ab-new-item-badge")) return;
+      if (window.getComputedStyle(card).position === "static") {
+        card.style.position = "relative";
+      }
+      var b = document.createElement("span");
+      b.className = "ab-new-item-badge";
+      b.textContent = "✨ جديد";
+      card.appendChild(b);
+    } catch (e) {}
+  }
+
+  /* 3) الانتقال الذكي للصنف وفتح لوحة الكمية بلمسة واحدة */
+  function focusAndOpenProduct(pid) {
+    closePopup();
+    closeDrawer();
+
+    // التأكد من الرجوع لتبويب الكتالوج إذا كانت الفاتورة مفتوحة
+    try {
+      var catBtn = document.getElementById("navCatalogBtn");
+      var invView = document.getElementById("viewInvoice");
+      if (catBtn && invView && window.getComputedStyle(invView).display !== "none") {
+        catBtn.click();
+      }
+    } catch (e) {}
+
+    if (!pid) return;
+
+    setTimeout(function () {
+      try {
+        var card = document.querySelector('[data-ab-prod-id="' + String(pid) + '"]');
+        if (!card) {
+          // ربما كان في تبويب قسم آخر؛ نرجع لقسم «الكل»
+          var allTab = document.querySelector("#tabsBar button");
+          if (allTab) allTab.click();
+          card = document.querySelector('[data-ab-prod-id="' + String(pid) + '"]');
+        }
+        if (!card) return;
+
+        // إذا كان الصنف داخل مجموعة البطاطس المطوية، نفتحها تلقائياً
+        var potPanel = card.closest(".ab-pot-panel");
+        if (potPanel && !potPanel.classList.contains("open")) {
+          var potBtn = document.getElementById("abPotToggleBtn");
+          if (potBtn) potBtn.click();
+          var potAll = document.querySelector('.ab-pot-tab[data-size="all"]');
+          if (potAll) potAll.click();
+        }
+
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.classList.add("ab-alert-focus-ring");
+        setTimeout(function () { card.classList.remove("ab-alert-focus-ring"); }, 2600);
+
+        // فتح لوحة الكمية السريعة على الصنف مباشرة
+        setTimeout(function () {
+          var clickTarget = card.querySelector("img") || card.querySelector(".card-body") || card;
+          if (clickTarget && typeof clickTarget.click === "function") {
+            clickTarget.click();
+          }
+        }, 380);
+      } catch (e) {}
+    }, 120);
+  }
+
+  /* 4) بناء وعرض البطاقة المنبثقة (Popup) */
+  function ensurePopupDom() {
+    var bd = document.getElementById("abAlertPopupBackdrop");
+    if (bd) return bd;
+    bd = document.createElement("div");
+    bd.id = "abAlertPopupBackdrop";
+    bd.innerHTML =
+      '<div id="abAlertPopupCard" role="dialog" aria-modal="true">' +
+        '<div class="ab-ap-head">' +
+          '<span id="abApTag" class="ab-ap-tag">✨ إشعار جديد</span>' +
+          '<button type="button" id="abApCloseBtn" class="ab-ap-close" aria-label="إغلاق">✕</button>' +
+        '</div>' +
+        '<div class="ab-ap-body">' +
+          '<div id="abApImgWrap" class="ab-ap-img-wrap" style="display:none;"><img id="abApImg" alt=""></div>' +
+          '<h3 id="abApTitle" class="ab-ap-title"></h3>' +
+          '<p id="abApDesc" class="ab-ap-desc"></p>' +
+          '<div class="ab-ap-actions">' +
+            '<button type="button" id="abApCtaBtn" class="ab-ap-cta">🛒 اطلب الآن</button>' +
+            '<button type="button" id="abApLaterBtn" class="ab-ap-later">لاحقاً</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(bd);
+
+    bd.addEventListener("click", function (ev) {
+      if (ev.target === bd) closePopup();
+    });
+    document.getElementById("abApCloseBtn").addEventListener("click", closePopup);
+    document.getElementById("abApLaterBtn").addEventListener("click", closePopup);
+    document.getElementById("abApCtaBtn").addEventListener("click", function () {
+      var a = currentPopupAlert;
+      if (a && a.id) markAlertSeen(a.id);
+      if (a && a.pid) {
+        focusAndOpenProduct(a.pid);
+      } else {
+        closePopup();
+      }
+    });
+    return bd;
+  }
+
+  function showPopupAlert(alertObj, isPreview) {
+    if (!alertObj) return;
+    var bd = ensurePopupDom();
+    currentPopupAlert = alertObj;
+
+    document.getElementById("abApTag").textContent = alertObj.tag || "✨ إشعار جديد";
+    document.getElementById("abApTitle").textContent = alertObj.title || "";
+    document.getElementById("abApDesc").textContent = alertObj.desc || "";
+
+    var imgWrap = document.getElementById("abApImgWrap");
+    var imgEl = document.getElementById("abApImg");
+    if (alertObj.img) {
+      imgEl.src = alertObj.img;
+      imgWrap.style.display = "flex";
+    } else {
+      imgEl.removeAttribute("src");
+      imgWrap.style.display = "none";
+    }
+
+    var ctaBtn = document.getElementById("abApCtaBtn");
+    ctaBtn.textContent = alertObj.pid ? "🛒 اطلب الآن" : "🛍️ تصفح المتجر";
+
+    bd.classList.add("open");
+    document.documentElement.classList.add("ab-modal-open");
+    if (!isPreview && alertObj.id) {
+      markAlertSeen(alertObj.id);
+    }
+  }
+
+  function closePopup() {
+    var bd = document.getElementById("abAlertPopupBackdrop");
+    if (bd) bd.classList.remove("open");
+    var dr = document.getElementById("abAlertsDrawerBackdrop");
+    if (!dr || !dr.classList.contains("open")) {
+      document.documentElement.classList.remove("ab-modal-open");
+    }
+  }
+
+  /* 5) بناء وعرض مركز الإشعارات وصانع إعلانات الواتساب للمدير */
+  function buildPromoData() {
+    var sel = document.getElementById("abPmProdSel");
+    var titleInp = document.getElementById("abPmTitleInp");
+    var descInp = document.getElementById("abPmDescInp");
+
+    var pid = sel ? String(sel.value || "").trim() : "";
+    var p = pid ? findProdById(pid) : null;
+    var title = (titleInp ? titleInp.value : "").trim() || (p ? ("✨ عرض جديد: " + p.name) : "🔥 عروض جديدة من أبوضياء للتوزيع");
+    var desc = (descInp ? descInp.value : "").trim() || (p ? ("متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ").") : "اطلب الآن بلمسة واحدة من تطبيق المتجر.");
+
+    var base = window.location.origin + window.location.pathname;
+    if (base.indexOf("http") !== 0) base = "https://abudhiya-catalog.vercel.app/";
+    var params = [];
+    if (pid) params.push("ab_pid=" + encodeURIComponent(pid));
+    params.push("ab_t=" + encodeURIComponent(title));
+    if (desc) params.push("ab_d=" + encodeURIComponent(desc));
+    var link = base + "?" + params.join("&");
+
+    var msg =
+      "✨ *" + title + "* ✨\n" +
+      "━━━━━━━━━━━━━━\n" +
+      desc + "\n\n" +
+      "📲 *للطلب المباشر من التطبيق بلمسة واحدة:*\n" +
+      link + "\n\n" +
+      "🏢 *أبوضياء للتوزيع* — سيئون\n" +
+      "📞 771458609";
+
+    return {
+      pid: pid,
+      prod: p,
+      title: title,
+      desc: desc,
+      link: link,
+      msg: msg
+    };
+  }
+
+  function populatePromoProducts(filterTxt) {
+    var sel = document.getElementById("abPmProdSel");
+    if (!sel) return;
+    var curVal = sel.value;
+    var q = String(filterTxt || "").trim().toLowerCase();
+    var prods = getProductsList();
+
+    sel.innerHTML = "";
+    var opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = "— إعلان عام (بدون ربط بصنف محدد) —";
+    sel.appendChild(opt0);
+
+    for (var i = 0; i < prods.length; i++) {
+      var p = prods[i];
+      var nm = String(p.name || "");
+      if (q && nm.toLowerCase().indexOf(q) === -1) continue;
+      var opt = document.createElement("option");
+      opt.value = String(p.id);
+      opt.textContent = nm + (p.unit ? (" (" + p.unit + ")") : "");
+      sel.appendChild(opt);
+    }
+    if (curVal) sel.value = curVal;
+  }
+
+  function ensureDrawerDom() {
+    var bd = document.getElementById("abAlertsDrawerBackdrop");
+    if (bd) return bd;
+
+    bd = document.createElement("div");
+    bd.id = "abAlertsDrawerBackdrop";
+    bd.innerHTML =
+      '<div id="abAlertsDrawerSheet" role="dialog" aria-modal="true">' +
+        '<div class="ab-ad-head">' +
+          '<span class="ab-ad-title">🔔 الإشعارات والعروض الجديدة</span>' +
+          '<button type="button" id="abAdCloseBtn" class="ab-ad-close" aria-label="إغلاق">✕</button>' +
+        '</div>' +
+        '<div class="ab-ad-scroll">' +
+          '<button type="button" id="abAdminPromoToggleBtn" style="display:none;">📣 إنشاء إعلان واتساب برابط مباشر</button>' +
+          '<div id="abAdminPromoBox">' +
+            '<label class="ab-pm-lbl">🔍 ابحث عن الصنف أو اختره:</label>' +
+            '<input type="search" id="abPmSearchInp" class="ab-pm-inp" placeholder="ابحث باسم الصنف (رنجو، ريلاكس، بطاطس...)">' +
+            '<select id="abPmProdSel" class="ab-pm-sel"></select>' +
+            '<label class="ab-pm-lbl">✏️ عنوان الإشعار / العرض:</label>' +
+            '<input type="text" id="abPmTitleInp" class="ab-pm-inp" placeholder="مثال: 🔥 وصل حديثاً — عرض خاص لفترة محدودة">' +
+            '<label class="ab-pm-lbl">📝 تفاصيل مختصرة للعميل:</label>' +
+            '<textarea id="abPmDescInp" class="ab-pm-txt" placeholder="مثال: اطلب الآن بلمسة واحدة قبل نفاد الكمية..."></textarea>' +
+            '<div class="ab-pm-btns">' +
+              '<button type="button" id="abPmWaBtn" class="ab-pm-wa">📲 إرسال الإعلان عبر واتساب</button>' +
+              '<button type="button" id="abPmCopyBtn" class="ab-pm-sub">📋 نسخ الرسالة والرابط</button>' +
+              '<button type="button" id="abPmPrevBtn" class="ab-pm-sub">👁️ معاينة البطاقة</button>' +
+            '</div>' +
+          '</div>' +
+          '<div id="abAlertsListWrap"></div>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(bd);
+
+    bd.addEventListener("click", function (ev) {
+      if (ev.target === bd) closeDrawer();
+    });
+    document.getElementById("abAdCloseBtn").addEventListener("click", closeDrawer);
+
+    document.getElementById("abAdminPromoToggleBtn").addEventListener("click", function () {
+      var box = document.getElementById("abAdminPromoBox");
+      var opened = box.classList.toggle("open");
+      if (opened) populatePromoProducts("");
+    });
+
+    document.getElementById("abPmSearchInp").addEventListener("input", function () {
+      populatePromoProducts(this.value);
+    });
+
+    document.getElementById("abPmProdSel").addEventListener("change", function () {
+      var p = findProdById(this.value);
+      if (p) {
+        document.getElementById("abPmTitleInp").value = "✨ وصل حديثاً: " + p.name;
+        var dStr = "متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ") — اضغط لفتح الصنف مباشرة.";
+        document.getElementById("abPmDescInp").value = dStr;
+      }
+    });
+
+    document.getElementById("abPmWaBtn").addEventListener("click", function () {
+      var d = buildPromoData();
+      window.open("https://wa.me/?text=" + encodeURIComponent(d.msg), "_blank");
+    });
+
+    document.getElementById("abPmCopyBtn").addEventListener("click", function () {
+      var d = buildPromoData();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(d.msg).then(function () {
+          if (typeof showToast === "function") showToast("✅ تم نسخ الإعلان والرابط المباشر");
+        }).catch(function () {
+          if (typeof showToast === "function") showToast("📋 انسخ الرسالة من نافذة الواتساب");
+        });
+      } else {
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = d.msg;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          if (typeof showToast === "function") showToast("✅ تم نسخ الإعلان والرابط المباشر");
+        } catch (e) {}
+      }
+    });
+
+    document.getElementById("abPmPrevBtn").addEventListener("click", function () {
+      var d = buildPromoData();
+      showPopupAlert({
+        id: "preview_alert",
+        kind: "offer",
+        tag: "📣 معاينة إشعار العميل",
+        title: d.title,
+        desc: d.desc,
+        img: d.prod ? getProdImg(d.prod) : "",
+        pid: d.pid
+      }, true);
+    });
+
+    return bd;
+  }
+
+  function renderDrawerList() {
+    var wrap = document.getElementById("abAlertsListWrap");
+    if (!wrap) return;
+    var list = collectAlerts();
+    wrap.innerHTML = "";
+
+    if (list.length === 0) {
+      wrap.innerHTML = '<div style="text-align:center;padding:24px 10px;color:#475569;font-weight:700;font-size:13px;">لا توجد إشعارات جديدة حالياً — ستصلك كل العروض والأصناف الجديدة هنا فوراً.</div>';
+      return;
+    }
+
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i];
+      var row = document.createElement("div");
+      row.className = "ab-al-item";
+
+      var thumb = document.createElement("div");
+      thumb.className = "ab-al-thumb";
+      if (a.img) {
+        var im = document.createElement("img");
+        im.src = a.img;
+        im.alt = "";
+        thumb.appendChild(im);
+      } else {
+        thumb.textContent = a.kind === "offer" ? "🔥" : "✨";
+      }
+
+      var info = document.createElement("div");
+      info.className = "ab-al-info";
+      var pill = document.createElement("span");
+      pill.className = "ab-al-pill" + (a.kind === "offer" ? " offer" : "");
+      pill.textContent = a.tag || "جديد";
+      var nm = document.createElement("div");
+      nm.className = "ab-al-name";
+      nm.textContent = a.title;
+      var mt = document.createElement("div");
+      mt.className = "ab-al-meta";
+      mt.textContent = a.desc;
+      info.appendChild(pill);
+      info.appendChild(nm);
+      info.appendChild(mt);
+
+      var go = document.createElement("button");
+      go.type = "button";
+      go.className = "ab-al-go";
+      go.textContent = a.pid ? "اطلب الآن" : "عرض";
+      (function (alertItem) {
+        go.addEventListener("click", function () {
+          if (alertItem.pid) focusAndOpenProduct(alertItem.pid);
+          else showPopupAlert(alertItem, false);
+        });
+      })(a);
+
+      row.appendChild(thumb);
+      row.appendChild(info);
+      row.appendChild(go);
+      wrap.appendChild(row);
+    }
+  }
+
+  function openDrawer(openPromoDirectly) {
+    var bd = ensureDrawerDom();
+    var admBtn = document.getElementById("abAdminPromoToggleBtn");
+    var admBox = document.getElementById("abAdminPromoBox");
+    var adm = isAdminMode();
+    if (admBtn) admBtn.style.display = adm ? "flex" : "none";
+    if (admBox) {
+      if (adm && openPromoDirectly) {
+        admBox.classList.add("open");
+        populatePromoProducts("");
+      } else if (!adm) {
+        admBox.classList.remove("open");
+      }
+    }
+    renderDrawerList();
+    markAllAlertsSeen();
+    bd.classList.add("open");
+    document.documentElement.classList.add("ab-modal-open");
+  }
+
+  function closeDrawer() {
+    var bd = document.getElementById("abAlertsDrawerBackdrop");
+    if (bd) bd.classList.remove("open");
+    var pop = document.getElementById("abAlertPopupBackdrop");
+    if (!pop || !pop.classList.contains("open")) {
+      document.documentElement.classList.remove("ab-modal-open");
+    }
+  }
+
+  /* 6) تركيب زر الجرس 🔔 في شريط الأدوات السريعة + تحديث العداد */
+  function updateBellBadge() {
+    var btn = document.getElementById("abBellBtn");
+    var badge = document.getElementById("abBellBadge");
+    if (!btn || !badge) return;
+
+    var seen = getSeenAlertIds();
+    var unread = 0;
+    for (var i = 0; i < cachedAlerts.length; i++) {
+      if (!cachedAlerts[i].silentOnly && seen.indexOf(cachedAlerts[i].id) === -1) {
+        unread++;
+      }
+    }
+    if (unread > 0) {
+      badge.textContent = unread > 9 ? "9+" : String(unread);
+      badge.style.display = "inline-block";
+      btn.classList.add("has-unread");
+    } else {
+      badge.style.display = "none";
+      btn.classList.remove("has-unread");
+    }
+  }
+
+  function ensureBellButton() {
+    var existing = document.getElementById("abBellBtn");
+    if (existing) {
+      updateBellBadge();
+      return existing;
+    }
+    var qbar = document.getElementById("abQuickDrawerBar");
+    if (!qbar) return null;
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "abBellBtn";
+    btn.className = "ab-qd-btn";
+    btn.title = "الإشعارات والعروض الجديدة";
+    btn.setAttribute("aria-label", "الإشعارات والعروض الجديدة");
+    btn.innerHTML = '<span>🔔</span><span id="abBellBadge" style="display:none;">0</span>';
+    btn.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      openDrawer(false);
+    });
+    qbar.appendChild(btn);
+    updateBellBadge();
+    return btn;
+  }
+
+  /* 7) تشغيل فحص الإشعارات والرابط المباشر بعد فتح التطبيق */
+  function runSmartAlertsBoot() {
+    collectAlerts();
+    ensureBellButton();
+
+    // أولاً: فحص إذا فتح العميل التطبيق من رابط إعلان واتساب مباشر
+    var direct = parseDirectLinkAlert();
+    if (direct) {
+      setTimeout(function () {
+        showPopupAlert(direct, false);
+        try {
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        } catch (e) {}
+      }, 650);
+      return;
+    }
+
+    // ثانياً: عرض أول إشعار غير مقروء (عرض جديد أو صنف جديد) مرة واحدة فقط
+    var seen = getSeenAlertIds();
+    var firstUnseen = null;
+    for (var i = 0; i < cachedAlerts.length; i++) {
+      var item = cachedAlerts[i];
+      if (!item.silentOnly && seen.indexOf(item.id) === -1) {
+        firstUnseen = item;
+        break;
+      }
+    }
+    if (firstUnseen) {
+      setTimeout(function () {
+        // عدم فتح البطاقة فوق بوابة الدخول أو نافذة أخرى مفتوحة
+        var gate = document.getElementById("abAccessGateOverlay");
+        if (gate && window.getComputedStyle(gate).display !== "none") return;
+        if (document.documentElement.classList.contains("ab-modal-open")) return;
+        showPopupAlert(firstUnseen, false);
+      }, 1050);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(runSmartAlertsBoot, 320); }, { once: true });
+  } else {
+    setTimeout(runSmartAlertsBoot, 320);
+  }
+  setTimeout(ensureBellButton, 900);
+  setTimeout(ensureBellButton, 2000);
+})();
+</script>
+<!-- ABUDHIYA_SMART_ALERTS_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -21586,7 +22719,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-682612";
+  var TARGET_CACHE = "abudhiya-offline-v4-684674";
 
   function forceReleaseSplash() {
     try {
