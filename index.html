@@ -23582,6 +23582,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_WEBPUSH_START -->
 <style id="abWebPushCss" data-ab-webpush="3">
   #abCustPushCard {
@@ -23753,7 +23755,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abWebPushV3) return;
   window.__abWebPushV3 = true;
 
-  var BUILTIN_APP_ID = "d2ebcf2d-0cde-478c-ae28-7d4166e74222";
+  var BUILTIN_APP_ID = "";
   var LS_APP_ID = "ab_os_appid_v1";
   var LS_API_KEY = "ab_os_restkey_v1";
   var activeAppId = BUILTIN_APP_ID || "";
@@ -24234,7 +24236,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       document.getElementById("abPsSendBtn").addEventListener("click", sendLivePushNotification);
     }
 
-    var showAdm = isAdmin();
+    var showAdm = isAdmin() && !!getEffectiveAppId();
     admToggle.style.display = showAdm ? "flex" : "none";
     if (!showAdm && admBox) admBox.classList.remove("open");
     refreshAdminPushStatus();
@@ -24311,7 +24313,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-699717";
+  var TARGET_CACHE = "abudhiya-offline-v4-700004";
 
   function forceReleaseSplash() {
     try {
