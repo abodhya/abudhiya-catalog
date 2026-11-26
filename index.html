@@ -574,6 +574,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20526,8 +20527,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="15">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="16">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -21957,11 +21960,24 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     background-image: none !important;
     border-color: rgba(5, 150, 105, 0.25) !important;
   }
+
+  /* 17) ضبط نهائي (v16): إبعاد كبسولة مندوب المبيعات عن الخط الفاصل */
+  html body #abSaifLuxuryHeader .ab-hdr-rep-pill,
+  html body .absf-hdr-card .ab-hdr-rep-pill {
+    font-size: 9.2px !important;
+    padding: 2px 6px !important;
+    margin-right: 4px !important;
+    max-width: calc(100% - 6px) !important;
+  }
+  html body #abSaifLuxuryHeader .ab-hdr-rep-pill *,
+  html body .absf-hdr-card .ab-hdr-rep-pill * {
+    font-size: 9.2px !important;
+  }
 </style>
-<script data-ab-flagship-ui="15">
+<script data-ab-flagship-ui="16">
 (function () {
-  if (window.__abFlagshipUiV15) return;
-  window.__abFlagshipUiV15 = true;
+  if (window.__abFlagshipUiV16) return;
+  window.__abFlagshipUiV16 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -22677,8 +22693,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v15")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v15", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v16")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v16", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -22775,39 +22791,67 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 10) اللمسة النهائية (v15): تفتيح زر إعادة آخر طلب ورفع زر تثبيت التطبيق فوق الشريط السفلي */
+  /* 10) اللمسة النهائية (v16): تفتيح زر إعادة آخر طلب والشريط الكحلي ورفع زر التثبيت بقوة مباشرة */
   function applyFinalPolishV15() {
     try {
-      // أ) تفتيح زر «إعادة آخر طلب» الأسود
-      var btns = document.querySelectorAll("button, a");
-      for (var i = 0; i < btns.length; i++) {
-        var b = btns[i];
-        var t = (b.textContent || "").replace(/\s+/g, " ").trim();
-        if (t && t.length < 30 && /إعادة\s*آخر\s*طلب/.test(t)) {
-          b.setAttribute("data-ab-repeat-btn", "1");
+      // أ) تفتيح زر «إعادة آخر طلب» مهما كان نوعه (button / div / a)
+      var allEls = document.querySelectorAll("button, a, div");
+      for (var i = 0; i < allEls.length; i++) {
+        var el = allEls[i];
+        if (!el || el.children.length > 3) continue;
+        var t = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (t && t.length <= 26 && /إعادة\s*آخر\s*طلب/.test(t)) {
+          el.setAttribute("data-ab-repeat-btn", "1");
+          el.style.setProperty("background", "#ffffff", "important");
+          el.style.setProperty("background-image", "none", "important");
+          el.style.setProperty("color", "#065f46", "important");
+          el.style.setProperty("-webkit-text-fill-color", "#065f46", "important");
+          el.style.setProperty("border", "1.2px solid rgba(5, 150, 105, 0.30)", "important");
+          el.style.setProperty("box-shadow", "0 2px 8px rgba(6, 78, 59, 0.08)", "important");
         }
       }
 
-      // ب) تفتيح الشريط الكحلي/الأسود النحيف أسفل #liveTicker إن وجد
+      // ب) تفتيح الشريط الكحلي/الأسود النحيف أسفل #liveTicker
       var tk = document.getElementById("liveTicker");
-      if (tk && tk.nextElementSibling) {
-        var nx = tk.nextElementSibling;
-        var ncs = window.getComputedStyle(nx);
-        var nr = nx.getBoundingClientRect();
-        if (ncs && nr.height > 2 && nr.height < 22 && isNeutralDarkBg(ncs)) {
-          nx.setAttribute("data-ab-dark-strip", "1");
+      if (tk && tk.parentElement) {
+        var sib = tk.nextElementSibling;
+        for (var s = 0; s < 3 && sib; s++, sib = sib.nextElementSibling) {
+          var sr = sib.getBoundingClientRect();
+          if (sr.height > 2 && sr.height <= 26 && !(sib.textContent || "").trim()) {
+            sib.style.setProperty("background", "#d1fae5", "important");
+            sib.style.setProperty("background-image", "none", "important");
+            var kids = sib.querySelectorAll("div, span");
+            for (var k = 0; k < kids.length; k++) {
+              kids[k].style.setProperty("background", "#059669", "important");
+            }
+          }
         }
       }
 
-      // ج) رفع زر «تثبيت التطبيق / تحديث الأيقونة» وتلوينه بالزمردي بقوة أعلى من inline styles
-      var pills = document.querySelectorAll('[data-ab-install-pill="1"]');
-      for (var p = 0; p < pills.length; p++) {
-        var pl = pills[p];
-        pl.style.setProperty("bottom", "70px", "important");
-        pl.style.setProperty("background", "linear-gradient(135deg, #033325 0%, #065f46 100%)", "important");
-        pl.style.setProperty("color", "#fef08a", "important");
-        pl.style.setProperty("border", "1.2px solid rgba(250, 204, 21, 0.65)", "important");
-        pl.style.setProperty("z-index", "840", "important");
+      // ج) التقاط زر «تثبيت التطبيق / تحديث الأيقونة» من أي وسم ثابت ورفعه فوق الشريط السفلي
+      var fixedNodes = document.querySelectorAll("body *");
+      for (var f = 0; f < fixedNodes.length; f++) {
+        var fn = fixedNodes[f];
+        if (!fn || fn.children.length > 5) continue;
+        var ft = (fn.textContent || "").replace(/\s+/g, " ").trim();
+        if (ft && ft.length >= 6 && ft.length <= 65 && /تثبيت\s*التطبيق|تحديث\s*الأيقونة/.test(ft)) {
+          var host = fn;
+          for (var up = 0; up < 5 && host && host !== document.body; up++) {
+            var hcs = window.getComputedStyle(host);
+            if (hcs && hcs.position === "fixed") {
+              host.setAttribute("data-ab-install-pill", "1");
+              host.style.setProperty("bottom", "72px", "important");
+              host.style.setProperty("background", "linear-gradient(135deg, #033325 0%, #065f46 100%)", "important");
+              host.style.setProperty("background-image", "linear-gradient(135deg, #033325 0%, #065f46 100%)", "important");
+              host.style.setProperty("color", "#fef08a", "important");
+              host.style.setProperty("-webkit-text-fill-color", "#fef08a", "important");
+              host.style.setProperty("border", "1.2px solid rgba(250, 204, 21, 0.65)", "important");
+              host.style.setProperty("z-index", "840", "important");
+              break;
+            }
+            host = host.parentElement;
+          }
+        }
       }
     } catch (e) {}
   }
@@ -22890,7 +22934,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-689117";
+  var TARGET_CACHE = "abudhiya-offline-v4-689251";
 
   function forceReleaseSplash() {
     try {
