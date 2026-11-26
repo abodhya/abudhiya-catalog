@@ -568,6 +568,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19375,8 +19376,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="10">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="11">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -20345,11 +20348,100 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-weight: 800 !important;
     z-index: 2147483640 !important;
   }
+
+  /* 14) قفل الحركة الأفقية نهائياً وتوسيط جميع عناصر المتجر بتماثل تام */
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+  html,
+  html body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
+    overflow-x: clip !important;
+    overscroll-behavior-x: none !important;
+  }
+  html body img,
+  html body svg,
+  html body canvas,
+  html body video {
+    max-width: 100% !important;
+  }
+  html body #viewCatalog,
+  html body #viewInvoice,
+  html body .app-top {
+    width: 100% !important;
+    max-width: 540px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: clip !important;
+  }
+  html body #prodGrid,
+  html body .grid {
+    width: 100% !important;
+    max-width: 540px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: clip !important;
+  }
+  html body #prodGrid > *,
+  html body .grid > *,
+  html body #prodGrid .card,
+  html body .grid .card,
+  html body .ab-pot-grid .card {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  html body .ab-pot-wrap,
+  html body .ab-pot-panel,
+  html body #prodGrid [data-ab-group-card="1"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: hidden !important;
+  }
+  html body #abSaifLuxuryHeader,
+  html body .absf-hdr-card,
+  html body #abQuickDrawerBar,
+  html body #liveTicker,
+  html body [data-ab-rep-strip="1"],
+  html body [data-ab-light-card="1"],
+  html body [data-ab-brand-footer="1"] {
+    width: calc(100% - 20px) !important;
+    max-width: 520px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: hidden !important;
+  }
+  /* إبقاء التمرير الأفقي السلس داخل شريط الأقسام والكبسولات والحالات فقط */
+  html body #tabsBar,
+  html body .tabs-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  html body [data-ab-panel-sub="pills"],
+  html body [data-ab-panel-sub="stories"] {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  /* توسيط الشريط السفلي ومنع تجاوزه حدود الشاشة */
+  html body .app-nav {
+    max-width: calc(100% - 24px) !important;
+  }
 </style>
-<script data-ab-flagship-ui="10">
+<script data-ab-flagship-ui="11">
 (function () {
-  if (window.__abFlagshipUiV10) return;
-  window.__abFlagshipUiV10 = true;
+  if (window.__abFlagshipUiV11) return;
+  window.__abFlagshipUiV11 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -21026,8 +21118,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v10")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v10", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v11")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v11", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -21035,6 +21127,37 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       });
     }
   } catch (e) {}
+
+  /* 8) ضبط viewport ومنع أي انزياح أفقي طارئ للشاشة */
+  function lockHorizontalCenter() {
+    try {
+      var vp = document.querySelector('meta[name="viewport"]');
+      if (vp) {
+        var c = vp.getAttribute("content") || "";
+        if (c.indexOf("maximum-scale") === -1) {
+          vp.setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
+        }
+      }
+      if (document.documentElement.scrollLeft !== 0) document.documentElement.scrollLeft = 0;
+      if (document.body && document.body.scrollLeft !== 0) document.body.scrollLeft = 0;
+
+      // تقليص أي حاوية عريضة متسللة تتجاوز عرض الشاشة (مع استثناء أشرطة التمرير المقصودة)
+      var vw = window.innerWidth || document.documentElement.clientWidth || 360;
+      var kids = document.querySelectorAll("body > div, body > section, body > footer, #viewCatalog > div, #viewCatalog > section");
+      for (var i = 0; i < kids.length; i++) {
+        var el = kids[i];
+        if (!el || el.id === "tabsBar" || el.classList.contains("tabs-bar")) continue;
+        if (el.getAttribute("data-ab-panel-sub") === "pills" || el.getAttribute("data-ab-panel-sub") === "stories") continue;
+        var cs = window.getComputedStyle(el);
+        if (!cs || cs.display === "none" || cs.position === "fixed") continue;
+        if (cs.overflowX === "auto" || cs.overflowX === "scroll") continue;
+        if (el.scrollWidth > vw + 2) {
+          el.style.setProperty("max-width", "100%", "important");
+          el.style.setProperty("overflow-x", "hidden", "important");
+        }
+      }
+    } catch (e) {}
+  }
 
   function boot() {
     initSmartBottomDock();
@@ -21044,6 +21167,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     unifyQuantityPickerAndModals();
     scanAndMergeExtraBottomBar();
     watchDomForModals();
+    lockHorizontalCenter();
+    window.addEventListener('resize', lockHorizontalCenter, { passive: true });
   }
 
   if (document.readyState === "loading") {
@@ -21111,7 +21236,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-681742";
+  var TARGET_CACHE = "abudhiya-offline-v4-682083";
 
   function forceReleaseSplash() {
     try {
