@@ -559,11 +559,12 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 </style>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_HEAD_END -->
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-<style id="abFlagshipStoreUiCss" data-flagship-ui="1">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="2">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -591,22 +592,78 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
   }
 
-  /* 2) الترويسة الملكية العلوية المتناغمة مع الأيقونة الخضراء */
+  /* 2) الترويسة الملكية العلوية المتناغمة مع الأيقونة الخضراء — بتباين ناصع 100% */
   #abSaifLuxuryHeader,
   .absf-hdr-card {
-    background: linear-gradient(135deg, #03261b 0%, #065f46 62%, #047857 100%) !important;
+    background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
     color: #ffffff !important;
-    border: 1px solid rgba(250, 204, 21, 0.34) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.42) !important;
     border-radius: 20px !important;
-    box-shadow: 0 12px 28px rgba(4, 47, 34, 0.22) !important;
+    box-shadow: 0 12px 28px rgba(4, 47, 34, 0.26) !important;
     margin: 10px 10px 8px !important;
   }
   #abSaifLuxuryHeader h1,
   #abSaifLuxuryHeader h2,
+  #abSaifLuxuryHeader h3,
+  #abSaifLuxuryHeader strong,
+  #abSaifLuxuryHeader b,
   .absf-hdr-card h1,
-  .absf-hdr-card h2 {
+  .absf-hdr-card h2,
+  .absf-hdr-card h3,
+  .absf-hdr-card strong,
+  .absf-hdr-card b {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-image: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    opacity: 1 !important;
     letter-spacing: 0 !important;
     font-weight: 900 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.42) !important;
+  }
+  #abSaifLuxuryHeader p,
+  #abSaifLuxuryHeader span,
+  #abSaifLuxuryHeader small,
+  #abSaifLuxuryHeader a,
+  #abSaifLuxuryHeader label,
+  #abSaifLuxuryHeader div,
+  .absf-hdr-card p,
+  .absf-hdr-card span,
+  .absf-hdr-card small,
+  .absf-hdr-card a,
+  .absf-hdr-card label,
+  .absf-hdr-card div {
+    color: #f0fdf4 !important;
+    -webkit-text-fill-color: #f0fdf4 !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30) !important;
+  }
+  #abSaifLuxuryHeader button,
+  .absf-hdr-card button,
+  #abMshCopyBtn {
+    background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%) !important;
+    color: #052e16 !important;
+    -webkit-text-fill-color: #052e16 !important;
+    border: 1px solid rgba(254, 240, 138, 0.9) !important;
+    border-radius: 11px !important;
+    font-weight: 900 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24) !important;
+  }
+  #abSaifLuxuryHeader button *,
+  .absf-hdr-card button *,
+  #abMshCopyBtn * {
+    color: #052e16 !important;
+    -webkit-text-fill-color: #052e16 !important;
+    text-shadow: none !important;
+  }
+  .ab-hdr-glass-fix {
+    background: rgba(2, 24, 17, 0.48) !important;
+    background-image: none !important;
+    border: 1px solid rgba(167, 243, 208, 0.28) !important;
+    border-radius: 12px !important;
   }
 
   /* 3) الشريط العلوي للبحث والأدوات بتأثير الزجاج الأبيض */
@@ -873,10 +930,45 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     padding: 10px 18px !important;
   }
 </style>
-<script data-ab-flagship-ui="1">
+<script data-ab-flagship-ui="2">
 (function () {
-  if (window.__abFlagshipUiV1) return;
-  window.__abFlagshipUiV1 = true;
+  if (window.__abFlagshipUiV2) return;
+  window.__abFlagshipUiV2 = true;
+
+  // فاحص تباين ذكي للترويسة: يمنع ظهور أي نص أبيض فوق خلفية فاتحة فرعية
+  function fixHeaderContrast() {
+    try {
+      var roots = document.querySelectorAll("#abSaifLuxuryHeader, .absf-hdr-card");
+      for (var r = 0; r < roots.length; r++) {
+        var nodes = roots[r].querySelectorAll("div, section, p, span, a");
+        for (var i = 0; i < nodes.length; i++) {
+          var el = nodes[i];
+          if (!el || el.closest("button, #abMshCopyBtn")) continue;
+          var cs = window.getComputedStyle(el);
+          if (!cs) continue;
+          var bg = cs.backgroundColor || "";
+          var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+          if (m) {
+            var a = m[4] === undefined ? 1 : parseFloat(m[4]);
+            var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
+            if (a > 0.2 && lum > 130) {
+              el.classList.add("ab-hdr-glass-fix");
+            }
+          }
+          if ((cs.backgroundImage || "").indexOf("gradient") !== -1 &&
+              (cs.webkitBackgroundClip === "text" || cs.backgroundClip === "text")) {
+            el.style.setProperty("background-image", "none", "important");
+          }
+        }
+      }
+    } catch (e) {}
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(fixHeaderContrast, 120); });
+  } else {
+    setTimeout(fixHeaderContrast, 120);
+  }
+  setTimeout(fixHeaderContrast, 750);
 
   // ضبط لون شريط الحالة العلوي في أندرويد ليتطابق مع الترويسة الزمردية
   try {
@@ -19621,6 +19713,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -19664,7 +19757,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-667422";
+  var TARGET_CACHE = "abudhiya-offline-v4-667674";
 
   function forceReleaseSplash() {
     try {
