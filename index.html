@@ -345,8 +345,283 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 <link rel="shortcut icon" href="/abusaif-app-1795638331-64.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/abusaif-app-1795638331-180.png">
 <!-- ABUSAIF_APP_ICONS_END -->
+
+<!-- ABUDHIYA_PRO_NATIVE_LAUNCH_HEAD_START -->
+<style id="abProNativeLaunchCss" data-pro-launch="1">
+  /* 1) إحساس تطبيق جوال أصلي ومنع وميض اللمس والتمرير العشوائي */
+  html, body {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-font-smoothing: antialiased !important;
+    overscroll-behavior-y: contain;
+    scroll-behavior: smooth;
+  }
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation;
+    transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  button:active, [role="button"]:active {
+    transform: scale(0.972);
+  }
+
+  /* 2) شاشة الإقلاع الفورية (Native Splash Screen) لإخفاء لحظة تجهيز السكربتات تماماً */
+  #abProSplash {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: radial-gradient(circle at 50% 36%, #0b4a33 0%, #05261a 56%, #02120c 100%);
+    color: #f8fafc;
+    direction: rtl;
+    font-family: "Cairo", "Tajawal", system-ui, -apple-system, sans-serif;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.42s ease;
+    pointer-events: all;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #abProSplash.ab-splash-hide {
+    opacity: 0;
+    transform: scale(1.035);
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .ab-sp-icon-wrap {
+    position: relative;
+    width: 98px;
+    height: 98px;
+    border-radius: 26px;
+    padding: 3px;
+    background: linear-gradient(145deg, rgba(110, 231, 183, 0.72), rgba(212, 175, 55, 0.55));
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 36px rgba(16, 185, 129, 0.28);
+    animation: abSpFloat 1.8s ease-in-out infinite;
+  }
+  .ab-sp-icon-wrap img {
+    width: 100%;
+    height: 100%;
+    border-radius: 23px;
+    object-fit: cover;
+    display: block;
+    background: #042f1e;
+  }
+  .ab-sp-title {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    color: #ffffff;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    margin-top: 2px;
+  }
+  .ab-sp-sub {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #a7f3d0;
+    opacity: 0.92;
+    margin-top: -10px;
+  }
+  .ab-sp-bar {
+    width: 146px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .ab-sp-bar-fill {
+    width: 45%;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #34d399, #fde68a, #10b981);
+    animation: abSpSlide 1.05s ease-in-out infinite;
+  }
+  @keyframes abSpFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+  }
+  @keyframes abSpSlide {
+    0% { transform: translateX(120%); }
+    100% { transform: translateX(-180%); }
+  }
+
+  /* 3) ترقية تصميم بوابة الدخول لتكون بتناغم زمردي فخم ونظيف */
+  #abAccessGateOverlay {
+    background: radial-gradient(circle at 50% 20%, rgba(6, 78, 59, 0.72) 0%, rgba(3, 12, 9, 0.96) 72%) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    padding: 16px !important;
+  }
+  #abAccessGateOverlay .ab-gate-card {
+    max-width: 400px !important;
+    border-radius: 24px !important;
+    background: linear-gradient(170deg, rgba(10, 34, 26, 0.96) 0%, rgba(7, 15, 13, 0.98) 65%, rgba(10, 26, 20, 0.98) 100%) !important;
+    border: 1px solid rgba(110, 231, 183, 0.28) !important;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    padding: 20px 16px 18px !important;
+    animation: abGateIn 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes abGateIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .ab-gate-brand-badge {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 10px;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(145deg, rgba(52, 211, 153, 0.75), rgba(250, 204, 21, 0.45));
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.42);
+  }
+  .ab-gate-brand-badge img {
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    object-fit: cover;
+    display: block;
+  }
+  #abAccessGateOverlay .ab-gate-tabs {
+    background: rgba(2, 12, 9, 0.72) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 14px !important;
+    padding: 4px !important;
+    gap: 4px !important;
+    margin-bottom: 12px !important;
+  }
+  #abAccessGateOverlay .ab-gate-tab {
+    border-radius: 10px !important;
+    border: none !important;
+    background: transparent !important;
+    color: #94a3b8 !important;
+    font-weight: 800 !important;
+    padding: 8px 6px !important;
+  }
+  #abAccessGateOverlay .ab-gate-tab.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.34) !important;
+  }
+
+  /* 4) تجميل صندوق بيانات العميل والحقول داخل البوابة */
+  #abGateCustBox {
+    background: rgba(4, 18, 13, 0.78) !important;
+    border: 1px solid rgba(52, 211, 153, 0.24) !important;
+    border-radius: 16px !important;
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  #abGateCustBox .ab-gc-inp,
+  #abAccessGateOverlay input[type="text"],
+  #abAccessGateOverlay input[type="tel"],
+  #abAccessGateOverlay input[type="password"] {
+    background: rgba(2, 10, 8, 0.88) !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
+    border-radius: 12px !important;
+    padding: 11px 13px !important;
+    color: #f8fafc !important;
+    font-size: 13.5px !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  #abGateCustBox .ab-gc-inp:focus,
+  #abAccessGateOverlay input:focus {
+    border-color: #34d399 !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important;
+  }
+  #abAccessGateOverlay #abGateRepGo,
+  #abAccessGateOverlay #abGateGuestGo,
+  #abAccessGateOverlay #abGateStaffGo,
+  #abAccessGateOverlay #abGateAdminGo {
+    border-radius: 13px !important;
+    padding: 12px 14px !important;
+    font-weight: 900 !important;
+    font-size: 14px !important;
+    border: 1px solid rgba(110, 231, 183, 0.45) !important;
+    background: linear-gradient(135deg, #10b981 0%, #059669 55%, #047857 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 24px rgba(5, 150, 105, 0.35) !important;
+  }
+
+  /* 5) تنعيم بطاقة العميل المحفوظة والهيدر والبطاقات في الصفحة الرئيسية */
+  #abSavedCustBadgeCard {
+    background: linear-gradient(145deg, rgba(6, 46, 34, 0.95) 0%, rgba(7, 20, 16, 0.98) 100%) !important;
+    border: 1px solid rgba(52, 211, 153, 0.42) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28) !important;
+  }
+  header, .header, .top-bar, .app-header {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+</style>
+<!-- ABUDHIYA_PRO_NATIVE_LAUNCH_HEAD_END -->
 </head>
 <body>
+<!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
+<div id="abProSplash" aria-hidden="true">
+  <div class="ab-sp-icon-wrap">
+    <img src="/abusaif-app-1795638331-512.png" alt="أبوسيف للتجارة العامة" decoding="sync">
+  </div>
+  <div class="ab-sp-title">أبوسيف للتجارة العامة</div>
+  <div class="ab-sp-sub">بوابة الطلبات السريعة</div>
+  <div class="ab-sp-bar"><div class="ab-sp-bar-fill"></div></div>
+</div>
+<script data-ab-pro-launch="1">
+(function () {
+  if (window.__abProNativeLaunchV1) return;
+  window.__abProNativeLaunchV1 = true;
+
+  var ICON_SRC = "/abusaif-app-1795638331-512.png";
+  var startedAt = Date.now();
+  var hidden = false;
+
+  function hideSplash() {
+    if (hidden) return;
+    hidden = true;
+    var el = document.getElementById("abProSplash");
+    if (!el) return;
+    el.classList.add("ab-splash-hide");
+    setTimeout(function () {
+      try { if (el && el.parentNode) el.parentNode.removeChild(el); } catch (e) {}
+    }, 480);
+  }
+
+  function scheduleHide() {
+    var elapsed = Date.now() - startedAt;
+    // انتظار وجيز (580ms) يكفي لانتهاء كل طبقات الصلاحيات والتعبئة خلف الشاشة بدون أي قفز بصري
+    var wait = Math.max(0, 580 - elapsed);
+    setTimeout(hideSplash, wait);
+  }
+
+  if (document.readyState === "complete") {
+    scheduleHide();
+  } else {
+    document.addEventListener("DOMContentLoaded", scheduleHide, { once: true });
+    window.addEventListener("load", scheduleHide, { once: true });
+  }
+  // أمان مطلق: إخفاء الشاشة تلقائياً بعد 1.8 ثانية كحد أقصى حتى لو تأخرت أي صورة خارجية
+  setTimeout(hideSplash, 1800);
+
+  // إضافة شعار الأيقونة الخضراء الأنيق أعلى بطاقة بوابة الدخول تلقائياً عند ظهورها
+  function decorateGateBrand() {
+    var card = document.querySelector("#abAccessGateOverlay .ab-gate-card");
+    if (!card || card.querySelector(".ab-gate-brand-badge")) return;
+    var badge = document.createElement("div");
+    badge.className = "ab-gate-brand-badge";
+    badge.innerHTML = '<img src="' + ICON_SRC + '" alt="logo">';
+    card.insertAdjacentElement("afterbegin", badge);
+  }
+
+  setTimeout(decorateGateBrand, 220);
+  setTimeout(decorateGateBrand, 700);
+  setInterval(decorateGateBrand, 1800);
+})();
+</script>
+<!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_END -->
+
 <!-- ABUSAIF_LUXURY_HEADER_START -->
 <style id="abSaifLuxuryHeaderStyle">
   .absf-hdr-shell {
@@ -18995,6 +19270,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_OFFICIAL_RECEIPT_IMAGE_SEND_END -->
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -19038,7 +19314,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-642358";
+  var TARGET_CACHE = "abudhiya-offline-v4-666998";
 
   function forceReleaseSplash() {
     try {
