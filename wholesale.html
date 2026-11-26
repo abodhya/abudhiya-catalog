@@ -23580,13 +23580,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_WEBPUSH_START -->
-<style id="abWebPushCss" data-ab-webpush="2">
+<style id="abWebPushCss" data-ab-webpush="3">
   #abCustPushCard {
     display: flex !important;
+    flex-wrap: wrap !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 10px !important;
+    gap: 8px 10px !important;
     padding: 10px 12px !important;
     margin-bottom: 10px !important;
     border-radius: 15px !important;
@@ -23595,7 +23598,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-shadow: 0 3px 10px rgba(6, 78, 59, 0.06) !important;
   }
   #abCustPushCard .ab-cp-txt {
-    flex: 1 1 auto !important;
+    flex: 1 1 160px !important;
     min-width: 0 !important;
   }
   #abCustPushCard .ab-cp-t {
@@ -23633,6 +23636,35 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-text-fill-color: #065f46 !important;
     border: 1px solid rgba(5, 150, 105, 0.35) !important;
     box-shadow: none !important;
+  }
+  #abCustPushDiag {
+    display: none;
+    width: 100% !important;
+    font-size: 11.4px !important;
+    font-weight: 800 !important;
+    line-height: 1.45 !important;
+    padding: 7px 9px !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(5, 150, 105, 0.28) !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    box-sizing: border-box !important;
+  }
+  #abCustPushDiag.show {
+    display: block !important;
+  }
+  #abCustPushDiag.err {
+    background: #fef2f2 !important;
+    border-color: rgba(220, 38, 38, 0.35) !important;
+    color: #991b1b !important;
+    -webkit-text-fill-color: #991b1b !important;
+  }
+  #abCustPushDiag.warn {
+    background: #fffbeb !important;
+    border-color: rgba(245, 158, 11, 0.42) !important;
+    color: #92400e !important;
+    -webkit-text-fill-color: #92400e !important;
   }
   #abAdminPushToggleBtn {
     width: 100% !important;
@@ -23716,17 +23748,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #065f46 !important;
   }
 </style>
-<script data-ab-webpush="2">
+<script data-ab-webpush="3">
 (function () {
-  if (window.__abWebPushV2) return;
-  window.__abWebPushV2 = true;
+  if (window.__abWebPushV3) return;
+  window.__abWebPushV3 = true;
 
   var BUILTIN_APP_ID = "d2ebcf2d-0cde-478c-ae28-7d4166e74222";
   var LS_APP_ID = "ab_os_appid_v1";
   var LS_API_KEY = "ab_os_restkey_v1";
   var activeAppId = BUILTIN_APP_ID || "";
-  var sdkLoaded = false;
-  var osReady = false;
+  var sdkState = "idle"; // idle | loading | ready | error
+  var sdkErrMsg = "";
+  var osInstance = null;
 
   function getEffectiveAppId() {
     var localId = "";
@@ -23768,32 +23801,105 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return false;
   }
 
-  /* 1) تحميل OneSignal SDK v16 بأمان في نطاق /push/onesignal/ المعزول عن sw.js */
+  function setCustDiag(msg, kind) {
+    var d = document.getElementById("abCustPushDiag");
+    if (!d) return;
+    if (!msg) {
+      d.className = "";
+      d.textContent = "";
+      return;
+    }
+    d.className = "show" + (kind ? (" " + kind) : "");
+    d.textContent = msg;
+  }
+
+  function getPushSubInfo() {
+    try {
+      var os = osInstance || window.OneSignal;
+      if (os && os.User && os.User.PushSubscription) {
+        return {
+          optedIn: !!os.User.PushSubscription.optedIn,
+          id: String(os.User.PushSubscription.id || "")
+        };
+      }
+    } catch (e) {}
+    return { optedIn: false, id: "" };
+  }
+
+  function isPushSubscribed() {
+    var perm = (typeof Notification !== "undefined") ? Notification.permission : "default";
+    var info = getPushSubInfo();
+    return perm === "granted" && info.optedIn && !!info.id;
+  }
+
+  /* 1) تحميل وتهيئة OneSignal SDK v16 مع التقاط أي خطأ فعلي بدلاً من الصمت */
   function initOneSignalSdk(appId) {
-    if (!appId || sdkLoaded) return;
-    if (window.location.protocol !== "https:" && window.location.hostname !== "localhost") return;
-    sdkLoaded = true;
+    if (!appId) return;
+    if (sdkState === "loading" || sdkState === "ready") return;
+    if (window.location.protocol !== "https:" && window.location.hostname !== "localhost") {
+      sdkState = "error";
+      sdkErrMsg = "المتجر يجب أن يُفتح عبر رابط HTTPS الآمن.";
+      return;
+    }
+    sdkState = "loading";
+    sdkErrMsg = "";
+
     window.OneSignalDeferred = window.OneSignalDeferred || [];
     window.OneSignalDeferred.push(async function (OneSignal) {
       try {
         await OneSignal.init({
           appId: appId,
-          serviceWorkerPath: "/push/onesignal/OneSignalSDKWorker.js",
+          serviceWorkerPath: "push/onesignal/OneSignalSDKWorker.js",
           serviceWorkerParam: { scope: "/push/onesignal/" },
           allowLocalhostAsSecureOrigin: true
         });
-        osReady = true;
+        osInstance = OneSignal;
+        sdkState = "ready";
+        sdkErrMsg = "";
         refreshCustomerPushCard();
-      } catch (e) {}
+      } catch (e) {
+        sdkState = "error";
+        sdkErrMsg = String((e && e.message) ? e.message : e || "فشل تهيئة OneSignal");
+        refreshCustomerPushCard();
+      }
     });
-    var s = document.createElement("script");
-    s.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
-    s.defer = true;
-    document.head.appendChild(s);
+
+    var existing = document.querySelector('script[data-ab-os-sdk="1"]');
+    if (!existing) {
+      var s = document.createElement("script");
+      s.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+      s.defer = true;
+      s.setAttribute("data-ab-os-sdk", "1");
+      s.onerror = function () {
+        sdkState = "error";
+        sdkErrMsg = "تعذر تحميل ملف OneSignal (cdn.onesignal.com) — قد يكون محجوباً على الشبكة الحالية بدون VPN.";
+        refreshCustomerPushCard();
+      };
+      document.head.appendChild(s);
+    }
+  }
+
+  function waitForOneSignal(timeoutMs) {
+    return new Promise(function (resolve) {
+      var start = Date.now();
+      (function poll() {
+        if (sdkState === "ready" && (osInstance || window.OneSignal)) {
+          return resolve({ ok: true, os: osInstance || window.OneSignal });
+        }
+        if (sdkState === "error") {
+          return resolve({ ok: false, error: sdkErrMsg || "فشل الاتصال بـ OneSignal" });
+        }
+        if (Date.now() - start >= timeoutMs) {
+          return resolve({ ok: false, error: "انتهت مهلة تحميل OneSignal (cdn.onesignal.com) — الشبكة الحالية لا تصل إلى خادم OneSignal." });
+        }
+        setTimeout(poll, 250);
+      })();
+    });
   }
 
   function loadRemoteConfig() {
-    if (activeAppId) initOneSignalSdk(activeAppId);
+    var eid = getEffectiveAppId();
+    if (eid) initOneSignalSdk(eid);
     try {
       fetch("/push_config.json?v=" + Date.now(), { cache: "no-store" })
         .then(function (r) { return r.ok ? r.json() : null; })
@@ -23809,38 +23915,83 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  function isPushSubscribed() {
-    try {
-      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-        if (window.OneSignal && window.OneSignal.User && window.OneSignal.User.PushSubscription) {
-          return !!window.OneSignal.User.PushSubscription.optedIn;
-        }
-        return true;
-      }
-    } catch (e) {}
-    return false;
-  }
-
-  function requestPushSubscribe() {
+  async function requestPushSubscribe() {
+    var btn = document.getElementById("abCustPushBtn");
     var appId = getEffectiveAppId();
     if (!appId) {
-      if (typeof showToast === "function") showToast("⚠️ إشعارات شاشة القفل غير مربوطة بعد");
+      setCustDiag("⚠️ إشعارات شاشة القفل غير مربوطة بـ App ID بعد.", "warn");
       return;
     }
-    if (!sdkLoaded) initOneSignalSdk(appId);
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function (OneSignal) {
-      try {
-        await OneSignal.Notifications.requestPermission();
-        if (OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.optIn) {
-          await OneSignal.User.PushSubscription.optIn();
-        }
-        refreshCustomerPushCard();
-        if (typeof showToast === "function") showToast("✅ تم تفعيل إشعارات العروض على شاشة القفل");
-      } catch (e) {
-        if (typeof showToast === "function") showToast("⚠️ اسمح بالإشعارات من إعدادات المتصفح");
+
+    if (typeof Notification === "undefined" || !("serviceWorker" in navigator)) {
+      setCustDiag("⚠️ هذا المتصفح لا يدعم إشعارات الويب (على آيفون: أضف المتجر للشاشة الرئيسية أولاً).", "warn");
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      setCustDiag("🚫 الإشعارات محظورة لهذا الموقع في المتصفح — اضغط أيقونة الإعدادات بجانب رابط الموقع بالأعلى ← الأذونات ← الإشعارات ← سماح، ثم أعد المحاولة.", "err");
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "⏳ جاري التفعيل...";
+    }
+    setCustDiag("⏳ جاري طلب إذن الإشعارات والربط بالخادم...", "");
+
+    try {
+      // 1) طلب إذن المتصفح مباشرة داخل ضغطة المستخدم لضمان ظهور نافذة «السماح» فوراً
+      var perm = Notification.permission;
+      if (perm === "default") {
+        perm = await Notification.requestPermission();
       }
-    });
+      if (perm !== "granted") {
+        setCustDiag("⚠️ لم يتم منح إذن الإشعارات (الحالة: " + perm + "). اضغط تفعيل واختر «سماح».", "warn");
+        return;
+      }
+
+      // 2) التأكد من تحميل وتهيئة OneSignal SDK
+      if (sdkState === "error") {
+        sdkState = "idle";
+        var oldTag = document.querySelector('script[data-ab-os-sdk="1"]');
+        if (oldTag && oldTag.parentNode) oldTag.parentNode.removeChild(oldTag);
+      }
+      initOneSignalSdk(appId);
+
+      var waited = await waitForOneSignal(9000);
+      if (!waited.ok) {
+        setCustDiag("❌ تم السماح بالإشعارات في المتصفح، لكن: " + waited.error, "err");
+        return;
+      }
+
+      var os = waited.os;
+      if (os.User && os.User.PushSubscription && os.User.PushSubscription.optIn) {
+        await os.User.PushSubscription.optIn();
+      }
+
+      // انتظار قصير لتأكيد استلام معرّف الاشتراك من OneSignal
+      var subId = "";
+      for (var t = 0; t < 10; t++) {
+        var info = getPushSubInfo();
+        if (info.optedIn && info.id) {
+          subId = info.id;
+          break;
+        }
+        await new Promise(function (r) { setTimeout(r, 350); });
+      }
+
+      if (subId) {
+        setCustDiag("✅ تم تفعيل إشعارات شاشة القفل بنجاح! جهازك الآن مسجّل لاستقبال الإشعارات.", "");
+        if (typeof showToast === "function") showToast("✅ تم تفعيل إشعارات شاشة القفل بنجاح");
+      } else {
+        setCustDiag("⚠️ تم السماح في المتصفح ولكن لم يكتمل تسجيل الاشتراك مع OneSignal بعد — أعد تحديث الصفحة واضغط تفعيل مرة أخرى.", "warn");
+      }
+    } catch (e) {
+      setCustDiag("❌ خطأ أثناء التفعيل: " + String((e && e.message) ? e.message : e), "err");
+    } finally {
+      if (btn) btn.disabled = false;
+      refreshCustomerPushCard();
+    }
   }
 
   function refreshCustomerPushCard() {
@@ -23858,7 +24009,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     if (isPushSubscribed()) {
       btn.textContent = "✓ مفعّلة";
       btn.classList.add("subscribed");
-      if (sub) sub.textContent = "ستصلك العروض والأصناف الجديدة فور نزولها على جوالك.";
+      if (sub) sub.textContent = "جهازك مشترك — ستصلك العروض الجديدة فور نزولها على شاشة القفل.";
     } else {
       btn.textContent = "🔔 تفعيل الآن";
       btn.classList.remove("subscribed");
@@ -23978,7 +24129,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     var scrollWrap = document.querySelector("#abAlertsDrawerSheet .ab-ad-scroll");
     if (!scrollWrap) return;
 
-    // أ) بطاقة تفعيل إشعارات شاشة القفل للعملاء
     if (!document.getElementById("abCustPushCard")) {
       var cCard = document.createElement("div");
       cCard.id = "abCustPushCard";
@@ -23988,13 +24138,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           '<div class="ab-cp-t">🔔 إشعارات شاشة القفل</div>' +
           '<div id="abCustPushSub" class="ab-cp-s">فعّلها لتصلك العروض الجديدة بصوت وإشعار حتى والتطبيق مغلق.</div>' +
         '</div>' +
-        '<button type="button" id="abCustPushBtn">🔔 تفعيل الآن</button>';
+        '<button type="button" id="abCustPushBtn">🔔 تفعيل الآن</button>' +
+        '<div id="abCustPushDiag"></div>';
       scrollWrap.insertBefore(cCard, scrollWrap.firstChild);
       document.getElementById("abCustPushBtn").addEventListener("click", requestPushSubscribe);
     }
     refreshCustomerPushCard();
 
-    // ب) زر ولوحة إرسال إشعارات شاشة القفل للمدير
     var admToggle = document.getElementById("abAdminPushToggleBtn");
     var admBox = document.getElementById("abAdminPushBox");
     if (!admToggle) {
@@ -24060,7 +24210,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           if (aVal) localStorage.setItem(LS_APP_ID, aVal);
           if (kVal) localStorage.setItem(LS_API_KEY, kVal);
         } catch (e) {}
-        if (aVal) initOneSignalSdk(aVal);
+        if (aVal) {
+          sdkState = "idle";
+          initOneSignalSdk(aVal);
+        }
         refreshAdminPushStatus();
         refreshCustomerPushCard();
         if (typeof showToast === "function") showToast("✅ تم حفظ إعدادات إشعارات شاشة القفل");
@@ -24158,7 +24311,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-699087";
+  var TARGET_CACHE = "abudhiya-offline-v4-699717";
 
   function forceReleaseSplash() {
     try {
