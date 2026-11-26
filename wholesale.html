@@ -558,6 +558,355 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
   }
 </style>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_HEAD_END -->
+
+<!-- ABUDHIYA_FLAGSHIP_UI_START -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="1">
+  :root {
+    --ab-bg: #f2f6f4;
+    --ab-surface: #ffffff;
+    --ab-emerald-dark: #042f22;
+    --ab-emerald: #059669;
+    --ab-emerald-deep: #047857;
+    --ab-emerald-soft: #ecfdf5;
+    --ab-ink: #0f172a;
+    --ab-muted: #475569;
+    --ab-border: rgba(6, 78, 59, 0.10);
+    --ab-gold: #d4af37;
+  }
+
+  /* 1) الخط العربي الاحترافي والخلفية النظيفة المريحة للعين */
+  html, body {
+    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
+    background: var(--ab-bg) !important;
+    color: var(--ab-ink) !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+  body {
+    padding-bottom: 98px !important;
+  }
+  button, input, select, textarea {
+    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
+  }
+
+  /* 2) الترويسة الملكية العلوية المتناغمة مع الأيقونة الخضراء */
+  #abSaifLuxuryHeader,
+  .absf-hdr-card {
+    background: linear-gradient(135deg, #03261b 0%, #065f46 62%, #047857 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(250, 204, 21, 0.34) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 12px 28px rgba(4, 47, 34, 0.22) !important;
+    margin: 10px 10px 8px !important;
+  }
+  #abSaifLuxuryHeader h1,
+  #abSaifLuxuryHeader h2,
+  .absf-hdr-card h1,
+  .absf-hdr-card h2 {
+    letter-spacing: 0 !important;
+    font-weight: 900 !important;
+  }
+
+  /* 3) الشريط العلوي للبحث والأدوات بتأثير الزجاج الأبيض */
+  .app-top {
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid var(--ab-border) !important;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+    padding: 8px 12px !important;
+  }
+  .app-top input[type="search"],
+  .app-top input[type="text"] {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1.2px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 10px 14px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+  }
+  .app-top input:focus {
+    background: #ffffff !important;
+    border-color: var(--ab-emerald) !important;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.14) !important;
+  }
+
+  .top-actions {
+    gap: 8px !important;
+  }
+  .top-actions button,
+  #repeatBtn,
+  #onlySelBtn {
+    background: #ffffff !important;
+    color: #065f46 !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.26) !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    font-size: 12.5px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+  }
+  .top-actions button.active,
+  #onlySelBtn.active {
+    background: linear-gradient(135deg, #059669, #047857) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 6px 14px rgba(5, 150, 105, 0.28) !important;
+  }
+
+  /* 4) شريط الأقسام والتبويبات بنمط كبسولات عصرية */
+  #tabsBar,
+  .tabs-bar {
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    scrollbar-width: none !important;
+  }
+  #tabsBar::-webkit-scrollbar,
+  .tabs-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+  #tabsBar button,
+  .tabs-bar button,
+  .tabs-bar .tab {
+    border-radius: 999px !important;
+    padding: 8px 16px !important;
+    background: #ffffff !important;
+    color: #334155 !important;
+    border: 1px solid #e2e8f0 !important;
+    font-size: 12.8px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+    white-space: nowrap !important;
+  }
+  #tabsBar button.active,
+  .tabs-bar button.active,
+  .tabs-bar .tab.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.30) !important;
+  }
+
+  /* 5) الشريط الإخباري والمبدّل بأسلوب هادئ وأنيق */
+  #liveTicker {
+    margin: 6px 12px 10px !important;
+    padding: 7px 14px !important;
+    border-radius: 13px !important;
+    background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 100%) !important;
+    border: 1px solid #a7f3d0 !important;
+    box-shadow: none !important;
+  }
+  #tickerTxt {
+    color: #065f46 !important;
+    font-weight: 800 !important;
+    font-size: 12.5px !important;
+  }
+  #abPwaPriceSwitcher,
+  .ab-sw-bar {
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    border: 1px solid var(--ab-border) !important;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+  }
+
+  /* 6) شبكة المنتجات والكروت البيضاء الفخمة */
+  #prodGrid,
+  .grid {
+    gap: 11px !important;
+    padding: 4px 12px 24px !important;
+  }
+  #prodGrid .card,
+  .grid .card {
+    background: var(--ab-surface) !important;
+    color: var(--ab-ink) !important;
+    border: 1px solid rgba(15, 23, 42, 0.07) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+    overflow: hidden !important;
+    transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+  }
+  #prodGrid .card.selected,
+  #prodGrid .card.has-qty,
+  #prodGrid .card.active {
+    border: 2px solid var(--ab-emerald) !important;
+    box-shadow: 0 10px 24px rgba(5, 150, 105, 0.16) !important;
+  }
+  #prodGrid .card img {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    object-fit: contain !important;
+  }
+  #prodGrid .card-body {
+    padding: 10px 10px 12px !important;
+    background: transparent !important;
+  }
+  #prodGrid .card-body h3,
+  #prodGrid .card-body h4,
+  #prodGrid .card-body .title,
+  #prodGrid .card-body .name,
+  #prodGrid .card-body .prod-name {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 13.5px !important;
+    line-height: 1.42 !important;
+  }
+  #prodGrid .card input[type="number"],
+  #prodGrid .card input[type="text"] {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border: 1.2px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    font-weight: 900 !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+
+  /* 7) شاشة الفاتورة المرتبة */
+  #viewInvoice {
+    padding: 10px 12px 30px !important;
+  }
+  .inv-head,
+  .inv-totals-card,
+  #invEmptyState {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid var(--ab-border) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
+    padding: 14px !important;
+  }
+  #invDateMeta {
+    color: #475569 !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+  }
+  #mQtySummary,
+  #mTotalSummary {
+    font-variant-numeric: tabular-nums !important;
+    font-weight: 900 !important;
+  }
+  #payPills button {
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    border: 1.2px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+  }
+  #payPills button.active {
+    background: linear-gradient(135deg, #059669, #047857) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
+  }
+
+  /* 8) لوحة الأرقام السريعة للاختيار */
+  .qp-head {
+    font-weight: 900 !important;
+  }
+  .shortcuts-grid button,
+  .numpad-grid button {
+    border-radius: 14px !important;
+    font-weight: 900 !important;
+    font-variant-numeric: tabular-nums !important;
+  }
+
+  /* 9) شريط التنقل السفلي العائم (Floating Glass Dock) */
+  .app-nav {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    width: auto !important;
+    border-radius: 22px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border: 1px solid rgba(6, 78, 59, 0.14) !important;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.15) !important;
+    padding: 6px !important;
+    z-index: 9990 !important;
+  }
+  .nav-in {
+    gap: 8px !important;
+  }
+  .nav-tab {
+    border-radius: 16px !important;
+    color: #475569 !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    background: transparent !important;
+  }
+  .nav-tab.active {
+    background: #ecfdf5 !important;
+    color: #047857 !important;
+    box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.22) !important;
+  }
+  .nav-inv-btn {
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    font-size: 13.5px !important;
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.30) !important;
+  }
+  .nav-inv-btn.empty {
+    background: #e2e8f0 !important;
+    color: #475569 !important;
+    box-shadow: none !important;
+  }
+  .nav-badge {
+    font-variant-numeric: tabular-nums !important;
+    font-weight: 900 !important;
+    border-radius: 999px !important;
+  }
+
+  /* 10) إشعارات التطبيق العائمة */
+  #toastEl {
+    background: #042f22 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(52, 211, 153, 0.45) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.26) !important;
+    font-weight: 800 !important;
+    padding: 10px 18px !important;
+  }
+</style>
+<script data-ab-flagship-ui="1">
+(function () {
+  if (window.__abFlagshipUiV1) return;
+  window.__abFlagshipUiV1 = true;
+
+  // ضبط لون شريط الحالة العلوي في أندرويد ليتطابق مع الترويسة الزمردية
+  try {
+    var tm = document.querySelector('meta[name="theme-color"]');
+    if (!tm) {
+      tm = document.createElement("meta");
+      tm.name = "theme-color";
+      document.head.appendChild(tm);
+    }
+    tm.content = "#042F22";
+  } catch (e) {}
+
+  // تحديث تلقائي ذكي للواجهة فور نزول إصدار Service Worker جديد (مرة واحدة فقط دون تكرار)
+  try {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (sessionStorage.getItem("ab_sw_reloaded_v1")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v1", "1");
+        window.location.reload();
+      });
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        for (var i = 0; i < regs.length; i++) {
+          try { regs[i].update(); } catch (e) {}
+        }
+      });
+    }
+  } catch (e) {}
+})();
+</script>
+<!-- ABUDHIYA_FLAGSHIP_UI_END -->
 </head>
 <body>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
@@ -19271,6 +19620,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_OFFICIAL_RECEIPT_IMAGE_SEND_END -->
 
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -19314,7 +19664,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-666998";
+  var TARGET_CACHE = "abudhiya-offline-v4-667422";
 
   function forceReleaseSplash() {
     try {
