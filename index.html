@@ -573,6 +573,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20523,8 +20524,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="14">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="15">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -21918,11 +21921,47 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #fef08a !important;
     -webkit-text-fill-color: #fef08a !important;
   }
+
+  /* 16) اللمسة النهائية (v15): ضبط عرض كبسولة مندوب المبيعات + تفتيح زر إعادة آخر طلب + رفع زر التثبيت */
+  html body #abSaifLuxuryHeader .ab-hdr-rep-pill,
+  html body .absf-hdr-card .ab-hdr-rep-pill {
+    max-width: 100% !important;
+    padding: 2px 8px !important;
+    font-size: 10.2px !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html body #abSaifLuxuryHeader .ab-hdr-rep-pill *,
+  html body .absf-hdr-card .ab-hdr-rep-pill * {
+    font-size: 10.2px !important;
+  }
+  html body [data-ab-repeat-btn="1"] {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.30) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(6, 78, 59, 0.08) !important;
+    font-weight: 800 !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-repeat-btn="1"] * {
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-dark-strip="1"] {
+    background: #d1fae5 !important;
+    background-image: none !important;
+    border-color: rgba(5, 150, 105, 0.25) !important;
+  }
 </style>
-<script data-ab-flagship-ui="14">
+<script data-ab-flagship-ui="15">
 (function () {
-  if (window.__abFlagshipUiV14) return;
-  window.__abFlagshipUiV14 = true;
+  if (window.__abFlagshipUiV15) return;
+  window.__abFlagshipUiV15 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -22574,6 +22613,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         unifyQuantityPickerAndModals();
         polishCatalogCardsAndFooter();
       collapseEmptyGaps();
+      applyFinalPolishV15();
+    applyFinalPolishV15();
         scanAndMergeExtraBottomBar();
         syncSafeClearance();
       }, 45);
@@ -22636,8 +22677,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v14")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v14", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v15")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v15", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -22734,6 +22775,43 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
+  /* 10) اللمسة النهائية (v15): تفتيح زر إعادة آخر طلب ورفع زر تثبيت التطبيق فوق الشريط السفلي */
+  function applyFinalPolishV15() {
+    try {
+      // أ) تفتيح زر «إعادة آخر طلب» الأسود
+      var btns = document.querySelectorAll("button, a");
+      for (var i = 0; i < btns.length; i++) {
+        var b = btns[i];
+        var t = (b.textContent || "").replace(/\s+/g, " ").trim();
+        if (t && t.length < 30 && /إعادة\s*آخر\s*طلب/.test(t)) {
+          b.setAttribute("data-ab-repeat-btn", "1");
+        }
+      }
+
+      // ب) تفتيح الشريط الكحلي/الأسود النحيف أسفل #liveTicker إن وجد
+      var tk = document.getElementById("liveTicker");
+      if (tk && tk.nextElementSibling) {
+        var nx = tk.nextElementSibling;
+        var ncs = window.getComputedStyle(nx);
+        var nr = nx.getBoundingClientRect();
+        if (ncs && nr.height > 2 && nr.height < 22 && isNeutralDarkBg(ncs)) {
+          nx.setAttribute("data-ab-dark-strip", "1");
+        }
+      }
+
+      // ج) رفع زر «تثبيت التطبيق / تحديث الأيقونة» وتلوينه بالزمردي بقوة أعلى من inline styles
+      var pills = document.querySelectorAll('[data-ab-install-pill="1"]');
+      for (var p = 0; p < pills.length; p++) {
+        var pl = pills[p];
+        pl.style.setProperty("bottom", "70px", "important");
+        pl.style.setProperty("background", "linear-gradient(135deg, #033325 0%, #065f46 100%)", "important");
+        pl.style.setProperty("color", "#fef08a", "important");
+        pl.style.setProperty("border", "1.2px solid rgba(250, 204, 21, 0.65)", "important");
+        pl.style.setProperty("z-index", "840", "important");
+      }
+    } catch (e) {}
+  }
+
   function boot() {
     initSmartBottomDock();
     fixHeaderContrast();
@@ -22812,7 +22890,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-688914";
+  var TARGET_CACHE = "abudhiya-offline-v4-689117";
 
   function forceReleaseSplash() {
     try {
