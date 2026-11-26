@@ -23578,8 +23578,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_POTATO_ALL_FLAVORS_END -->
 
 
+
+
 <!-- ABUDHIYA_WEBPUSH_START -->
-<style id="abWebPushCss" data-ab-webpush="1">
+<style id="abWebPushCss" data-ab-webpush="2">
   #abCustPushCard {
     display: flex !important;
     align-items: center !important;
@@ -23714,10 +23716,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #065f46 !important;
   }
 </style>
-<script data-ab-webpush="1">
+<script data-ab-webpush="2">
 (function () {
-  if (window.__abWebPushV1) return;
-  window.__abWebPushV1 = true;
+  if (window.__abWebPushV2) return;
+  window.__abWebPushV2 = true;
 
   var BUILTIN_APP_ID = "d2ebcf2d-0cde-478c-ae28-7d4166e74222";
   var LS_APP_ID = "ab_os_appid_v1";
@@ -23928,18 +23930,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     params.push("ab_d=" + encodeURIComponent(body));
     var deepUrl = base + "?" + params.join("&");
 
-    var payload = {
-      app_id: appId,
-      included_segments: ["All"],
-      headings: { ar: title, en: title },
-      contents: { ar: body, en: body },
-      url: deepUrl
-    };
-
+    var imgUrl = "";
     try {
       var rawImg = p ? (p.img || p.image || p.photo || "") : "";
       if (rawImg && rawImg.indexOf("data:") !== 0) {
-        payload.chrome_web_image = new URL(rawImg, base).href;
+        imgUrl = new URL(rawImg, base).href;
       }
     } catch (e) {}
 
@@ -23947,26 +23942,32 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     if (msgEl) msgEl.textContent = "";
 
     try {
-      var res = await fetch("https://api.onesignal.com/notifications", {
+      var res = await fetch("/api/send-push", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          "Authorization": "Key " + restKey
-        },
-        body: JSON.stringify(payload)
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({
+          app_id: appId,
+          rest_key: restKey,
+          title: title,
+          body: body,
+          url: deepUrl,
+          image: imgUrl
+        })
       });
       var data = await res.json().catch(function () { return {}; });
-      if (res.ok && data && !data.errors) {
-        var rcp = data.recipients || 0;
-        var okTxt = "✅ تم إرسال إشعار شاشة القفل بنجاح" + (rcp ? (" إلى " + rcp + " مشترك") : "!");
+      if (res.ok && data && data.ok) {
+        var rcp = Number(data.recipients || 0);
+        var okTxt = rcp > 0
+          ? ("✅ تم إرسال إشعار شاشة القفل بنجاح إلى " + rcp + " مشترك!")
+          : "⚠️ تم الاتصال بـ OneSignal بنجاح، لكن عدد المشتركين حالياً (0) — اضغط «🔔 تفعيل الآن» بالأعلى ثم أعد المحاولة.";
         if (msgEl) msgEl.textContent = okTxt;
         if (typeof showToast === "function") showToast(okTxt);
       } else {
-        var errStr = (data && data.errors) ? JSON.stringify(data.errors) : ("HTTP " + res.status);
+        var errStr = (data && data.error) ? (typeof data.error === "string" ? data.error : JSON.stringify(data.error)) : ("HTTP " + res.status);
         if (msgEl) msgEl.textContent = "❌ تعذر الإرسال: " + errStr;
       }
     } catch (e) {
-      if (msgEl) msgEl.textContent = "❌ تعذر الاتصال بخادم الإشعارات — تحقق من الإنترنت.";
+      if (msgEl) msgEl.textContent = "❌ تعذر الاتصال بالوسيط الخادمي — حدّث الصفحة وجرّب مجدداً.";
     } finally {
       if (btn) { btn.disabled = false; btn.textContent = "🚀 إرسال إشعار شاشة القفل للجميع الآن"; }
     }
@@ -24157,7 +24158,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-698544";
+  var TARGET_CACHE = "abudhiya-offline-v4-699087";
 
   function forceReleaseSplash() {
     try {
