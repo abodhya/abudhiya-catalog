@@ -563,6 +563,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19286,16 +19287,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="5">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="6">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
     --ab-emerald-dark: #042f22;
     --ab-emerald: #059669;
     --ab-emerald-deep: #047857;
+    --ab-emerald-soft: #ecfdf5;
     --ab-ink: #0f172a;
-    --ab-border: rgba(6, 78, 59, 0.11);
+    --ab-border: rgba(6, 78, 59, 0.12);
     --ab-nav-safe: 136px;
   }
 
@@ -19315,14 +19319,29 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
   }
 
-  /* 2) الترويسة الملكية العلوية بتباين ناصع 100% لكل النصوص وشارة مندوب المبيعات */
+  /* 2) مسافة آمنة لزر تبديل الدور العلوي حتى لا يتداخل مع زاوية الترويسة */
+  html.ab-has-top-role-pill body #abSaifLuxuryHeader,
+  html.ab-has-top-role-pill body .absf-hdr-card {
+    margin-top: 46px !important;
+  }
+  html body .ab-top-role-pill {
+    top: 8px !important;
+    background: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
+    color: #fef08a !important;
+    border: 1px solid rgba(250, 204, 21, 0.65) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 4px 14px rgba(4, 47, 34, 0.25) !important;
+    font-weight: 800 !important;
+  }
+
+  /* 3) الترويسة الملكية العلوية بتباين ناصع 100% لكل النصوص وشارة مندوب المبيعات */
   html body #abSaifLuxuryHeader,
   html body .absf-hdr-card {
     background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
     color: #ffffff !important;
     border: 1.2px solid rgba(250, 204, 21, 0.45) !important;
     border-radius: 20px !important;
-    box-shadow: 0 12px 28px rgba(4, 47, 34, 0.24) !important;
+    box-shadow: 0 10px 24px rgba(4, 47, 34, 0.20) !important;
     margin: 10px 10px 8px !important;
   }
   html body #abSaifLuxuryHeader h1,
@@ -19402,14 +19421,217 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #fef08a !important;
     -webkit-text-fill-color: #fef08a !important;
   }
+  /* تنعيم المربع الأبيض الصغير على الخط الفاصل داخل الترويسة */
+  html body #abSaifLuxuryHeader .ab-hdr-divider-dot,
+  html body .absf-hdr-card .ab-hdr-divider-dot {
+    background: rgba(250, 204, 21, 0.65) !important;
+    background-image: none !important;
+    border: none !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    width: 6px !important;
+    height: 6px !important;
+    min-width: 6px !important;
+    min-height: 6px !important;
+    padding: 0 !important;
+  }
 
-  /* 3) الشريط العلوي والأقسام */
+  /* 4) شريط الأدوات السريعة القابل للطيّ أسفل الترويسة مباشرة */
+  #abQuickDrawerBar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 6px 10px 8px;
+    padding: 6px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(6, 78, 59, 0.13);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+    direction: rtl;
+  }
+  #abQuickDrawerBar .ab-qd-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(5, 150, 105, 0.18);
+    background: #f4f9f6;
+    color: #065f46;
+    font-size: 12.2px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  #abQuickDrawerBar .ab-qd-btn.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.28);
+  }
+  #abQuickDrawerBar .ab-qd-btn[data-qd="offers"] {
+    border-color: rgba(245, 158, 11, 0.34);
+    background: #fffbeb;
+    color: #92400e;
+  }
+  #abQuickDrawerBar .ab-qd-btn[data-qd="offers"].active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    border-color: transparent;
+  }
+  #abQuickDrawerBar .ab-qd-btn[data-qd="admin"] {
+    border-color: rgba(15, 23, 42, 0.14);
+    background: #f8fafc;
+    color: #1e293b;
+  }
+  #abQuickDrawerBar .ab-qd-btn[data-qd="admin"].active {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fef08a;
+    border-color: transparent;
+  }
+  #abQuickDrawerBar .ab-qd-chev {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  #abQuickDrawerBar .ab-qd-btn.active .ab-qd-chev {
+    transform: rotate(180deg);
+  }
+  #abQuickDrawerBar .ab-qd-btn.ab-qd-hidden {
+    display: none !important;
+  }
+
+  /* طيّ البطاقات الثانوية افتراضياً لإظهار البحث والمنتجات في الشاشة الأولى */
+  html:not(.ab-tools-open) body [data-ab-panel-kind="tools"] {
+    display: none !important;
+  }
+  html:not(.ab-offers-open) body [data-ab-panel-kind="offers"] {
+    display: none !important;
+  }
+  html:not(.ab-admin-open) body [data-ab-panel-kind="admin"] {
+    display: none !important;
+  }
+
+  /* 5) تحويل جميع البطاقات السوداء الثانوية إلى الأبيض والزمردي المتناسق عند فتحها */
+  html body [data-ab-light-card="1"] {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(6, 78, 59, 0.14) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06) !important;
+    margin: 6px 10px 8px !important;
+  }
+  html body [data-ab-light-card="1"] h1,
+  html body [data-ab-light-card="1"] h2,
+  html body [data-ab-light-card="1"] h3,
+  html body [data-ab-light-card="1"] h4,
+  html body [data-ab-light-card="1"] p,
+  html body [data-ab-light-card="1"] span,
+  html body [data-ab-light-card="1"] div,
+  html body [data-ab-light-card="1"] label,
+  html body [data-ab-light-card="1"] strong,
+  html body [data-ab-light-card="1"] small {
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-light-card="1"] button,
+  html body [data-ab-light-card="1"] a,
+  html body [data-ab-light-card="1"] [role="button"] {
+    background: #f4f9f6 !important;
+    background-image: none !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    border: 1px solid rgba(5, 150, 105, 0.22) !important;
+    border-radius: 13px !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+    font-weight: 800 !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-light-card="1"] button *,
+  html body [data-ab-light-card="1"] a * {
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+  }
+
+  /* تجميل شريط الكبسولات السريعة وشريط الحالات باللون الأبيض والزمردي */
+  html body [data-ab-panel-sub="pills"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 2px 4px !important;
+  }
+  html body [data-ab-panel-sub="pills"] button,
+  html body [data-ab-panel-sub="pills"] a {
+    background: #ffffff !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(5, 150, 105, 0.24) !important;
+  }
+  html body [data-ab-panel-sub="stories"] {
+    background: #ffffff !important;
+    padding: 10px 8px !important;
+  }
+  html body [data-ab-panel-sub="stories"] > div,
+  html body [data-ab-panel-sub="stories"] [class*="story"],
+  html body [data-ab-panel-sub="stories"] [class*="item"] {
+    background: transparent !important;
+  }
+
+  /* تجميل بطاقة العروض الخاصة بتدرّج فاتح ناعم بدلاً من الأسود */
+  html body [data-ab-panel-kind="offers"] {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 65%, #fefce8 100%) !important;
+    border: 1.4px solid rgba(5, 150, 105, 0.28) !important;
+    padding: 12px !important;
+  }
+  html body [data-ab-panel-kind="offers"] [data-ab-inner-dark="1"] {
+    background: #ffffff !important;
+    background-image: none !important;
+    border: 1px solid rgba(5, 150, 105, 0.20) !important;
+    border-radius: 14px !important;
+  }
+
+  /* بطاقة المندوب المعتمد: سطر أنيق مضغوط ومتناسق تبقى ظاهرة */
+  html body [data-ab-rep-strip="1"] {
+    margin: 4px 10px 8px !important;
+    padding: 9px 12px !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%) !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.28) !important;
+    box-shadow: 0 3px 12px rgba(6, 78, 59, 0.06) !important;
+  }
+  html body [data-ab-rep-strip="1"] *,
+  html body [data-ab-rep-strip="1"] {
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-rep-strip="1"] button {
+    background: #059669 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    padding: 6px 12px !important;
+  }
+  html body [data-ab-rep-strip="1"] button * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  /* 6) الشريط العلوي للبحث والأقسام */
   html body .app-top {
-    background: rgba(255, 255, 255, 0.94) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
     border-bottom: 1px solid var(--ab-border) !important;
-    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
     padding: 8px 12px !important;
   }
   html body .app-top input[type="search"],
@@ -19466,7 +19688,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     box-shadow: 0 5px 14px rgba(5, 150, 105, 0.28) !important;
   }
 
-  /* 4) شريط الملخص الأخضر (#liveTicker) بتباين ناصع بدون إطار مزدوج */
+  /* 7) شريط الملخص الأخضر (#liveTicker) بتباين ناصع */
   html body #liveTicker {
     margin: 8px 12px 10px !important;
     padding: 7px 12px !important;
@@ -19498,10 +19720,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-radius: 10px !important;
     font-weight: 900 !important;
     padding: 6px 12px !important;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.20) !important;
   }
 
-  /* 5) كروت المنتجات البيضاء على خلفية موحدة ناعمة */
+  /* 8) كروت المنتجات البيضاء */
   html body #prodGrid,
   html body .grid {
     gap: 11px !important;
@@ -19531,7 +19752,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 10px 10px 12px !important;
   }
 
-  /* 6) شاشة الفاتورة */
+  /* 9) شاشة الفاتورة */
   html body #viewInvoice,
   html body #invFilledWrap,
   html body #abSilentOrderBox {
@@ -19548,14 +19769,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 14px !important;
   }
 
-  /* 7) إخفاء الشريط السفلي المكرر بعد دمج عدادي الكراتين والأكياس في الشريط الموحد */
+  /* 10) الشريط السفلي الموحّد الذكي (دمج الشريط المكرر + انكماش عند التمرير) */
   html body [data-ab-merged-dock="1"] {
     display: none !important;
     visibility: hidden !important;
     pointer-events: none !important;
   }
-
-  /* 8) الشريط السفلي الموحد النحيف (شريط واحد فقط يجمع الفاتورة + الكراتين + الأكياس) */
   html body {
     padding-bottom: calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
   }
@@ -19568,7 +19787,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     max-width: 480px !important;
     margin: 0 auto !important;
     border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.93) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
     backdrop-filter: blur(18px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
     border: 1.2px solid rgba(6, 78, 59, 0.16) !important;
@@ -19653,11 +19872,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     white-space: nowrap !important;
     flex-shrink: 0 !important;
   }
-  #abUnifiedUnitsPill:empty {
-    display: none !important;
-  }
+  #abUnifiedUnitsPill:empty { display: none !important; }
 
-  /* الوضع المنكمش أثناء النزول: كبسولة واحدة صغيرة بالزاوية اليسرى تضم العدادين دون حجب المنتجات */
   html.ab-nav-compact body .app-nav {
     right: auto !important;
     left: 12px !important;
@@ -19669,25 +19885,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-color: rgba(52, 211, 153, 0.48) !important;
     box-shadow: 0 8px 22px rgba(4, 47, 34, 0.34) !important;
   }
-  html.ab-nav-compact body .app-nav .nav-tab {
-    display: none !important;
-  }
-  html.ab-nav-compact body .app-nav .nav-in {
-    min-height: 38px !important;
-  }
+  html.ab-nav-compact body .app-nav .nav-tab { display: none !important; }
+  html.ab-nav-compact body .app-nav .nav-in { min-height: 38px !important; }
   html.ab-nav-compact body .app-nav .nav-inv-btn {
     height: 38px !important;
     padding: 0 11px !important;
     font-size: 11.8px !important;
     box-shadow: none !important;
   }
-
   html.ab-kbd-open body .app-nav {
     transform: translateY(120px) !important;
     opacity: 0 !important;
     pointer-events: none !important;
   }
-
   html body #toastEl {
     background: #042f22 !important;
     color: #ffffff !important;
@@ -19696,10 +19906,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-weight: 800 !important;
   }
 </style>
-<script data-ab-flagship-ui="5">
+<script data-ab-flagship-ui="6">
 (function () {
-  if (window.__abFlagshipUiV5) return;
-  window.__abFlagshipUiV5 = true;
+  if (window.__abFlagshipUiV6) return;
+  window.__abFlagshipUiV6 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -19709,7 +19919,186 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return String(s || "").replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); });
   }
 
-  /* 1) اكتشاف الشريط السفلي الثاني (أكياس/كراتين) وإخفاؤه ودمج عداديه حياً داخل .app-nav */
+  function isProtected(el) {
+    if (!el || el.nodeType !== 1) return true;
+    var id = el.id || "";
+    if (id === "abProSplash" || id === "abSaifLuxuryHeader" || id === "abQuickDrawerBar" ||
+        id === "viewCatalog" || id === "viewInvoice" || id === "prodGrid" || id === "tabsBar" ||
+        id === "liveTicker" || id === "toastEl" || id === "abAccessGateOverlay" ||
+        id === "abPinModal" || id === "abCustProfileModal" || id === "abAdminStudioModal" ||
+        id === "abRepVaultModal") return true;
+    if (el.classList.contains("app-nav") || el.classList.contains("app-top") || el.classList.contains("absf-hdr-card")) return true;
+    if (el.closest("#abSaifLuxuryHeader, .absf-hdr-card, .app-top, #tabsBar, #liveTicker, #prodGrid, #viewInvoice, .app-nav, #abQuickDrawerBar, #abAccessGateOverlay, #abPinModal, #abCustProfileModal, #abAdminStudioModal, #abRepVaultModal")) return true;
+    if (el.querySelector && el.querySelector("#prodGrid, #tabsBar, .app-top, #abSaifLuxuryHeader, #viewInvoice, .app-nav, #abQuickDrawerBar")) return true;
+    return false;
+  }
+
+  /* 1) إنشاء شريط التحكم القابل للطيّ أسفل الترويسة مباشرة */
+  function ensureQuickDrawerBar() {
+    var bar = document.getElementById("abQuickDrawerBar");
+    if (bar) return bar;
+    var hdr = document.getElementById("abSaifLuxuryHeader") || document.querySelector(".absf-hdr-card");
+    if (!hdr || !hdr.parentNode) return null;
+
+    bar = document.createElement("div");
+    bar.id = "abQuickDrawerBar";
+    bar.innerHTML =
+      '<button type="button" class="ab-qd-btn" data-qd="tools"><span>⚡ أدوات سريعة</span><span class="ab-qd-chev">▾</span></button>' +
+      '<button type="button" class="ab-qd-btn ab-qd-hidden" data-qd="offers"><span>🔥 العروض</span><span class="ab-qd-chev">▾</span></button>' +
+      '<button type="button" class="ab-qd-btn ab-qd-hidden" data-qd="admin"><span>👑 المدير</span><span class="ab-qd-chev">▾</span></button>';
+
+    hdr.insertAdjacentElement("afterend", bar);
+
+    bar.addEventListener("click", function (ev) {
+      var btn = ev.target && ev.target.closest ? ev.target.closest(".ab-qd-btn") : null;
+      if (!btn) return;
+      var kind = btn.getAttribute("data-qd");
+      var cls = kind === "offers" ? "ab-offers-open" : (kind === "admin" ? "ab-admin-open" : "ab-tools-open");
+      var opened = document.documentElement.classList.toggle(cls);
+      btn.classList.toggle("active", opened);
+    });
+    return bar;
+  }
+
+  function findPanelRoot(startEl, maxChars, forbidRe) {
+    var cur = startEl;
+    var best = startEl;
+    for (var d = 0; d < 6 && cur && cur.parentElement && cur.parentElement !== document.body; d++) {
+      var p = cur.parentElement;
+      if (isProtected(p)) break;
+      var t = (p.textContent || "").trim();
+      if (t.length > maxChars) break;
+      if (forbidRe && forbidRe.test(t)) break;
+      best = p;
+      cur = p;
+    }
+    return best;
+  }
+
+  function markInnerDarkBoxes(rootEl) {
+    try {
+      var children = rootEl.querySelectorAll("div, section, article");
+      for (var i = 0; i < children.length; i++) {
+        var ch = children[i];
+        var cs = window.getComputedStyle(ch);
+        if (!cs) continue;
+        var m = (cs.backgroundColor || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+        if (m) {
+          var a = m[4] === undefined ? 1 : parseFloat(m[4]);
+          var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
+          if (a > 0.35 && lum < 75) {
+            ch.setAttribute("data-ab-inner-dark", "1");
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  /* 2) تصنيف وتوحيد البطاقات السوداء الثانوية وربطها بزر الأدوات السريعة */
+  function classifyAndUnifyPanels() {
+    try {
+      var bar = ensureQuickDrawerBar();
+      var hasOffers = false;
+      var hasAdmin = false;
+
+      var allNodes = document.querySelectorAll("body > div, body > section, #viewCatalog > div, #viewCatalog > section, div[id], section[id]");
+      for (var i = 0; i < allNodes.length; i++) {
+        var el = allNodes[i];
+        if (isProtected(el)) continue;
+        if (el.getAttribute("data-ab-merged-dock") === "1") continue;
+
+        var raw = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!raw || raw.length > 650) continue;
+
+        // 1) زر تبديل الدور العائم أعلى اليسار (المدير • تبديل)
+        if (raw.length < 40 && /(?:المدير|مندوب|عميل).*تبديل|تبديل.*(?:المدير|مندوب)/.test(raw)) {
+          var cs0 = window.getComputedStyle(el);
+          if (cs0 && cs0.position === "fixed") {
+            var r0 = el.getBoundingClientRect();
+            if (r0.top < 55 && r0.height > 18 && r0.height < 56) {
+              el.classList.add("ab-top-role-pill");
+              document.documentElement.classList.add("ab-has-top-role-pill");
+            }
+          }
+          continue;
+        }
+
+        // 2) بطاقة المندوب المعتمد (تبقى ظاهرة بشكل أنيق مضغوط)
+        if (raw.length < 180 && /مندوبك\s*المعتمد/.test(raw) && !/لوحة\s*تحكم\s*المدير|عروض\s*خاصة/.test(raw)) {
+          var repRoot = findPanelRoot(el, 220, /الأرشيف|طلب\s*ذكي|عروض\s*خاصة|لوحة\s*تحكم/);
+          if (repRoot && !isProtected(repRoot)) {
+            repRoot.setAttribute("data-ab-rep-strip", "1");
+          }
+          continue;
+        }
+
+        // 3) شريط الأدوات (الأرشيف / المفضلة / بحث صوتي / باركود)
+        if (raw.length < 180 && /الأرشيف/.test(raw) && /(?:المفضلة|بحث\s*صوتي|باركود)/.test(raw)) {
+          var tRoot1 = findPanelRoot(el, 220, /مندوبك\s*المعتمد|عروض\s*خاصة|لوحة\s*تحكم|تكرار\s*طلب/);
+          if (tRoot1 && !isProtected(tRoot1)) {
+            tRoot1.setAttribute("data-ab-panel-kind", "tools");
+            tRoot1.setAttribute("data-ab-light-card", "1");
+          }
+          continue;
+        }
+
+        // 4) شريط الكبسولات (طلب ذكي / سلال جاهزة / دفتر المحلات)
+        if (raw.length < 180 && /(?:طلب\s*ذكي|سلال\s*جاهزة)/.test(raw) && /(?:سلال\s*جاهزة|دفتر\s*المحلات|باركود)/.test(raw)) {
+          var tRoot2 = findPanelRoot(el, 220, /مندوبك\s*المعتمد|عروض\s*خاصة|لوحة\s*تحكم|الأرشيف/);
+          if (tRoot2 && !isProtected(tRoot2)) {
+            tRoot2.setAttribute("data-ab-panel-kind", "tools");
+            tRoot2.setAttribute("data-ab-panel-sub", "pills");
+            tRoot2.setAttribute("data-ab-light-card", "1");
+          }
+          continue;
+        }
+
+        // 5) شريط الحالات (تكرار طلب / جرد اليوم)
+        if (raw.length < 320 && /تكرار\s*طلب/.test(raw) && /جرد\s*اليوم/.test(raw)) {
+          var tRoot3 = findPanelRoot(el, 360, /مندوبك\s*المعتمد|عروض\s*خاصة|لوحة\s*تحكم/);
+          if (tRoot3 && !isProtected(tRoot3)) {
+            tRoot3.setAttribute("data-ab-panel-kind", "tools");
+            tRoot3.setAttribute("data-ab-panel-sub", "stories");
+            tRoot3.setAttribute("data-ab-light-card", "1");
+          }
+          continue;
+        }
+
+        // 6) بطاقة العروض الخاصة لفترة محدودة
+        if (raw.length < 520 && /عروض\s*خاصة\s*لفترة\s*محدودة/.test(raw) && !/لوحة\s*تحكم\s*المدير/.test(raw)) {
+          var oRoot = findPanelRoot(el, 560, /مندوبك\s*المعتمد|لوحة\s*تحكم\s*المدير|الأرشيف/);
+          if (oRoot && !isProtected(oRoot)) {
+            oRoot.setAttribute("data-ab-panel-kind", "offers");
+            oRoot.setAttribute("data-ab-light-card", "1");
+            markInnerDarkBoxes(oRoot);
+            hasOffers = true;
+          }
+          continue;
+        }
+
+        // 7) لوحة تحكم المدير
+        if (raw.length < 360 && /لوحة\s*تحكم\s*المدير/.test(raw) && !/عروض\s*خاصة/.test(raw)) {
+          var aRoot = findPanelRoot(el, 400, /مندوبك\s*المعتمد|عروض\s*خاصة|الأرشيف/);
+          if (aRoot && !isProtected(aRoot)) {
+            aRoot.setAttribute("data-ab-panel-kind", "admin");
+            aRoot.setAttribute("data-ab-light-card", "1");
+            markInnerDarkBoxes(aRoot);
+            hasAdmin = true;
+          }
+          continue;
+        }
+      }
+
+      if (bar) {
+        var oBtn = bar.querySelector('[data-qd="offers"]');
+        var aBtn = bar.querySelector('[data-qd="admin"]');
+        if (oBtn) oBtn.classList.toggle("ab-qd-hidden", !hasOffers && !document.querySelector('[data-ab-panel-kind="offers"]'));
+        if (aBtn) aBtn.classList.toggle("ab-qd-hidden", !hasAdmin && !document.querySelector('[data-ab-panel-kind="admin"]'));
+      }
+    } catch (e) {}
+  }
+
+  /* 3) دمج الشريط السفلي المكرر (أكياس/كراتين) حياً داخل الشريط الموحّد */
   function syncUnitsIntoUnifiedPill() {
     if (!mergedBarRef) return;
     var invBtn = document.querySelector(".app-nav .nav-inv-btn");
@@ -19732,28 +20121,23 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     if (cartons > 0) parts.push("📦 " + cartons);
     if (bags > 0) parts.push("🛍️ " + bags);
     var nextTxt = parts.join(" • ");
-    if (pill.textContent !== nextTxt) {
-      pill.textContent = nextTxt;
-    }
+    if (pill.textContent !== nextTxt) pill.textContent = nextTxt;
   }
 
   function isCandidateExtraBottomBar(el) {
     if (!el || el.nodeType !== 1) return false;
     if (el.classList.contains("app-nav") || el.closest(".app-nav")) return false;
     if (el.querySelector(".app-nav")) return false;
-    if (el.id === "viewCatalog" || el.id === "viewInvoice" || el.id === "prodGrid" || el.id === "abProSplash" || el.id === "abSaifLuxuryHeader" || el.id === "liveTicker" || el.id === "toastEl") return false;
-    if (el.closest("#viewInvoice, #abAccessGateOverlay, #abCustProfileModal, #abAdminStudioModal, #abPinModal, #abRepVaultModal, #abSaifLuxuryHeader, #liveTicker")) return false;
+    if (isProtected(el)) return false;
 
     var txt = (el.textContent || "").trim();
     if (!txt || txt.length > 180) return false;
     if (!/(?:كيس|أكياس|اكياس|كرتون|كراتين)/.test(txt)) return false;
-
     if (el.getAttribute("data-ab-merged-dock") === "1") return true;
 
     var cs = window.getComputedStyle(el);
     if (!cs || cs.display === "none" || cs.visibility === "hidden") return false;
     if (cs.position !== "fixed" && cs.position !== "sticky") return false;
-
     var rect = el.getBoundingClientRect();
     if (rect.height < 22 || rect.height > 145) return false;
     if (rect.bottom < window.innerHeight * 0.50) return false;
@@ -19775,17 +20159,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         var byId = document.getElementById(KNOWN_EXTRA_IDS[k]);
         if (isCandidateExtraBottomBar(byId)) { found = byId; break; }
       }
-
       if (!found) {
         var list = document.querySelectorAll("body > div, body > nav, body > footer, body > section, [id*='bar' i], [id*='dock' i], [id*='float' i], [id*='split' i], [id*='cart' i], [class*='bar'], [class*='dock'], [class*='float'], [class*='bottom'], [class*='sticky'], [class*='fixed']");
         for (var i = 0; i < list.length; i++) {
-          if (isCandidateExtraBottomBar(list[i])) {
-            found = list[i];
-            break;
-          }
+          if (isCandidateExtraBottomBar(list[i])) { found = list[i]; break; }
         }
       }
-
       if (found) {
         mergedBarRef = found;
         mergedBarRef.setAttribute("data-ab-merged-dock", "1");
@@ -19801,7 +20180,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 2) فاحص تباين الترويسة وشارة مندوب المبيعات */
+  /* 4) فاحص تباين الترويسة + تنعيم النقطة الوسطى بالفاصل */
   function hasBrightCssColor(str) {
     if (!str || str === "none" || str === "transparent") return false;
     var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
@@ -19824,10 +20203,20 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           if (!el || el.closest("button, #abMshCopyBtn")) continue;
           var cs = window.getComputedStyle(el);
           if (!cs) continue;
+          var rawTxt = (el.textContent || "").trim();
+
+          // تنعيم أي مربع أبيض زخرفي صغير داخل خط الفاصل في الترويسة
+          if (!rawTxt && el.children.length === 0) {
+            var rc = el.getBoundingClientRect();
+            if (rc.width > 1 && rc.width <= 18 && rc.height > 1 && rc.height <= 36 && hasBrightCssColor(cs.backgroundColor)) {
+              el.classList.add("ab-hdr-divider-dot");
+              continue;
+            }
+          }
+
           if (hasBrightCssColor(cs.backgroundColor) || hasBrightCssColor(cs.backgroundImage)) {
             el.classList.add("ab-hdr-glass-fix");
           }
-          var rawTxt = (el.textContent || "").trim();
           if (rawTxt && rawTxt.length <= 90 && el.children.length <= 3 && /مندوب|المبيعات/.test(rawTxt)) {
             el.classList.add("ab-hdr-rep-pill");
           }
@@ -19836,7 +20225,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 3) سلوك الكبسولة الذكية النحيفة عند التمرير والكيبورد */
+  /* 5) الشريط السفلي الذكي عند التمرير والكيبورد */
   function initSmartBottomDock() {
     var root = document.documentElement;
     var lastY = window.scrollY || 0;
@@ -19910,7 +20299,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     window.addEventListener("resize", syncSafeClearance, { passive: true });
   }
 
-  /* 4) لون شريط الحالة + تحديث Service Worker تلقائياً */
+  /* 6) لون شريط الحالة + تحديث Service Worker تلقائياً */
   try {
     var tm = document.querySelector('meta[name="theme-color"]');
     if (!tm) {
@@ -19921,8 +20310,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v5")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v5", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v6")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v6", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -19934,17 +20323,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   function boot() {
     initSmartBottomDock();
     fixHeaderContrast();
+    classifyAndUnifyPanels();
     scanAndMergeExtraBottomBar();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(boot, 100); }, { once: true });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(boot, 90); }, { once: true });
   } else {
-    setTimeout(boot, 100);
+    setTimeout(boot, 90);
   }
-  setTimeout(scanAndMergeExtraBottomBar, 650);
-  setTimeout(fixHeaderContrast, 750);
-  setInterval(scanAndMergeExtraBottomBar, 1300);
+  setTimeout(function () { classifyAndUnifyPanels(); fixHeaderContrast(); scanAndMergeExtraBottomBar(); }, 550);
+  setTimeout(function () { classifyAndUnifyPanels(); fixHeaderContrast(); }, 1250);
+  setInterval(function () {
+    scanAndMergeExtraBottomBar();
+    classifyAndUnifyPanels();
+  }, 1600);
 })();
 </script>
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_END -->
@@ -19992,7 +20385,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-679046";
+  var TARGET_CACHE = "abudhiya-offline-v4-679666";
 
   function forceReleaseSplash() {
     try {
