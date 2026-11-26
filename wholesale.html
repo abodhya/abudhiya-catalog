@@ -560,11 +560,12 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_HEAD_END -->
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-<style id="abFlagshipStoreUiCss" data-flagship-ui="2">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="3">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -592,12 +593,12 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
   }
 
-  /* 2) الترويسة الملكية العلوية المتناغمة مع الأيقونة الخضراء — بتباين ناصع 100% */
+  /* 2) الترويسة الملكية العلوية — تباين ناصع 100% لكل النصوص وشارة مندوب المبيعات */
   #abSaifLuxuryHeader,
   .absf-hdr-card {
     background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
     color: #ffffff !important;
-    border: 1.2px solid rgba(250, 204, 21, 0.42) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.45) !important;
     border-radius: 20px !important;
     box-shadow: 0 12px 28px rgba(4, 47, 34, 0.26) !important;
     margin: 10px 10px 8px !important;
@@ -620,7 +621,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     opacity: 1 !important;
     letter-spacing: 0 !important;
     font-weight: 900 !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.42) !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45) !important;
   }
   #abSaifLuxuryHeader p,
   #abSaifLuxuryHeader span,
@@ -637,33 +638,57 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     color: #f0fdf4 !important;
     -webkit-text-fill-color: #f0fdf4 !important;
     opacity: 1 !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.30) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.38) !important;
   }
-  #abSaifLuxuryHeader button,
-  .absf-hdr-card button,
-  #abMshCopyBtn {
+  /* أزرار الترويسة بأولوية CSS أعلى لضمان خط داكن واضح فوق الذهبي */
+  html #abSaifLuxuryHeader button,
+  html .absf-hdr-card button,
+  html #abMshCopyBtn {
     background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%) !important;
     color: #052e16 !important;
     -webkit-text-fill-color: #052e16 !important;
-    border: 1px solid rgba(254, 240, 138, 0.9) !important;
+    border: 1px solid rgba(254, 240, 138, 0.95) !important;
     border-radius: 11px !important;
     font-weight: 900 !important;
     opacity: 1 !important;
     text-shadow: none !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24) !important;
   }
-  #abSaifLuxuryHeader button *,
-  .absf-hdr-card button *,
-  #abMshCopyBtn * {
+  html #abSaifLuxuryHeader button *,
+  html .absf-hdr-card button *,
+  html #abMshCopyBtn * {
     color: #052e16 !important;
     -webkit-text-fill-color: #052e16 !important;
     text-shadow: none !important;
   }
-  .ab-hdr-glass-fix {
-    background: rgba(2, 24, 17, 0.48) !important;
+  /* تحويل أي بطاقة/تدرّج فاتح داخل الترويسة إلى زجاج زمردي داكن واضح */
+  html #abSaifLuxuryHeader .ab-hdr-glass-fix,
+  html .absf-hdr-card .ab-hdr-glass-fix {
+    background: rgba(2, 24, 17, 0.84) !important;
     background-image: none !important;
-    border: 1px solid rgba(167, 243, 208, 0.28) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.58) !important;
     border-radius: 12px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+  /* شارة مندوب المبيعات بتباين ملكي واضح جداً */
+  html #abSaifLuxuryHeader .ab-hdr-rep-pill,
+  html .absf-hdr-card .ab-hdr-rep-pill {
+    background: rgba(2, 22, 16, 0.92) !important;
+    background-image: none !important;
+    border: 1.4px solid rgba(250, 204, 21, 0.85) !important;
+    border-radius: 12px !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-weight: 900 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.30) !important;
+  }
+  html #abSaifLuxuryHeader .ab-hdr-rep-pill *,
+  html .absf-hdr-card .ab-hdr-rep-pill * {
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65) !important;
   }
 
   /* 3) الشريط العلوي للبحث والأدوات بتأثير الزجاج الأبيض */
@@ -930,45 +955,61 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
     padding: 10px 18px !important;
   }
 </style>
-<script data-ab-flagship-ui="2">
+<script data-ab-flagship-ui="3">
 (function () {
-  if (window.__abFlagshipUiV2) return;
-  window.__abFlagshipUiV2 = true;
+  if (window.__abFlagshipUiV3) return;
+  window.__abFlagshipUiV3 = true;
 
-  // فاحص تباين ذكي للترويسة: يمنع ظهور أي نص أبيض فوق خلفية فاتحة فرعية
+  // فاحص تباين ذكي للترويسة: يلتقط الخلفيات والتدرّجات الفاتحة وشارة مندوب المبيعات
+  function hasBrightCssColor(str) {
+    if (!str || str === "none" || str === "transparent") return false;
+    var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
+    var m;
+    while ((m = re.exec(str)) !== null) {
+      var a = m[4] === undefined ? 1 : parseFloat(m[4]);
+      var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
+      if (a > 0.2 && lum > 130) return true;
+    }
+    return false;
+  }
+
   function fixHeaderContrast() {
     try {
       var roots = document.querySelectorAll("#abSaifLuxuryHeader, .absf-hdr-card");
       for (var r = 0; r < roots.length; r++) {
-        var nodes = roots[r].querySelectorAll("div, section, p, span, a");
+        var nodes = roots[r].querySelectorAll("div, section, p, span, a, small, strong, b, label");
         for (var i = 0; i < nodes.length; i++) {
           var el = nodes[i];
           if (!el || el.closest("button, #abMshCopyBtn")) continue;
           var cs = window.getComputedStyle(el);
           if (!cs) continue;
-          var bg = cs.backgroundColor || "";
-          var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-          if (m) {
-            var a = m[4] === undefined ? 1 : parseFloat(m[4]);
-            var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
-            if (a > 0.2 && lum > 130) {
-              el.classList.add("ab-hdr-glass-fix");
-            }
+
+          if (hasBrightCssColor(cs.backgroundColor) || hasBrightCssColor(cs.backgroundImage)) {
+            el.classList.add("ab-hdr-glass-fix");
           }
+
           if ((cs.backgroundImage || "").indexOf("gradient") !== -1 &&
               (cs.webkitBackgroundClip === "text" || cs.backgroundClip === "text")) {
             el.style.setProperty("background-image", "none", "important");
+          }
+
+          var rawTxt = (el.textContent || "").trim();
+          if (rawTxt && rawTxt.length <= 90 && el.children.length <= 3 && /مندوب|المبيعات/.test(rawTxt)) {
+            el.classList.add("ab-hdr-rep-pill");
           }
         }
       }
     } catch (e) {}
   }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(fixHeaderContrast, 120); });
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(fixHeaderContrast, 100); });
   } else {
-    setTimeout(fixHeaderContrast, 120);
+    setTimeout(fixHeaderContrast, 100);
   }
-  setTimeout(fixHeaderContrast, 750);
+  setTimeout(fixHeaderContrast, 600);
+  setTimeout(fixHeaderContrast, 1600);
+  document.addEventListener("click", function () { setTimeout(fixHeaderContrast, 180); }, true);
 
   // ضبط لون شريط الحالة العلوي في أندرويد ليتطابق مع الترويسة الزمردية
   try {
@@ -19714,6 +19755,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -19757,7 +19799,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-667674";
+  var TARGET_CACHE = "abudhiya-offline-v4-677528";
 
   function forceReleaseSplash() {
     try {
