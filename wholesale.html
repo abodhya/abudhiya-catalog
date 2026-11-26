@@ -569,6 +569,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19378,8 +19379,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="11">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="12">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -20080,6 +20083,47 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border: 1.2px solid #fecaca !important;
   }
 
+  html body [data-ab-qp-bar="1"] [data-ab-qp-val="1"],
+  html body [data-ab-qp-bar="1"] [data-ab-qp-val="1"] * {
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+    font-weight: 900 !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+  }
+  html body [data-ab-qp-sheet="1"] button[data-ab-qp-confirm="1"] {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    background-image: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: none !important;
+    border-radius: 14px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.30) !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-qp-sheet="1"] button[data-ab-qp-confirm="1"] * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-qp-sheet="1"] button[data-ab-qp-del="1"] {
+    background: #fef2f2 !important;
+    background-image: none !important;
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    border: 1.3px solid #fca5a5 !important;
+    border-radius: 14px !important;
+    font-weight: 900 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-qp-sheet="1"] button[data-ab-qp-del="1"] * {
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    text-shadow: none !important;
+  }
+
   /* 10) توحيد جميع النوافذ المنبثقة والحقول والأزرار السوداء المتبقية في كامل المتجر */
   html body [data-ab-uni-sheet="1"] {
     background: #ffffff !important;
@@ -20438,10 +20482,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     max-width: calc(100% - 24px) !important;
   }
 </style>
-<script data-ab-flagship-ui="11">
+<script data-ab-flagship-ui="12">
 (function () {
-  if (window.__abFlagshipUiV11) return;
-  window.__abFlagshipUiV11 = true;
+  if (window.__abFlagshipUiV12) return;
+  window.__abFlagshipUiV12 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -20518,7 +20562,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           sheet.setAttribute("data-ab-qp-sheet", "1");
           if (isElementVisible(sheet)) anyModalOpen = true;
 
-          // العثور على شريط العداد (- / 0 / +)
+          // العثور على شريط العداد (- / 0 / +) وتوضيح رقم العداد وزري الإضافة والحذف
           var allBtns = sheet.querySelectorAll("button");
           for (var i = 0; i < allBtns.length; i++) {
             var btn = allBtns[i];
@@ -20537,6 +20581,35 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
               btn.setAttribute("data-ab-uni-close", "1");
             } else if (btn.closest(".numpad-grid") && (/مسح/.test(bt) || bt === "⌫" || bt === "←" || btn.querySelector("svg"))) {
               btn.setAttribute("data-ab-num-danger", "1");
+            } else if (!btn.closest(".numpad-grid, .shortcuts-grid, .qp-head") && /إضافة|اضافة|تأكيد|تاكيد|حفظ|اعتماد/.test(bt)) {
+              btn.setAttribute("data-ab-qp-confirm", "1");
+              btn.removeAttribute("data-ab-uni-btn");
+              btn.style.setProperty("background", "linear-gradient(135deg, #059669 0%, #047857 100%)", "important");
+              btn.style.setProperty("color", "#ffffff", "important");
+              btn.style.setProperty("-webkit-text-fill-color", "#ffffff", "important");
+              btn.style.setProperty("border", "none", "important");
+            } else if (!btn.closest(".numpad-grid, .shortcuts-grid, .qp-head") && /حذف|إزالة|ازالة/.test(bt)) {
+              btn.setAttribute("data-ab-qp-del", "1");
+              btn.removeAttribute("data-ab-uni-btn");
+              btn.style.setProperty("background", "#fef2f2", "important");
+              btn.style.setProperty("color", "#b91c1c", "important");
+              btn.style.setProperty("-webkit-text-fill-color", "#b91c1c", "important");
+              btn.style.setProperty("border", "1.3px solid #fca5a5", "important");
+            }
+          }
+
+          var qpBar = sheet.querySelector('[data-ab-qp-bar="1"]');
+          if (qpBar) {
+            qpBar.style.setProperty("color", "#042f22", "important");
+            var barNodes = qpBar.querySelectorAll("*");
+            for (var bn = 0; bn < barNodes.length; bn++) {
+              var bEl = barNodes[bn];
+              if (!bEl || bEl.tagName === "BUTTON" || (bEl.closest && bEl.closest("button"))) continue;
+              bEl.setAttribute("data-ab-qp-val", "1");
+              bEl.style.setProperty("color", "#042f22", "important");
+              bEl.style.setProperty("-webkit-text-fill-color", "#042f22", "important");
+              bEl.style.setProperty("text-shadow", "none", "important");
+              bEl.style.setProperty("opacity", "1", "important");
             }
           }
         }
@@ -20571,7 +20644,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           for (var j = 0; j < innerKids.length; j++) {
             var ch = innerKids[j];
             if (!ch || isKeepEmeraldOrBrand(ch)) continue;
-            if (ch.hasAttribute("data-ab-qp-sheet") || ch.hasAttribute("data-ab-qp-bar") || ch.closest(".shortcuts-grid, .numpad-grid")) continue;
+            if (ch.hasAttribute("data-ab-qp-sheet") || ch.hasAttribute("data-ab-qp-bar") || ch.closest("[data-ab-qp-sheet='1'], .shortcuts-grid, .numpad-grid")) continue;
             var chCs = window.getComputedStyle(ch);
             if (!chCs || chCs.display === "none") continue;
             var chRect = ch.getBoundingClientRect();
@@ -21118,8 +21191,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v11")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v11", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v12")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v12", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -21236,7 +21309,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-682083";
+  var TARGET_CACHE = "abudhiya-offline-v4-682360";
 
   function forceReleaseSplash() {
     try {
