@@ -562,647 +562,12 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
-<!-- ABUDHIYA_FLAGSHIP_UI_START -->
+
+<!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-<style id="abFlagshipStoreUiCss" data-flagship-ui="4">
-  :root {
-    --ab-bg: #f2f6f4;
-    --ab-surface: #ffffff;
-    --ab-emerald-dark: #042f22;
-    --ab-emerald: #059669;
-    --ab-emerald-deep: #047857;
-    --ab-emerald-soft: #ecfdf5;
-    --ab-ink: #0f172a;
-    --ab-muted: #475569;
-    --ab-border: rgba(6, 78, 59, 0.10);
-    --ab-gold: #d4af37;
-  }
-
-  /* 1) الخط العربي الاحترافي والخلفية النظيفة المريحة للعين */
-  html, body {
-    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
-    background: var(--ab-bg) !important;
-    color: var(--ab-ink) !important;
-    -webkit-font-smoothing: antialiased !important;
-  }
-  body {
-    padding-bottom: 98px !important;
-  }
-  button, input, select, textarea {
-    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
-  }
-
-  /* 2) الترويسة الملكية العلوية — تباين ناصع 100% لكل النصوص وشارة مندوب المبيعات */
-  #abSaifLuxuryHeader,
-  .absf-hdr-card {
-    background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
-    color: #ffffff !important;
-    border: 1.2px solid rgba(250, 204, 21, 0.45) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 12px 28px rgba(4, 47, 34, 0.26) !important;
-    margin: 10px 10px 8px !important;
-  }
-  #abSaifLuxuryHeader h1,
-  #abSaifLuxuryHeader h2,
-  #abSaifLuxuryHeader h3,
-  #abSaifLuxuryHeader strong,
-  #abSaifLuxuryHeader b,
-  .absf-hdr-card h1,
-  .absf-hdr-card h2,
-  .absf-hdr-card h3,
-  .absf-hdr-card strong,
-  .absf-hdr-card b {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    background-image: none !important;
-    -webkit-background-clip: border-box !important;
-    background-clip: border-box !important;
-    opacity: 1 !important;
-    letter-spacing: 0 !important;
-    font-weight: 900 !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45) !important;
-  }
-  #abSaifLuxuryHeader p,
-  #abSaifLuxuryHeader span,
-  #abSaifLuxuryHeader small,
-  #abSaifLuxuryHeader a,
-  #abSaifLuxuryHeader label,
-  #abSaifLuxuryHeader div,
-  .absf-hdr-card p,
-  .absf-hdr-card span,
-  .absf-hdr-card small,
-  .absf-hdr-card a,
-  .absf-hdr-card label,
-  .absf-hdr-card div {
-    color: #f0fdf4 !important;
-    -webkit-text-fill-color: #f0fdf4 !important;
-    opacity: 1 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.38) !important;
-  }
-  /* أزرار الترويسة بأولوية CSS أعلى لضمان خط داكن واضح فوق الذهبي */
-  html #abSaifLuxuryHeader button,
-  html .absf-hdr-card button,
-  html #abMshCopyBtn {
-    background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%) !important;
-    color: #052e16 !important;
-    -webkit-text-fill-color: #052e16 !important;
-    border: 1px solid rgba(254, 240, 138, 0.95) !important;
-    border-radius: 11px !important;
-    font-weight: 900 !important;
-    opacity: 1 !important;
-    text-shadow: none !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24) !important;
-  }
-  html #abSaifLuxuryHeader button *,
-  html .absf-hdr-card button *,
-  html #abMshCopyBtn * {
-    color: #052e16 !important;
-    -webkit-text-fill-color: #052e16 !important;
-    text-shadow: none !important;
-  }
-  /* تحويل أي بطاقة/تدرّج فاتح داخل الترويسة إلى زجاج زمردي داكن واضح */
-  html #abSaifLuxuryHeader .ab-hdr-glass-fix,
-  html .absf-hdr-card .ab-hdr-glass-fix {
-    background: rgba(2, 24, 17, 0.84) !important;
-    background-image: none !important;
-    border: 1.2px solid rgba(250, 204, 21, 0.58) !important;
-    border-radius: 12px !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-  }
-  /* شارة مندوب المبيعات بتباين ملكي واضح جداً */
-  html #abSaifLuxuryHeader .ab-hdr-rep-pill,
-  html .absf-hdr-card .ab-hdr-rep-pill {
-    background: rgba(2, 22, 16, 0.92) !important;
-    background-image: none !important;
-    border: 1.4px solid rgba(250, 204, 21, 0.85) !important;
-    border-radius: 12px !important;
-    color: #fef08a !important;
-    -webkit-text-fill-color: #fef08a !important;
-    font-weight: 900 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.30) !important;
-  }
-  html #abSaifLuxuryHeader .ab-hdr-rep-pill *,
-  html .absf-hdr-card .ab-hdr-rep-pill * {
-    color: #fef08a !important;
-    -webkit-text-fill-color: #fef08a !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65) !important;
-  }
-
-  /* 3) الشريط العلوي للبحث والأدوات بتأثير الزجاج الأبيض */
-  .app-top {
-    background: rgba(255, 255, 255, 0.92) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border-bottom: 1px solid var(--ab-border) !important;
-    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
-    padding: 8px 12px !important;
-  }
-  .app-top input[type="search"],
-  .app-top input[type="text"] {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
-    border: 1.2px solid #e2e8f0 !important;
-    border-radius: 14px !important;
-    padding: 10px 14px !important;
-    font-size: 13.5px !important;
-    font-weight: 700 !important;
-    box-shadow: none !important;
-  }
-  .app-top input:focus {
-    background: #ffffff !important;
-    border-color: var(--ab-emerald) !important;
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.14) !important;
-  }
-
-  .top-actions {
-    gap: 8px !important;
-  }
-  .top-actions button,
-  #repeatBtn,
-  #onlySelBtn {
-    background: #ffffff !important;
-    color: #065f46 !important;
-    border: 1.2px solid rgba(5, 150, 105, 0.26) !important;
-    border-radius: 12px !important;
-    font-weight: 800 !important;
-    font-size: 12.5px !important;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
-  }
-  .top-actions button.active,
-  #onlySelBtn.active {
-    background: linear-gradient(135deg, #059669, #047857) !important;
-    color: #ffffff !important;
-    border-color: transparent !important;
-    box-shadow: 0 6px 14px rgba(5, 150, 105, 0.28) !important;
-  }
-
-  /* 4) شريط الأقسام والتبويبات بنمط كبسولات عصرية */
-  #tabsBar,
-  .tabs-bar {
-    gap: 8px !important;
-    padding: 8px 12px !important;
-    scrollbar-width: none !important;
-  }
-  #tabsBar::-webkit-scrollbar,
-  .tabs-bar::-webkit-scrollbar {
-    display: none !important;
-  }
-  #tabsBar button,
-  .tabs-bar button,
-  .tabs-bar .tab {
-    border-radius: 999px !important;
-    padding: 8px 16px !important;
-    background: #ffffff !important;
-    color: #334155 !important;
-    border: 1px solid #e2e8f0 !important;
-    font-size: 12.8px !important;
-    font-weight: 800 !important;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
-    white-space: nowrap !important;
-  }
-  #tabsBar button.active,
-  .tabs-bar button.active,
-  .tabs-bar .tab.active {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-    color: #ffffff !important;
-    border-color: transparent !important;
-    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.30) !important;
-  }
-
-  /* 5) الشريط الإخباري والمبدّل بأسلوب هادئ وأنيق */
-  #liveTicker {
-    margin: 6px 12px 10px !important;
-    padding: 7px 14px !important;
-    border-radius: 13px !important;
-    background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 100%) !important;
-    border: 1px solid #a7f3d0 !important;
-    box-shadow: none !important;
-  }
-  #tickerTxt {
-    color: #065f46 !important;
-    font-weight: 800 !important;
-    font-size: 12.5px !important;
-  }
-  #abPwaPriceSwitcher,
-  .ab-sw-bar {
-    border-radius: 14px !important;
-    background: #ffffff !important;
-    border: 1px solid var(--ab-border) !important;
-    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
-  }
-
-  /* 6) شبكة المنتجات والكروت البيضاء الفخمة */
-  #prodGrid,
-  .grid {
-    gap: 11px !important;
-    padding: 4px 12px 24px !important;
-  }
-  #prodGrid .card,
-  .grid .card {
-    background: var(--ab-surface) !important;
-    color: var(--ab-ink) !important;
-    border: 1px solid rgba(15, 23, 42, 0.07) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
-    overflow: hidden !important;
-    transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-  }
-  #prodGrid .card.selected,
-  #prodGrid .card.has-qty,
-  #prodGrid .card.active {
-    border: 2px solid var(--ab-emerald) !important;
-    box-shadow: 0 10px 24px rgba(5, 150, 105, 0.16) !important;
-  }
-  #prodGrid .card img {
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    object-fit: contain !important;
-  }
-  #prodGrid .card-body {
-    padding: 10px 10px 12px !important;
-    background: transparent !important;
-  }
-  #prodGrid .card-body h3,
-  #prodGrid .card-body h4,
-  #prodGrid .card-body .title,
-  #prodGrid .card-body .name,
-  #prodGrid .card-body .prod-name {
-    color: #0f172a !important;
-    font-weight: 800 !important;
-    font-size: 13.5px !important;
-    line-height: 1.42 !important;
-  }
-  #prodGrid .card input[type="number"],
-  #prodGrid .card input[type="text"] {
-    background: #f8fafc !important;
-    color: #0f172a !important;
-    border: 1.2px solid #cbd5e1 !important;
-    border-radius: 10px !important;
-    font-weight: 900 !important;
-    font-variant-numeric: tabular-nums !important;
-  }
-
-  /* 7) شاشة الفاتورة المرتبة */
-  #viewInvoice {
-    padding: 10px 12px 30px !important;
-  }
-  .inv-head,
-  .inv-totals-card,
-  #invEmptyState {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border: 1px solid var(--ab-border) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
-    padding: 14px !important;
-  }
-  #invDateMeta {
-    color: #475569 !important;
-    font-weight: 700 !important;
-    font-size: 12px !important;
-  }
-  #mQtySummary,
-  #mTotalSummary {
-    font-variant-numeric: tabular-nums !important;
-    font-weight: 900 !important;
-  }
-  #payPills button {
-    border-radius: 12px !important;
-    font-weight: 800 !important;
-    border: 1.2px solid #cbd5e1 !important;
-    background: #f8fafc !important;
-    color: #334155 !important;
-  }
-  #payPills button.active {
-    background: linear-gradient(135deg, #059669, #047857) !important;
-    color: #ffffff !important;
-    border-color: transparent !important;
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
-  }
-
-  /* 8) لوحة الأرقام السريعة للاختيار */
-  .qp-head {
-    font-weight: 900 !important;
-  }
-  .shortcuts-grid button,
-  .numpad-grid button {
-    border-radius: 14px !important;
-    font-weight: 900 !important;
-    font-variant-numeric: tabular-nums !important;
-  }
-
-  /* 9) الشريط السفلي الذكي النحيف (Smart Auto-Compact Dock) + مساحة أمان تمنع حجب أي عنصر */
-  :root {
-    --ab-nav-safe: 132px;
-  }
-  body {
-    padding-bottom: calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
-  }
-  #viewCatalog,
-  #prodGrid,
-  .grid,
-  #viewInvoice,
-  #invFilledWrap,
-  #abSilentOrderBox {
-    padding-bottom: calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
-  }
-
-  .app-nav {
-    position: fixed !important;
-    left: 12px !important;
-    right: 12px !important;
-    bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
-    width: auto !important;
-    max-width: 460px !important;
-    margin: 0 auto !important;
-    border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.90) !important;
-    backdrop-filter: blur(18px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
-    border: 1px solid rgba(6, 78, 59, 0.14) !important;
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14) !important;
-    padding: 5px !important;
-    z-index: 9990 !important;
-    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.22s ease,
-                max-width 0.24s ease,
-                background 0.22s ease !important;
-  }
-  .nav-in {
-    display: flex !important;
-    align-items: center !important;
-    flex-wrap: nowrap !important;
-    gap: 6px !important;
-    min-height: 44px !important;
-  }
-  .nav-tab {
-    flex: 0 0 auto !important;
-    height: 42px !important;
-    padding: 0 14px !important;
-    border-radius: 999px !important;
-    color: #334155 !important;
-    font-weight: 800 !important;
-    font-size: 12.5px !important;
-    background: transparent !important;
-    white-space: nowrap !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 5px !important;
-  }
-  .nav-tab.active {
-    background: #ecfdf5 !important;
-    color: #047857 !important;
-    box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.22) !important;
-  }
-  .nav-inv-btn {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    height: 42px !important;
-    padding: 0 14px !important;
-    border-radius: 999px !important;
-    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-    color: #ffffff !important;
-    font-weight: 900 !important;
-    font-size: 12.5px !important;
-    line-height: 1.15 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.28) !important;
-  }
-  .nav-inv-btn.empty {
-    background: #e2e8f0 !important;
-    color: #475569 !important;
-    box-shadow: none !important;
-  }
-  .nav-badge {
-    font-variant-numeric: tabular-nums !important;
-    font-weight: 900 !important;
-    font-size: 11.5px !important;
-    padding: 2px 8px !important;
-    border-radius: 999px !important;
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* الوضع المنكمش الذكي أثناء النزول في الكتالوج: كبسولة صغيرة بالزاوية اليسرى لا تحجب الشاشة */
-  html.ab-nav-compact .app-nav {
-    right: auto !important;
-    left: 12px !important;
-    margin: 0 !important;
-    width: auto !important;
-    max-width: calc(100vw - 24px) !important;
-    padding: 4px !important;
-    background: rgba(4, 47, 34, 0.90) !important;
-    border-color: rgba(52, 211, 153, 0.45) !important;
-    box-shadow: 0 8px 22px rgba(4, 47, 34, 0.32) !important;
-  }
-  html.ab-nav-compact .app-nav .nav-tab {
-    display: none !important;
-  }
-  html.ab-nav-compact .app-nav .nav-in {
-    min-height: 38px !important;
-  }
-  html.ab-nav-compact .app-nav .nav-inv-btn {
-    height: 38px !important;
-    padding: 0 13px !important;
-    font-size: 12px !important;
-    box-shadow: none !important;
-  }
-
-  /* إخفاء الشريط مؤقتاً عند فتح لوحة المفاتيح للكتابة */
-  html.ab-kbd-open .app-nav {
-    transform: translateY(120px) !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  /* 10) إشعارات التطبيق العائمة */
-  #toastEl {
-    background: #042f22 !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(52, 211, 153, 0.45) !important;
-    border-radius: 999px !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.26) !important;
-    font-weight: 800 !important;
-    padding: 10px 18px !important;
-  }
-</style>
-<script data-ab-flagship-ui="4">
-(function () {
-  if (window.__abFlagshipUiV4) return;
-  window.__abFlagshipUiV4 = true;
-
-  // فاحص تباين ذكي للترويسة: يلتقط الخلفيات والتدرّجات الفاتحة وشارة مندوب المبيعات
-  function hasBrightCssColor(str) {
-    if (!str || str === "none" || str === "transparent") return false;
-    var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
-    var m;
-    while ((m = re.exec(str)) !== null) {
-      var a = m[4] === undefined ? 1 : parseFloat(m[4]);
-      var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
-      if (a > 0.2 && lum > 130) return true;
-    }
-    return false;
-  }
-
-  function fixHeaderContrast() {
-    try {
-      var roots = document.querySelectorAll("#abSaifLuxuryHeader, .absf-hdr-card");
-      for (var r = 0; r < roots.length; r++) {
-        var nodes = roots[r].querySelectorAll("div, section, p, span, a, small, strong, b, label");
-        for (var i = 0; i < nodes.length; i++) {
-          var el = nodes[i];
-          if (!el || el.closest("button, #abMshCopyBtn")) continue;
-          var cs = window.getComputedStyle(el);
-          if (!cs) continue;
-
-          if (hasBrightCssColor(cs.backgroundColor) || hasBrightCssColor(cs.backgroundImage)) {
-            el.classList.add("ab-hdr-glass-fix");
-          }
-
-          if ((cs.backgroundImage || "").indexOf("gradient") !== -1 &&
-              (cs.webkitBackgroundClip === "text" || cs.backgroundClip === "text")) {
-            el.style.setProperty("background-image", "none", "important");
-          }
-
-          var rawTxt = (el.textContent || "").trim();
-          if (rawTxt && rawTxt.length <= 90 && el.children.length <= 3 && /مندوب|المبيعات/.test(rawTxt)) {
-            el.classList.add("ab-hdr-rep-pill");
-          }
-        }
-      }
-    } catch (e) {}
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { setTimeout(fixHeaderContrast, 100); });
-  } else {
-    setTimeout(fixHeaderContrast, 100);
-  }
-  setTimeout(fixHeaderContrast, 600);
-  setTimeout(fixHeaderContrast, 1600);
-  document.addEventListener("click", function () { setTimeout(fixHeaderContrast, 180); }, true);
-
-  // الشريط السفلي الذكي: قياس مسافة الأمان + انكماش عند النزول + إخفاء عند فتح الكيبورد
-  function initSmartBottomDock() {
-    var root = document.documentElement;
-    var lastY = window.scrollY || 0;
-    var downDelta = 0;
-
-    function isInvoiceOpen() {
-      var inv = document.getElementById("viewInvoice");
-      if (!inv) return false;
-      var st = window.getComputedStyle(inv);
-      return st && st.display !== "none" && st.visibility !== "hidden";
-    }
-
-    function syncSafeClearance() {
-      var nav = document.querySelector(".app-nav");
-      if (!nav) return;
-      var h = Math.ceil(nav.getBoundingClientRect().height || 58);
-      var safePx = Math.max(120, h + 64);
-      root.style.setProperty("--ab-nav-safe", safePx + "px");
-      if (isInvoiceOpen()) {
-        root.classList.remove("ab-nav-compact");
-      }
-    }
-
-    window.addEventListener("scroll", function () {
-      var y = window.scrollY || document.documentElement.scrollTop || 0;
-      if (isInvoiceOpen() || y < 70) {
-        root.classList.remove("ab-nav-compact");
-        downDelta = 0;
-        lastY = y;
-        return;
-      }
-      var diff = y - lastY;
-      if (diff > 0) {
-        downDelta += diff;
-        if (downDelta > 36) root.classList.add("ab-nav-compact");
-      } else if (diff < -14) {
-        downDelta = 0;
-        root.classList.remove("ab-nav-compact");
-      }
-      lastY = y;
-    }, { passive: true });
-
-    // إرجاع الشريط كاملاً عند تغيير الكمية أو التنقل
-    document.addEventListener("click", function (ev) {
-      var t = ev.target;
-      if (t && t.closest && t.closest(".app-nav, #tabsBar, #prodGrid .card")) {
-        root.classList.remove("ab-nav-compact");
-        setTimeout(syncSafeClearance, 120);
-      }
-    }, true);
-
-    // إخفاء الشريط مؤقتاً أثناء الكتابة في أي حقل نصي حتى لا يغطي الحقل
-    document.addEventListener("focusin", function (ev) {
-      var el = ev.target;
-      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) {
-        var tp = String(el.type || "text").toLowerCase();
-        if (tp !== "checkbox" && tp !== "radio" && tp !== "button" && tp !== "submit") {
-          root.classList.add("ab-kbd-open");
-        }
-      }
-    });
-    document.addEventListener("focusout", function () {
-      setTimeout(function () {
-        var ae = document.activeElement;
-        if (!ae || (ae.tagName !== "INPUT" && ae.tagName !== "TEXTAREA")) {
-          root.classList.remove("ab-kbd-open");
-        }
-      }, 140);
-    });
-
-    syncSafeClearance();
-    setTimeout(syncSafeClearance, 700);
-    window.addEventListener("resize", syncSafeClearance, { passive: true });
-  }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initSmartBottomDock, { once: true });
-  } else {
-    initSmartBottomDock();
-  }
-
-  // ضبط لون شريط الحالة العلوي في أندرويد ليتطابق مع الترويسة الزمردية
-  try {
-    var tm = document.querySelector('meta[name="theme-color"]');
-    if (!tm) {
-      tm = document.createElement("meta");
-      tm.name = "theme-color";
-      document.head.appendChild(tm);
-    }
-    tm.content = "#042F22";
-  } catch (e) {}
-
-  // تحديث تلقائي ذكي للواجهة فور نزول إصدار Service Worker جديد (مرة واحدة فقط دون تكرار)
-  try {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v1")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v1", "1");
-        window.location.reload();
-      });
-      navigator.serviceWorker.getRegistrations().then(function (regs) {
-        for (var i = 0; i < regs.length; i++) {
-          try { regs[i].update(); } catch (e) {}
-        }
-      });
-    }
-  } catch (e) {}
-})();
-</script>
-<!-- ABUDHIYA_FLAGSHIP_UI_END -->
+<!-- ABUDHIYA_FLAGSHIP_UI_HEAD_END -->
 </head>
 <body>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
@@ -19920,6 +19285,670 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+<!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
+<style id="abFlagshipStoreUiCss" data-flagship-ui="5">
+  :root {
+    --ab-bg: #f2f6f4;
+    --ab-surface: #ffffff;
+    --ab-emerald-dark: #042f22;
+    --ab-emerald: #059669;
+    --ab-emerald-deep: #047857;
+    --ab-ink: #0f172a;
+    --ab-border: rgba(6, 78, 59, 0.11);
+    --ab-nav-safe: 136px;
+  }
+
+  /* 1) الخط العربي الاحترافي وتوحيد الخلفية النظيفة لكامل المتجر */
+  html,
+  html body,
+  html body #viewCatalog,
+  html body #prodGrid,
+  html body #viewInvoice {
+    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
+    background: var(--ab-bg) !important;
+    background-color: var(--ab-bg) !important;
+    color: var(--ab-ink) !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+  button, input, select, textarea {
+    font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
+  }
+
+  /* 2) الترويسة الملكية العلوية بتباين ناصع 100% لكل النصوص وشارة مندوب المبيعات */
+  html body #abSaifLuxuryHeader,
+  html body .absf-hdr-card {
+    background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
+    color: #ffffff !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.45) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 12px 28px rgba(4, 47, 34, 0.24) !important;
+    margin: 10px 10px 8px !important;
+  }
+  html body #abSaifLuxuryHeader h1,
+  html body #abSaifLuxuryHeader h2,
+  html body #abSaifLuxuryHeader h3,
+  html body #abSaifLuxuryHeader strong,
+  html body #abSaifLuxuryHeader b,
+  html body .absf-hdr-card h1,
+  html body .absf-hdr-card h2,
+  html body .absf-hdr-card h3,
+  html body .absf-hdr-card strong,
+  html body .absf-hdr-card b {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-image: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    opacity: 1 !important;
+    font-weight: 900 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45) !important;
+  }
+  html body #abSaifLuxuryHeader p,
+  html body #abSaifLuxuryHeader span,
+  html body #abSaifLuxuryHeader small,
+  html body #abSaifLuxuryHeader a,
+  html body #abSaifLuxuryHeader label,
+  html body #abSaifLuxuryHeader div,
+  html body .absf-hdr-card p,
+  html body .absf-hdr-card span,
+  html body .absf-hdr-card small,
+  html body .absf-hdr-card a,
+  html body .absf-hdr-card label,
+  html body .absf-hdr-card div {
+    color: #f0fdf4 !important;
+    -webkit-text-fill-color: #f0fdf4 !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.36) !important;
+  }
+  html body #abSaifLuxuryHeader button,
+  html body .absf-hdr-card button,
+  html body #abMshCopyBtn {
+    background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%) !important;
+    color: #052e16 !important;
+    -webkit-text-fill-color: #052e16 !important;
+    border: 1px solid rgba(254, 240, 138, 0.95) !important;
+    border-radius: 11px !important;
+    font-weight: 900 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+  }
+  html body #abSaifLuxuryHeader button *,
+  html body .absf-hdr-card button *,
+  html body #abMshCopyBtn * {
+    color: #052e16 !important;
+    -webkit-text-fill-color: #052e16 !important;
+    text-shadow: none !important;
+  }
+  html body #abSaifLuxuryHeader .ab-hdr-glass-fix,
+  html body .absf-hdr-card .ab-hdr-glass-fix {
+    background: rgba(2, 24, 17, 0.86) !important;
+    background-image: none !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.58) !important;
+    border-radius: 12px !important;
+  }
+  html body #abSaifLuxuryHeader .ab-hdr-rep-pill,
+  html body .absf-hdr-card .ab-hdr-rep-pill {
+    background: rgba(2, 22, 16, 0.94) !important;
+    background-image: none !important;
+    border: 1.4px solid rgba(250, 204, 21, 0.85) !important;
+    border-radius: 12px !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-weight: 900 !important;
+  }
+  html body #abSaifLuxuryHeader .ab-hdr-rep-pill *,
+  html body .absf-hdr-card .ab-hdr-rep-pill * {
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+  }
+
+  /* 3) الشريط العلوي والأقسام */
+  html body .app-top {
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid var(--ab-border) !important;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+    padding: 8px 12px !important;
+  }
+  html body .app-top input[type="search"],
+  html body .app-top input[type="text"] {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1.2px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 10px 14px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+  }
+  html body .top-actions button,
+  html body #repeatBtn,
+  html body #onlySelBtn {
+    background: #ffffff !important;
+    color: #065f46 !important;
+    border: 1.2px solid rgba(5, 150, 105, 0.28) !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+  }
+  html body .top-actions button.active,
+  html body #onlySelBtn.active {
+    background: linear-gradient(135deg, #059669, #047857) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+  }
+  html body #tabsBar,
+  html body .tabs-bar {
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    scrollbar-width: none !important;
+  }
+  html body #tabsBar::-webkit-scrollbar,
+  html body .tabs-bar::-webkit-scrollbar { display: none !important; }
+  html body #tabsBar button,
+  html body .tabs-bar button,
+  html body .tabs-bar .tab {
+    border-radius: 999px !important;
+    padding: 8px 16px !important;
+    background: #ffffff !important;
+    color: #334155 !important;
+    border: 1px solid #e2e8f0 !important;
+    font-size: 12.8px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+  html body #tabsBar button.active,
+  html body .tabs-bar button.active,
+  html body .tabs-bar .tab.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.28) !important;
+  }
+
+  /* 4) شريط الملخص الأخضر (#liveTicker) بتباين ناصع بدون إطار مزدوج */
+  html body #liveTicker {
+    margin: 8px 12px 10px !important;
+    padding: 7px 12px !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #033325 0%, #065f46 100%) !important;
+    border: 1.2px solid rgba(52, 211, 153, 0.42) !important;
+    box-shadow: 0 6px 16px rgba(4, 47, 34, 0.16) !important;
+  }
+  html body #liveTicker > div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  html body #liveTicker #tickerTxt,
+  html body #liveTicker span {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 12.5px !important;
+    opacity: 1 !important;
+  }
+  html body #liveTicker button,
+  html body #liveTicker a {
+    background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%) !important;
+    color: #052e16 !important;
+    -webkit-text-fill-color: #052e16 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 900 !important;
+    padding: 6px 12px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.20) !important;
+  }
+
+  /* 5) كروت المنتجات البيضاء على خلفية موحدة ناعمة */
+  html body #prodGrid,
+  html body .grid {
+    gap: 11px !important;
+    padding: 6px 12px calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  html body #prodGrid .card,
+  html body .grid .card {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+    overflow: hidden !important;
+  }
+  html body #prodGrid .card.selected,
+  html body #prodGrid .card.has-qty,
+  html body #prodGrid .card.active {
+    border: 2px solid #059669 !important;
+    box-shadow: 0 10px 24px rgba(5, 150, 105, 0.18) !important;
+  }
+  html body #prodGrid .card img {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    object-fit: contain !important;
+  }
+  html body #prodGrid .card-body {
+    padding: 10px 10px 12px !important;
+  }
+
+  /* 6) شاشة الفاتورة */
+  html body #viewInvoice,
+  html body #invFilledWrap,
+  html body #abSilentOrderBox {
+    padding-bottom: calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  html body .inv-head,
+  html body .inv-totals-card,
+  html body #invEmptyState {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid var(--ab-border) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
+    padding: 14px !important;
+  }
+
+  /* 7) إخفاء الشريط السفلي المكرر بعد دمج عدادي الكراتين والأكياس في الشريط الموحد */
+  html body [data-ab-merged-dock="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* 8) الشريط السفلي الموحد النحيف (شريط واحد فقط يجمع الفاتورة + الكراتين + الأكياس) */
+  html body {
+    padding-bottom: calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  html body .app-nav {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    border-radius: 999px !important;
+    background: rgba(255, 255, 255, 0.93) !important;
+    backdrop-filter: blur(18px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+    border: 1.2px solid rgba(6, 78, 59, 0.16) !important;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.15) !important;
+    padding: 5px !important;
+    z-index: 9990 !important;
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.22s ease,
+                max-width 0.24s ease,
+                background 0.22s ease !important;
+  }
+  html body .nav-in {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    min-height: 44px !important;
+  }
+  html body .nav-tab {
+    flex: 0 0 auto !important;
+    height: 42px !important;
+    padding: 0 13px !important;
+    border-radius: 999px !important;
+    color: #334155 !important;
+    font-weight: 800 !important;
+    font-size: 12.5px !important;
+    background: transparent !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+  }
+  html body .nav-tab.active {
+    background: #ecfdf5 !important;
+    color: #047857 !important;
+    box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.22) !important;
+  }
+  html body .nav-inv-btn {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    padding: 0 12px !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    font-size: 12.2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.28) !important;
+  }
+  html body .nav-inv-btn.empty {
+    background: #e2e8f0 !important;
+    color: #475569 !important;
+    box-shadow: none !important;
+  }
+  html body .nav-badge {
+    font-variant-numeric: tabular-nums !important;
+    font-weight: 900 !important;
+    font-size: 11.5px !important;
+    padding: 2px 7px !important;
+    border-radius: 999px !important;
+    flex-shrink: 0 !important;
+  }
+  #abUnifiedUnitsPill {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 2px 8px !important;
+    border-radius: 999px !important;
+    background: rgba(2, 24, 17, 0.34) !important;
+    border: 1px solid rgba(254, 240, 138, 0.45) !important;
+    color: #fef08a !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    font-variant-numeric: tabular-nums !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  #abUnifiedUnitsPill:empty {
+    display: none !important;
+  }
+
+  /* الوضع المنكمش أثناء النزول: كبسولة واحدة صغيرة بالزاوية اليسرى تضم العدادين دون حجب المنتجات */
+  html.ab-nav-compact body .app-nav {
+    right: auto !important;
+    left: 12px !important;
+    margin: 0 !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    padding: 4px !important;
+    background: rgba(4, 47, 34, 0.92) !important;
+    border-color: rgba(52, 211, 153, 0.48) !important;
+    box-shadow: 0 8px 22px rgba(4, 47, 34, 0.34) !important;
+  }
+  html.ab-nav-compact body .app-nav .nav-tab {
+    display: none !important;
+  }
+  html.ab-nav-compact body .app-nav .nav-in {
+    min-height: 38px !important;
+  }
+  html.ab-nav-compact body .app-nav .nav-inv-btn {
+    height: 38px !important;
+    padding: 0 11px !important;
+    font-size: 11.8px !important;
+    box-shadow: none !important;
+  }
+
+  html.ab-kbd-open body .app-nav {
+    transform: translateY(120px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  html body #toastEl {
+    background: #042f22 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(52, 211, 153, 0.45) !important;
+    border-radius: 999px !important;
+    font-weight: 800 !important;
+  }
+</style>
+<script data-ab-flagship-ui="5">
+(function () {
+  if (window.__abFlagshipUiV5) return;
+  window.__abFlagshipUiV5 = true;
+
+  var KNOWN_EXTRA_IDS = [];
+  var mergedBarRef = null;
+  var barObserver = null;
+
+  function toAsciiDigits(s) {
+    return String(s || "").replace(/[٠-٩]/g, function (d) { return String("٠١٢٣٤٥٦٧٨٩".indexOf(d)); });
+  }
+
+  /* 1) اكتشاف الشريط السفلي الثاني (أكياس/كراتين) وإخفاؤه ودمج عداديه حياً داخل .app-nav */
+  function syncUnitsIntoUnifiedPill() {
+    if (!mergedBarRef) return;
+    var invBtn = document.querySelector(".app-nav .nav-inv-btn");
+    if (!invBtn) return;
+
+    var raw = toAsciiDigits(mergedBarRef.textContent || "");
+    var cM = raw.match(/(\d+(?:\.\d+)?)\s*(?:كرتون|كراتين|كرتن)/);
+    var bM = raw.match(/(\d+(?:\.\d+)?)\s*(?:كيس|أكياس|اكياس)/);
+    var cartons = cM ? Number(cM[1]) : 0;
+    var bags = bM ? Number(bM[1]) : 0;
+
+    var pill = document.getElementById("abUnifiedUnitsPill");
+    if (!pill) {
+      pill = document.createElement("span");
+      pill.id = "abUnifiedUnitsPill";
+      invBtn.appendChild(pill);
+    }
+
+    var parts = [];
+    if (cartons > 0) parts.push("📦 " + cartons);
+    if (bags > 0) parts.push("🛍️ " + bags);
+    var nextTxt = parts.join(" • ");
+    if (pill.textContent !== nextTxt) {
+      pill.textContent = nextTxt;
+    }
+  }
+
+  function isCandidateExtraBottomBar(el) {
+    if (!el || el.nodeType !== 1) return false;
+    if (el.classList.contains("app-nav") || el.closest(".app-nav")) return false;
+    if (el.querySelector(".app-nav")) return false;
+    if (el.id === "viewCatalog" || el.id === "viewInvoice" || el.id === "prodGrid" || el.id === "abProSplash" || el.id === "abSaifLuxuryHeader" || el.id === "liveTicker" || el.id === "toastEl") return false;
+    if (el.closest("#viewInvoice, #abAccessGateOverlay, #abCustProfileModal, #abAdminStudioModal, #abPinModal, #abRepVaultModal, #abSaifLuxuryHeader, #liveTicker")) return false;
+
+    var txt = (el.textContent || "").trim();
+    if (!txt || txt.length > 180) return false;
+    if (!/(?:كيس|أكياس|اكياس|كرتون|كراتين)/.test(txt)) return false;
+
+    if (el.getAttribute("data-ab-merged-dock") === "1") return true;
+
+    var cs = window.getComputedStyle(el);
+    if (!cs || cs.display === "none" || cs.visibility === "hidden") return false;
+    if (cs.position !== "fixed" && cs.position !== "sticky") return false;
+
+    var rect = el.getBoundingClientRect();
+    if (rect.height < 22 || rect.height > 145) return false;
+    if (rect.bottom < window.innerHeight * 0.50) return false;
+    return true;
+  }
+
+  function scanAndMergeExtraBottomBar() {
+    try {
+      if (mergedBarRef && document.body.contains(mergedBarRef)) {
+        if (mergedBarRef.getAttribute("data-ab-merged-dock") !== "1") {
+          mergedBarRef.setAttribute("data-ab-merged-dock", "1");
+        }
+        syncUnitsIntoUnifiedPill();
+        return;
+      }
+
+      var found = null;
+      for (var k = 0; k < KNOWN_EXTRA_IDS.length; k++) {
+        var byId = document.getElementById(KNOWN_EXTRA_IDS[k]);
+        if (isCandidateExtraBottomBar(byId)) { found = byId; break; }
+      }
+
+      if (!found) {
+        var list = document.querySelectorAll("body > div, body > nav, body > footer, body > section, [id*='bar' i], [id*='dock' i], [id*='float' i], [id*='split' i], [id*='cart' i], [class*='bar'], [class*='dock'], [class*='float'], [class*='bottom'], [class*='sticky'], [class*='fixed']");
+        for (var i = 0; i < list.length; i++) {
+          if (isCandidateExtraBottomBar(list[i])) {
+            found = list[i];
+            break;
+          }
+        }
+      }
+
+      if (found) {
+        mergedBarRef = found;
+        mergedBarRef.setAttribute("data-ab-merged-dock", "1");
+        syncUnitsIntoUnifiedPill();
+        if (typeof MutationObserver !== "undefined") {
+          try {
+            if (barObserver) barObserver.disconnect();
+            barObserver = new MutationObserver(syncUnitsIntoUnifiedPill);
+            barObserver.observe(mergedBarRef, { childList: true, subtree: true, characterData: true });
+          } catch (e) {}
+        }
+      }
+    } catch (e) {}
+  }
+
+  /* 2) فاحص تباين الترويسة وشارة مندوب المبيعات */
+  function hasBrightCssColor(str) {
+    if (!str || str === "none" || str === "transparent") return false;
+    var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
+    var m;
+    while ((m = re.exec(str)) !== null) {
+      var a = m[4] === undefined ? 1 : parseFloat(m[4]);
+      var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
+      if (a > 0.2 && lum > 130) return true;
+    }
+    return false;
+  }
+
+  function fixHeaderContrast() {
+    try {
+      var roots = document.querySelectorAll("#abSaifLuxuryHeader, .absf-hdr-card");
+      for (var r = 0; r < roots.length; r++) {
+        var nodes = roots[r].querySelectorAll("div, section, p, span, a, small, strong, b, label");
+        for (var i = 0; i < nodes.length; i++) {
+          var el = nodes[i];
+          if (!el || el.closest("button, #abMshCopyBtn")) continue;
+          var cs = window.getComputedStyle(el);
+          if (!cs) continue;
+          if (hasBrightCssColor(cs.backgroundColor) || hasBrightCssColor(cs.backgroundImage)) {
+            el.classList.add("ab-hdr-glass-fix");
+          }
+          var rawTxt = (el.textContent || "").trim();
+          if (rawTxt && rawTxt.length <= 90 && el.children.length <= 3 && /مندوب|المبيعات/.test(rawTxt)) {
+            el.classList.add("ab-hdr-rep-pill");
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  /* 3) سلوك الكبسولة الذكية النحيفة عند التمرير والكيبورد */
+  function initSmartBottomDock() {
+    var root = document.documentElement;
+    var lastY = window.scrollY || 0;
+    var downDelta = 0;
+
+    function isInvoiceOpen() {
+      var inv = document.getElementById("viewInvoice");
+      if (!inv) return false;
+      var st = window.getComputedStyle(inv);
+      return st && st.display !== "none" && st.visibility !== "hidden";
+    }
+
+    function syncSafeClearance() {
+      var nav = document.querySelector(".app-nav");
+      if (!nav) return;
+      var h = Math.ceil(nav.getBoundingClientRect().height || 54);
+      root.style.setProperty("--ab-nav-safe", Math.max(120, h + 66) + "px");
+      if (isInvoiceOpen()) root.classList.remove("ab-nav-compact");
+    }
+
+    window.addEventListener("scroll", function () {
+      var y = window.scrollY || document.documentElement.scrollTop || 0;
+      if (isInvoiceOpen() || y < 70) {
+        root.classList.remove("ab-nav-compact");
+        downDelta = 0;
+        lastY = y;
+        return;
+      }
+      var diff = y - lastY;
+      if (diff > 0) {
+        downDelta += diff;
+        if (downDelta > 36) root.classList.add("ab-nav-compact");
+      } else if (diff < -14) {
+        downDelta = 0;
+        root.classList.remove("ab-nav-compact");
+      }
+      lastY = y;
+    }, { passive: true });
+
+    document.addEventListener("click", function (ev) {
+      var t = ev.target;
+      if (t && t.closest && t.closest(".app-nav, #tabsBar, #prodGrid .card")) {
+        root.classList.remove("ab-nav-compact");
+        setTimeout(function () {
+          scanAndMergeExtraBottomBar();
+          syncSafeClearance();
+        }, 120);
+      }
+    }, true);
+
+    document.addEventListener("focusin", function (ev) {
+      var el = ev.target;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) {
+        var tp = String(el.type || "text").toLowerCase();
+        if (tp !== "checkbox" && tp !== "radio" && tp !== "button" && tp !== "submit") {
+          root.classList.add("ab-kbd-open");
+        }
+      }
+    });
+    document.addEventListener("focusout", function () {
+      setTimeout(function () {
+        var ae = document.activeElement;
+        if (!ae || (ae.tagName !== "INPUT" && ae.tagName !== "TEXTAREA")) {
+          root.classList.remove("ab-kbd-open");
+        }
+      }, 140);
+    });
+
+    syncSafeClearance();
+    setTimeout(syncSafeClearance, 700);
+    window.addEventListener("resize", syncSafeClearance, { passive: true });
+  }
+
+  /* 4) لون شريط الحالة + تحديث Service Worker تلقائياً */
+  try {
+    var tm = document.querySelector('meta[name="theme-color"]');
+    if (!tm) {
+      tm = document.createElement("meta");
+      tm.name = "theme-color";
+      document.head.appendChild(tm);
+    }
+    tm.content = "#042F22";
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (sessionStorage.getItem("ab_sw_reloaded_v5")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v5", "1");
+        window.location.reload();
+      });
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        for (var i = 0; i < regs.length; i++) { try { regs[i].update(); } catch (e) {} }
+      });
+    }
+  } catch (e) {}
+
+  function boot() {
+    initSmartBottomDock();
+    fixHeaderContrast();
+    scanAndMergeExtraBottomBar();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { setTimeout(boot, 100); }, { once: true });
+  } else {
+    setTimeout(boot, 100);
+  }
+  setTimeout(scanAndMergeExtraBottomBar, 650);
+  setTimeout(fixHeaderContrast, 750);
+  setInterval(scanAndMergeExtraBottomBar, 1300);
+})();
+</script>
+<!-- ABUDHIYA_FLAGSHIP_UI_BODY_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -19963,7 +19992,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-677758";
+  var TARGET_CACHE = "abudhiya-offline-v4-679046";
 
   function forceReleaseSplash() {
     try {
