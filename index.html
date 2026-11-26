@@ -565,6 +565,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19292,8 +19293,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="7">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="8">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -19782,10 +19785,15 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   html body [data-ab-group-card="1"] {
     background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
     background-image: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
-    color: #0f172a !important;
-    border: 1.4px solid rgba(5, 150, 105, 0.28) !important;
+    color: #064e3b !important;
+    border: 1.5px solid rgba(5, 150, 105, 0.30) !important;
     border-radius: 18px !important;
-    box-shadow: 0 5px 16px rgba(6, 78, 59, 0.08) !important;
+    box-shadow: 0 6px 18px rgba(6, 78, 59, 0.08) !important;
+  }
+  html body [data-ab-group-card="1"] [data-ab-group-dark-inner="1"] {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
   }
   html body [data-ab-group-card="1"] h1,
   html body [data-ab-group-card="1"] h2,
@@ -19805,8 +19813,22 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     background-image: none !important;
     color: #065f46 !important;
     -webkit-text-fill-color: #065f46 !important;
-    border: 1px solid rgba(5, 150, 105, 0.25) !important;
+    border: 1px solid rgba(5, 150, 105, 0.30) !important;
     border-radius: 999px !important;
+    font-weight: 800 !important;
+  }
+  html body [data-ab-group-card="1"] [data-ab-group-ininv="1"] {
+    background: #059669 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: none !important;
+    border-radius: 999px !important;
+    font-weight: 800 !important;
+  }
+  html body [data-ab-group-card="1"] [data-ab-group-ininv="1"] * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
   }
   html body [data-ab-group-card="1"] button,
   html body [data-ab-group-card="1"] [data-ab-group-toggle="1"] {
@@ -19817,7 +19839,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border: none !important;
     border-radius: 12px !important;
     font-weight: 900 !important;
-    box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25) !important;
+    box-shadow: 0 3px 10px rgba(5, 150, 105, 0.26) !important;
   }
   html body [data-ab-group-card="1"] button *,
   html body [data-ab-group-card="1"] [data-ab-group-toggle="1"] * {
@@ -19825,14 +19847,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-text-fill-color: #ffffff !important;
   }
 
-  /* تجميل تذييل أبوضياء للتصميم والبرمجة باللون الزمردي المتناسق وتقليص الفراغ حوله */
+  /* توحيد تذييل أبوضياء للتصميم والبرمجة بنفس التدرّج الزمردي الملكي للترويسة */
   html body [data-ab-brand-footer="1"] {
-    background: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
-    background-image: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
-    border: 1.2px solid rgba(250, 204, 21, 0.45) !important;
+    background: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
+    background-image: linear-gradient(135deg, #022017 0%, #054a36 58%, #046c4e 100%) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.48) !important;
     border-radius: 18px !important;
-    margin: 8px 12px 10px !important;
-    box-shadow: 0 6px 18px rgba(4, 47, 34, 0.16) !important;
+    box-shadow: 0 8px 20px rgba(4, 47, 34, 0.20) !important;
+  }
+  html body [data-ab-brand-footer="1"] [data-ab-brand-footer-inner="1"] {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
   }
 
   /* 9) شاشة الفاتورة */
@@ -19989,10 +20016,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-weight: 800 !important;
   }
 </style>
-<script data-ab-flagship-ui="7">
+<script data-ab-flagship-ui="8">
 (function () {
-  if (window.__abFlagshipUiV7) return;
-  window.__abFlagshipUiV7 = true;
+  if (window.__abFlagshipUiV8) return;
+  window.__abFlagshipUiV8 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -20016,10 +20043,62 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return false;
   }
 
-  /* 1) تفتيح أزرار الكميات السريعة (10-300) + بطاقات المجموعات (مثل بطاطس طبيعي رنجو) + تذييل البرمجة */
+  /* 1) تفتيح أزرار الكميات السريعة + التقاط بطاقات المجموعات والتذييل بدقة عبر TreeWalker */
+  function isDarkBgStyle(cs) {
+    if (!cs) return false;
+    var bg = (cs.backgroundColor || "") + " " + (cs.backgroundImage || "");
+    var re = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/g;
+    var m;
+    while ((m = re.exec(bg)) !== null) {
+      var a = m[4] === undefined ? 1 : parseFloat(m[4]);
+      var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
+      if (a > 0.35 && lum < 75) return true;
+    }
+    return false;
+  }
+
+  function styleGroupCardNode(cardEl) {
+    if (!cardEl || cardEl.id === "prodGrid" || cardEl.id === "viewCatalog" || cardEl === document.body) return;
+    cardEl.setAttribute("data-ab-group-card", "1");
+    var subs = cardEl.querySelectorAll("div, span, button, a, p, small, strong");
+    for (var i = 0; i < subs.length; i++) {
+      var s = subs[i];
+      if (!s) continue;
+      var st = (s.textContent || "").replace(/\s+/g, " ").trim();
+      if (st && st.length < 32 && s.children.length <= 1 && /في\s*الفاتورة/.test(st)) {
+        s.setAttribute("data-ab-group-ininv", "1");
+        continue;
+      }
+      if (st && /^[\d٠-٩]+\s*صنف$/.test(st) && s.children.length === 0) {
+        s.setAttribute("data-ab-group-badge", "1");
+        continue;
+      }
+      if (st && /^(?:▾|▼|▲|▴)?\s*(?:عرض|إخفاء)\s*(?:▾|▼|▲|▴)?$/.test(st) && s.children.length <= 1) {
+        s.setAttribute("data-ab-group-toggle", "1");
+        continue;
+      }
+      if (s.tagName !== "BUTTON" && isDarkBgStyle(window.getComputedStyle(s))) {
+        s.setAttribute("data-ab-group-dark-inner", "1");
+      }
+    }
+  }
+
+  function styleBrandFooterNode(footEl) {
+    if (!footEl || footEl.id === "prodGrid" || footEl.id === "viewCatalog" || footEl === document.body) return;
+    footEl.setAttribute("data-ab-brand-footer", "1");
+    var subs = footEl.querySelectorAll("div, section, span, p");
+    for (var i = 0; i < subs.length; i++) {
+      var s = subs[i];
+      if (!s || s.closest("a, button")) continue;
+      if (isDarkBgStyle(window.getComputedStyle(s))) {
+        s.setAttribute("data-ab-brand-footer-inner", "1");
+      }
+    }
+  }
+
   function polishCatalogCardsAndFooter() {
     try {
-      // أزرار الكميات الرقمية داخل كروت المنتجات
+      // أ) أزرار الكميات الرقمية داخل كروت المنتجات
       var qtyBtns = document.querySelectorAll("#prodGrid .card button, .grid .card button");
       for (var i = 0; i < qtyBtns.length; i++) {
         var b = qtyBtns[i];
@@ -20029,41 +20108,64 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         }
       }
 
-      // بطاقات المجموعات السوداء القابلة للفتح (مثل: بطاطس طبيعي رنجو - 20 صنف)
-      var candGroups = document.querySelectorAll("#prodGrid > div, #viewCatalog > div, #viewCatalog > section, body > div, body > section");
-      for (var g = 0; g < candGroups.length; g++) {
-        var el = candGroups[g];
-        if (!el || el.classList.contains("card") || el.id === "prodGrid" || el.id === "viewCatalog") continue;
-        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
-        if (!txt) continue;
+      // ب) التقاط بطاقات المجموعات السوداء والتذييل عبر TreeWalker مهما كان نوع الوسم أو عمق التداخل
+      if (document.createTreeWalker && document.body) {
+        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        var tn;
+        var seenGroups = [];
+        var seenFooters = [];
+        while ((tn = walker.nextNode())) {
+          var v = (tn.nodeValue || "").trim();
+          if (!v || v.length < 4) continue;
 
-        if (txt.length < 220 && /اضغط\s*لعرض/.test(txt) && /صنف/.test(txt)) {
-          el.setAttribute("data-ab-group-card", "1");
-          var subs = el.querySelectorAll("span, div, button");
-          for (var s = 0; s < subs.length; s++) {
-            var st = (subs[s].textContent || "").trim();
-            if (/^[\d٠-٩]+\s*صنف$/.test(st)) {
-              subs[s].setAttribute("data-ab-group-badge", "1");
-            } else if (/^(?:▾|▼|▲|▴)?\s*(?:عرض|إخفاء)\s*(?:▾|▼|▲|▴)?$/.test(st) && subs[s].children.length <= 1) {
-              subs[s].setAttribute("data-ab-group-toggle", "1");
+          // بطاقة مجموعة قابلة للفتح (مثل: بطاطس طبيعي رنجو - اضغط لعرض الأحجام...)
+          if (/اضغط\s*لعرض/.test(v)) {
+            var cur = tn.parentElement;
+            var bestDark = null;
+            var bestFit = null;
+            for (var d = 0; d < 6 && cur && cur !== document.body && cur.id !== "prodGrid" && cur.id !== "viewCatalog"; d++) {
+              if (cur.classList && cur.classList.contains("card")) break;
+              var ct = (cur.textContent || "").replace(/\s+/g, " ").trim();
+              if (ct.length > 340) break;
+              bestFit = cur;
+              if (cur.getAttribute("data-ab-group-card") === "1" || isDarkBgStyle(window.getComputedStyle(cur))) {
+                bestDark = cur;
+              }
+              cur = cur.parentElement;
+            }
+            var targetG = bestDark || bestFit;
+            if (targetG && seenGroups.indexOf(targetG) === -1) {
+              seenGroups.push(targetG);
+              styleGroupCardNode(targetG);
+            }
+            continue;
+          }
+
+          // تذييل أبوضياء للتصميم والبرمجة
+          if (/أبوضياء\s*للتصميم\s*والبرمجة|تطوير\s*معتمد/.test(v)) {
+            var fCur = tn.parentElement;
+            var fBestDark = null;
+            var fBestFit = null;
+            for (var fd = 0; fd < 6 && fCur && fCur !== document.body && fCur.id !== "prodGrid" && fCur.id !== "viewCatalog"; fd++) {
+              var ft = (fCur.textContent || "").replace(/\s+/g, " ").trim();
+              if (ft.length > 220) break;
+              if (fCur.querySelector && fCur.querySelector("#prodGrid")) break;
+              fBestFit = fCur;
+              if (fCur.getAttribute("data-ab-brand-footer") === "1" || isDarkBgStyle(window.getComputedStyle(fCur))) {
+                fBestDark = fCur;
+              }
+              fCur = fCur.parentElement;
+            }
+            var targetF = fBestDark || fBestFit;
+            if (targetF && seenFooters.indexOf(targetF) === -1) {
+              seenFooters.push(targetF);
+              styleBrandFooterNode(targetF);
             }
           }
-          continue;
-        }
-
-        // تذييل أبوضياء للتصميم والبرمجة
-        if (txt.length < 160 && /أبوضياء\s*للتصميم\s*والبرمجة|تطوير\s*معتمد/.test(txt) && !el.querySelector("#prodGrid")) {
-          var fRoot = el;
-          for (var d = 0; d < 3 && fRoot.parentElement && fRoot.parentElement !== document.body; d++) {
-            var pt = (fRoot.parentElement.textContent || "").trim();
-            if (pt.length > 180 || fRoot.parentElement.id === "viewCatalog") break;
-            fRoot = fRoot.parentElement;
-          }
-          fRoot.setAttribute("data-ab-brand-footer", "1");
         }
       }
 
-      // زر تبديل الدور العائم أعلى اليسار (سواء كان button أو div أو a)
+      // ج) زر تبديل الدور العائم أعلى اليسار
       var roleNodes = document.querySelectorAll("body > button, body > div, body > a, button[id], div[id]");
       for (var r = 0; r < roleNodes.length; r++) {
         var rn = roleNodes[r];
@@ -20443,8 +20545,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v7")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v7", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v8")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v8", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -20525,7 +20627,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-680358";
+  var TARGET_CACHE = "abudhiya-offline-v4-680691";
 
   function forceReleaseSplash() {
     try {
