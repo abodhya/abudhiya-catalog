@@ -564,6 +564,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_START -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19289,8 +19290,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_START -->
-<style id="abFlagshipStoreUiCss" data-flagship-ui="6">
+<style id="abFlagshipStoreUiCss" data-flagship-ui="7">
   :root {
     --ab-bg: #f2f6f4;
     --ab-surface: #ffffff;
@@ -19300,7 +19303,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     --ab-emerald-soft: #ecfdf5;
     --ab-ink: #0f172a;
     --ab-border: rgba(6, 78, 59, 0.12);
-    --ab-nav-safe: 136px;
+    --ab-nav-safe: 78px;
   }
 
   /* 1) الخط العربي الاحترافي وتوحيد الخلفية النظيفة لكامل المتجر */
@@ -19319,7 +19322,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif !important;
   }
 
-  /* 2) مسافة آمنة لزر تبديل الدور العلوي حتى لا يتداخل مع زاوية الترويسة */
+  /* 2) زر تبديل الدور العلوي (المدير • تبديل): متناسق بالزمردي ويختفي بسلاسة أثناء النزول حتى لا يغطي المنتجات */
   html.ab-has-top-role-pill body #abSaifLuxuryHeader,
   html.ab-has-top-role-pill body .absf-hdr-card {
     margin-top: 46px !important;
@@ -19327,11 +19330,23 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   html body .ab-top-role-pill {
     top: 8px !important;
     background: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
+    background-image: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
     color: #fef08a !important;
-    border: 1px solid rgba(250, 204, 21, 0.65) !important;
+    -webkit-text-fill-color: #fef08a !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.72) !important;
     border-radius: 999px !important;
-    box-shadow: 0 4px 14px rgba(4, 47, 34, 0.25) !important;
+    box-shadow: 0 4px 14px rgba(4, 47, 34, 0.24) !important;
     font-weight: 800 !important;
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease !important;
+  }
+  html body .ab-top-role-pill * {
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+  }
+  html.ab-scrolled-down body .ab-top-role-pill {
+    transform: translateY(-64px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   /* 3) الترويسة الملكية العلوية بتباين ناصع 100% لكل النصوص وشارة مندوب المبيعات */
@@ -19421,7 +19436,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #fef08a !important;
     -webkit-text-fill-color: #fef08a !important;
   }
-  /* تنعيم المربع الأبيض الصغير على الخط الفاصل داخل الترويسة */
   html body #abSaifLuxuryHeader .ab-hdr-divider-dot,
   html body .absf-hdr-card .ab-hdr-divider-dot {
     background: rgba(250, 204, 21, 0.65) !important;
@@ -19506,18 +19520,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     display: none !important;
   }
 
-  /* طيّ البطاقات الثانوية افتراضياً لإظهار البحث والمنتجات في الشاشة الأولى */
-  html:not(.ab-tools-open) body [data-ab-panel-kind="tools"] {
-    display: none !important;
-  }
-  html:not(.ab-offers-open) body [data-ab-panel-kind="offers"] {
-    display: none !important;
-  }
-  html:not(.ab-admin-open) body [data-ab-panel-kind="admin"] {
-    display: none !important;
-  }
+  html:not(.ab-tools-open) body [data-ab-panel-kind="tools"] { display: none !important; }
+  html:not(.ab-offers-open) body [data-ab-panel-kind="offers"] { display: none !important; }
+  html:not(.ab-admin-open) body [data-ab-panel-kind="admin"] { display: none !important; }
 
-  /* 5) تحويل جميع البطاقات السوداء الثانوية إلى الأبيض والزمردي المتناسق عند فتحها */
+  /* 5) توحيد البطاقات الثانوية باللونين الأبيض والزمردي */
   html body [data-ab-light-card="1"] {
     background: #ffffff !important;
     background-image: none !important;
@@ -19559,8 +19566,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #064e3b !important;
     -webkit-text-fill-color: #064e3b !important;
   }
-
-  /* تجميل شريط الكبسولات السريعة وشريط الحالات باللون الأبيض والزمردي */
   html body [data-ab-panel-sub="pills"] {
     background: transparent !important;
     border: none !important;
@@ -19577,13 +19582,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     background: #ffffff !important;
     padding: 10px 8px !important;
   }
-  html body [data-ab-panel-sub="stories"] > div,
-  html body [data-ab-panel-sub="stories"] [class*="story"],
-  html body [data-ab-panel-sub="stories"] [class*="item"] {
-    background: transparent !important;
-  }
-
-  /* تجميل بطاقة العروض الخاصة بتدرّج فاتح ناعم بدلاً من الأسود */
   html body [data-ab-panel-kind="offers"] {
     background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 65%, #fefce8 100%) !important;
     border: 1.4px solid rgba(5, 150, 105, 0.28) !important;
@@ -19596,7 +19594,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-radius: 14px !important;
   }
 
-  /* بطاقة المندوب المعتمد: سطر أنيق مضغوط ومتناسق تبقى ظاهرة */
+  /* بطاقة المندوب المعتمد */
   html body [data-ab-rep-strip="1"] {
     margin: 4px 10px 8px !important;
     padding: 9px 12px !important;
@@ -19722,11 +19720,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 6px 12px !important;
   }
 
-  /* 8) كروت المنتجات البيضاء */
+  /* 8) كروت المنتجات البيضاء + إزالة الفراغ الأبيض الزائد أسفل الشبكة + تفتيح أزرار الكميات السريعة */
+  html body #viewCatalog {
+    padding-bottom: 10px !important;
+    min-height: auto !important;
+  }
   html body #prodGrid,
   html body .grid {
     gap: 11px !important;
-    padding: 6px 12px calc(var(--ab-nav-safe) + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 6px 12px 14px !important;
+    margin-bottom: 0 !important;
   }
   html body #prodGrid .card,
   html body .grid .card {
@@ -19734,14 +19737,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #0f172a !important;
     border: 1px solid rgba(15, 23, 42, 0.08) !important;
     border-radius: 18px !important;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
     overflow: hidden !important;
   }
   html body #prodGrid .card.selected,
   html body #prodGrid .card.has-qty,
   html body #prodGrid .card.active {
     border: 2px solid #059669 !important;
-    box-shadow: 0 10px 24px rgba(5, 150, 105, 0.18) !important;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.16) !important;
   }
   html body #prodGrid .card img {
     background: #ffffff !important;
@@ -19749,7 +19752,87 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     object-fit: contain !important;
   }
   html body #prodGrid .card-body {
-    padding: 10px 10px 12px !important;
+    padding: 8px 8px 10px !important;
+  }
+
+  /* تحويل أزرار الكميات السريعة (10 - 300) داخل الكروت من الأسود الثقيل إلى نعناعي فاتح أنيق */
+  html body #prodGrid .card button[data-ab-qty-btn="1"],
+  html body .grid .card .shortcuts-grid button {
+    background: #f0f7f4 !important;
+    background-image: none !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    border: 1px solid rgba(5, 150, 105, 0.22) !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    font-variant-numeric: tabular-nums !important;
+    box-shadow: 0 1px 3px rgba(6, 78, 59, 0.05) !important;
+    text-shadow: none !important;
+  }
+  html body #prodGrid .card button[data-ab-qty-btn="1"]:active,
+  html body #prodGrid .card button[data-ab-qty-btn="1"].active,
+  html body .grid .card .shortcuts-grid button.active {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-color: transparent !important;
+  }
+
+  /* تحويل بطاقات المجموعات السوداء (مثل: بطاطس طبيعي رنجو 20 صنف) إلى أبيض وزمردي متناسق */
+  html body [data-ab-group-card="1"] {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+    background-image: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%) !important;
+    color: #0f172a !important;
+    border: 1.4px solid rgba(5, 150, 105, 0.28) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 5px 16px rgba(6, 78, 59, 0.08) !important;
+  }
+  html body [data-ab-group-card="1"] h1,
+  html body [data-ab-group-card="1"] h2,
+  html body [data-ab-group-card="1"] h3,
+  html body [data-ab-group-card="1"] h4,
+  html body [data-ab-group-card="1"] p,
+  html body [data-ab-group-card="1"] span,
+  html body [data-ab-group-card="1"] div,
+  html body [data-ab-group-card="1"] strong,
+  html body [data-ab-group-card="1"] small {
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-group-card="1"] [data-ab-group-badge="1"] {
+    background: #d1fae5 !important;
+    background-image: none !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    border: 1px solid rgba(5, 150, 105, 0.25) !important;
+    border-radius: 999px !important;
+  }
+  html body [data-ab-group-card="1"] button,
+  html body [data-ab-group-card="1"] [data-ab-group-toggle="1"] {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    background-image: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25) !important;
+  }
+  html body [data-ab-group-card="1"] button *,
+  html body [data-ab-group-card="1"] [data-ab-group-toggle="1"] * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  /* تجميل تذييل أبوضياء للتصميم والبرمجة باللون الزمردي المتناسق وتقليص الفراغ حوله */
+  html body [data-ab-brand-footer="1"] {
+    background: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
+    background-image: linear-gradient(135deg, #03261b 0%, #065f46 100%) !important;
+    border: 1.2px solid rgba(250, 204, 21, 0.45) !important;
+    border-radius: 18px !important;
+    margin: 8px 12px 10px !important;
+    box-shadow: 0 6px 18px rgba(4, 47, 34, 0.16) !important;
   }
 
   /* 9) شاشة الفاتورة */
@@ -19769,7 +19852,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     padding: 14px !important;
   }
 
-  /* 10) الشريط السفلي الموحّد الذكي (دمج الشريط المكرر + انكماش عند التمرير) */
+  /* 10) الشريط السفلي الموحّد الذكي (مسافة أمان واحدة متوازنة فقط في body) */
   html body [data-ab-merged-dock="1"] {
     display: none !important;
     visibility: hidden !important;
@@ -19906,10 +19989,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     font-weight: 800 !important;
   }
 </style>
-<script data-ab-flagship-ui="6">
+<script data-ab-flagship-ui="7">
 (function () {
-  if (window.__abFlagshipUiV6) return;
-  window.__abFlagshipUiV6 = true;
+  if (window.__abFlagshipUiV7) return;
+  window.__abFlagshipUiV7 = true;
 
   var KNOWN_EXTRA_IDS = [];
   var mergedBarRef = null;
@@ -19933,7 +20016,74 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return false;
   }
 
-  /* 1) إنشاء شريط التحكم القابل للطيّ أسفل الترويسة مباشرة */
+  /* 1) تفتيح أزرار الكميات السريعة (10-300) + بطاقات المجموعات (مثل بطاطس طبيعي رنجو) + تذييل البرمجة */
+  function polishCatalogCardsAndFooter() {
+    try {
+      // أزرار الكميات الرقمية داخل كروت المنتجات
+      var qtyBtns = document.querySelectorAll("#prodGrid .card button, .grid .card button");
+      for (var i = 0; i < qtyBtns.length; i++) {
+        var b = qtyBtns[i];
+        var t = toAsciiDigits((b.textContent || "").trim());
+        if (/^\d{1,4}$/.test(t)) {
+          b.setAttribute("data-ab-qty-btn", "1");
+        }
+      }
+
+      // بطاقات المجموعات السوداء القابلة للفتح (مثل: بطاطس طبيعي رنجو - 20 صنف)
+      var candGroups = document.querySelectorAll("#prodGrid > div, #viewCatalog > div, #viewCatalog > section, body > div, body > section");
+      for (var g = 0; g < candGroups.length; g++) {
+        var el = candGroups[g];
+        if (!el || el.classList.contains("card") || el.id === "prodGrid" || el.id === "viewCatalog") continue;
+        var txt = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (!txt) continue;
+
+        if (txt.length < 220 && /اضغط\s*لعرض/.test(txt) && /صنف/.test(txt)) {
+          el.setAttribute("data-ab-group-card", "1");
+          var subs = el.querySelectorAll("span, div, button");
+          for (var s = 0; s < subs.length; s++) {
+            var st = (subs[s].textContent || "").trim();
+            if (/^[\d٠-٩]+\s*صنف$/.test(st)) {
+              subs[s].setAttribute("data-ab-group-badge", "1");
+            } else if (/^(?:▾|▼|▲|▴)?\s*(?:عرض|إخفاء)\s*(?:▾|▼|▲|▴)?$/.test(st) && subs[s].children.length <= 1) {
+              subs[s].setAttribute("data-ab-group-toggle", "1");
+            }
+          }
+          continue;
+        }
+
+        // تذييل أبوضياء للتصميم والبرمجة
+        if (txt.length < 160 && /أبوضياء\s*للتصميم\s*والبرمجة|تطوير\s*معتمد/.test(txt) && !el.querySelector("#prodGrid")) {
+          var fRoot = el;
+          for (var d = 0; d < 3 && fRoot.parentElement && fRoot.parentElement !== document.body; d++) {
+            var pt = (fRoot.parentElement.textContent || "").trim();
+            if (pt.length > 180 || fRoot.parentElement.id === "viewCatalog") break;
+            fRoot = fRoot.parentElement;
+          }
+          fRoot.setAttribute("data-ab-brand-footer", "1");
+        }
+      }
+
+      // زر تبديل الدور العائم أعلى اليسار (سواء كان button أو div أو a)
+      var roleNodes = document.querySelectorAll("body > button, body > div, body > a, button[id], div[id]");
+      for (var r = 0; r < roleNodes.length; r++) {
+        var rn = roleNodes[r];
+        if (!rn || rn.closest("#abSaifLuxuryHeader, #abQuickDrawerBar, .app-nav")) continue;
+        var rt = (rn.textContent || "").replace(/\s+/g, " ").trim();
+        if (rt && rt.length < 40 && /(?:المدير|مندوب|عميل).*تبديل|تبديل.*(?:المدير|مندوب)/.test(rt)) {
+          var cs0 = window.getComputedStyle(rn);
+          if (cs0 && cs0.position === "fixed") {
+            var r0 = rn.getBoundingClientRect();
+            if (r0.top < 65 && r0.height > 18 && r0.height < 60) {
+              rn.classList.add("ab-top-role-pill");
+              document.documentElement.classList.add("ab-has-top-role-pill");
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  /* 2) إنشاء شريط التحكم القابل للطيّ أسفل الترويسة مباشرة */
   function ensureQuickDrawerBar() {
     var bar = document.getElementById("abQuickDrawerBar");
     if (bar) return bar;
@@ -19986,15 +20136,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         if (m) {
           var a = m[4] === undefined ? 1 : parseFloat(m[4]);
           var lum = (0.299 * (+m[1])) + (0.587 * (+m[2])) + (0.114 * (+m[3]));
-          if (a > 0.35 && lum < 75) {
-            ch.setAttribute("data-ab-inner-dark", "1");
-          }
+          if (a > 0.35 && lum < 75) ch.setAttribute("data-ab-inner-dark", "1");
         }
       }
     } catch (e) {}
   }
 
-  /* 2) تصنيف وتوحيد البطاقات السوداء الثانوية وربطها بزر الأدوات السريعة */
   function classifyAndUnifyPanels() {
     try {
       var bar = ensureQuickDrawerBar();
@@ -20010,29 +20157,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         var raw = (el.textContent || "").replace(/\s+/g, " ").trim();
         if (!raw || raw.length > 650) continue;
 
-        // 1) زر تبديل الدور العائم أعلى اليسار (المدير • تبديل)
-        if (raw.length < 40 && /(?:المدير|مندوب|عميل).*تبديل|تبديل.*(?:المدير|مندوب)/.test(raw)) {
-          var cs0 = window.getComputedStyle(el);
-          if (cs0 && cs0.position === "fixed") {
-            var r0 = el.getBoundingClientRect();
-            if (r0.top < 55 && r0.height > 18 && r0.height < 56) {
-              el.classList.add("ab-top-role-pill");
-              document.documentElement.classList.add("ab-has-top-role-pill");
-            }
-          }
-          continue;
-        }
-
-        // 2) بطاقة المندوب المعتمد (تبقى ظاهرة بشكل أنيق مضغوط)
         if (raw.length < 180 && /مندوبك\s*المعتمد/.test(raw) && !/لوحة\s*تحكم\s*المدير|عروض\s*خاصة/.test(raw)) {
           var repRoot = findPanelRoot(el, 220, /الأرشيف|طلب\s*ذكي|عروض\s*خاصة|لوحة\s*تحكم/);
-          if (repRoot && !isProtected(repRoot)) {
-            repRoot.setAttribute("data-ab-rep-strip", "1");
-          }
+          if (repRoot && !isProtected(repRoot)) repRoot.setAttribute("data-ab-rep-strip", "1");
           continue;
         }
-
-        // 3) شريط الأدوات (الأرشيف / المفضلة / بحث صوتي / باركود)
         if (raw.length < 180 && /الأرشيف/.test(raw) && /(?:المفضلة|بحث\s*صوتي|باركود)/.test(raw)) {
           var tRoot1 = findPanelRoot(el, 220, /مندوبك\s*المعتمد|عروض\s*خاصة|لوحة\s*تحكم|تكرار\s*طلب/);
           if (tRoot1 && !isProtected(tRoot1)) {
@@ -20041,8 +20170,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           }
           continue;
         }
-
-        // 4) شريط الكبسولات (طلب ذكي / سلال جاهزة / دفتر المحلات)
         if (raw.length < 180 && /(?:طلب\s*ذكي|سلال\s*جاهزة)/.test(raw) && /(?:سلال\s*جاهزة|دفتر\s*المحلات|باركود)/.test(raw)) {
           var tRoot2 = findPanelRoot(el, 220, /مندوبك\s*المعتمد|عروض\s*خاصة|لوحة\s*تحكم|الأرشيف/);
           if (tRoot2 && !isProtected(tRoot2)) {
@@ -20052,8 +20179,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           }
           continue;
         }
-
-        // 5) شريط الحالات (تكرار طلب / جرد اليوم)
         if (raw.length < 320 && /تكرار\s*طلب/.test(raw) && /جرد\s*اليوم/.test(raw)) {
           var tRoot3 = findPanelRoot(el, 360, /مندوبك\s*المعتمد|عروض\s*خاصة|لوحة\s*تحكم/);
           if (tRoot3 && !isProtected(tRoot3)) {
@@ -20063,8 +20188,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           }
           continue;
         }
-
-        // 6) بطاقة العروض الخاصة لفترة محدودة
         if (raw.length < 520 && /عروض\s*خاصة\s*لفترة\s*محدودة/.test(raw) && !/لوحة\s*تحكم\s*المدير/.test(raw)) {
           var oRoot = findPanelRoot(el, 560, /مندوبك\s*المعتمد|لوحة\s*تحكم\s*المدير|الأرشيف/);
           if (oRoot && !isProtected(oRoot)) {
@@ -20075,8 +20198,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           }
           continue;
         }
-
-        // 7) لوحة تحكم المدير
         if (raw.length < 360 && /لوحة\s*تحكم\s*المدير/.test(raw) && !/عروض\s*خاصة/.test(raw)) {
           var aRoot = findPanelRoot(el, 400, /مندوبك\s*المعتمد|عروض\s*خاصة|الأرشيف/);
           if (aRoot && !isProtected(aRoot)) {
@@ -20205,7 +20326,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           if (!cs) continue;
           var rawTxt = (el.textContent || "").trim();
 
-          // تنعيم أي مربع أبيض زخرفي صغير داخل خط الفاصل في الترويسة
           if (!rawTxt && el.children.length === 0) {
             var rc = el.getBoundingClientRect();
             if (rc.width > 1 && rc.width <= 18 && rc.height > 1 && rc.height <= 36 && hasBrightCssColor(cs.backgroundColor)) {
@@ -20213,7 +20333,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
               continue;
             }
           }
-
           if (hasBrightCssColor(cs.backgroundColor) || hasBrightCssColor(cs.backgroundImage)) {
             el.classList.add("ab-hdr-glass-fix");
           }
@@ -20225,7 +20344,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     } catch (e) {}
   }
 
-  /* 5) الشريط السفلي الذكي عند التمرير والكيبورد */
+  /* 5) الشريط السفلي الذكي وإخفاء زر المدير أثناء النزول */
   function initSmartBottomDock() {
     var root = document.documentElement;
     var lastY = window.scrollY || 0;
@@ -20241,13 +20360,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     function syncSafeClearance() {
       var nav = document.querySelector(".app-nav");
       if (!nav) return;
-      var h = Math.ceil(nav.getBoundingClientRect().height || 54);
-      root.style.setProperty("--ab-nav-safe", Math.max(120, h + 66) + "px");
+      var h = Math.ceil(nav.getBoundingClientRect().height || 52);
+      root.style.setProperty("--ab-nav-safe", Math.max(72, h + 24) + "px");
       if (isInvoiceOpen()) root.classList.remove("ab-nav-compact");
     }
 
     window.addEventListener("scroll", function () {
       var y = window.scrollY || document.documentElement.scrollTop || 0;
+      root.classList.toggle("ab-scrolled-down", y > 45);
       if (isInvoiceOpen() || y < 70) {
         root.classList.remove("ab-nav-compact");
         downDelta = 0;
@@ -20267,9 +20387,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
     document.addEventListener("click", function (ev) {
       var t = ev.target;
-      if (t && t.closest && t.closest(".app-nav, #tabsBar, #prodGrid .card")) {
+      if (t && t.closest && t.closest(".app-nav, #tabsBar, #prodGrid .card, [data-ab-group-card]")) {
         root.classList.remove("ab-nav-compact");
         setTimeout(function () {
+          polishCatalogCardsAndFooter();
           scanAndMergeExtraBottomBar();
           syncSafeClearance();
         }, 120);
@@ -20299,7 +20420,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     window.addEventListener("resize", syncSafeClearance, { passive: true });
   }
 
-  /* 6) لون شريط الحالة + تحديث Service Worker تلقائياً */
+  /* 6) مراقبة تحديث شبكة المنتجات لتطبيق تفتيح الأزرار فور تبديل الأقسام */
+  function watchGridChanges() {
+    var grid = document.getElementById("prodGrid");
+    if (!grid || typeof MutationObserver === "undefined") return;
+    try {
+      var obs = new MutationObserver(function () {
+        polishCatalogCardsAndFooter();
+      });
+      obs.observe(grid, { childList: true, subtree: true });
+    } catch (e) {}
+  }
+
+  /* 7) لون شريط الحالة + تحديث Service Worker تلقائياً */
   try {
     var tm = document.querySelector('meta[name="theme-color"]');
     if (!tm) {
@@ -20310,8 +20443,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     tm.content = "#042F22";
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.addEventListener("controllerchange", function () {
-        if (sessionStorage.getItem("ab_sw_reloaded_v6")) return;
-        sessionStorage.setItem("ab_sw_reloaded_v6", "1");
+        if (sessionStorage.getItem("ab_sw_reloaded_v7")) return;
+        sessionStorage.setItem("ab_sw_reloaded_v7", "1");
         window.location.reload();
       });
       navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -20324,7 +20457,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     initSmartBottomDock();
     fixHeaderContrast();
     classifyAndUnifyPanels();
+    polishCatalogCardsAndFooter();
     scanAndMergeExtraBottomBar();
+    watchGridChanges();
   }
 
   if (document.readyState === "loading") {
@@ -20332,12 +20467,17 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   } else {
     setTimeout(boot, 90);
   }
-  setTimeout(function () { classifyAndUnifyPanels(); fixHeaderContrast(); scanAndMergeExtraBottomBar(); }, 550);
-  setTimeout(function () { classifyAndUnifyPanels(); fixHeaderContrast(); }, 1250);
+  setTimeout(function () {
+    classifyAndUnifyPanels();
+    polishCatalogCardsAndFooter();
+    fixHeaderContrast();
+    scanAndMergeExtraBottomBar();
+  }, 550);
   setInterval(function () {
+    polishCatalogCardsAndFooter();
     scanAndMergeExtraBottomBar();
     classifyAndUnifyPanels();
-  }, 1600);
+  }, 1500);
 })();
 </script>
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_END -->
@@ -20385,7 +20525,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-679666";
+  var TARGET_CACHE = "abudhiya-offline-v4-680358";
 
   function forceReleaseSplash() {
     try {
