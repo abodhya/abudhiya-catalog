@@ -23087,6 +23087,543 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_FLAGSHIP_UI_BODY_END -->
 
+
+<!-- ABUDHIYA_WEBPUSH_START -->
+<style id="abWebPushCss" data-ab-webpush="1">
+  #abCustPushCard {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 10px 12px !important;
+    margin-bottom: 10px !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%) !important;
+    border: 1.3px solid rgba(5, 150, 105, 0.30) !important;
+    box-shadow: 0 3px 10px rgba(6, 78, 59, 0.06) !important;
+  }
+  #abCustPushCard .ab-cp-txt {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  #abCustPushCard .ab-cp-t {
+    font-size: 12.8px !important;
+    font-weight: 900 !important;
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+    margin-bottom: 2px !important;
+  }
+  #abCustPushCard .ab-cp-s {
+    font-size: 11.2px !important;
+    font-weight: 700 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    line-height: 1.35 !important;
+  }
+  #abCustPushBtn {
+    flex-shrink: 0 !important;
+    height: 36px !important;
+    padding: 0 13px !important;
+    border-radius: 11px !important;
+    border: none !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 10px rgba(5, 150, 105, 0.28) !important;
+    white-space: nowrap !important;
+  }
+  #abCustPushBtn.subscribed {
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    border: 1px solid rgba(5, 150, 105, 0.35) !important;
+    box-shadow: none !important;
+  }
+  #abAdminPushToggleBtn {
+    width: 100% !important;
+    height: 42px !important;
+    margin-bottom: 10px !important;
+    border-radius: 13px !important;
+    border: 1.3px solid rgba(5, 150, 105, 0.38) !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.24) !important;
+  }
+  #abAdminPushBox {
+    display: none;
+    background: #f4f9f6 !important;
+    border: 1.3px solid rgba(5, 150, 105, 0.30) !important;
+    border-radius: 16px !important;
+    padding: 11px !important;
+    margin-bottom: 12px !important;
+  }
+  #abAdminPushBox.open {
+    display: block !important;
+  }
+  .ab-ps-status {
+    font-size: 11.8px !important;
+    font-weight: 800 !important;
+    padding: 7px 10px !important;
+    border-radius: 10px !important;
+    margin-bottom: 9px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(5, 150, 105, 0.24) !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    line-height: 1.45 !important;
+  }
+  .ab-ps-status.warn {
+    background: #fffbeb !important;
+    border-color: rgba(245, 158, 11, 0.42) !important;
+    color: #92400e !important;
+    -webkit-text-fill-color: #92400e !important;
+  }
+  .ab-ps-cfg-details {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 8px 10px !important;
+    margin-bottom: 9px !important;
+  }
+  .ab-ps-cfg-details summary {
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    color: #064e3b !important;
+    cursor: pointer !important;
+  }
+  .ab-ps-send-btn {
+    width: 100% !important;
+    height: 43px !important;
+    border-radius: 12px !important;
+    border: none !important;
+    background: linear-gradient(135deg, #042f22 0%, #059669 100%) !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    box-shadow: 0 5px 14px rgba(4, 47, 34, 0.24) !important;
+    margin-bottom: 7px !important;
+  }
+  .ab-ps-msg {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    margin-top: 6px !important;
+    color: #065f46 !important;
+  }
+</style>
+<script data-ab-webpush="1">
+(function () {
+  if (window.__abWebPushV1) return;
+  window.__abWebPushV1 = true;
+
+  var BUILTIN_APP_ID = "";
+  var LS_APP_ID = "ab_os_appid_v1";
+  var LS_API_KEY = "ab_os_restkey_v1";
+  var activeAppId = BUILTIN_APP_ID || "";
+  var sdkLoaded = false;
+  var osReady = false;
+
+  function getEffectiveAppId() {
+    var localId = "";
+    try { localId = String(localStorage.getItem(LS_APP_ID) || "").trim(); } catch (e) {}
+    return activeAppId || localId || "";
+  }
+
+  function getRestKey() {
+    try { return String(localStorage.getItem(LS_API_KEY) || "").trim(); } catch (e) { return ""; }
+  }
+
+  function getProducts() {
+    try {
+      if (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) return PRODUCTS;
+      if (Array.isArray(window.PRODUCTS)) return window.PRODUCTS;
+    } catch (e) {}
+    return [];
+  }
+
+  function findProd(pid) {
+    var list = getProducts();
+    var target = String(pid || "").trim();
+    for (var i = 0; i < list.length; i++) {
+      if (String(list[i].id) === target) return list[i];
+    }
+    return null;
+  }
+
+  function isAdmin() {
+    try {
+      var rp = document.querySelector(".ab-top-role-pill");
+      if (rp && /المدير/.test(rp.textContent || "")) return true;
+      if (document.querySelector('[data-ab-panel-kind="admin"]')) return true;
+      var qAdm = document.querySelector('#abQuickDrawerBar [data-qd="admin"]:not(.ab-qd-hidden)');
+      if (qAdm) return true;
+      var r = String(localStorage.getItem("ab_role") || localStorage.getItem("user_role") || "").toLowerCase();
+      if (r.indexOf("admin") !== -1 || r.indexOf("مدير") !== -1) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  /* 1) تحميل OneSignal SDK v16 بأمان في نطاق /push/onesignal/ المعزول عن sw.js */
+  function initOneSignalSdk(appId) {
+    if (!appId || sdkLoaded) return;
+    if (window.location.protocol !== "https:" && window.location.hostname !== "localhost") return;
+    sdkLoaded = true;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+      try {
+        await OneSignal.init({
+          appId: appId,
+          serviceWorkerPath: "/push/onesignal/OneSignalSDKWorker.js",
+          serviceWorkerParam: { scope: "/push/onesignal/" },
+          allowLocalhostAsSecureOrigin: true
+        });
+        osReady = true;
+        refreshCustomerPushCard();
+      } catch (e) {}
+    });
+    var s = document.createElement("script");
+    s.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  function loadRemoteConfig() {
+    if (activeAppId) initOneSignalSdk(activeAppId);
+    try {
+      fetch("/push_config.json?v=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (cfg) {
+          if (cfg && cfg.appId && String(cfg.appId).trim()) {
+            activeAppId = String(cfg.appId).trim();
+            initOneSignalSdk(activeAppId);
+            refreshCustomerPushCard();
+            refreshAdminPushStatus();
+          }
+        })
+        .catch(function () {});
+    } catch (e) {}
+  }
+
+  function isPushSubscribed() {
+    try {
+      if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+        if (window.OneSignal && window.OneSignal.User && window.OneSignal.User.PushSubscription) {
+          return !!window.OneSignal.User.PushSubscription.optedIn;
+        }
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function requestPushSubscribe() {
+    var appId = getEffectiveAppId();
+    if (!appId) {
+      if (typeof showToast === "function") showToast("⚠️ إشعارات شاشة القفل غير مربوطة بعد");
+      return;
+    }
+    if (!sdkLoaded) initOneSignalSdk(appId);
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function (OneSignal) {
+      try {
+        await OneSignal.Notifications.requestPermission();
+        if (OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.optIn) {
+          await OneSignal.User.PushSubscription.optIn();
+        }
+        refreshCustomerPushCard();
+        if (typeof showToast === "function") showToast("✅ تم تفعيل إشعارات العروض على شاشة القفل");
+      } catch (e) {
+        if (typeof showToast === "function") showToast("⚠️ اسمح بالإشعارات من إعدادات المتصفح");
+      }
+    });
+  }
+
+  function refreshCustomerPushCard() {
+    var card = document.getElementById("abCustPushCard");
+    var btn = document.getElementById("abCustPushBtn");
+    var sub = document.getElementById("abCustPushSub");
+    if (!card || !btn) return;
+
+    var appId = getEffectiveAppId();
+    if (!appId) {
+      card.style.display = "none";
+      return;
+    }
+    card.style.display = "flex";
+    if (isPushSubscribed()) {
+      btn.textContent = "✓ مفعّلة";
+      btn.classList.add("subscribed");
+      if (sub) sub.textContent = "ستصلك العروض والأصناف الجديدة فور نزولها على جوالك.";
+    } else {
+      btn.textContent = "🔔 تفعيل الآن";
+      btn.classList.remove("subscribed");
+      if (sub) sub.textContent = "فعّلها لتصلك العروض الجديدة بصوت وإشعار حتى والتطبيق مغلق.";
+    }
+  }
+
+  function refreshAdminPushStatus() {
+    var st = document.getElementById("abPsStatusBox");
+    if (!st) return;
+    var appId = getEffectiveAppId();
+    var rKey = getRestKey();
+    if (appId && rKey) {
+      st.className = "ab-ps-status";
+      st.textContent = "✅ النظام مربوط وجاهز للإرسال الفوري لكل العملاء المشتركين.";
+    } else if (appId && !rKey) {
+      st.className = "ab-ps-status warn";
+      st.textContent = "⚠️ الـ App ID مربوط، أضف مفتاح REST API Key بالأسفل لتتمكن من الإرسال المباشر من هنا.";
+    } else {
+      st.className = "ab-ps-status warn";
+      st.textContent = "⚠️ بانتظار ربط OneSignal App ID (افتح «إعدادات الربط» بالأسفل أو نفّذ: bash ~/wa-bot/set_push_id.sh <APP_ID>).";
+    }
+  }
+
+  function fillPushProducts(qTxt) {
+    var sel = document.getElementById("abPsProdSel");
+    if (!sel) return;
+    var cur = sel.value;
+    var q = String(qTxt || "").trim().toLowerCase();
+    var list = getProducts();
+    sel.innerHTML = "";
+    var o0 = document.createElement("option");
+    o0.value = "";
+    o0.textContent = "— إشعار عام (يفتح المتجر) —";
+    sel.appendChild(o0);
+    for (var i = 0; i < list.length; i++) {
+      var p = list[i];
+      var nm = String(p.name || "");
+      if (q && nm.toLowerCase().indexOf(q) === -1) continue;
+      var o = document.createElement("option");
+      o.value = String(p.id);
+      o.textContent = nm + (p.unit ? (" (" + p.unit + ")") : "");
+      sel.appendChild(o);
+    }
+    if (cur) sel.value = cur;
+  }
+
+  async function sendLivePushNotification() {
+    var msgEl = document.getElementById("abPsResultMsg");
+    var btn = document.getElementById("abPsSendBtn");
+    var appId = getEffectiveAppId();
+    var restKey = getRestKey();
+
+    if (!appId || !restKey) {
+      if (msgEl) msgEl.textContent = "⚠️ يرجى إدخال وحفظ App ID و REST API Key داخل «إعدادات الربط» أولاً.";
+      return;
+    }
+
+    var pid = (document.getElementById("abPsProdSel") || {}).value || "";
+    var p = pid ? findProd(pid) : null;
+    var title = ((document.getElementById("abPsTitleInp") || {}).value || "").trim() || (p ? ("✨ عرض جديد: " + p.name) : "🔥 عروض جديدة من أبوضياء للتوزيع");
+    var body = ((document.getElementById("abPsDescInp") || {}).value || "").trim() || (p ? ("متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ").") : "افتح التطبيق الآن وتصفح أحدث العروض.");
+
+    var base = window.location.origin + window.location.pathname;
+    if (base.indexOf("http") !== 0) base = "https://abudhiya-catalog.vercel.app/";
+    var params = [];
+    if (pid) params.push("ab_pid=" + encodeURIComponent(pid));
+    params.push("ab_t=" + encodeURIComponent(title));
+    params.push("ab_d=" + encodeURIComponent(body));
+    var deepUrl = base + "?" + params.join("&");
+
+    var payload = {
+      app_id: appId,
+      included_segments: ["All"],
+      headings: { ar: title, en: title },
+      contents: { ar: body, en: body },
+      url: deepUrl
+    };
+
+    try {
+      var rawImg = p ? (p.img || p.image || p.photo || "") : "";
+      if (rawImg && rawImg.indexOf("data:") !== 0) {
+        payload.chrome_web_image = new URL(rawImg, base).href;
+      }
+    } catch (e) {}
+
+    if (btn) { btn.disabled = true; btn.textContent = "⏳ جاري إرسال الإشعار للعملاء..."; }
+    if (msgEl) msgEl.textContent = "";
+
+    try {
+      var res = await fetch("https://api.onesignal.com/notifications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Authorization": "Key " + restKey
+        },
+        body: JSON.stringify(payload)
+      });
+      var data = await res.json().catch(function () { return {}; });
+      if (res.ok && data && !data.errors) {
+        var rcp = data.recipients || 0;
+        var okTxt = "✅ تم إرسال إشعار شاشة القفل بنجاح" + (rcp ? (" إلى " + rcp + " مشترك") : "!");
+        if (msgEl) msgEl.textContent = okTxt;
+        if (typeof showToast === "function") showToast(okTxt);
+      } else {
+        var errStr = (data && data.errors) ? JSON.stringify(data.errors) : ("HTTP " + res.status);
+        if (msgEl) msgEl.textContent = "❌ تعذر الإرسال: " + errStr;
+      }
+    } catch (e) {
+      if (msgEl) msgEl.textContent = "❌ تعذر الاتصال بخادم الإشعارات — تحقق من الإنترنت.";
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = "🚀 إرسال إشعار شاشة القفل للجميع الآن"; }
+    }
+  }
+
+  /* 2) حقن بطاقة التفعيل للعملاء ولوحة الإرسال للمدير داخل درج الجرس 🔔 دون تعديل أي ملف آخر */
+  function injectIntoAlertsDrawer() {
+    var scrollWrap = document.querySelector("#abAlertsDrawerSheet .ab-ad-scroll");
+    if (!scrollWrap) return;
+
+    // أ) بطاقة تفعيل إشعارات شاشة القفل للعملاء
+    if (!document.getElementById("abCustPushCard")) {
+      var cCard = document.createElement("div");
+      cCard.id = "abCustPushCard";
+      cCard.style.display = "none";
+      cCard.innerHTML =
+        '<div class="ab-cp-txt">' +
+          '<div class="ab-cp-t">🔔 إشعارات شاشة القفل</div>' +
+          '<div id="abCustPushSub" class="ab-cp-s">فعّلها لتصلك العروض الجديدة بصوت وإشعار حتى والتطبيق مغلق.</div>' +
+        '</div>' +
+        '<button type="button" id="abCustPushBtn">🔔 تفعيل الآن</button>';
+      scrollWrap.insertBefore(cCard, scrollWrap.firstChild);
+      document.getElementById("abCustPushBtn").addEventListener("click", requestPushSubscribe);
+    }
+    refreshCustomerPushCard();
+
+    // ب) زر ولوحة إرسال إشعارات شاشة القفل للمدير
+    var admToggle = document.getElementById("abAdminPushToggleBtn");
+    var admBox = document.getElementById("abAdminPushBox");
+    if (!admToggle) {
+      admToggle = document.createElement("button");
+      admToggle.type = "button";
+      admToggle.id = "abAdminPushToggleBtn";
+      admToggle.textContent = "📡 إرسال إشعار شاشة القفل لجميع العملاء";
+
+      admBox = document.createElement("div");
+      admBox.id = "abAdminPushBox";
+      admBox.innerHTML =
+        '<div id="abPsStatusBox" class="ab-ps-status"></div>' +
+        '<details class="ab-ps-cfg-details">' +
+          '<summary>⚙️ إعدادات الربط (OneSignal App ID &amp; Key)</summary>' +
+          '<div style="margin-top:8px;">' +
+            '<label class="ab-pm-lbl">OneSignal App ID:</label>' +
+            '<input type="text" id="abPsAppIdInp" class="ab-pm-inp" placeholder="مثال: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">' +
+            '<label class="ab-pm-lbl">REST API Key (يُحفظ في جوالك فقط بأمان):</label>' +
+            '<input type="password" id="abPsKeyInp" class="ab-pm-inp" placeholder="os_v2_app_...">' +
+            '<button type="button" id="abPsSaveCfgBtn" class="ab-pm-sub" style="width:100%;">💾 حفظ إعدادات الإشعارات</button>' +
+          '</div>' +
+        '</details>' +
+        '<label class="ab-pm-lbl">🔍 اختر صنفاً لربطه بالإشعار (اختياري):</label>' +
+        '<input type="search" id="abPsSearchInp" class="ab-pm-inp" placeholder="ابحث باسم الصنف...">' +
+        '<select id="abPsProdSel" class="ab-pm-sel"></select>' +
+        '<label class="ab-pm-lbl">✏️ عنوان الإشعار (يظهر بخط عريض على شاشة القفل):</label>' +
+        '<input type="text" id="abPsTitleInp" class="ab-pm-inp" placeholder="مثال: 🔥 وصل حديثاً عرض خاص من أبوضياء">' +
+        '<label class="ab-pm-lbl">📝 نص الإشعار:</label>' +
+        '<textarea id="abPsDescInp" class="ab-pm-txt" placeholder="اطلب الآن بلمسة واحدة قبل نفاد الكمية..."></textarea>' +
+        '<button type="button" id="abPsSendBtn" class="ab-ps-send-btn">🚀 إرسال إشعار شاشة القفل للجميع الآن</button>' +
+        '<div id="abPsResultMsg" class="ab-ps-msg"></div>';
+
+      var anchor = document.getElementById("abAdminPromoBox") || document.getElementById("abAlertsListWrap");
+      if (anchor && anchor.parentNode === scrollWrap) {
+        if (anchor.id === "abAdminPromoBox") {
+          anchor.insertAdjacentElement("afterend", admToggle);
+          admToggle.insertAdjacentElement("afterend", admBox);
+        } else {
+          scrollWrap.insertBefore(admToggle, anchor);
+          scrollWrap.insertBefore(admBox, anchor);
+        }
+      } else {
+        scrollWrap.appendChild(admToggle);
+        scrollWrap.appendChild(admBox);
+      }
+
+      admToggle.addEventListener("click", function () {
+        var opened = admBox.classList.toggle("open");
+        if (opened) {
+          fillPushProducts("");
+          var ai = document.getElementById("abPsAppIdInp");
+          var ki = document.getElementById("abPsKeyInp");
+          if (ai) ai.value = getEffectiveAppId();
+          if (ki) ki.value = getRestKey();
+          refreshAdminPushStatus();
+        }
+      });
+
+      document.getElementById("abPsSaveCfgBtn").addEventListener("click", function () {
+        var aVal = ((document.getElementById("abPsAppIdInp") || {}).value || "").trim();
+        var kVal = ((document.getElementById("abPsKeyInp") || {}).value || "").trim();
+        try {
+          if (aVal) localStorage.setItem(LS_APP_ID, aVal);
+          if (kVal) localStorage.setItem(LS_API_KEY, kVal);
+        } catch (e) {}
+        if (aVal) initOneSignalSdk(aVal);
+        refreshAdminPushStatus();
+        refreshCustomerPushCard();
+        if (typeof showToast === "function") showToast("✅ تم حفظ إعدادات إشعارات شاشة القفل");
+      });
+
+      document.getElementById("abPsSearchInp").addEventListener("input", function () {
+        fillPushProducts(this.value);
+      });
+
+      document.getElementById("abPsProdSel").addEventListener("change", function () {
+        var p = findProd(this.value);
+        if (p) {
+          document.getElementById("abPsTitleInp").value = "✨ وصل حديثاً: " + p.name;
+          document.getElementById("abPsDescInp").value = "متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ") — اضغط لفتح الصنف مباشرة.";
+        }
+      });
+
+      document.getElementById("abPsSendBtn").addEventListener("click", sendLivePushNotification);
+    }
+
+    var showAdm = isAdmin();
+    admToggle.style.display = showAdm ? "flex" : "none";
+    if (!showAdm && admBox) admBox.classList.remove("open");
+    refreshAdminPushStatus();
+  }
+
+  document.addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (t && t.closest && t.closest("#abBellBtn")) {
+      setTimeout(injectIntoAlertsDrawer, 40);
+      setTimeout(injectIntoAlertsDrawer, 200);
+    }
+  }, true);
+
+  if (typeof MutationObserver !== "undefined" && document.body) {
+    try {
+      var mo = new MutationObserver(function () {
+        if (document.getElementById("abAlertsDrawerSheet") && !document.getElementById("abCustPushCard")) {
+          injectIntoAlertsDrawer();
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: false });
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadRemoteConfig, { once: true });
+  } else {
+    loadRemoteConfig();
+  }
+})();
+</script>
+<!-- ABUDHIYA_WEBPUSH_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -23130,7 +23667,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-691244";
+  var TARGET_CACHE = "abudhiya-offline-v4-691973";
 
   function forceReleaseSplash() {
     try {
