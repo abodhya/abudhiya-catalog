@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <!-- ABUDHIYA_NO_VIBRATE_HEAD_START -->
-<script data-ab-no-jitter="2">
+<script data-ab-no-jitter="3">
 (function () {
   var noop = function () { return false; };
   try {
@@ -18,6 +18,7 @@
 })();
 </script>
 <!-- ABUDHIYA_NO_VIBRATE_HEAD_END -->
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -25821,138 +25822,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_FAST_IMAGES_END -->
 
 
-<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
-<style id="abNoJitterCssV2" data-ab-no-jitter="2">
-  /* إيقاف جميع حركات الارتداد والنبض عند تغيير الكميات مع الحفاظ على مواقع النوافذ */
-  @keyframes abCartBump { 0%, 100% { transform: none; } }
-  @keyframes abSv3Pop { 0%, 100% { transform: none; } }
-  @keyframes abPopIn { 0%, 100% { opacity: 1; transform: none; } }
-  @keyframes abSpPulse { 0%, 100% { transform: none; } }
-  @keyframes abNsPulse { 0%, 100% { transform: none; } }
-  @keyframes abSpFloat { 0%, 100% { transform: none; } }
-  @keyframes abSpSlide { 0%, 100% { transform: none; } }
-  @keyframes abFadeIn { 0%, 100% { opacity: 1; transform: none; } }
-
-  html, body {
-    overflow-anchor: none !important;
-    overscroll-behavior-y: contain;
-  }
-
-  [data-ab-pro-card="1"],
-  [data-ab-pro-card="1"] *,
-  .product-card,
-  .product-card *,
-  .prod-card,
-  .prod-card * {
-    animation: none !important;
-    transition: none !important;
-    overflow-anchor: none !important;
-  }
-
-  [data-ab-pro-card="1"],
-  [data-ab-pro-card="1"]:hover,
-  [data-ab-pro-card="1"]:active,
-  .product-card,
-  .product-card:hover,
-  .product-card:active,
-  .prod-card,
-  .prod-card:hover,
-  .prod-card:active {
-    transform: none !important;
-    will-change: auto !important;
-  }
-
-  [data-ab-pro-card="1"] button,
-  [data-ab-pro-card="1"] button:active,
-  #qtyModal button,
-  #qtyModal button:active {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
-
-  #cartBar,
-  #cartBadge,
-  .cart-bar,
-  .cart-badge {
-    animation: none !important;
-  }
-</style>
-<script data-ab-no-jitter="2">
-(function () {
-  if (window.__abNoVibrateJitterV2) return;
-  window.__abNoVibrateJitterV2 = true;
-
-  var noop = function () { return false; };
-  function killVibrate() {
-    try {
-      if (typeof navigator !== "undefined") {
-        try { Object.defineProperty(navigator, "vibrate", { value: noop, writable: true, configurable: true }); }
-        catch (e) { try { navigator.vibrate = noop; } catch (e2) {} }
-      }
-      if (typeof Navigator !== "undefined" && Navigator.prototype) {
-        try { Object.defineProperty(Navigator.prototype, "vibrate", { value: noop, writable: true, configurable: true }); }
-        catch (e3) {}
-      }
-    } catch (err) {}
-  }
-  killVibrate();
-  window.addEventListener("load", killVibrate);
-
-  var blockScrollUntil = 0;
-  var userScrolling = false;
-  window.addEventListener("touchmove", function () { userScrolling = true; }, { passive: true });
-  window.addEventListener("wheel", function () { userScrolling = true; }, { passive: true });
-
-  try {
-    var origScrollIntoView = Element.prototype.scrollIntoView;
-    if (typeof origScrollIntoView === "function" && !Element.prototype.__abOrigScrollIntoView) {
-      Element.prototype.__abOrigScrollIntoView = origScrollIntoView;
-      Element.prototype.scrollIntoView = function () {
-        if (Date.now() < blockScrollUntil) return;
-        return origScrollIntoView.apply(this, arguments);
-      };
-    }
-  } catch (e) {}
-
-  function isQtyBtn(el) {
-    if (!el || !el.closest) return false;
-    var btn = el.closest("button, [role='button'], [onclick]");
-    if (!btn) return false;
-    var isMatch = false;
-    try {
-      isMatch = btn.matches('button[onclick*="Qty"], button[onclick*="qty"], button[onclick*="Cart"], button[onclick*="cart"]');
-    } catch (e) {}
-    return Boolean(
-      isMatch ||
-      btn.closest('[data-ab-pro-card="1"]') ||
-      btn.closest("#qtyModal") ||
-      btn.closest(".product-card, .prod-card, .qty-controls, .qty-box, .ab-qty-bar")
-    );
-  }
-
-  function armScrollLock(ev) {
-    if (!isQtyBtn(ev && ev.target)) return;
-    blockScrollUntil = Date.now() + 450;
-    userScrolling = false;
-    var lockedY = window.scrollY || window.pageYOffset || 0;
-    requestAnimationFrame(function () {
-      if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
-        window.scrollTo(0, lockedY);
-      }
-      setTimeout(function () {
-        if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
-          window.scrollTo(0, lockedY);
-        }
-      }, 65);
-    });
-  }
-
-  document.addEventListener("pointerdown", armScrollLock, true);
-  document.addEventListener("click", armScrollLock, true);
-})();
-</script>
-<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
 
 
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_START -->
@@ -26697,6 +26566,335 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_END -->
 
+
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
+<style id="abUltraSmoothFinalMirror" data-ab-no-jitter="3">
+
+  /* 1) ثبات كامل للصفحة ومنع أي إزاحة تمرير أو شريط تمرير */
+  html,
+  body,
+  #productsGrid,
+  .products-grid,
+  .ab-sleek-grid-3 {
+    overflow-anchor: none !important;
+  }
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  #productsGrid,
+  .products-grid,
+  .ab-sleek-grid-3 {
+    grid-auto-rows: auto !important;
+    align-items: stretch !important;
+  }
+
+  /* 2) قفل هندسي مطلق لبطاقات الأصناف في جميع الحالات (صفر حركة، صفر تغيّر هوامش أو حدود، ارتفاع مقفول) */
+  #productsGrid .card,
+  .products-grid .card,
+  .ab-sleek-grid-3 > .card,
+  .prod-card,
+  .product-card,
+  .item-card,
+  [data-ab-pro-card="1"],
+  #productsGrid .card:hover,
+  #productsGrid .card:active,
+  #productsGrid .card:focus,
+  #productsGrid .card:focus-within,
+  #productsGrid .card.selected,
+  #productsGrid .card.active,
+  #productsGrid .card.in-cart,
+  #productsGrid .card.has-qty,
+  [data-ab-pro-card="1"]:hover,
+  [data-ab-pro-card="1"]:active,
+  [data-ab-pro-card="1"]:focus,
+  [data-ab-pro-card="1"]:focus-within,
+  [data-ab-pro-card="1"].selected,
+  [data-ab-pro-card="1"].active,
+  [data-ab-pro-card="1"].in-cart,
+  [data-ab-pro-card="1"].has-qty {
+    animation: none !important;
+    -webkit-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    scale: none !important;
+    translate: none !important;
+    rotate: none !important;
+    will-change: auto !important;
+    box-sizing: border-box !important;
+    border: 1.25px solid rgba(212, 175, 55, 0.82) !important;
+    padding: 4px 4px 5px !important;
+    margin: 0 !important;
+    min-height: var(--ab-locked-card-h, 0px) !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* قفل كل العناصر الداخلية في البطاقة ضد أي حركة أو انتقال */
+  #productsGrid .card *,
+  .products-grid .card *,
+  .ab-sleek-grid-3 > .card *,
+  [data-ab-pro-card="1"] *,
+  [data-ab-pro-card="1"] *::before,
+  [data-ab-pro-card="1"] *::after {
+    animation: none !important;
+    -webkit-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    scale: none !important;
+    translate: none !important;
+    rotate: none !important;
+    will-change: auto !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* 3) لمعان زجاجي كريستالي ثابت وهادئ بدون حركة */
+  .ab-crystal-gloss::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 44% !important;
+    border-radius: inherit !important;
+    background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 252, 236, 0.10) 38%,
+      rgba(255, 255, 255, 0) 100%
+    ) !important;
+  }
+  .ab-crystal-gloss::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    opacity: 1 !important;
+    background: linear-gradient(
+      132deg,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.04) 24%,
+      rgba(255, 255, 255, 0) 48%,
+      rgba(255, 248, 220, 0.06) 100%
+    ) !important;
+  }
+
+  /* 4) أزرار الكميات المختصرة وزر الحذف: استجابة لونية ناعمة بدون حركة */
+  [data-ab-pro-card="1"] .ab-qbar {
+    display: grid !important;
+    direction: rtl !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 2.5px !important;
+    margin-top: auto !important;
+    padding-top: 2px !important;
+  }
+  [data-ab-pro-card="1"] .ab-qbtn:active {
+    background: linear-gradient(135deg, #d4af37, #facc15) !important;
+    color: #09090b !important;
+    border-color: #fef08a !important;
+  }
+  .ab-clear-qty-btn:active {
+    opacity: 0.78 !important;
+  }
+
+  /* 5) تثبيت جميع شارات الكمية بشكل مطلق فوق البطاقة حتى لا تدفع أي بكسل */
+  [data-ab-pro-card="1"] .qty-badge,
+  [data-ab-pro-card="1"] .q-badge,
+  [data-ab-pro-card="1"] .cart-badge,
+  [data-ab-pro-card="1"] .badge-qty,
+  [data-ab-pro-card="1"] .prod-qty,
+  [data-ab-pro-card="1"] .count-badge,
+  [data-ab-pro-card="1"] .card-badge,
+  [data-ab-pro-card="1"] .qty-tag,
+  [data-ab-pro-card="1"] .badge,
+  [data-ab-pro-card="1"] .ab-instant-qty-badge {
+    position: absolute !important;
+    top: 5px !important;
+    left: 5px !important;
+    z-index: 9 !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* 6) إلغاء أي حركة على الشريط السفلي والعدّاد */
+  .bottom-nav,
+  .bottom-nav *,
+  .bottom-bar,
+  .bottom-bar *,
+  #cartBadge,
+  .ab-pro-pulse {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* 7) إخفاء فوري لكلاسات السعر */
+  html.ab-prices-hidden .p-price,
+  html.ab-prices-hidden .qp-price {
+    display: none !important;
+  }
+
+</style>
+<style id="abNoJitterCssV3" data-ab-no-jitter="3">
+  @keyframes abCartBump { 0%, 100% { transform: none; } }
+  @keyframes abSv3Pop { 0%, 100% { transform: none; } }
+  @keyframes abPopIn { 0%, 100% { opacity: 1; transform: none; } }
+  @keyframes abSpPulse { 0%, 100% { transform: none; } }
+  @keyframes abNsPulse { 0%, 100% { transform: none; } }
+  @keyframes abSpFloat { 0%, 100% { transform: none; } }
+  @keyframes abSpSlide { 0%, 100% { transform: none; } }
+  @keyframes abFadeIn { 0%, 100% { opacity: 1; transform: none; } }
+
+  html,
+  body,
+  #productsGrid,
+  .products-grid,
+  .ab-sleek-grid-3 {
+    overflow-anchor: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* تثبيت شامل للشبكة وجميع البطاقات الأصلية والمحسّنة وأزرار الكميات */
+  #productsGrid,
+  #productsGrid *,
+  .products-grid,
+  .products-grid *,
+  .ab-sleek-grid-3,
+  .ab-sleek-grid-3 *,
+  [id^="card_"],
+  [id^="card_"] *,
+  [data-ab-pro-card="1"],
+  [data-ab-pro-card="1"] *,
+  .product-card,
+  .product-card *,
+  .prod-card,
+  .prod-card *,
+  #qtyModal,
+  #qtyModal *,
+  #cartBar,
+  #cartBar *,
+  #cartBadge,
+  .cart-bar,
+  .cart-badge {
+    animation: none !important;
+    transition: none !important;
+    overflow-anchor: none !important;
+  }
+
+  /* منع أي تحرك أو تكبير عند الضغط أو التحديد (.selected) */
+  [id^="card_"],
+  [id^="card_"]:hover,
+  [id^="card_"]:active,
+  [id^="card_"]:focus,
+  [id^="card_"].selected,
+  [data-ab-pro-card="1"],
+  [data-ab-pro-card="1"]:hover,
+  [data-ab-pro-card="1"]:active,
+  [data-ab-pro-card="1"].selected,
+  .product-card,
+  .product-card:hover,
+  .product-card:active,
+  .product-card.selected,
+  .prod-card,
+  .prod-card:hover,
+  .prod-card:active,
+  .prod-card.selected,
+  #productsGrid button,
+  #productsGrid button:active,
+  .ab-sleek-grid-3 button,
+  .ab-sleek-grid-3 button:active,
+  [id^="card_"] button,
+  [id^="card_"] button:active,
+  [data-ab-pro-card="1"] button,
+  [data-ab-pro-card="1"] button:active,
+  #qtyModal button,
+  #qtyModal button:active {
+    transform: none !important;
+    will-change: auto !important;
+    box-sizing: border-box !important;
+  }
+</style>
+<script data-ab-no-jitter="3">
+(function () {
+  if (window.__abNoVibrateJitterV3) return;
+  window.__abNoVibrateJitterV3 = true;
+
+  var noop = function () { return false; };
+  function killVibrate() {
+    try {
+      if (typeof navigator !== "undefined") {
+        try { Object.defineProperty(navigator, "vibrate", { value: noop, writable: true, configurable: true }); }
+        catch (e) { try { navigator.vibrate = noop; } catch (e2) {} }
+      }
+      if (typeof Navigator !== "undefined" && Navigator.prototype) {
+        try { Object.defineProperty(Navigator.prototype, "vibrate", { value: noop, writable: true, configurable: true }); }
+        catch (e3) {}
+      }
+    } catch (err) {}
+  }
+  killVibrate();
+  window.addEventListener("load", killVibrate);
+
+  var blockScrollUntil = 0;
+  var isTouching = false;
+  window.addEventListener("touchstart", function () { isTouching = true; }, { passive: true });
+  window.addEventListener("touchend", function () { isTouching = false; }, { passive: true });
+  window.addEventListener("touchcancel", function () { isTouching = false; }, { passive: true });
+
+  try {
+    var origScrollIntoView = Element.prototype.scrollIntoView;
+    if (typeof origScrollIntoView === "function" && !Element.prototype.__abOrigScrollIntoView) {
+      Element.prototype.__abOrigScrollIntoView = origScrollIntoView;
+      Element.prototype.scrollIntoView = function () {
+        if (Date.now() < blockScrollUntil) return;
+        return origScrollIntoView.apply(this, arguments);
+      };
+    }
+  } catch (e) {}
+
+  function isQtyControl(el) {
+    if (!el || !el.closest) return false;
+    var btn = el.closest("button, [role='button'], [onclick]");
+    if (!btn) return false;
+    return Boolean(
+      btn.closest('[id^="card_"]') ||
+      btn.closest('[data-ab-pro-card="1"]') ||
+      btn.closest("#productsGrid, .products-grid, .ab-sleek-grid-3") ||
+      btn.closest("#qtyModal")
+    );
+  }
+
+  document.addEventListener("click", function (ev) {
+    if (!isQtyControl(ev && ev.target)) return;
+    killVibrate();
+    blockScrollUntil = Date.now() + 500;
+    var lockedY = window.scrollY || window.pageYOffset || 0;
+    requestAnimationFrame(function () {
+      if (!isTouching && Math.abs((window.scrollY || 0) - lockedY) > 2) {
+        window.scrollTo(0, lockedY);
+      }
+      setTimeout(function () {
+        if (!isTouching && Math.abs((window.scrollY || 0) - lockedY) > 2) {
+          window.scrollTo(0, lockedY);
+        }
+      }, 60);
+    });
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -26740,7 +26938,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-815879";
+  var TARGET_CACHE = "abudhiya-offline-v4-816221";
 
   function forceReleaseSplash() {
     try {
