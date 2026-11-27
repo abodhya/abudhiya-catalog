@@ -24281,6 +24281,249 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_WEBPUSH_END -->
 
+
+<!-- ABUDHIYA_GUEST_NOPRICE_SHIELD_START -->
+<style id="abGuestNoPriceShieldCss" data-ab-guest-noprice="1">
+  /* 1) إخفاء جميع الأسعار والإجماليات تلقائياً عن الجميع ما لم يكن المستخدم مديراً/مندوباً وفعّل زر إظهار الأسعار */
+  html:not(.ab-staff-prices-on) .p-price,
+  html:not(.ab-staff-prices-on) .p-cur,
+  html:not(.ab-staff-prices-on) .price-bar,
+  html:not(.ab-staff-prices-on) .qp-price,
+  html:not(.ab-staff-prices-on) #qpPrice,
+  html:not(.ab-staff-prices-on) #qpSub,
+  html:not(.ab-staff-prices-on) .sub-tot,
+  html:not(.ab-staff-prices-on) #navTotalTxt,
+  html:not(.ab-staff-prices-on) #mTotalSummary,
+  html:not(.ab-staff-prices-on) .inv-totals-card,
+  html:not(.ab-staff-prices-on) .inv-tot-amt,
+  html:not(.ab-staff-prices-on) .ab-ns-price-row,
+  html:not(.ab-staff-prices-on) .ab-ns-price-tag,
+  html:not(.ab-staff-prices-on) .ab-ns-old-price,
+  html:not(.ab-staff-prices-on) .ab-nsv-hero-price,
+  html:not(.ab-staff-prices-on) .ab-nsv-hero-old,
+  html:not(.ab-staff-prices-on) .ab-ns-save-pill,
+  html:not(.ab-staff-prices-on) #abNsvPriceSlot,
+  html:not(.ab-staff-prices-on) .ab-gnp-hide {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 2) إخفاء أزرار التحويل للسعر وأزرار الإرسال المسعّر وأدوات السعر عن العملاء (غير الطاقم) نهائياً */
+  html:not(.ab-role-staff) #abPwaPriceSwitcher,
+  html:not(.ab-role-staff) #abWhBtnPrice,
+  html:not(.ab-role-staff) .ab-wh-btn-price,
+  html:not(.ab-role-staff) #abDirectSendPricedBtn,
+  html:not(.ab-role-staff) #abTogglePricedBtn,
+  html:not(.ab-role-staff) .ab-adm-priced-send,
+  html:not(.ab-role-staff) .ab-adm-priced-toggle,
+  html:not(.ab-role-staff) button[data-ab-role="priced"],
+  html:not(.ab-role-staff) #abStaffPriceBar,
+  html:not(.ab-role-staff) #abStfPriceBtn,
+  html:not(.ab-role-staff) #abAmbPriceBtn {
+    display: none !important;
+    visibility: hidden !important;
+  }
+</style>
+<script data-ab-guest-noprice="1">
+(function () {
+  if (window.__abGuestNoPriceShieldV1) return;
+  window.__abGuestNoPriceShieldV1 = true;
+
+  var isScrubbing = false;
+  var pendingTimer = null;
+
+  function isStaffUser() {
+    try {
+      var root = document.documentElement;
+      if (root) {
+        if (
+          root.classList.contains("ab-role-staff") ||
+          root.classList.contains("ab-role-admin") ||
+          root.classList.contains("ab-role-rep")
+        ) {
+          return true;
+        }
+        if (root.classList.contains("ab-role-guest")) {
+          return false;
+        }
+      }
+      var r = String(localStorage.getItem("ab_app_role_v1") || "").trim().toLowerCase();
+      if (
+        r &&
+        (r.indexOf("admin") !== -1 ||
+          r.indexOf("rep") !== -1 ||
+          r.indexOf("staff") !== -1 ||
+          r.indexOf("مدير") !== -1 ||
+          r.indexOf("مندوب") !== -1)
+      ) {
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function isStaffPricesEnabled() {
+    if (!isStaffUser()) return false;
+    try {
+      return localStorage.getItem("ab_show_prices_secret_v2") === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function isInsideAdminEditor(el) {
+    if (!el || !el.closest) return false;
+    return !!el.closest(
+      "#abAdminPushBox, #abAdminPromoBox, #abStaffPriceBar, #abPricedAdminCtrl, #abSv3Admin, .ab-admin-modal, [data-ab-panel-kind='admin']"
+    );
+  }
+
+  function scrubOrRestoreDom(pricesAllowed) {
+    if (isScrubbing || !document.body) return;
+    isScrubbing = true;
+    try {
+      var i, j, el;
+
+      if (pricesAllowed) {
+        var hiddenEls = document.querySelectorAll(".ab-gnp-hide");
+        for (i = 0; i < hiddenEls.length; i++) {
+          hiddenEls[i].classList.remove("ab-gnp-hide");
+        }
+        var maskedEls = document.querySelectorAll("[data-ab-gnp-orig]");
+        for (i = 0; i < maskedEls.length; i++) {
+          el = maskedEls[i];
+          el.textContent = el.getAttribute("data-ab-gnp-orig");
+          el.removeAttribute("data-ab-gnp-orig");
+        }
+        return;
+      }
+
+      /* 1) إخفاء أعمدة «السعر» و«الإجمالي» داخل جداول السلة والفاتورة */
+      var tables = document.querySelectorAll("table");
+      for (i = 0; i < tables.length; i++) {
+        var tbl = tables[i];
+        if (isInsideAdminEditor(tbl)) continue;
+        var ths = tbl.querySelectorAll("thead th, tr:first-child th");
+        var hideCols = [];
+        for (j = 0; j < ths.length; j++) {
+          var hTxt = String(ths[j].textContent || "").trim();
+          if (/^(?:السعر|الإجمالي|الاجمالي|المبلغ|سعر|سعر\s+الوحدة|الاجمالى)$/i.test(hTxt)) {
+            hideCols.push(j);
+            ths[j].classList.add("ab-gnp-hide");
+          }
+        }
+        if (hideCols.length) {
+          var rows = tbl.querySelectorAll("tr");
+          for (var r = 0; r < rows.length; r++) {
+            var cells = rows[r].children;
+            for (var c = 0; c < hideCols.length; c++) {
+              var idx = hideCols[c];
+              if (cells[idx]) cells[idx].classList.add("ab-gnp-hide");
+            }
+          }
+        }
+      }
+
+      /* 2) تنظيف ملخص السلة السريع من جزء «= XXX ر.ي» مع إبقاء الكميات */
+      var summaryIds = ["abQlSummary", "mQtySummary"];
+      for (i = 0; i < summaryIds.length; i++) {
+        var sEl = document.getElementById(summaryIds[i]);
+        if (!sEl) continue;
+        var rawTxt = sEl.textContent || "";
+        if (/(?:ر\.ي|ر\.س|ريال)/.test(rawTxt)) {
+          if (!sEl.hasAttribute("data-ab-gnp-orig")) {
+            sEl.setAttribute("data-ab-gnp-orig", rawTxt);
+          }
+          var cleaned = rawTxt
+            .replace(/\s*=\s*[\d,\.\u0660-\u0669]+\s*(?:ر\.ي|ر\.س|ريال)?/g, "")
+            .replace(/\s*[\|•-]\s*(?:الإجمالي|الاجمالي)[^|•\n]*/g, "")
+            .trim();
+          if (cleaned && cleaned !== rawTxt) sEl.textContent = cleaned;
+        }
+      }
+
+      /* 3) إخفاء أي عنصر نصي ورقي يعرض مبلغاً بالريال (ر.ي / ر.س) خارج لوحات المدير */
+      var candidates = document.querySelectorAll("span, div, small, strong, b, p, td, li");
+      for (i = 0; i < candidates.length; i++) {
+        el = candidates[i];
+        if (!el || el.children.length > 0) continue;
+        if (el.classList.contains("ab-gnp-hide")) continue;
+        if (isInsideAdminEditor(el)) continue;
+        var txt = String(el.textContent || "").trim();
+        if (!txt || txt.length > 80) continue;
+        if (/(?:ر\.ي|ر\.س)\b/.test(txt) || /^(?:الإجمالي|الاجمالي|السعر)\s*:/.test(txt)) {
+          if (/=/.test(txt) && txt.indexOf("🧾") !== -1) {
+            if (!el.hasAttribute("data-ab-gnp-orig")) {
+              el.setAttribute("data-ab-gnp-orig", txt);
+            }
+            var stripped = txt.replace(/\s*=\s*[\d,\.\u0660-\u0669]+\s*(?:ر\.ي|ر\.س|ريال)?/g, "").trim();
+            if (stripped) el.textContent = stripped;
+          } else {
+            el.classList.add("ab-gnp-hide");
+          }
+        }
+      }
+    } finally {
+      isScrubbing = false;
+    }
+  }
+
+  function syncPriceShield() {
+    var root = document.documentElement;
+    if (!root) return;
+    var allowed = isStaffPricesEnabled();
+    if (allowed) {
+      root.classList.add("ab-staff-prices-on");
+    } else {
+      root.classList.remove("ab-staff-prices-on");
+      if (!isStaffUser()) {
+        root.classList.add("ab-prices-hidden");
+      }
+    }
+    scrubOrRestoreDom(allowed);
+  }
+
+  function scheduleSync(delay) {
+    if (pendingTimer) clearTimeout(pendingTimer);
+    pendingTimer = setTimeout(syncPriceShield, delay || 35);
+  }
+
+  /* تشغيل فوري قبل اكتمال الرسم لمنع أي ومضة للسعر */
+  syncPriceShield();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { syncPriceShield(); }, { once: true });
+  }
+  window.addEventListener("load", function () { syncPriceShield(); });
+  window.addEventListener("storage", function () { scheduleSync(20); });
+
+  document.addEventListener("click", function () {
+    scheduleSync(50);
+    setTimeout(syncPriceShield, 260);
+  }, true);
+
+  if (typeof MutationObserver !== "undefined") {
+    try {
+      new MutationObserver(function () {
+        if (!isScrubbing) scheduleSync(25);
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+      var startBodyObs = function () {
+        if (!document.body) return;
+        new MutationObserver(function () {
+          if (!isScrubbing) scheduleSync(45);
+        }).observe(document.body, { childList: true, subtree: true });
+      };
+      if (document.body) startBodyObs();
+      else document.addEventListener("DOMContentLoaded", startBodyObs, { once: true });
+    } catch (e) {}
+  }
+
+  setInterval(syncPriceShield, 1200);
+})();
+</script>
+<!-- ABUDHIYA_GUEST_NOPRICE_SHIELD_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -24324,7 +24567,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-757421";
+  var TARGET_CACHE = "abudhiya-offline-v4-758968";
 
   function forceReleaseSplash() {
     try {
