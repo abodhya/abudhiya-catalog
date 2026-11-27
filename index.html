@@ -564,6 +564,54 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_END -->
+
+<!-- ABUDHIYA_BROWSER_LOCK_HEAD_START -->
+<style id="abStrictBrowserLockCss" data-ab-install-gate="2">
+  html.ab-browser-blocked,
+  html.ab-browser-blocked body,
+  html.ab-profile-locked,
+  html.ab-profile-locked body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    background: #021c14 !important;
+    touch-action: none !important;
+  }
+  html.ab-browser-blocked body > *:not(#abInstallGateOverlay),
+  html.ab-profile-locked body > *:not(#abInstallGateOverlay) {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+</style>
+<script data-ab-install-gate="2">
+(function () {
+  function isAppMode() {
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia) {
+        if (
+          window.matchMedia("(display-mode: standalone)").matches ||
+          window.matchMedia("(display-mode: fullscreen)").matches ||
+          window.matchMedia("(display-mode: minimal-ui)").matches
+        ) {
+          return true;
+        }
+      }
+      if (document.referrer && document.referrer.indexOf("android-app://") === 0) return true;
+    } catch (e) {}
+    return false;
+  }
+  window.__abIsStandaloneApp = isAppMode;
+  if (!isAppMode()) {
+    document.documentElement.classList.add("ab-browser-blocked");
+  }
+})();
+</script>
+<!-- ABUDHIYA_BROWSER_LOCK_HEAD_END -->
 </head>
 <body>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
@@ -25695,19 +25743,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
-<!-- ABUDHIYA_INSTALL_ONBOARD_GATE_START -->
-<style id="abInstallGateCss" data-ab-install-gate="1">
-  html.ab-gate-locked,
-  html.ab-gate-locked body {
-    overflow: hidden !important;
-    height: 100% !important;
-    touch-action: none !important;
-  }
 
+
+<!-- ABUDHIYA_INSTALL_ONBOARD_GATE_START -->
+<style id="abInstallGateCss" data-ab-install-gate="2">
   #abInstallGateOverlay {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 2147483600 !important;
+    z-index: 2147483647 !important;
     background: radial-gradient(circle at top, #065f46 0%, #042f22 52%, #021c14 100%) !important;
     display: flex !important;
     align-items: center !important;
@@ -25725,13 +25768,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     background: #ffffff !important;
     border-radius: 22px !important;
     border: 2px solid #f5c542 !important;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45) !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5) !important;
     overflow: hidden !important;
-    animation: abIgFadeIn 0.22s ease !important;
-  }
-  @keyframes abIgFadeIn {
-    from { opacity: 0; transform: translateY(10px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   .ab-ig-head {
@@ -25753,7 +25791,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     align-items: center !important;
     justify-content: center !important;
     font-size: 32px !important;
-    user-select: none !important;
   }
   .ab-ig-brand {
     font-size: 20px !important;
@@ -25761,13 +25798,24 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     margin: 0 0 4px 0 !important;
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;
-    user-select: none !important;
   }
   .ab-ig-phone {
     font-size: 13px !important;
     font-weight: 700 !important;
     color: #d1fae5 !important;
     -webkit-text-fill-color: #d1fae5 !important;
+  }
+  .ab-ig-badge {
+    display: inline-block !important;
+    margin-top: 8px !important;
+    padding: 4px 12px !important;
+    border-radius: 999px !important;
+    background: rgba(245, 197, 66, 0.2) !important;
+    border: 1px solid #f5c542 !important;
+    color: #fef08a !important;
+    -webkit-text-fill-color: #fef08a !important;
+    font-size: 11.5px !important;
+    font-weight: 900 !important;
   }
 
   .ab-ig-steps {
@@ -25843,21 +25891,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   .ab-ig-btn-main:active { transform: scale(0.98) !important; }
 
-  .ab-ig-btn-sec {
-    width: 100% !important;
-    min-height: 42px !important;
-    margin-top: 8px !important;
-    padding: 9px 12px !important;
-    border: 1.3px solid #059669 !important;
-    border-radius: 12px !important;
-    background: #ecfdf5 !important;
-    color: #065f46 !important;
-    -webkit-text-fill-color: #065f46 !important;
-    font-size: 13px !important;
-    font-weight: 800 !important;
-    cursor: pointer !important;
-  }
-
   .ab-ig-box {
     margin-top: 12px !important;
     padding: 12px 13px !important;
@@ -25883,9 +25916,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     text-align: center !important;
   }
 
-  .ab-ig-field {
-    margin-bottom: 12px !important;
-  }
+  .ab-ig-field { margin-bottom: 12px !important; }
   .ab-ig-label {
     display: block !important;
     margin-bottom: 5px !important;
@@ -25927,25 +25958,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   .ab-ig-err.show { display: block !important; }
 </style>
-<script data-ab-install-gate="1">
+<script data-ab-install-gate="2">
 (function () {
-  if (window.__abInstallOnboardGateV1) return;
-  window.__abInstallOnboardGateV1 = true;
+  if (window.__abInstallOnboardGateV2) return;
+  window.__abInstallOnboardGateV2 = true;
 
   var PROFILE_KEY = "ab_customer_profile_v1";
-  var BYPASS_KEY = "ab_gate_staff_bypass_v1";
   var deferredPrompt = null;
   var appJustInstalled = false;
-  var secretTapCount = 0;
-  var secretTapTimer = null;
-
-  function toEnDigits(str) {
-    return String(str || "")
-      .replace(/[\u0660-\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); })
-      .replace(/[\u06F0-\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); });
-  }
 
   function isStandaloneApp() {
+    if (typeof window.__abIsStandaloneApp === "function") {
+      return window.__abIsStandaloneApp();
+    }
     try {
       if (window.navigator && window.navigator.standalone === true) return true;
       if (window.matchMedia) {
@@ -25953,18 +25978,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           window.matchMedia("(display-mode: standalone)").matches ||
           window.matchMedia("(display-mode: fullscreen)").matches ||
           window.matchMedia("(display-mode: minimal-ui)").matches
-        ) {
-          return true;
-        }
+        ) return true;
       }
       if (document.referrer && document.referrer.indexOf("android-app://") === 0) return true;
     } catch (e) {}
     return false;
   }
 
-  function isStaffUser() {
+  function toEnDigits(str) {
+    return String(str || "")
+      .replace(/[\u0660-\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); })
+      .replace(/[\u06F0-\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); });
+  }
+
+  function isStaffInsideApp() {
     try {
-      if (sessionStorage.getItem(BYPASS_KEY) === "1") return true;
       var root = document.documentElement;
       if (
         root &&
@@ -25972,9 +26000,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           root.classList.contains("ab-role-rep") ||
           root.classList.contains("ab-role-staff")) &&
         !root.classList.contains("ab-role-guest")
-      ) {
-        return true;
-      }
+      ) return true;
       var r = String(localStorage.getItem("ab_app_role_v1") || "").trim().toLowerCase();
       if (
         r &&
@@ -25983,9 +26009,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           r.indexOf("staff") !== -1 ||
           r.indexOf("مدير") !== -1 ||
           r.indexOf("مندوب") !== -1)
-      ) {
-        return true;
-      }
+      ) return true;
     } catch (e) {}
     return false;
   }
@@ -26038,39 +26062,38 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return /(iPhone|iPad|iPod)/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   }
 
-  function removeGate() {
+  function setRootClass(cls, on) {
+    var root = document.documentElement;
+    if (!root || !root.classList) return;
+    if (on && !root.classList.contains(cls)) root.classList.add(cls);
+    if (!on && root.classList.contains(cls)) root.classList.remove(cls);
+  }
+
+  function removeGateOverlay() {
     var ov = document.getElementById("abInstallGateOverlay");
     if (ov) ov.remove();
-    if (document.documentElement) document.documentElement.classList.remove("ab-gate-locked");
+    setRootClass("ab-browser-blocked", false);
+    setRootClass("ab-profile-locked", false);
   }
 
-  function bindSecretStaffBypass(overlay) {
-    var brandEl = overlay.querySelector(".ab-ig-head");
-    if (!brandEl) return;
-    brandEl.addEventListener("click", function () {
-      secretTapCount++;
-      if (secretTapTimer) clearTimeout(secretTapTimer);
-      secretTapTimer = setTimeout(function () { secretTapCount = 0; }, 1600);
-      if (secretTapCount >= 5) {
-        secretTapCount = 0;
-        sessionStorage.setItem(BYPASS_KEY, "1");
-        removeGate();
-        if (typeof showToast === "function") showToast("🔓 تم تفعيل معاينة الإدارة مؤقتاً");
-      }
-    });
-  }
-
-  function renderInstallGate() {
-    if (!document.body) return;
-    if (document.documentElement) document.documentElement.classList.add("ab-gate-locked");
-
+  function ensureOverlay() {
     var ov = document.getElementById("abInstallGateOverlay");
-    if (!ov) {
+    if (!ov && document.body) {
       ov = document.createElement("div");
       ov.id = "abInstallGateOverlay";
-      ov.setAttribute("data-ab-install-gate", "1");
+      ov.setAttribute("data-ab-install-gate", "2");
       document.body.appendChild(ov);
     }
+    return ov;
+  }
+
+  function renderStrictBrowserLock() {
+    if (!document.body) return;
+    setRootClass("ab-browser-blocked", true);
+    setRootClass("ab-profile-locked", false);
+
+    var ov = ensureOverlay();
+    if (!ov) return;
 
     var inApp = isInAppBrowser();
     var ios = isIOSDevice();
@@ -26080,39 +26103,39 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       mainContent =
         '<div class="ab-ig-box ok">' +
           '<div style="font-size:34px;margin-bottom:6px">✅</div>' +
-          '<div style="font-size:16px;font-weight:900;margin-bottom:6px">تم تثبيت تطبيق أبوضياء للتوزيع بنجاح!</div>' +
-          '<div>أغلق المتصفح الآن وافتح أيقونة <b>«أبوضياء للتوزيع»</b> من الشاشة الرئيسية لجوالك لإدخال بياناتك والبدء بالطلب.</div>' +
+          '<div style="font-size:16px;font-weight:900;margin-bottom:6px">تم تثبيت التطبيق بنجاح!</div>' +
+          '<div>المتصفح مقفل تماماً — أغلق المتصفح الآن وافتح أيقونة <b>«أبوضياء للتوزيع»</b> من شاشة جوالك لإدخال بياناتك والبدء.</div>' +
         '</div>';
     } else if (inApp) {
       mainContent =
-        '<h2 class="ab-ig-title">📲 ثبّت التطبيق أولاً للدخول</h2>' +
-        '<p class="ab-ig-desc">للدخول إلى متجر <b>أبوضياء للتوزيع</b> يجب تثبيت التطبيق أولاً، ثم إدخال اسمك وبياناتك ورقمك.</p>' +
+        '<h2 class="ab-ig-title">🔒 التشغيل من التطبيق فقط</h2>' +
+        '<p class="ab-ig-desc">لا يعمل متجر <b>أبوضياء للتوزيع</b> داخل المتصفح. ثبّت التطبيق أولاً ثم افتحه لإدخال اسمك وبياناتك ورقمك.</p>' +
         '<div class="ab-ig-box warn">' +
-          '<b>⚠️ خطوة مهمة:</b> أنت تفتح الرابط من داخل متصفح تطبيق (مثل واتساب).<br>' +
-          '1️⃣ اضغط على <b>الثلاث نقاط (⋮)</b> أعلى الشاشة واختر <b>«الفتح في Chrome»</b>.<br>' +
-          '2️⃣ ستظهر لك شاشة التثبيت المباشر فوراً.' +
+          '<b>⚠️ خطوة مطلوبة:</b> أنت داخل متصفح واتساب/تطبيق آخر.<br>' +
+          '1️⃣ اضغط على <b>الثلاث نقاط (⋮)</b> بالأعلى واختر <b>«الفتح في Chrome»</b>.<br>' +
+          '2️⃣ ثبّت التطبيق مباشرة ثم افتحه من الشاشة الرئيسية.' +
         '</div>' +
-        '<button type="button" id="abIgCopyLinkBtn" class="ab-ig-btn-main" style="margin-top:12px">📋 نسخ رابط المتجر لفتحه في كروم</button>';
+        '<button type="button" id="abIgCopyLinkBtn" class="ab-ig-btn-main" style="margin-top:12px">📋 نسخ الرابط لفتحه في Chrome</button>';
     } else if (ios) {
       mainContent =
-        '<h2 class="ab-ig-title">📲 ثبّت التطبيق أولاً على الآيفون</h2>' +
-        '<p class="ab-ig-desc">للدخول إلى متجر <b>أبوضياء للتوزيع</b> وإدخال بياناتك، أضف التطبيق إلى الشاشة الرئيسية أولاً:</p>' +
+        '<h2 class="ab-ig-title">🔒 التشغيل من التطبيق فقط</h2>' +
+        '<p class="ab-ig-desc">متجر <b>أبوضياء للتوزيع</b> مقفل داخل المتصفح. أضفه إلى الشاشة الرئيسية أولاً ثم افتحه من الأيقونة:</p>' +
         '<div class="ab-ig-box">' +
-          '1️⃣ اضغط زر <b>المشاركة (⬆️)</b> أسفل متصفح سفاري.<br>' +
-          '2️⃣ مرّر للأسفل واختر <b>«إضافة إلى الصفحة الرئيسية»</b>.<br>' +
-          '3️⃣ اضغط <b>«إضافة»</b> ثم افتح التطبيق من الشاشة الرئيسية.' +
+          '1️⃣ اضغط زر <b>المشاركة (⬆️)</b> أسفل متصفح Safari.<br>' +
+          '2️⃣ اختر <b>«إضافة إلى الصفحة الرئيسية»</b> ثم <b>«إضافة»</b>.<br>' +
+          '3️⃣ افتح أيقونة <b>«أبوضياء للتوزيع»</b> من الشاشة الرئيسية.' +
         '</div>';
     } else {
       mainContent =
-        '<h2 class="ab-ig-title">📲 تثبيت التطبيق مطلوب أولاً</h2>' +
-        '<p class="ab-ig-desc">للدخول إلى متجر <b>أبوضياء للتوزيع</b> والطلب مباشرة، ثبّت التطبيق على جوالك أولاً ثم افتحه لإدخال اسمك وبياناتك ورقمك.</p>' +
+        '<h2 class="ab-ig-title">🔒 المتجر لا يعمل داخل المتصفح</h2>' +
+        '<p class="ab-ig-desc">لتصفح الأصناف والطلب من <b>أبوضياء للتوزيع</b>، يجب تثبيت التطبيق أولاً ثم فتحه من الشاشة الرئيسية وإدخال بياناتك.</p>' +
         '<button type="button" id="abIgInstallNowBtn" class="ab-ig-btn-main">' +
           (deferredPrompt ? "📲 تثبيت تطبيق أبوضياء للتوزيع الآن" : "📲 اضغط لتثبيت التطبيق الآن") +
         '</button>' +
         '<div id="abIgManualHint" class="ab-ig-box" style="display:' + (deferredPrompt ? "none" : "block") + '">' +
-          '<b>طريقة التثبيت السريعة:</b><br>' +
-          '• اضغط <b>القائمة (⋮)</b> أعلى متصفح كروم ثم اختر <b>«تثبيت التطبيق»</b> أو <b>«الإضافة إلى الشاشة الرئيسية»</b>.<br>' +
-          '• إذا كنت قد ثبّت التطبيق مسبقاً، افتح أيقونة <b>«أبوضياء للتوزيع»</b> من شاشة جوالك مباشرة.' +
+          '<b>طريقة التثبيت:</b><br>' +
+          '• اضغط <b>الثلاث نقاط (⋮)</b> أعلى كروم واختر <b>«تثبيت التطبيق»</b> أو <b>«الإضافة إلى الشاشة الرئيسية»</b>.<br>' +
+          '• إن كان التطبيق مثبّتاً لديك مسبقاً، أغلق المتصفح وافتح الأيقونة من شاشة الجوال مباشرة.' +
         '</div>';
     }
 
@@ -26122,6 +26145,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           '<div class="ab-ig-logo">🏪</div>' +
           '<div class="ab-ig-brand">أبوضياء للتوزيع</div>' +
           '<div class="ab-ig-phone">📞 771458609 • السوق العام - سيئون</div>' +
+          '<div class="ab-ig-badge">🔒 مقفل داخل المتصفح — تطبيق فقط</div>' +
         '</div>' +
         '<div class="ab-ig-steps">' +
           '<div class="ab-ig-step-pill ' + (appJustInstalled ? "done" : "active") + '">1️⃣ تثبيت التطبيق</div>' +
@@ -26130,18 +26154,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '<div class="ab-ig-body">' + mainContent + '</div>' +
       '</div>';
 
-    bindSecretStaffBypass(ov);
-
     var copyBtn = document.getElementById("abIgCopyLinkBtn");
     if (copyBtn) {
       copyBtn.onclick = function () {
         var url = window.location.href;
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(url).then(function () {
-            copyBtn.textContent = "✅ تم نسخ الرابط — الصقه في متصفح Chrome";
+            copyBtn.textContent = "✅ تم نسخ الرابط — الصقه في Chrome";
           }).catch(function () {});
         } else {
-          window.prompt("انسخ الرابط وافتحه في متصفح Chrome:", url);
+          window.prompt("انسخ الرابط وافتحه في Chrome:", url);
         }
       };
     }
@@ -26158,7 +26180,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
               deferredPrompt = null;
               if (choice && choice.outcome === "accepted") {
                 appJustInstalled = true;
-                renderInstallGate();
+                renderStrictBrowserLock();
               } else {
                 instBtn.disabled = false;
                 instBtn.textContent = "📲 اضغط لتثبيت التطبيق الآن";
@@ -26185,15 +26207,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
   function renderProfileGate() {
     if (!document.body) return;
-    if (document.documentElement) document.documentElement.classList.add("ab-gate-locked");
+    setRootClass("ab-browser-blocked", false);
+    setRootClass("ab-profile-locked", true);
 
-    var ov = document.getElementById("abInstallGateOverlay");
-    if (!ov) {
-      ov = document.createElement("div");
-      ov.id = "abInstallGateOverlay";
-      ov.setAttribute("data-ab-install-gate", "1");
-      document.body.appendChild(ov);
-    }
+    var ov = ensureOverlay();
+    if (!ov) return;
 
     ov.innerHTML =
       '<div class="ab-ig-card">' +
@@ -26208,7 +26226,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '</div>' +
         '<div class="ab-ig-body">' +
           '<h2 class="ab-ig-title">📝 سجّل بياناتك للبدء</h2>' +
-          '<p class="ab-ig-desc">أدخل اسمك وبياناتك ورقم جوالك مرة واحدة فقط لتفعيل طلباتك الفورية.</p>' +
+          '<p class="ab-ig-desc">أدخل اسمك ورقم جوالك وعنوانك مرة واحدة فقط لتفعيل التطبيق.</p>' +
           '<div id="abIgFormErr" class="ab-ig-err"></div>' +
           '<form id="abIgProfileForm" novalidate>' +
             '<div class="ab-ig-field">' +
@@ -26220,15 +26238,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
               '<input type="tel" id="abGatePhoneInp" class="ab-ig-inp" style="direction:ltr;text-align:center" placeholder="77XXXXXXX" autocomplete="tel" required>' +
             '</div>' +
             '<div class="ab-ig-field">' +
-              '<label class="ab-ig-label" for="abGateAddrInp">📍 المنطقة / العنوان وبيانات التوصيل *</label>' +
-              '<input type="text" id="abGateAddrInp" class="ab-ig-inp" placeholder="مثال: سيئون - السوق العام / جوار..." autocomplete="street-address" required>' +
+              '<label class="ab-ig-label" for="abGateAddrInp">📍 المنطقة / العنوان *</label>' +
+              '<input type="text" id="abGateAddrInp" class="ab-ig-inp" placeholder="مثال: سيئون - السوق العام" autocomplete="street-address" required>' +
             '</div>' +
             '<button type="submit" class="ab-ig-btn-main">✅ حفظ البيانات والدخول للمتجر</button>' +
           '</form>' +
         '</div>' +
       '</div>';
-
-    bindSecretStaffBypass(ov);
 
     var form = document.getElementById("abIgProfileForm");
     if (form) {
@@ -26236,8 +26252,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         ev.preventDefault();
         var errEl = document.getElementById("abIgFormErr");
         var nameVal = String((document.getElementById("abGateNameInp") || {}).value || "").trim();
-        var rawPhone = toEnDigits((document.getElementById("abGatePhoneInp") || {}).value || "");
-        var phoneDigits = rawPhone.replace(/[^0-9]/g, "");
+        var phoneDigits = toEnDigits((document.getElementById("abGatePhoneInp") || {}).value || "").replace(/[^0-9]/g, "");
         var addrVal = String((document.getElementById("abGateAddrInp") || {}).value || "").trim();
 
         var showErr = function (msg) {
@@ -26247,18 +26262,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           }
         };
 
-        if (nameVal.length < 2) {
-          showErr("⚠️ يرجى كتابة اسمك أو اسم المحل بشكل صحيح.");
-          return;
-        }
-        if (phoneDigits.length < 9) {
-          showErr("⚠️ يرجى إدخال رقم جوال صحيح (9 أرقام على الأقل).");
-          return;
-        }
-        if (addrVal.length < 2) {
-          showErr("⚠️ يرجى كتابة المنطقة أو العنوان لتوصيل الطلبات.");
-          return;
-        }
+        if (nameVal.length < 2) { showErr("⚠️ يرجى كتابة اسمك أو اسم المحل بشكل صحيح."); return; }
+        if (phoneDigits.length < 9) { showErr("⚠️ يرجى إدخال رقم جوال صحيح (9 أرقام على الأقل)."); return; }
+        if (addrVal.length < 2) { showErr("⚠️ يرجى كتابة المنطقة أو العنوان."); return; }
 
         if (errEl) errEl.classList.remove("show");
         saveCustomerProfile({
@@ -26267,57 +26273,57 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           address: addrVal,
           savedAt: new Date().toISOString(),
         });
-        removeGate();
+        removeGateOverlay();
         if (typeof showToast === "function") {
-          showToast("✅ أهلاً بك يا " + nameVal + " في متجر أبوضياء للتوزيع");
+          showToast("✅ أهلاً بك يا " + nameVal + " في تطبيق أبوضياء للتوزيع");
         }
       });
     }
   }
 
   function evaluateGate() {
-    if (isStaffUser()) {
-      removeGate();
+    if (!isStandaloneApp()) {
+      renderStrictBrowserLock();
       return;
     }
 
-    if (!isStandaloneApp()) {
-      renderInstallGate();
+    if (isStaffInsideApp()) {
+      removeGateOverlay();
       return;
     }
 
     var saved = getSavedCustomerProfile();
     if (!saved) {
-      renderProfileGate();
+      if (!document.getElementById("abIgProfileForm")) {
+        renderProfileGate();
+      }
       return;
     }
 
-    removeGate();
+    removeGateOverlay();
     fillCheckoutFields(saved);
   }
 
   window.addEventListener("beforeinstallprompt", function (e) {
     e.preventDefault();
     deferredPrompt = e;
-    if (!isStandaloneApp() && !isStaffUser()) {
-      renderInstallGate();
+    if (!isStandaloneApp()) {
+      renderStrictBrowserLock();
     }
   });
 
   window.addEventListener("appinstalled", function () {
     deferredPrompt = null;
     appJustInstalled = true;
-    if (!isStandaloneApp() && !isStaffUser()) {
-      renderInstallGate();
+    if (!isStandaloneApp()) {
+      renderStrictBrowserLock();
     }
   });
 
   if (window.matchMedia) {
     try {
       var mq = window.matchMedia("(display-mode: standalone)");
-      if (mq && mq.addEventListener) {
-        mq.addEventListener("change", evaluateGate);
-      }
+      if (mq && mq.addEventListener) mq.addEventListener("change", evaluateGate);
     } catch (e) {}
   }
 
@@ -26331,8 +26337,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     fillCheckoutFields();
   });
   document.addEventListener("click", function () {
-    fillCheckoutFields();
+    if (isStandaloneApp()) fillCheckoutFields();
   }, true);
+
+  /* حارس خفيف لضمان بقاء المتصفح مقفلاً دائماً دون أي حلقة تجميد */
+  setInterval(function () {
+    if (!isStandaloneApp()) {
+      setRootClass("ab-browser-blocked", true);
+      if (!document.getElementById("abInstallGateOverlay")) {
+        renderStrictBrowserLock();
+      }
+    }
+  }, 1500);
 })();
 </script>
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_END -->
@@ -26380,7 +26396,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-779991";
+  var TARGET_CACHE = "abudhiya-offline-v4-780268";
 
   function forceReleaseSplash() {
     try {
