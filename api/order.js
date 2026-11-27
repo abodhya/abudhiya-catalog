@@ -22,7 +22,6 @@ module.exports = async (req, res) => {
   }
   if (!body || !body.text || !body.orderId) return res.status(400).json({ ok: false });
 
-  delete body.receiptImageBase64; delete body.imageBase64; delete body.receiptMime;
   body.token = TOKEN;
   const payload = JSON.stringify(body);
 
