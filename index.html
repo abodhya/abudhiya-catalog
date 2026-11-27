@@ -621,6 +621,47 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 })();
 </script>
 <!-- ABUDHIYA_BROWSER_LOCK_HEAD_END -->
+
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
+<style id="abNoJitterCss" data-ab-no-jitter="1">
+  html, body {
+    overflow-anchor: none !important;
+    overscroll-behavior-y: contain;
+  }
+  .product-card, .card, [class*="qty"], [class*="cart"] {
+    overflow-anchor: none !important;
+  }
+</style>
+<script data-ab-no-jitter="1">
+(function () {
+  if (window.__abNoVibrateJitterV1) return;
+  window.__abNoVibrateJitterV1 = true;
+  var noop = function () { return false; };
+  try {
+    if (typeof navigator !== "undefined") {
+      try {
+        Object.defineProperty(navigator, "vibrate", {
+          value: noop,
+          writable: true,
+          configurable: true
+        });
+      } catch (e) {
+        try { navigator.vibrate = noop; } catch (e2) {}
+      }
+    }
+    if (typeof Navigator !== "undefined" && Navigator.prototype) {
+      try {
+        Object.defineProperty(Navigator.prototype, "vibrate", {
+          value: noop,
+          writable: true,
+          configurable: true
+        });
+      } catch (e3) {}
+    }
+  } catch (err) {}
+})();
+</script>
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
 </head>
 <body>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
@@ -26505,73 +26546,37 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_END -->
 
 
+
+
 <!-- ABUDHIYA_FAST_IMAGES_START -->
-<style id="abFastImagesCss" data-ab-fast-img="1">
-  img[data-ab-opt="1"] {
-    background-color: #f1f5f9;
-    image-rendering: auto;
-  }
-</style>
-<script data-ab-fast-img="1">
+<script data-ab-fast-img="2">
 (function () {
-  if (window.__abFastImagesV1) return;
-  window.__abFastImagesV1 = true;
+  if (window.__abFastImagesV2) return;
+  window.__abFastImagesV2 = true;
 
-  var eagerLimit = 6;
-  var seenCount = 0;
-
-  function tuneImg(img) {
-    if (!img || img.nodeType !== 1 || img.tagName !== "IMG") return;
-    if (img.getAttribute("data-ab-opt") === "1") return;
-    img.setAttribute("data-ab-opt", "1");
-    img.decoding = "async";
-
-    var src = String(img.getAttribute("src") || "");
-    if (!src || src.indexOf("data:") === 0) return;
-
-    seenCount++;
-    if (seenCount <= eagerLimit) {
-      img.loading = "eager";
-      try { img.setAttribute("fetchpriority", "high"); } catch (e) {}
-    } else {
-      img.loading = "lazy";
-      try { img.setAttribute("fetchpriority", "low"); } catch (e) {}
-    }
-  }
-
-  function scanAll() {
+  function tuneInitialImages() {
     var imgs = document.getElementsByTagName("img");
+    var vh = window.innerHeight || 800;
     for (var i = 0; i < imgs.length; i++) {
-      tuneImg(imgs[i]);
-    }
-  }
-
-  function startObserver() {
-    scanAll();
-    if (typeof MutationObserver === "undefined" || !document.body) return;
-    var obs = new MutationObserver(function (muts) {
-      for (var i = 0; i < muts.length; i++) {
-        var added = muts[i].addedNodes;
-        if (!added) continue;
-        for (var j = 0; j < added.length; j++) {
-          var n = added[j];
-          if (!n || n.nodeType !== 1) continue;
-          if (n.tagName === "IMG") {
-            tuneImg(n);
-          } else if (n.getElementsByTagName) {
-            var nested = n.getElementsByTagName("img");
-            for (var k = 0; k < nested.length; k++) tuneImg(nested[k]);
-          }
-        }
+      var img = imgs[i];
+      if (!img || img.getAttribute("data-ab-opt") === "2") continue;
+      img.setAttribute("data-ab-opt", "2");
+      img.decoding = "async";
+      var src = String(img.getAttribute("src") || "");
+      if (!src || src.indexOf("data:") === 0 || img.complete) continue;
+      var rect = img.getBoundingClientRect ? img.getBoundingClientRect() : null;
+      if (rect && rect.top > vh * 1.4) {
+        img.loading = "lazy";
+      } else {
+        img.loading = "eager";
       }
-    });
-    obs.observe(document.body, { childList: true, subtree: true });
+    }
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", startObserver, { once: true });
+    document.addEventListener("DOMContentLoaded", tuneInitialImages, { once: true });
   } else {
-    startObserver();
+    tuneInitialImages();
   }
 })();
 </script>
@@ -26620,7 +26625,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-810066";
+  var TARGET_CACHE = "abudhiya-offline-v4-810594";
 
   function forceReleaseSplash() {
     try {
