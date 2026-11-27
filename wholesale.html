@@ -24858,6 +24858,107 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_STAFF_WH_DIRECT_END -->
 
+
+<!-- ABUDHIYA_PRELAUNCH_ROLE_POLISH_START -->
+<style id="abPrelaunchRolePolishCss" data-ab-prelaunch-polish="1">
+  /* 1) إخفاء زر الاعتماد بالسعر وزر الطابعة الحرارية عن العملاء (الضيوف) نهائياً */
+  html:not(.ab-prp-staff) #abConfirmOrderSilentBtn,
+  html:not(.ab-prp-staff) #abThSharePrintBtn {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 2) إخفاء زر الاعتماد بالسعر حتى عن الطاقم ما لم تكن الأسعار مفعّلة */
+  html:not(.ab-staff-prices-on) #abConfirmOrderSilentBtn {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 3) حصر تعديل رقم المستودع وإرسال المستودع بالسعر في المدير فقط (المندوب يرى زر الإرسال المباشر فقط) */
+  html:not(.ab-prp-admin) #abStaffWhPhoneToggle,
+  html:not(.ab-prp-admin) #abStaffWhPhoneBox,
+  html:not(.ab-prp-admin) #abStaffWhPricedBtn,
+  html:not(.ab-prp-admin) #abStaffWhDirectWrap .ab-swh-subrow {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 4) حصر أدوات إدارة العروض وإشعارات شاشة القفل وإدارة المناديب في المدير فقط */
+  html:not(.ab-prp-admin) #abAdminPromoToggleBtn,
+  html:not(.ab-prp-admin) #abAdminPromoBox,
+  html:not(.ab-prp-admin) #abAdminPushToggleBtn,
+  html:not(.ab-prp-admin) #abAdminPushBox,
+  html:not(.ab-prp-admin) #abAmbRepsBtn,
+  html:not(.ab-prp-admin) #abProSavePromo {
+    display: none !important;
+    visibility: hidden !important;
+  }
+</style>
+<script data-ab-prelaunch-polish="1">
+(function () {
+  if (window.__abPrelaunchRolePolishV1) return;
+  window.__abPrelaunchRolePolishV1 = true;
+
+  function detectRoleFlags() {
+    var isAdmin = false;
+    var isStaff = false;
+    try {
+      var root = document.documentElement;
+      if (root) {
+        if (root.classList.contains("ab-role-admin")) {
+          isAdmin = true;
+          isStaff = true;
+        } else if (root.classList.contains("ab-role-rep") || root.classList.contains("ab-role-staff")) {
+          isStaff = true;
+        }
+      }
+      var r = String(localStorage.getItem("ab_app_role_v1") || "").trim().toLowerCase();
+      if (r === "admin" || r.indexOf("admin") !== -1 || r.indexOf("مدير") !== -1) {
+        isAdmin = true;
+        isStaff = true;
+      } else if (r === "rep" || r.indexOf("rep") !== -1 || r.indexOf("staff") !== -1 || r.indexOf("مندوب") !== -1) {
+        isStaff = true;
+      }
+      if (root && root.classList.contains("ab-role-guest")) {
+        isAdmin = false;
+        isStaff = false;
+      }
+    } catch (e) {}
+    return { isAdmin: isAdmin, isStaff: isStaff };
+  }
+
+  function syncRolePolish() {
+    var root = document.documentElement;
+    if (!root) return;
+    var f = detectRoleFlags();
+    root.classList.toggle("ab-prp-admin", f.isAdmin);
+    root.classList.toggle("ab-prp-staff", f.isStaff);
+  }
+
+  syncRolePolish();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncRolePolish, { once: true });
+  }
+  window.addEventListener("load", syncRolePolish);
+  window.addEventListener("storage", syncRolePolish);
+  document.addEventListener("click", function () {
+    setTimeout(syncRolePolish, 60);
+  }, true);
+
+  if (typeof MutationObserver !== "undefined") {
+    try {
+      new MutationObserver(syncRolePolish).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    } catch (e) {}
+  }
+
+  setInterval(syncRolePolish, 1200);
+})();
+</script>
+<!-- ABUDHIYA_PRELAUNCH_ROLE_POLISH_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -24901,7 +25002,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-759485";
+  var TARGET_CACHE = "abudhiya-offline-v4-759919";
 
   function forceReleaseSplash() {
     try {
