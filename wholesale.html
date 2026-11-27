@@ -24524,6 +24524,340 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_GUEST_NOPRICE_SHIELD_END -->
 
+
+<!-- ABUDHIYA_STAFF_WH_DIRECT_START -->
+<style id="abStaffWhDirectCss" data-ab-staff-wh-direct="1">
+  /* إخفاء قسم إدارة المستودع عن العملاء (غير المدير والمندوب) تماماً */
+  html:not(.ab-wh-staff-visible) #abStaffWhDirectWrap,
+  html:not(.ab-wh-staff-visible) #abWhBox .ab-wh-head,
+  html:not(.ab-wh-staff-visible) #abWhBox .ab-wh-btns,
+  html:not(.ab-wh-staff-visible) #abWhBox #abWhPhoneRow,
+  html:not(.ab-wh-staff-visible) #abWhBox .ab-admin-gear {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* منع تكرار الأزرار القديمة داخل #abWhBox عند ظهور البطاقة المباشرة للطاقم مع بقائها في DOM */
+  html.ab-wh-staff-visible #abWhBox .ab-wh-head,
+  html.ab-wh-staff-visible #abWhBox .ab-wh-btns,
+  html.ab-wh-staff-visible #abWhBox #abWhPhoneRow,
+  html.ab-wh-staff-visible #abWhBox .ab-admin-gear {
+    display: none !important;
+  }
+
+  /* بطاقة الإرسال المباشر لإدارة المستودع (تظهر فقط للمدير والمندوب) */
+  #abStaffWhDirectWrap {
+    display: none;
+    margin: 10px 0 8px 0 !important;
+    padding: 10px !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #ecfdf5 0%, #f8fafc 100%) !important;
+    border: 1.4px solid rgba(5, 150, 105, 0.34) !important;
+    box-shadow: 0 4px 14px rgba(4, 47, 34, 0.08) !important;
+    box-sizing: border-box !important;
+  }
+  html.ab-wh-staff-visible #abStaffWhDirectWrap {
+    display: block !important;
+  }
+
+  #abStaffWhDirectBtn {
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #042f22 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 14.5px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.28) !important;
+    transition: transform 0.15s ease !important;
+  }
+  #abStaffWhDirectBtn:active {
+    transform: scale(0.985) !important;
+  }
+
+  .ab-swh-subrow {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+  }
+  .ab-swh-mini-btn {
+    flex: 1 1 0 !important;
+    height: 35px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(5, 150, 105, 0.32) !important;
+    background: #ffffff !important;
+    color: #064e3b !important;
+    -webkit-text-fill-color: #064e3b !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+  }
+  .ab-swh-mini-btn:active {
+    background: #ecfdf5 !important;
+  }
+
+  #abStaffWhPhoneBox {
+    display: none;
+    margin-top: 8px !important;
+    gap: 6px !important;
+    align-items: center !important;
+  }
+  #abStaffWhPhoneBox.open {
+    display: flex !important;
+  }
+  #abStaffWhPhoneInp {
+    flex: 1 1 auto !important;
+    height: 36px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    border: 1.2px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    direction: ltr !important;
+    text-align: center !important;
+  }
+  #abStaffWhPhoneSave {
+    height: 36px !important;
+    padding: 0 14px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    background: #059669 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 12.5px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+  }
+</style>
+<script data-ab-staff-wh-direct="1">
+(function () {
+  if (window.__abStaffWhDirectV1) return;
+  window.__abStaffWhDirectV1 = true;
+
+  var WH_KEY = "ab_warehouse_phone_v2";
+  var DEFAULT_WH_PHONE = "967772777609";
+
+  function isStaffUser() {
+    try {
+      var root = document.documentElement;
+      if (root) {
+        if (
+          root.classList.contains("ab-role-staff") ||
+          root.classList.contains("ab-role-admin") ||
+          root.classList.contains("ab-role-rep")
+        ) {
+          return true;
+        }
+        if (root.classList.contains("ab-role-guest")) {
+          return false;
+        }
+      }
+      var r = String(localStorage.getItem("ab_app_role_v1") || "").trim().toLowerCase();
+      if (
+        r &&
+        (r.indexOf("admin") !== -1 ||
+          r.indexOf("rep") !== -1 ||
+          r.indexOf("staff") !== -1 ||
+          r.indexOf("مدير") !== -1 ||
+          r.indexOf("مندوب") !== -1)
+      ) {
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function cleanPhone(raw) {
+    var d = String(raw || "").replace(/[^0-9]/g, "");
+    if (d.length === 9 && d.charAt(0) === "7") d = "967" + d;
+    if (d.indexOf("00967") === 0) d = d.slice(2);
+    return d;
+  }
+
+  function getWhPhone() {
+    try {
+      var saved = cleanPhone(localStorage.getItem(WH_KEY) || "");
+      if (saved.length >= 9) return saved;
+    } catch (e) {}
+    return DEFAULT_WH_PHONE;
+  }
+
+  function saveWhPhone(val) {
+    var p = cleanPhone(val) || DEFAULT_WH_PHONE;
+    try { localStorage.setItem(WH_KEY, p); } catch (e) {}
+    var legacyInp = document.getElementById("abWhPhoneInp");
+    if (legacyInp) legacyInp.value = p;
+    return p;
+  }
+
+  function fallbackSendWarehouse(withPrice) {
+    var phone = getWhPhone();
+    var cName = (document.getElementById("custNameInp") || {}).value || "";
+    var cPhone = (document.getElementById("custPhoneInp") || {}).value || "";
+    var cNote = (document.getElementById("custNoteInp") || {}).value || "";
+
+    var cartObj = (typeof CART !== "undefined" && CART) ? CART : (window.CART || {});
+    var prods = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS)) ? PRODUCTS : (Array.isArray(window.PRODUCTS) ? window.PRODUCTS : []);
+    var lines = [];
+    lines.push(withPrice ? "📦 *طلب تجهيز مستودع (بالسعر)*" : "📦 *طلب تجهيز مستودع مباشر*");
+    lines.push("🏪 *أبوضياء للتوزيع*");
+    if (cName.trim()) lines.push("👤 العميل: " + cName.trim());
+    if (cPhone.trim()) lines.push("📞 الجوال: " + cPhone.trim());
+    lines.push("━━━━━━━━━━━━━━━━━━");
+
+    var count = 0;
+    var grandTotal = 0;
+    for (var i = 0; i < prods.length; i++) {
+      var p = prods[i];
+      var q = Number(cartObj[p.id] || 0);
+      if (q > 0) {
+        count++;
+        var unit = p.unit || "كرتون";
+        if (withPrice && Number(p.price || 0) > 0) {
+          var sub = q * Number(p.price || 0);
+          grandTotal += sub;
+          lines.push(count + ". " + p.name + " × " + q + " (" + unit + ") = " + sub.toLocaleString("en-US") + " ر.ي");
+        } else {
+          lines.push(count + ". " + p.name + " — العدد: *" + q + "* (" + unit + ")");
+        }
+      }
+    }
+
+    if (count === 0) {
+      if (typeof showToast === "function") showToast("⚠️ السلة فارغة — أضف أصنافاً أولاً");
+      return;
+    }
+
+    if (withPrice && grandTotal > 0) {
+      lines.push("━━━━━━━━━━━━━━━━━━");
+      lines.push("💰 الإجمالي: *" + grandTotal.toLocaleString("en-US") + " ر.ي*");
+    }
+    if (cNote.trim()) {
+      lines.push("📝 ملاحظة: " + cNote.trim());
+    }
+
+    var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(lines.join("\n"));
+    window.open(url, "_blank");
+  }
+
+  function triggerWarehouseSend(withPrice) {
+    var targetBtn = document.getElementById(withPrice ? "abWhBtnPrice" : "abWhBtnShort");
+    if (targetBtn) {
+      var legacyInp = document.getElementById("abWhPhoneInp");
+      if (legacyInp) legacyInp.value = getWhPhone();
+      targetBtn.click();
+      return;
+    }
+    fallbackSendWarehouse(withPrice);
+  }
+
+  function mountStaffWarehouseCard() {
+    var existing = document.getElementById("abStaffWhDirectWrap");
+    if (existing) return;
+
+    var anchor =
+      document.getElementById("abWhBox") ||
+      document.querySelector(".inv-totals-card") ||
+      document.getElementById("invoiceView") ||
+      document.querySelector('[id*="invoice"], [class*="invoice"]');
+
+    if (!anchor || !anchor.parentNode) return;
+
+    var wrap = document.createElement("div");
+    wrap.id = "abStaffWhDirectWrap";
+    wrap.setAttribute("data-ab-staff-wh-direct", "1");
+    wrap.innerHTML =
+      '<button type="button" id="abStaffWhDirectBtn">📦 إرسال إلى إدارة المستودع مباشرة</button>' +
+      '<div class="ab-swh-subrow">' +
+        '<button type="button" id="abStaffWhPricedBtn" class="ab-swh-mini-btn">💰 بالسعر للمستودع</button>' +
+        '<button type="button" id="abStaffWhPhoneToggle" class="ab-swh-mini-btn">⚙️ رقم المستودع</button>' +
+      '</div>' +
+      '<div id="abStaffWhPhoneBox">' +
+        '<input type="tel" id="abStaffWhPhoneInp" placeholder="967772777609" value="' + getWhPhone() + '">' +
+        '<button type="button" id="abStaffWhPhoneSave">حفظ</button>' +
+      '</div>';
+
+    if (anchor.id === "abWhBox" || (anchor.classList && anchor.classList.contains("inv-totals-card"))) {
+      anchor.insertAdjacentElement("afterend", wrap);
+    } else {
+      anchor.appendChild(wrap);
+    }
+
+    document.getElementById("abStaffWhDirectBtn").addEventListener("click", function () {
+      triggerWarehouseSend(false);
+    });
+    document.getElementById("abStaffWhPricedBtn").addEventListener("click", function () {
+      triggerWarehouseSend(true);
+    });
+    document.getElementById("abStaffWhPhoneToggle").addEventListener("click", function () {
+      var pb = document.getElementById("abStaffWhPhoneBox");
+      var inp = document.getElementById("abStaffWhPhoneInp");
+      if (inp) inp.value = getWhPhone();
+      if (pb) pb.classList.toggle("open");
+    });
+    document.getElementById("abStaffWhPhoneSave").addEventListener("click", function () {
+      var inp = document.getElementById("abStaffWhPhoneInp");
+      var saved = saveWhPhone(inp ? inp.value : "");
+      if (inp) inp.value = saved;
+      var pb = document.getElementById("abStaffWhPhoneBox");
+      if (pb) pb.classList.remove("open");
+      if (typeof showToast === "function") showToast("✅ تم حفظ رقم إدارة المستودع: " + saved);
+    });
+  }
+
+  function syncStaffWarehouseVisibility() {
+    var root = document.documentElement;
+    if (!root) return;
+    if (isStaffUser()) {
+      root.classList.add("ab-wh-staff-visible");
+      mountStaffWarehouseCard();
+    } else {
+      root.classList.remove("ab-wh-staff-visible");
+    }
+  }
+
+  syncStaffWarehouseVisibility();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", syncStaffWarehouseVisibility, { once: true });
+  }
+  window.addEventListener("load", syncStaffWarehouseVisibility);
+  window.addEventListener("storage", syncStaffWarehouseVisibility);
+  document.addEventListener("click", function () {
+    setTimeout(syncStaffWarehouseVisibility, 90);
+  }, true);
+
+  if (typeof MutationObserver !== "undefined") {
+    try {
+      new MutationObserver(syncStaffWarehouseVisibility).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    } catch (e) {}
+  }
+
+  setInterval(syncStaffWarehouseVisibility, 1200);
+})();
+</script>
+<!-- ABUDHIYA_STAFF_WH_DIRECT_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -24567,7 +24901,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-758968";
+  var TARGET_CACHE = "abudhiya-offline-v4-759485";
 
   function forceReleaseSplash() {
     try {
