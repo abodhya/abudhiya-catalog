@@ -25692,6 +25692,649 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_PRELAUNCH_ROLE_POLISH_END -->
 
+
+<!-- ABUDHIYA_INSTALL_ONBOARD_GATE_START -->
+<style id="abInstallGateCss" data-ab-install-gate="1">
+  html.ab-gate-locked,
+  html.ab-gate-locked body {
+    overflow: hidden !important;
+    height: 100% !important;
+    touch-action: none !important;
+  }
+
+  #abInstallGateOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483600 !important;
+    background: radial-gradient(circle at top, #065f46 0%, #042f22 52%, #021c14 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
+    direction: rtl !important;
+    font-family: Tahoma, Arial, sans-serif !important;
+  }
+
+  .ab-ig-card {
+    width: 100% !important;
+    max-width: 410px !important;
+    background: #ffffff !important;
+    border-radius: 22px !important;
+    border: 2px solid #f5c542 !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45) !important;
+    overflow: hidden !important;
+    animation: abIgFadeIn 0.22s ease !important;
+  }
+  @keyframes abIgFadeIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .ab-ig-head {
+    background: linear-gradient(135deg, #042f22 0%, #059669 100%) !important;
+    padding: 20px 18px 16px 18px !important;
+    text-align: center !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-bottom: 2px solid #f5c542 !important;
+  }
+  .ab-ig-logo {
+    width: 62px !important;
+    height: 62px !important;
+    margin: 0 auto 10px auto !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1.5px solid #f5c542 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 32px !important;
+    user-select: none !important;
+  }
+  .ab-ig-brand {
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    margin: 0 0 4px 0 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    user-select: none !important;
+  }
+  .ab-ig-phone {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #d1fae5 !important;
+    -webkit-text-fill-color: #d1fae5 !important;
+  }
+
+  .ab-ig-steps {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 14px 4px 14px !important;
+    background: #f8fafc !important;
+  }
+  .ab-ig-step-pill {
+    flex: 1 1 0 !important;
+    text-align: center !important;
+    padding: 7px 8px !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    background: #e2e8f0 !important;
+    color: #475569 !important;
+    -webkit-text-fill-color: #475569 !important;
+  }
+  .ab-ig-step-pill.active {
+    background: #ecfdf5 !important;
+    color: #047857 !important;
+    -webkit-text-fill-color: #047857 !important;
+    border: 1.5px solid #059669 !important;
+  }
+  .ab-ig-step-pill.done {
+    background: #059669 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  .ab-ig-body {
+    padding: 18px !important;
+    text-align: right !important;
+    color: #0f172a !important;
+  }
+  .ab-ig-title {
+    margin: 0 0 8px 0 !important;
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+    text-align: center !important;
+  }
+  .ab-ig-desc {
+    margin: 0 0 14px 0 !important;
+    font-size: 13.5px !important;
+    line-height: 1.75 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    text-align: center !important;
+  }
+
+  .ab-ig-btn-main {
+    width: 100% !important;
+    min-height: 50px !important;
+    padding: 12px 16px !important;
+    border: none !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #042f22 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 15.5px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.34) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+  .ab-ig-btn-main:active { transform: scale(0.98) !important; }
+
+  .ab-ig-btn-sec {
+    width: 100% !important;
+    min-height: 42px !important;
+    margin-top: 8px !important;
+    padding: 9px 12px !important;
+    border: 1.3px solid #059669 !important;
+    border-radius: 12px !important;
+    background: #ecfdf5 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+  }
+
+  .ab-ig-box {
+    margin-top: 12px !important;
+    padding: 12px 13px !important;
+    border-radius: 13px !important;
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    font-size: 12.8px !important;
+    line-height: 1.8 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+  }
+  .ab-ig-box.warn {
+    background: #fffbeb !important;
+    border-color: #f59e0b !important;
+    color: #78350f !important;
+    -webkit-text-fill-color: #78350f !important;
+  }
+  .ab-ig-box.ok {
+    background: #ecfdf5 !important;
+    border-color: #059669 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    text-align: center !important;
+  }
+
+  .ab-ig-field {
+    margin-bottom: 12px !important;
+  }
+  .ab-ig-label {
+    display: block !important;
+    margin-bottom: 5px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+  }
+  .ab-ig-inp {
+    width: 100% !important;
+    height: 45px !important;
+    padding: 0 12px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    outline: none !important;
+  }
+  .ab-ig-inp:focus {
+    border-color: #059669 !important;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.14) !important;
+  }
+  .ab-ig-err {
+    display: none;
+    margin: 0 0 10px 0 !important;
+    padding: 9px 11px !important;
+    border-radius: 10px !important;
+    background: #fef2f2 !important;
+    border: 1px solid #ef4444 !important;
+    color: #b91c1c !important;
+    -webkit-text-fill-color: #b91c1c !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+  }
+  .ab-ig-err.show { display: block !important; }
+</style>
+<script data-ab-install-gate="1">
+(function () {
+  if (window.__abInstallOnboardGateV1) return;
+  window.__abInstallOnboardGateV1 = true;
+
+  var PROFILE_KEY = "ab_customer_profile_v1";
+  var BYPASS_KEY = "ab_gate_staff_bypass_v1";
+  var deferredPrompt = null;
+  var appJustInstalled = false;
+  var secretTapCount = 0;
+  var secretTapTimer = null;
+
+  function toEnDigits(str) {
+    return String(str || "")
+      .replace(/[\u0660-\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); })
+      .replace(/[\u06F0-\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); });
+  }
+
+  function isStandaloneApp() {
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia) {
+        if (
+          window.matchMedia("(display-mode: standalone)").matches ||
+          window.matchMedia("(display-mode: fullscreen)").matches ||
+          window.matchMedia("(display-mode: minimal-ui)").matches
+        ) {
+          return true;
+        }
+      }
+      if (document.referrer && document.referrer.indexOf("android-app://") === 0) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function isStaffUser() {
+    try {
+      if (sessionStorage.getItem(BYPASS_KEY) === "1") return true;
+      var root = document.documentElement;
+      if (
+        root &&
+        (root.classList.contains("ab-role-admin") ||
+          root.classList.contains("ab-role-rep") ||
+          root.classList.contains("ab-role-staff")) &&
+        !root.classList.contains("ab-role-guest")
+      ) {
+        return true;
+      }
+      var r = String(localStorage.getItem("ab_app_role_v1") || "").trim().toLowerCase();
+      if (
+        r &&
+        (r.indexOf("admin") !== -1 ||
+          r.indexOf("rep") !== -1 ||
+          r.indexOf("staff") !== -1 ||
+          r.indexOf("مدير") !== -1 ||
+          r.indexOf("مندوب") !== -1)
+      ) {
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function getSavedCustomerProfile() {
+    try {
+      var raw = localStorage.getItem(PROFILE_KEY);
+      if (raw) {
+        var obj = JSON.parse(raw);
+        if (obj && obj.name && obj.phone && obj.address) return obj;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function saveCustomerProfile(profile) {
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      localStorage.setItem("ab_cust_name", profile.name);
+      localStorage.setItem("ab_cust_phone", profile.phone);
+      localStorage.setItem("ab_cust_addr", profile.address);
+      localStorage.setItem("ab_cust_note", profile.address);
+      localStorage.setItem("ab_customer_name", profile.name);
+      localStorage.setItem("ab_customer_phone", profile.phone);
+      localStorage.setItem("ab_customer_address", profile.address);
+      window.__abCustomerProfile = profile;
+    } catch (e) {}
+    fillCheckoutFields(profile);
+  }
+
+  function fillCheckoutFields(profile) {
+    var p = profile || getSavedCustomerProfile();
+    if (!p) return;
+    window.__abCustomerProfile = p;
+    var nameInp = document.getElementById("custNameInp");
+    var phoneInp = document.getElementById("custPhoneInp");
+    var noteInp = document.getElementById("custNoteInp");
+    if (nameInp && !String(nameInp.value || "").trim()) nameInp.value = p.name;
+    if (phoneInp && !String(phoneInp.value || "").trim()) phoneInp.value = p.phone;
+    if (noteInp && !String(noteInp.value || "").trim()) noteInp.value = p.address;
+  }
+
+  function isInAppBrowser() {
+    var ua = String(navigator.userAgent || "");
+    return /(FBAN|FBAV|Instagram|WhatsApp|Snapchat|Line\/|Telegram|; wv\))/i.test(ua);
+  }
+
+  function isIOSDevice() {
+    var ua = String(navigator.userAgent || "");
+    return /(iPhone|iPad|iPod)/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function removeGate() {
+    var ov = document.getElementById("abInstallGateOverlay");
+    if (ov) ov.remove();
+    if (document.documentElement) document.documentElement.classList.remove("ab-gate-locked");
+  }
+
+  function bindSecretStaffBypass(overlay) {
+    var brandEl = overlay.querySelector(".ab-ig-head");
+    if (!brandEl) return;
+    brandEl.addEventListener("click", function () {
+      secretTapCount++;
+      if (secretTapTimer) clearTimeout(secretTapTimer);
+      secretTapTimer = setTimeout(function () { secretTapCount = 0; }, 1600);
+      if (secretTapCount >= 5) {
+        secretTapCount = 0;
+        sessionStorage.setItem(BYPASS_KEY, "1");
+        removeGate();
+        if (typeof showToast === "function") showToast("🔓 تم تفعيل معاينة الإدارة مؤقتاً");
+      }
+    });
+  }
+
+  function renderInstallGate() {
+    if (!document.body) return;
+    if (document.documentElement) document.documentElement.classList.add("ab-gate-locked");
+
+    var ov = document.getElementById("abInstallGateOverlay");
+    if (!ov) {
+      ov = document.createElement("div");
+      ov.id = "abInstallGateOverlay";
+      ov.setAttribute("data-ab-install-gate", "1");
+      document.body.appendChild(ov);
+    }
+
+    var inApp = isInAppBrowser();
+    var ios = isIOSDevice();
+    var mainContent = "";
+
+    if (appJustInstalled) {
+      mainContent =
+        '<div class="ab-ig-box ok">' +
+          '<div style="font-size:34px;margin-bottom:6px">✅</div>' +
+          '<div style="font-size:16px;font-weight:900;margin-bottom:6px">تم تثبيت تطبيق أبوضياء للتوزيع بنجاح!</div>' +
+          '<div>أغلق المتصفح الآن وافتح أيقونة <b>«أبوضياء للتوزيع»</b> من الشاشة الرئيسية لجوالك لإدخال بياناتك والبدء بالطلب.</div>' +
+        '</div>';
+    } else if (inApp) {
+      mainContent =
+        '<h2 class="ab-ig-title">📲 ثبّت التطبيق أولاً للدخول</h2>' +
+        '<p class="ab-ig-desc">للدخول إلى متجر <b>أبوضياء للتوزيع</b> يجب تثبيت التطبيق أولاً، ثم إدخال اسمك وبياناتك ورقمك.</p>' +
+        '<div class="ab-ig-box warn">' +
+          '<b>⚠️ خطوة مهمة:</b> أنت تفتح الرابط من داخل متصفح تطبيق (مثل واتساب).<br>' +
+          '1️⃣ اضغط على <b>الثلاث نقاط (⋮)</b> أعلى الشاشة واختر <b>«الفتح في Chrome»</b>.<br>' +
+          '2️⃣ ستظهر لك شاشة التثبيت المباشر فوراً.' +
+        '</div>' +
+        '<button type="button" id="abIgCopyLinkBtn" class="ab-ig-btn-main" style="margin-top:12px">📋 نسخ رابط المتجر لفتحه في كروم</button>';
+    } else if (ios) {
+      mainContent =
+        '<h2 class="ab-ig-title">📲 ثبّت التطبيق أولاً على الآيفون</h2>' +
+        '<p class="ab-ig-desc">للدخول إلى متجر <b>أبوضياء للتوزيع</b> وإدخال بياناتك، أضف التطبيق إلى الشاشة الرئيسية أولاً:</p>' +
+        '<div class="ab-ig-box">' +
+          '1️⃣ اضغط زر <b>المشاركة (⬆️)</b> أسفل متصفح سفاري.<br>' +
+          '2️⃣ مرّر للأسفل واختر <b>«إضافة إلى الصفحة الرئيسية»</b>.<br>' +
+          '3️⃣ اضغط <b>«إضافة»</b> ثم افتح التطبيق من الشاشة الرئيسية.' +
+        '</div>';
+    } else {
+      mainContent =
+        '<h2 class="ab-ig-title">📲 تثبيت التطبيق مطلوب أولاً</h2>' +
+        '<p class="ab-ig-desc">للدخول إلى متجر <b>أبوضياء للتوزيع</b> والطلب مباشرة، ثبّت التطبيق على جوالك أولاً ثم افتحه لإدخال اسمك وبياناتك ورقمك.</p>' +
+        '<button type="button" id="abIgInstallNowBtn" class="ab-ig-btn-main">' +
+          (deferredPrompt ? "📲 تثبيت تطبيق أبوضياء للتوزيع الآن" : "📲 اضغط لتثبيت التطبيق الآن") +
+        '</button>' +
+        '<div id="abIgManualHint" class="ab-ig-box" style="display:' + (deferredPrompt ? "none" : "block") + '">' +
+          '<b>طريقة التثبيت السريعة:</b><br>' +
+          '• اضغط <b>القائمة (⋮)</b> أعلى متصفح كروم ثم اختر <b>«تثبيت التطبيق»</b> أو <b>«الإضافة إلى الشاشة الرئيسية»</b>.<br>' +
+          '• إذا كنت قد ثبّت التطبيق مسبقاً، افتح أيقونة <b>«أبوضياء للتوزيع»</b> من شاشة جوالك مباشرة.' +
+        '</div>';
+    }
+
+    ov.innerHTML =
+      '<div class="ab-ig-card">' +
+        '<div class="ab-ig-head">' +
+          '<div class="ab-ig-logo">🏪</div>' +
+          '<div class="ab-ig-brand">أبوضياء للتوزيع</div>' +
+          '<div class="ab-ig-phone">📞 771458609 • السوق العام - سيئون</div>' +
+        '</div>' +
+        '<div class="ab-ig-steps">' +
+          '<div class="ab-ig-step-pill ' + (appJustInstalled ? "done" : "active") + '">1️⃣ تثبيت التطبيق</div>' +
+          '<div class="ab-ig-step-pill">2️⃣ بيانات العميل</div>' +
+        '</div>' +
+        '<div class="ab-ig-body">' + mainContent + '</div>' +
+      '</div>';
+
+    bindSecretStaffBypass(ov);
+
+    var copyBtn = document.getElementById("abIgCopyLinkBtn");
+    if (copyBtn) {
+      copyBtn.onclick = function () {
+        var url = window.location.href;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            copyBtn.textContent = "✅ تم نسخ الرابط — الصقه في متصفح Chrome";
+          }).catch(function () {});
+        } else {
+          window.prompt("انسخ الرابط وافتحه في متصفح Chrome:", url);
+        }
+      };
+    }
+
+    var instBtn = document.getElementById("abIgInstallNowBtn");
+    if (instBtn) {
+      instBtn.onclick = function () {
+        if (deferredPrompt) {
+          instBtn.disabled = true;
+          instBtn.textContent = "⏳ جاري فتح نافذة التثبيت...";
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice
+            .then(function (choice) {
+              deferredPrompt = null;
+              if (choice && choice.outcome === "accepted") {
+                appJustInstalled = true;
+                renderInstallGate();
+              } else {
+                instBtn.disabled = false;
+                instBtn.textContent = "📲 اضغط لتثبيت التطبيق الآن";
+                var hint = document.getElementById("abIgManualHint");
+                if (hint) hint.style.display = "block";
+              }
+            })
+            .catch(function () {
+              instBtn.disabled = false;
+              instBtn.textContent = "📲 اضغط لتثبيت التطبيق الآن";
+              var hint = document.getElementById("abIgManualHint");
+              if (hint) hint.style.display = "block";
+            });
+        } else {
+          var hint = document.getElementById("abIgManualHint");
+          if (hint) {
+            hint.style.display = "block";
+            hint.classList.add("warn");
+          }
+        }
+      };
+    }
+  }
+
+  function renderProfileGate() {
+    if (!document.body) return;
+    if (document.documentElement) document.documentElement.classList.add("ab-gate-locked");
+
+    var ov = document.getElementById("abInstallGateOverlay");
+    if (!ov) {
+      ov = document.createElement("div");
+      ov.id = "abInstallGateOverlay";
+      ov.setAttribute("data-ab-install-gate", "1");
+      document.body.appendChild(ov);
+    }
+
+    ov.innerHTML =
+      '<div class="ab-ig-card">' +
+        '<div class="ab-ig-head">' +
+          '<div class="ab-ig-logo">🏪</div>' +
+          '<div class="ab-ig-brand">أبوضياء للتوزيع</div>' +
+          '<div class="ab-ig-phone">📞 771458609 • أهلاً بك في التطبيق</div>' +
+        '</div>' +
+        '<div class="ab-ig-steps">' +
+          '<div class="ab-ig-step-pill done">✓ تم التثبيت</div>' +
+          '<div class="ab-ig-step-pill active">2️⃣ بيانات العميل</div>' +
+        '</div>' +
+        '<div class="ab-ig-body">' +
+          '<h2 class="ab-ig-title">📝 سجّل بياناتك للبدء</h2>' +
+          '<p class="ab-ig-desc">أدخل اسمك وبياناتك ورقم جوالك مرة واحدة فقط لتفعيل طلباتك الفورية.</p>' +
+          '<div id="abIgFormErr" class="ab-ig-err"></div>' +
+          '<form id="abIgProfileForm" novalidate>' +
+            '<div class="ab-ig-field">' +
+              '<label class="ab-ig-label" for="abGateNameInp">👤 الاسم الكامل / اسم المحل أو البقالة *</label>' +
+              '<input type="text" id="abGateNameInp" class="ab-ig-inp" placeholder="مثال: بقالة الخير - محمد" autocomplete="name" required>' +
+            '</div>' +
+            '<div class="ab-ig-field">' +
+              '<label class="ab-ig-label" for="abGatePhoneInp">📞 رقم الجوال / الواتساب *</label>' +
+              '<input type="tel" id="abGatePhoneInp" class="ab-ig-inp" style="direction:ltr;text-align:center" placeholder="77XXXXXXX" autocomplete="tel" required>' +
+            '</div>' +
+            '<div class="ab-ig-field">' +
+              '<label class="ab-ig-label" for="abGateAddrInp">📍 المنطقة / العنوان وبيانات التوصيل *</label>' +
+              '<input type="text" id="abGateAddrInp" class="ab-ig-inp" placeholder="مثال: سيئون - السوق العام / جوار..." autocomplete="street-address" required>' +
+            '</div>' +
+            '<button type="submit" class="ab-ig-btn-main">✅ حفظ البيانات والدخول للمتجر</button>' +
+          '</form>' +
+        '</div>' +
+      '</div>';
+
+    bindSecretStaffBypass(ov);
+
+    var form = document.getElementById("abIgProfileForm");
+    if (form) {
+      form.addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var errEl = document.getElementById("abIgFormErr");
+        var nameVal = String((document.getElementById("abGateNameInp") || {}).value || "").trim();
+        var rawPhone = toEnDigits((document.getElementById("abGatePhoneInp") || {}).value || "");
+        var phoneDigits = rawPhone.replace(/[^0-9]/g, "");
+        var addrVal = String((document.getElementById("abGateAddrInp") || {}).value || "").trim();
+
+        var showErr = function (msg) {
+          if (errEl) {
+            errEl.textContent = msg;
+            errEl.classList.add("show");
+          }
+        };
+
+        if (nameVal.length < 2) {
+          showErr("⚠️ يرجى كتابة اسمك أو اسم المحل بشكل صحيح.");
+          return;
+        }
+        if (phoneDigits.length < 9) {
+          showErr("⚠️ يرجى إدخال رقم جوال صحيح (9 أرقام على الأقل).");
+          return;
+        }
+        if (addrVal.length < 2) {
+          showErr("⚠️ يرجى كتابة المنطقة أو العنوان لتوصيل الطلبات.");
+          return;
+        }
+
+        if (errEl) errEl.classList.remove("show");
+        saveCustomerProfile({
+          name: nameVal,
+          phone: phoneDigits,
+          address: addrVal,
+          savedAt: new Date().toISOString(),
+        });
+        removeGate();
+        if (typeof showToast === "function") {
+          showToast("✅ أهلاً بك يا " + nameVal + " في متجر أبوضياء للتوزيع");
+        }
+      });
+    }
+  }
+
+  function evaluateGate() {
+    if (isStaffUser()) {
+      removeGate();
+      return;
+    }
+
+    if (!isStandaloneApp()) {
+      renderInstallGate();
+      return;
+    }
+
+    var saved = getSavedCustomerProfile();
+    if (!saved) {
+      renderProfileGate();
+      return;
+    }
+
+    removeGate();
+    fillCheckoutFields(saved);
+  }
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!isStandaloneApp() && !isStaffUser()) {
+      renderInstallGate();
+    }
+  });
+
+  window.addEventListener("appinstalled", function () {
+    deferredPrompt = null;
+    appJustInstalled = true;
+    if (!isStandaloneApp() && !isStaffUser()) {
+      renderInstallGate();
+    }
+  });
+
+  if (window.matchMedia) {
+    try {
+      var mq = window.matchMedia("(display-mode: standalone)");
+      if (mq && mq.addEventListener) {
+        mq.addEventListener("change", evaluateGate);
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", evaluateGate, { once: true });
+  } else {
+    evaluateGate();
+  }
+  window.addEventListener("load", function () {
+    evaluateGate();
+    fillCheckoutFields();
+  });
+  document.addEventListener("click", function () {
+    fillCheckoutFields();
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_INSTALL_ONBOARD_GATE_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -25735,7 +26378,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-777822";
+  var TARGET_CACHE = "abudhiya-offline-v4-779837";
 
   function forceReleaseSplash() {
     try {
