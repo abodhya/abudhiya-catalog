@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<!-- ABUDHIYA_NO_VIBRATE_HEAD_START -->
+<script data-ab-no-jitter="2">
+(function () {
+  var noop = function () { return false; };
+  try {
+    if (typeof navigator !== "undefined") {
+      try { Object.defineProperty(navigator, "vibrate", { value: noop, writable: true, configurable: true }); }
+      catch (e) { try { navigator.vibrate = noop; } catch (e2) {} }
+    }
+    if (typeof Navigator !== "undefined" && Navigator.prototype) {
+      try { Object.defineProperty(Navigator.prototype, "vibrate", { value: noop, writable: true, configurable: true }); }
+      catch (e3) {}
+    }
+  } catch (err) {}
+})();
+</script>
+<!-- ABUDHIYA_NO_VIBRATE_HEAD_END -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>ابوسيف للتجارة</title>
@@ -622,46 +640,6 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 </script>
 <!-- ABUDHIYA_BROWSER_LOCK_HEAD_END -->
 
-<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
-<style id="abNoJitterCss" data-ab-no-jitter="1">
-  html, body {
-    overflow-anchor: none !important;
-    overscroll-behavior-y: contain;
-  }
-  .product-card, .card, [class*="qty"], [class*="cart"] {
-    overflow-anchor: none !important;
-  }
-</style>
-<script data-ab-no-jitter="1">
-(function () {
-  if (window.__abNoVibrateJitterV1) return;
-  window.__abNoVibrateJitterV1 = true;
-  var noop = function () { return false; };
-  try {
-    if (typeof navigator !== "undefined") {
-      try {
-        Object.defineProperty(navigator, "vibrate", {
-          value: noop,
-          writable: true,
-          configurable: true
-        });
-      } catch (e) {
-        try { navigator.vibrate = noop; } catch (e2) {}
-      }
-    }
-    if (typeof Navigator !== "undefined" && Navigator.prototype) {
-      try {
-        Object.defineProperty(Navigator.prototype, "vibrate", {
-          value: noop,
-          writable: true,
-          configurable: true
-        });
-      } catch (e3) {}
-    }
-  } catch (err) {}
-})();
-</script>
-<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
 </head>
 <body>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
@@ -26582,6 +26560,140 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_FAST_IMAGES_END -->
 
+
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
+<style id="abNoJitterCssV2" data-ab-no-jitter="2">
+  /* إيقاف جميع حركات الارتداد والنبض عند تغيير الكميات مع الحفاظ على مواقع النوافذ */
+  @keyframes abCartBump { 0%, 100% { transform: none; } }
+  @keyframes abSv3Pop { 0%, 100% { transform: none; } }
+  @keyframes abPopIn { 0%, 100% { opacity: 1; transform: none; } }
+  @keyframes abSpPulse { 0%, 100% { transform: none; } }
+  @keyframes abNsPulse { 0%, 100% { transform: none; } }
+  @keyframes abSpFloat { 0%, 100% { transform: none; } }
+  @keyframes abSpSlide { 0%, 100% { transform: none; } }
+  @keyframes abFadeIn { 0%, 100% { opacity: 1; transform: none; } }
+
+  html, body {
+    overflow-anchor: none !important;
+    overscroll-behavior-y: contain;
+  }
+
+  [data-ab-pro-card="1"],
+  [data-ab-pro-card="1"] *,
+  .product-card,
+  .product-card *,
+  .prod-card,
+  .prod-card * {
+    animation: none !important;
+    transition: none !important;
+    overflow-anchor: none !important;
+  }
+
+  [data-ab-pro-card="1"],
+  [data-ab-pro-card="1"]:hover,
+  [data-ab-pro-card="1"]:active,
+  .product-card,
+  .product-card:hover,
+  .product-card:active,
+  .prod-card,
+  .prod-card:hover,
+  .prod-card:active {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  [data-ab-pro-card="1"] button,
+  [data-ab-pro-card="1"] button:active,
+  #qtyModal button,
+  #qtyModal button:active {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  #cartBar,
+  #cartBadge,
+  .cart-bar,
+  .cart-badge {
+    animation: none !important;
+  }
+</style>
+<script data-ab-no-jitter="2">
+(function () {
+  if (window.__abNoVibrateJitterV2) return;
+  window.__abNoVibrateJitterV2 = true;
+
+  var noop = function () { return false; };
+  function killVibrate() {
+    try {
+      if (typeof navigator !== "undefined") {
+        try { Object.defineProperty(navigator, "vibrate", { value: noop, writable: true, configurable: true }); }
+        catch (e) { try { navigator.vibrate = noop; } catch (e2) {} }
+      }
+      if (typeof Navigator !== "undefined" && Navigator.prototype) {
+        try { Object.defineProperty(Navigator.prototype, "vibrate", { value: noop, writable: true, configurable: true }); }
+        catch (e3) {}
+      }
+    } catch (err) {}
+  }
+  killVibrate();
+  window.addEventListener("load", killVibrate);
+
+  var blockScrollUntil = 0;
+  var userScrolling = false;
+  window.addEventListener("touchmove", function () { userScrolling = true; }, { passive: true });
+  window.addEventListener("wheel", function () { userScrolling = true; }, { passive: true });
+
+  try {
+    var origScrollIntoView = Element.prototype.scrollIntoView;
+    if (typeof origScrollIntoView === "function" && !Element.prototype.__abOrigScrollIntoView) {
+      Element.prototype.__abOrigScrollIntoView = origScrollIntoView;
+      Element.prototype.scrollIntoView = function () {
+        if (Date.now() < blockScrollUntil) return;
+        return origScrollIntoView.apply(this, arguments);
+      };
+    }
+  } catch (e) {}
+
+  function isQtyBtn(el) {
+    if (!el || !el.closest) return false;
+    var btn = el.closest("button, [role='button'], [onclick]");
+    if (!btn) return false;
+    var isMatch = false;
+    try {
+      isMatch = btn.matches('button[onclick*="Qty"], button[onclick*="qty"], button[onclick*="Cart"], button[onclick*="cart"]');
+    } catch (e) {}
+    return Boolean(
+      isMatch ||
+      btn.closest('[data-ab-pro-card="1"]') ||
+      btn.closest("#qtyModal") ||
+      btn.closest(".product-card, .prod-card, .qty-controls, .qty-box, .ab-qty-bar")
+    );
+  }
+
+  function armScrollLock(ev) {
+    if (!isQtyBtn(ev && ev.target)) return;
+    blockScrollUntil = Date.now() + 450;
+    userScrolling = false;
+    var lockedY = window.scrollY || window.pageYOffset || 0;
+    requestAnimationFrame(function () {
+      if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
+        window.scrollTo(0, lockedY);
+      }
+      setTimeout(function () {
+        if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
+          window.scrollTo(0, lockedY);
+        }
+      }, 65);
+    });
+  }
+
+  document.addEventListener("pointerdown", armScrollLock, true);
+  document.addEventListener("click", armScrollLock, true);
+})();
+</script>
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -26625,7 +26737,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-810594";
+  var TARGET_CACHE = "abudhiya-offline-v4-815648";
 
   function forceReleaseSplash() {
     try {
