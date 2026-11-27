@@ -23586,8 +23586,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_WEBPUSH_START -->
-<style id="abWebPushCss" data-ab-webpush="3">
+<style id="abWebPushCss" data-ab-webpush="4">
   #abCustPushCard {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -23752,10 +23754,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     color: #065f46 !important;
   }
 </style>
-<script data-ab-webpush="3">
+<script data-ab-webpush="4">
 (function () {
-  if (window.__abWebPushV3) return;
-  window.__abWebPushV3 = true;
+  if (window.__abWebPushV4) return;
+  window.__abWebPushV4 = true;
 
   var BUILTIN_APP_ID = "d2ebcf2d-0cde-478c-ae28-7d4166e74222";
   var LS_APP_ID = "ab_os_appid_v1";
@@ -24112,10 +24114,16 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       });
       var data = await res.json().catch(function () { return {}; });
       if (res.ok && data && data.ok) {
-        var rcp = Number(data.recipients || 0);
-        var okTxt = rcp > 0
-          ? ("✅ تم إرسال إشعار شاشة القفل بنجاح إلى " + rcp + " مشترك!")
-          : "⚠️ تم الاتصال بـ OneSignal بنجاح، لكن عدد المشتركين حالياً (0) — اضغط «🔔 تفعيل الآن» بالأعلى ثم أعد المحاولة.";
+        var isDelivered = (data.delivered === true) || (!!data.id && data.note !== "no_subscribers_yet");
+        var hasRcpNum = (typeof data.recipients === "number" && data.recipients > 0);
+        var okTxt = "";
+        if (isDelivered) {
+          okTxt = hasRcpNum
+            ? ("✅ تم إرسال إشعار شاشة القفل بنجاح إلى " + data.recipients + " مشترك!")
+            : ("✅ تم إرسال إشعار شاشة القفل بنجاح للجميع!" + (data.id ? (" (رقم: " + String(data.id).slice(0, 8) + ")") : ""));
+        } else {
+          okTxt = "⚠️ تم الاتصال بـ OneSignal بنجاح، لكن لا يوجد مشترك مفعّل حالياً (0) — اضغط «🔔 تفعيل الآن» بالأعلى ثم أعد المحاولة.";
+        }
         if (msgEl) msgEl.textContent = okTxt;
         if (typeof showToast === "function") showToast(okTxt);
       } else {
@@ -24316,7 +24324,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-756189";
+  var TARGET_CACHE = "abudhiya-offline-v4-757421";
 
   function forceReleaseSplash() {
     try {

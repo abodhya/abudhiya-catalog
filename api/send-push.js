@@ -50,7 +50,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method === "GET") {
     res.statusCode = 200;
-    return res.end(JSON.stringify({ ok: true, service: "abudhiya-push-proxy", version: 2 }));
+    return res.end(JSON.stringify({ ok: true, service: "abudhiya-push-proxy", version: 3 }));
   }
 
   if (req.method !== "POST") {
@@ -89,6 +89,8 @@ module.exports = async function handler(req, res) {
 
     const segments = ["Total Subscriptions", "Subscribed Users", "All"];
     let lastResult = null;
+    let sawNoSubs = false;
+    let lastNoSubsSeg = "";
 
     for (let a = 0; a < authHeaders.length; a++) {
       for (let s = 0; s < segments.length; s++) {
@@ -112,12 +114,20 @@ module.exports = async function handler(req, res) {
         lastResult = r;
 
         if (r.status >= 200 && r.status < 300 && r.data && !r.data.errors) {
+          const notifId = String(r.data.id || "").trim();
+          const hasRcp = typeof r.data.recipients === "number";
+          if (!notifId && (!hasRcp || r.data.recipients === 0)) {
+            sawNoSubs = true;
+            lastNoSubsSeg = segments[s];
+            continue;
+          }
           res.statusCode = 200;
           return res.end(
             JSON.stringify({
               ok: true,
-              id: r.data.id || "",
-              recipients: Number(r.data.recipients || 0),
+              delivered: true,
+              id: notifId,
+              recipients: hasRcp ? r.data.recipients : null,
               segment: segments[s],
             })
           );
@@ -128,18 +138,25 @@ module.exports = async function handler(req, res) {
           break;
         }
         if (/not subscribed|no subscribed/i.test(errText)) {
-          res.statusCode = 200;
-          return res.end(
-            JSON.stringify({
-              ok: true,
-              id: (r.data && r.data.id) || "",
-              recipients: 0,
-              note: "no_subscribers_yet",
-              segment: segments[s],
-            })
-          );
+          sawNoSubs = true;
+          lastNoSubsSeg = segments[s];
+          continue;
         }
       }
+    }
+
+    if (sawNoSubs) {
+      res.statusCode = 200;
+      return res.end(
+        JSON.stringify({
+          ok: true,
+          delivered: false,
+          id: "",
+          recipients: 0,
+          note: "no_subscribers_yet",
+          segment: lastNoSubsSeg,
+        })
+      );
     }
 
     res.statusCode = (lastResult && lastResult.status) || 502;
