@@ -565,6 +565,7 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <!-- ABUDHIYA_FLAGSHIP_UI_HEAD_END -->
 
+
 <!-- ABUDHIYA_BROWSER_LOCK_HEAD_START -->
 <style id="abStrictBrowserLockCss" data-ab-install-gate="2">
   html.ab-browser-blocked,
@@ -591,6 +592,12 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 (function () {
   function isAppMode() {
     try {
+      var sp = String(window.location.search || "");
+      if (sp.indexOf("app=abudhiya_apk") !== -1) {
+        try { localStorage.setItem("ab_native_apk_ok", "1"); } catch (e) {}
+        return true;
+      }
+      if (localStorage.getItem("ab_native_apk_ok") === "1") return true;
       if (window.navigator && window.navigator.standalone === true) return true;
       if (window.matchMedia) {
         if (
@@ -25745,6 +25752,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_START -->
 <style id="abInstallGateCss" data-ab-install-gate="2">
   #abInstallGateOverlay {
@@ -26396,7 +26405,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-780268";
+  var TARGET_CACHE = "abudhiya-offline-v4-780484";
 
   function forceReleaseSplash() {
     try {
