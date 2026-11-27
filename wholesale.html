@@ -337,7 +337,7 @@
 <meta name="twitter:image" content="https://abudhiya-catalog.vercel.app/og-cover.jpg">
 <meta name="theme-color" content="#0F172A">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ابوسيف">
+<meta name="apple-mobile-web-app-title" content="ابوسيف للتجارة">
 <style id="AB_PWA_BW_IBM">
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:400;font-display:swap;}
 @font-face{font-family:'AB_IBM';src:url('fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');font-weight:500;font-display:swap;}
@@ -357,7 +357,7 @@ button,.btn-primary,.add-btn,.send-btn,.qty-btn{background:#000000 !important;ba
 input,select,textarea{background:#FFFFFF !important;color:#000000 !important;border:1.5px solid #000000 !important;font-weight:600 !important;}
 </style>
 <!-- ABUSAIF_APP_ICONS_START -->
-<link rel="manifest" href="/manifest.json?v=abusaif2">
+<link rel="manifest" href="/manifest.json?v=abusaif3">
 <link rel="icon" type="image/png" sizes="192x192" href="/abusaif-app-1795777799-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/abusaif-app-1795777799-512.png">
 <link rel="shortcut icon" href="/abusaif-app-1795777799-64.png">
@@ -586,6 +586,8 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 
 
 
+
+
 <!-- ABUDHIYA_BROWSER_LOCK_HEAD_START -->
 <style id="abStrictBrowserLockCss" data-ab-install-gate="3">
   html.ab-browser-blocked,
@@ -639,7 +641,6 @@ input,select,textarea{background:#FFFFFF !important;color:#000000 !important;bor
 })();
 </script>
 <!-- ABUDHIYA_BROWSER_LOCK_HEAD_END -->
-
 </head>
 <body>
 <!-- ABUDHIYA_PRO_NATIVE_LAUNCH_BODY_START -->
@@ -25781,6 +25782,179 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
+
+
+
+<!-- ABUDHIYA_FAST_IMAGES_START -->
+<script data-ab-fast-img="2">
+(function () {
+  if (window.__abFastImagesV2) return;
+  window.__abFastImagesV2 = true;
+
+  function tuneInitialImages() {
+    var imgs = document.getElementsByTagName("img");
+    var vh = window.innerHeight || 800;
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      if (!img || img.getAttribute("data-ab-opt") === "2") continue;
+      img.setAttribute("data-ab-opt", "2");
+      img.decoding = "async";
+      var src = String(img.getAttribute("src") || "");
+      if (!src || src.indexOf("data:") === 0 || img.complete) continue;
+      var rect = img.getBoundingClientRect ? img.getBoundingClientRect() : null;
+      if (rect && rect.top > vh * 1.4) {
+        img.loading = "lazy";
+      } else {
+        img.loading = "eager";
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", tuneInitialImages, { once: true });
+  } else {
+    tuneInitialImages();
+  }
+})();
+</script>
+<!-- ABUDHIYA_FAST_IMAGES_END -->
+
+
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
+<style id="abNoJitterCssV2" data-ab-no-jitter="2">
+  /* إيقاف جميع حركات الارتداد والنبض عند تغيير الكميات مع الحفاظ على مواقع النوافذ */
+  @keyframes abCartBump { 0%, 100% { transform: none; } }
+  @keyframes abSv3Pop { 0%, 100% { transform: none; } }
+  @keyframes abPopIn { 0%, 100% { opacity: 1; transform: none; } }
+  @keyframes abSpPulse { 0%, 100% { transform: none; } }
+  @keyframes abNsPulse { 0%, 100% { transform: none; } }
+  @keyframes abSpFloat { 0%, 100% { transform: none; } }
+  @keyframes abSpSlide { 0%, 100% { transform: none; } }
+  @keyframes abFadeIn { 0%, 100% { opacity: 1; transform: none; } }
+
+  html, body {
+    overflow-anchor: none !important;
+    overscroll-behavior-y: contain;
+  }
+
+  [data-ab-pro-card="1"],
+  [data-ab-pro-card="1"] *,
+  .product-card,
+  .product-card *,
+  .prod-card,
+  .prod-card * {
+    animation: none !important;
+    transition: none !important;
+    overflow-anchor: none !important;
+  }
+
+  [data-ab-pro-card="1"],
+  [data-ab-pro-card="1"]:hover,
+  [data-ab-pro-card="1"]:active,
+  .product-card,
+  .product-card:hover,
+  .product-card:active,
+  .prod-card,
+  .prod-card:hover,
+  .prod-card:active {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  [data-ab-pro-card="1"] button,
+  [data-ab-pro-card="1"] button:active,
+  #qtyModal button,
+  #qtyModal button:active {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  #cartBar,
+  #cartBadge,
+  .cart-bar,
+  .cart-badge {
+    animation: none !important;
+  }
+</style>
+<script data-ab-no-jitter="2">
+(function () {
+  if (window.__abNoVibrateJitterV2) return;
+  window.__abNoVibrateJitterV2 = true;
+
+  var noop = function () { return false; };
+  function killVibrate() {
+    try {
+      if (typeof navigator !== "undefined") {
+        try { Object.defineProperty(navigator, "vibrate", { value: noop, writable: true, configurable: true }); }
+        catch (e) { try { navigator.vibrate = noop; } catch (e2) {} }
+      }
+      if (typeof Navigator !== "undefined" && Navigator.prototype) {
+        try { Object.defineProperty(Navigator.prototype, "vibrate", { value: noop, writable: true, configurable: true }); }
+        catch (e3) {}
+      }
+    } catch (err) {}
+  }
+  killVibrate();
+  window.addEventListener("load", killVibrate);
+
+  var blockScrollUntil = 0;
+  var userScrolling = false;
+  window.addEventListener("touchmove", function () { userScrolling = true; }, { passive: true });
+  window.addEventListener("wheel", function () { userScrolling = true; }, { passive: true });
+
+  try {
+    var origScrollIntoView = Element.prototype.scrollIntoView;
+    if (typeof origScrollIntoView === "function" && !Element.prototype.__abOrigScrollIntoView) {
+      Element.prototype.__abOrigScrollIntoView = origScrollIntoView;
+      Element.prototype.scrollIntoView = function () {
+        if (Date.now() < blockScrollUntil) return;
+        return origScrollIntoView.apply(this, arguments);
+      };
+    }
+  } catch (e) {}
+
+  function isQtyBtn(el) {
+    if (!el || !el.closest) return false;
+    var btn = el.closest("button, [role='button'], [onclick]");
+    if (!btn) return false;
+    var isMatch = false;
+    try {
+      isMatch = btn.matches('button[onclick*="Qty"], button[onclick*="qty"], button[onclick*="Cart"], button[onclick*="cart"]');
+    } catch (e) {}
+    return Boolean(
+      isMatch ||
+      btn.closest('[data-ab-pro-card="1"]') ||
+      btn.closest("#qtyModal") ||
+      btn.closest(".product-card, .prod-card, .qty-controls, .qty-box, .ab-qty-bar")
+    );
+  }
+
+  function armScrollLock(ev) {
+    if (!isQtyBtn(ev && ev.target)) return;
+    blockScrollUntil = Date.now() + 450;
+    userScrolling = false;
+    var lockedY = window.scrollY || window.pageYOffset || 0;
+    requestAnimationFrame(function () {
+      if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
+        window.scrollTo(0, lockedY);
+      }
+      setTimeout(function () {
+        if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
+          window.scrollTo(0, lockedY);
+        }
+      }, 65);
+    });
+  }
+
+  document.addEventListener("pointerdown", armScrollLock, true);
+  document.addEventListener("click", armScrollLock, true);
+})();
+</script>
+<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
+
+
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_START -->
 <style id="abInstallGateCss" data-ab-install-gate="3">
   #abInstallGateOverlay {
@@ -26239,8 +26413,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '</div>' +
         '<button type="button" id="abIgOpenAppBtn" class="ab-ig-btn-main">🚀 فتح تطبيق ابوسيف للتجارة الآن</button>' +
         (openFallbackShown
-          ? '<div class="ab-ig-box warn"><b>📌 ملاحظة:</b> يمنع المتصفح إغلاق نفسه تلقائياً؛ إذا لم ينقلك الجوال للتطبيق مباشرة، أغلق هذا التبويب واضغط على أيقونة <b>«ابوسيف»</b> على الشاشة الرئيسية لجوالك.</div>'
-          : '<div class="ab-ig-box">إذا لم ينقلك المتصفح تلقائياً، أغلق هذه الصفحة وافتح أيقونة <b>«ابوسيف»</b> من شاشة جوالك الرئيسية.</div>') +
+          ? '<div class="ab-ig-box warn"><b>📌 ملاحظة:</b> يمنع المتصفح إغلاق نفسه تلقائياً؛ إذا لم ينقلك الجوال للتطبيق مباشرة، أغلق هذا التبويب واضغط على أيقونة <b>«ابوسيف للتجارة»</b> على الشاشة الرئيسية لجوالك.</div>'
+          : '<div class="ab-ig-box">إذا لم ينقلك المتصفح تلقائياً، أغلق هذه الصفحة وافتح أيقونة <b>«ابوسيف للتجارة»</b> من شاشة جوالك الرئيسية.</div>') +
         '<button type="button" id="abIgReinstallBtn" class="ab-ig-btn-sec">🔄 لم يُثبّت أو حذفت التطبيق؟ إظهار خيارات التثبيت</button>';
     } else if (inApp) {
       mainContent =
@@ -26259,7 +26433,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '<div class="ab-ig-box">' +
           '1️⃣ اضغط زر <b>المشاركة (⬆️)</b> أسفل متصفح Safari.<br>' +
           '2️⃣ اختر <b>«إضافة إلى الصفحة الرئيسية»</b> ثم <b>«إضافة»</b>.<br>' +
-          '3️⃣ افتح أيقونة <b>«ابوسيف»</b> من الشاشة الرئيسية.' +
+          '3️⃣ افتح أيقونة <b>«ابوسيف للتجارة»</b> من الشاشة الرئيسية.' +
         '</div>';
     } else {
       mainContent =
@@ -26271,7 +26445,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '<div id="abIgManualHint" class="ab-ig-box" style="display:' + (deferredPrompt ? "none" : "block") + '">' +
           '<b>طريقة التثبيت:</b><br>' +
           '• اضغط <b>الثلاث نقاط (⋮)</b> أعلى كروم واختر <b>«تثبيت التطبيق»</b> أو <b>«الإضافة إلى الشاشة الرئيسية»</b>.<br>' +
-          '• إن كان التطبيق مثبّتاً لديك مسبقاً، أغلق المتصفح وافتح أيقونة <b>«ابوسيف»</b> من شاشة الجوال مباشرة.' +
+          '• إن كان التطبيق مثبّتاً لديك مسبقاً، أغلق المتصفح وافتح أيقونة <b>«ابوسيف للتجارة»</b> من شاشة الجوال مباشرة.' +
         '</div>';
     }
 
@@ -26523,177 +26697,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_INSTALL_ONBOARD_GATE_END -->
 
-
-
-
-<!-- ABUDHIYA_FAST_IMAGES_START -->
-<script data-ab-fast-img="2">
-(function () {
-  if (window.__abFastImagesV2) return;
-  window.__abFastImagesV2 = true;
-
-  function tuneInitialImages() {
-    var imgs = document.getElementsByTagName("img");
-    var vh = window.innerHeight || 800;
-    for (var i = 0; i < imgs.length; i++) {
-      var img = imgs[i];
-      if (!img || img.getAttribute("data-ab-opt") === "2") continue;
-      img.setAttribute("data-ab-opt", "2");
-      img.decoding = "async";
-      var src = String(img.getAttribute("src") || "");
-      if (!src || src.indexOf("data:") === 0 || img.complete) continue;
-      var rect = img.getBoundingClientRect ? img.getBoundingClientRect() : null;
-      if (rect && rect.top > vh * 1.4) {
-        img.loading = "lazy";
-      } else {
-        img.loading = "eager";
-      }
-    }
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", tuneInitialImages, { once: true });
-  } else {
-    tuneInitialImages();
-  }
-})();
-</script>
-<!-- ABUDHIYA_FAST_IMAGES_END -->
-
-
-<!-- ABUDHIYA_NO_VIBRATE_JITTER_START -->
-<style id="abNoJitterCssV2" data-ab-no-jitter="2">
-  /* إيقاف جميع حركات الارتداد والنبض عند تغيير الكميات مع الحفاظ على مواقع النوافذ */
-  @keyframes abCartBump { 0%, 100% { transform: none; } }
-  @keyframes abSv3Pop { 0%, 100% { transform: none; } }
-  @keyframes abPopIn { 0%, 100% { opacity: 1; transform: none; } }
-  @keyframes abSpPulse { 0%, 100% { transform: none; } }
-  @keyframes abNsPulse { 0%, 100% { transform: none; } }
-  @keyframes abSpFloat { 0%, 100% { transform: none; } }
-  @keyframes abSpSlide { 0%, 100% { transform: none; } }
-  @keyframes abFadeIn { 0%, 100% { opacity: 1; transform: none; } }
-
-  html, body {
-    overflow-anchor: none !important;
-    overscroll-behavior-y: contain;
-  }
-
-  [data-ab-pro-card="1"],
-  [data-ab-pro-card="1"] *,
-  .product-card,
-  .product-card *,
-  .prod-card,
-  .prod-card * {
-    animation: none !important;
-    transition: none !important;
-    overflow-anchor: none !important;
-  }
-
-  [data-ab-pro-card="1"],
-  [data-ab-pro-card="1"]:hover,
-  [data-ab-pro-card="1"]:active,
-  .product-card,
-  .product-card:hover,
-  .product-card:active,
-  .prod-card,
-  .prod-card:hover,
-  .prod-card:active {
-    transform: none !important;
-    will-change: auto !important;
-  }
-
-  [data-ab-pro-card="1"] button,
-  [data-ab-pro-card="1"] button:active,
-  #qtyModal button,
-  #qtyModal button:active {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
-
-  #cartBar,
-  #cartBadge,
-  .cart-bar,
-  .cart-badge {
-    animation: none !important;
-  }
-</style>
-<script data-ab-no-jitter="2">
-(function () {
-  if (window.__abNoVibrateJitterV2) return;
-  window.__abNoVibrateJitterV2 = true;
-
-  var noop = function () { return false; };
-  function killVibrate() {
-    try {
-      if (typeof navigator !== "undefined") {
-        try { Object.defineProperty(navigator, "vibrate", { value: noop, writable: true, configurable: true }); }
-        catch (e) { try { navigator.vibrate = noop; } catch (e2) {} }
-      }
-      if (typeof Navigator !== "undefined" && Navigator.prototype) {
-        try { Object.defineProperty(Navigator.prototype, "vibrate", { value: noop, writable: true, configurable: true }); }
-        catch (e3) {}
-      }
-    } catch (err) {}
-  }
-  killVibrate();
-  window.addEventListener("load", killVibrate);
-
-  var blockScrollUntil = 0;
-  var userScrolling = false;
-  window.addEventListener("touchmove", function () { userScrolling = true; }, { passive: true });
-  window.addEventListener("wheel", function () { userScrolling = true; }, { passive: true });
-
-  try {
-    var origScrollIntoView = Element.prototype.scrollIntoView;
-    if (typeof origScrollIntoView === "function" && !Element.prototype.__abOrigScrollIntoView) {
-      Element.prototype.__abOrigScrollIntoView = origScrollIntoView;
-      Element.prototype.scrollIntoView = function () {
-        if (Date.now() < blockScrollUntil) return;
-        return origScrollIntoView.apply(this, arguments);
-      };
-    }
-  } catch (e) {}
-
-  function isQtyBtn(el) {
-    if (!el || !el.closest) return false;
-    var btn = el.closest("button, [role='button'], [onclick]");
-    if (!btn) return false;
-    var isMatch = false;
-    try {
-      isMatch = btn.matches('button[onclick*="Qty"], button[onclick*="qty"], button[onclick*="Cart"], button[onclick*="cart"]');
-    } catch (e) {}
-    return Boolean(
-      isMatch ||
-      btn.closest('[data-ab-pro-card="1"]') ||
-      btn.closest("#qtyModal") ||
-      btn.closest(".product-card, .prod-card, .qty-controls, .qty-box, .ab-qty-bar")
-    );
-  }
-
-  function armScrollLock(ev) {
-    if (!isQtyBtn(ev && ev.target)) return;
-    blockScrollUntil = Date.now() + 450;
-    userScrolling = false;
-    var lockedY = window.scrollY || window.pageYOffset || 0;
-    requestAnimationFrame(function () {
-      if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
-        window.scrollTo(0, lockedY);
-      }
-      setTimeout(function () {
-        if (!userScrolling && Math.abs((window.scrollY || 0) - lockedY) > 4) {
-          window.scrollTo(0, lockedY);
-        }
-      }, 65);
-    });
-  }
-
-  document.addEventListener("pointerdown", armScrollLock, true);
-  document.addEventListener("click", armScrollLock, true);
-})();
-</script>
-<!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
-
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -26737,7 +26740,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-815648";
+  var TARGET_CACHE = "abudhiya-offline-v4-815879";
 
   function forceReleaseSplash() {
     try {
