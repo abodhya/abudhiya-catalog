@@ -27811,6 +27811,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_GUEST_FINAL_CLOAK_END -->
 
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -27854,7 +27855,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-843265";
+  var TARGET_CACHE = "abudhiya-offline-v4-847605";
 
   function forceReleaseSplash() {
     try {
@@ -28045,5 +28046,29 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_FULL_OFFLINE_END -->
+
+<!-- ABUDHIYA_ROCKSOLID_SW_REG_START -->
+<script data-ab-rocksolid-offline="5">
+(function () {
+  if (window.__abRocksolidSwRegV5) return;
+  window.__abRocksolidSwRegV5 = true;
+  if (!("serviceWorker" in navigator)) return;
+
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" })
+      .then(function (reg) {
+        try { reg.update(); } catch (e) {}
+        return navigator.serviceWorker.ready;
+      })
+      .then(function (readyReg) {
+        if (navigator.onLine && readyReg && readyReg.active) {
+          try { readyReg.active.postMessage({ type: "AB_WARM_OFFLINE" }); } catch (e) {}
+        }
+      })
+      .catch(function () {});
+  });
+})();
+</script>
+<!-- ABUDHIYA_ROCKSOLID_SW_REG_END -->
 </body>
 </html>
