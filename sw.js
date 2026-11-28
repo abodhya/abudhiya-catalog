@@ -1,3 +1,295 @@
+/* ABUDHIYA_OFFLINE_UNFREEZE_V6_START */
+(function () {
+  if (self.__abOfflineUnfreezeV6) return;
+  self.__abOfflineUnfreezeV6 = true;
+
+  const V6_CACHE = "abudhiya-offline-v4-847720";
+  const V6_CORE = ["/", "/index.html", "/manifest.json", "/wholesale.html", "/push_config.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/favicon.png", "/new_arrivals.json"];
+  const V6_MEDIA = ["/abusaif-3d-180.png", "/abusaif-3d-192.png", "/abusaif-3d-512.png", "/abusaif-3d-64.png", "/abusaif-3d-mask-192.png", "/abusaif-3d-mask-512.png", "/abusaif-3d-transparent-180.png", "/abusaif-3d-transparent-192.png", "/abusaif-3d-transparent-512.png", "/abusaif-3d-transparent-64.png", "/abusaif-app-1795777799-180.png", "/abusaif-app-1795777799-192.png", "/abusaif-app-1795777799-512.png", "/abusaif-app-1795777799-64.png", "/abusaif-app-1795777799-mask-192.png", "/abusaif-app-1795777799-mask-512.png", "/abusaif-apple-180.png", "/abusaif-cutout-180.png", "/abusaif-cutout-192.png", "/abusaif-cutout-512.png", "/abusaif-cutout-64.png", "/abusaif-cutout.svg", "/abusaif-favicon-64.png", "/abusaif-glass-180.png", "/abusaif-glass-192.png", "/abusaif-glass-512.png", "/abusaif-glass-64.png", "/abusaif-glass.svg", "/abusaif-icon-192.png", "/abusaif-icon-512.png", "/abusaif-icon.svg", "/abusaif-legend-180.png", "/abusaif-legend-192.png", "/abusaif-legend-512.png", "/abusaif-legend-64.png", "/abusaif-legend-mask-192.png", "/abusaif-legend-mask-512.png", "/abusaif-shield-192.png", "/abusaif-shield-512.png", "/abusaif-shield-mask-192.png", "/abusaif-shield-mask-512.png", "/favicon.ico", "/icon.svg", "/og-cover.jpg", "/store-qr.png", "/img/p_019a0b82ba97a0.jpg", "/img/p_03e48e32d83ab1.jpg", "/img/p_0759396e7a9741.jpg", "/img/p_0815cef80e7232.jpg", "/img/p_093455f202c13a.jpg", "/img/p_0a48adae315837.jpg", "/img/p_0a7cde9bc9acd7.jpg", "/img/p_0a81251222b0db.jpg", "/img/p_0ea5edb2736ea4.jpg", "/img/p_100a46aeef82e5.jpg", "/img/p_10880ba40a0ec3.jpg", "/img/p_114d3c814b4fe2.jpg", "/img/p_119c2e0aead59e.jpg", "/img/p_19fe4e90b3ca69.jpg", "/img/p_1a1ecbc1d72b96.jpg", "/img/p_1e6a8a3989f483.jpg", "/img/p_1e9a3c0d7e2f3c.jpg", "/img/p_22501c7ae8452b.jpg", "/img/p_24085fdacdd1b7.jpg", "/img/p_272b363b5f800c.jpg", "/img/p_27a2be9bd612c0.jpg", "/img/p_29965168511b1f.jpg", "/img/p_2a746427684bbd.jpg", "/img/p_2a906a1e090a9e.jpg", "/img/p_2ac0438fff3aca.jpg", "/img/p_2d830f4dc3f01e.jpg", "/img/p_2d99a0bc027aa1.jpg", "/img/p_342b80b5f3a471.jpg", "/img/p_352ad798688596.jpg", "/img/p_3f04431bed7213.jpg", "/img/p_448db364ea0f3b.jpg", "/img/p_4559b7dfe9aa3b.jpg", "/img/p_49670bebe05ef2.jpg", "/img/p_4beef3f2d07f5d.jpg", "/img/p_4d1e38a6e15c87.jpg", "/img/p_4e7ca5cf5a6614.jpg", "/img/p_523b4f7bd5ac38.jpg", "/img/p_52e4b186716b54.jpg", "/img/p_52e5bd3f997def.jpg", "/img/p_5339a824b96e68.jpg", "/img/p_5508263c24d811.jpg", "/img/p_576653a30359b8.jpg", "/img/p_5aebc9b5c64cef.jpg", "/img/p_5b0e13103021b6.jpg", "/img/p_5c0f5301d8d5fc.jpg", "/img/p_5cbc50d5f06541.jpg", "/img/p_5cd92a83b72d9d.jpg", "/img/p_63189b39d20e29.jpg", "/img/p_67d330e58fdfa3.jpg", "/img/p_67f238261bf6aa.jpg", "/img/p_6973edab293974.jpg", "/img/p_6b54d637ed365e.jpg", "/img/p_6b6fc438c409ef.jpg", "/img/p_6c0bda7b8dfdff.jpg", "/img/p_6d8d706b974f6d.jpg", "/img/p_6e0201817c2d41.jpg", "/img/p_6e80c342f32cd7.jpg", "/img/p_6f973a9ce784ad.jpg", "/img/p_73b29af0ee0f5d.jpg", "/img/p_75cab0382fb34b.jpg", "/img/p_75fe03d2c73838.jpg", "/img/p_7868f2fd60a5b1.jpg", "/img/p_78a48f3045dadb.jpg", "/img/p_7c4e1678153065.jpg", "/img/p_7cbd7548a81037.jpg", "/img/p_7d4745d0c6c865.jpg", "/img/p_81952aed8c4762.jpg", "/img/p_8272992028bc9b.jpg", "/img/p_8336b79c5b3383.jpg", "/img/p_836549700acb56.jpg", "/img/p_84965ef9bde709.jpg", "/img/p_84abd826f5c89a.jpg", "/img/p_87bae45db01daf.jpg", "/img/p_8a5cd056a94225.jpg", "/img/p_8b8092543d73d7.jpg", "/img/p_8e0b7ba1fd5572.jpg", "/img/p_8fd26333455822.jpg", "/img/p_8fdb144623b322.jpg", "/img/p_91f0c1d11ee473.jpg", "/img/p_954c2ee8499cd7.jpg", "/img/p_9656e3654e28d6.jpg", "/img/p_96ece3599975aa.jpg", "/img/p_981bac4080ea5a.jpg", "/img/p_985c6dd85a91e2.jpg", "/img/p_98b9d5a3bc849e.jpg", "/img/p_9c18f48b30a97b.jpg", "/img/p_9cc3cc1b4b98c2.jpg", "/img/p_9e38fad369178f.jpg", "/img/p_9f84722fbb22c6.jpg", "/img/p_ac4730bf44344f.jpg", "/img/p_ae13ab4061fb22.jpg", "/img/p_b02ec4a0904af2.jpg", "/img/p_b0cd6a3aec2517.jpg", "/img/p_b101ede2191313.jpg", "/img/p_b4fb7d438e5f1f.jpg", "/img/p_b685b13e31c031.jpg", "/img/p_b6ed5f729e12e6.jpg", "/img/p_ba242c39ec1b1c.jpg", "/img/p_bcd42e1e4be899.jpg", "/img/p_c001a846d88b7e.jpg", "/img/p_c09888291b9f97.jpg", "/img/p_c2c96afb7b453b.jpg", "/img/p_c2e225d18956d4.jpg", "/img/p_c3e4b1c361ed94.jpg", "/img/p_c492c6d0104b18.jpg", "/img/p_c63cd8d79131ae.jpg", "/img/p_c6f51398fffd59.jpg", "/img/p_c7be2677365d09.jpg", "/img/p_c7be7bd431adc8.jpg", "/img/p_c823f5b7529dd4.jpg", "/img/p_c939c131bf2ac1.jpg", "/img/p_c9c65b1c275c5b.jpg", "/img/p_cad9bcaef6d966.jpg", "/img/p_ce5557af06fce0.jpg", "/img/p_cf6e474577fc55.jpg", "/img/p_d01459fb5a4b56.jpg", "/img/p_d1231230e36bb1.jpg", "/img/p_d29507c936c16a.jpg", "/img/p_d3f3ef8429b994.jpg", "/img/p_d6c37e444251d4.jpg", "/img/p_d8cc4d4cec8fab.jpg", "/img/p_d9f4366ebe4052.jpg", "/img/p_db27a94f5b2066.jpg", "/img/p_dca5c14cdb0016.jpg", "/img/p_dcf9b06df37c89.jpg", "/img/p_dec7df110e599d.jpg", "/img/p_df2457aeab3eaa.jpg", "/img/p_e02aa24d53f7b8.jpg", "/img/p_e0547ad704c7d1.jpg", "/img/p_e15bd142d61051.jpg", "/img/p_e2d70f4b445b2d.jpg", "/img/p_e4b063b9089a70.jpg", "/img/p_e5918d98879fe1.jpg", "/img/p_e5be784de1826b.jpg", "/img/p_e82f3bedab425e.jpg", "/img/p_ecf6a3443778aa.jpg", "/img/p_f1b033cc72a839.jpg", "/img/p_f1fab0b143b63c.jpg", "/img/p_f37889551c3ca1.jpg", "/img/p_f47ccc2330e39a.jpg", "/img/p_f54237b5986a19.jpg", "/img/p_f69c176f2e4269.jpg", "/img/p_f6e2aa4e890c01.jpg", "/img/p_f8b7b9fdcd3528.jpg", "/img/p_f979b6d24c21b1.jpg", "/img/p_fb8e821fd3db18.jpg", "/img/p_fbeb144efc2083.jpg", "/img/p_fd39cb6db6ac73.jpg", "/img/p_fd744818589594.jpg", "/img/p_ffee15d207c6e6.jpg"];
+
+  // 1) حماية importScripts ضد أخطاء الشبكة عند إقلاع التطبيق بدون إنترنت
+  if (typeof self.importScripts === "function") {
+    const origImport = self.importScripts;
+    self.importScripts = function () {
+      try {
+        if (self.navigator && self.navigator.onLine === false) return;
+        return origImport.apply(self, arguments);
+      } catch (e) {}
+    };
+  }
+
+  async function v6CleanRes(res) {
+    if (!res || (!res.ok && res.type !== "opaque")) return null;
+    if (res.redirected) {
+      const blob = await res.blob();
+      const headers = new Headers(res.headers);
+      headers.delete("content-length");
+      return new Response(blob, { status: 200, statusText: "OK", headers: headers });
+    }
+    return res.clone();
+  }
+
+  function v6TimeoutFetch(req, ms) {
+    return new Promise(function (resolve, reject) {
+      let settled = false;
+      const ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+      const timer = setTimeout(function () {
+        if (settled) return;
+        settled = true;
+        try { if (ctrl) ctrl.abort(); } catch (e) {}
+        reject(new Error("timeout"));
+      }, ms);
+
+      fetch(req, ctrl ? { signal: ctrl.signal } : undefined)
+        .then(function (r) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          resolve(r);
+        })
+        .catch(function (err) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  }
+
+  async function v6CacheUrl(cache, url) {
+    try {
+      if (self.navigator && self.navigator.onLine === false) return false;
+      const req = new Request(url, { cache: "no-cache", credentials: "same-origin" });
+      const res = await v6TimeoutFetch(req, 6000);
+      const clean = await v6CleanRes(res);
+      if (!clean) return false;
+      await cache.put(url, clean.clone());
+      if (url === "/" || url === "/index.html") {
+        await cache.put("/", clean.clone());
+        await cache.put("/index.html", clean.clone());
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function v6Match(target) {
+    try {
+      const cache = await caches.open(V6_CACHE);
+      let hit = await cache.match(target, { ignoreSearch: true });
+      if (hit) return hit;
+      hit = await caches.match(target, { ignoreSearch: true });
+      if (hit) return hit;
+    } catch (e) {}
+    return null;
+  }
+
+  async function v6MatchShell(pathname) {
+    const list = (pathname && pathname.indexOf("wholesale") !== -1)
+      ? ["/wholesale.html", "/index.html", "/"]
+      : ["/", "/index.html"];
+    for (let i = 0; i < list.length; i++) {
+      const hit = await v6Match(list[i]);
+      if (hit) return hit;
+    }
+    return null;
+  }
+
+  async function v6WarmMedia() {
+    try {
+      if (self.navigator && self.navigator.onLine === false) return;
+      const cache = await caches.open(V6_CACHE);
+      for (let i = 0; i < V6_MEDIA.length; i += 4) {
+        if (self.navigator && self.navigator.onLine === false) return;
+        const batch = V6_MEDIA.slice(i, i + 4);
+        await Promise.all(batch.map(async function (u) {
+          const hit = await cache.match(u, { ignoreSearch: true });
+          if (!hit) await v6CacheUrl(cache, u);
+        }));
+      }
+    } catch (e) {}
+  }
+
+  self.addEventListener("install", function (event) {
+    self.skipWaiting();
+    event.waitUntil((async function () {
+      const cache = await caches.open(V6_CACHE);
+      for (let i = 0; i < V6_CORE.length; i++) {
+        await v6CacheUrl(cache, V6_CORE[i]);
+      }
+    })());
+  });
+
+  self.addEventListener("activate", function (event) {
+    event.waitUntil((async function () {
+      await self.clients.claim();
+      v6WarmMedia();
+    })());
+  });
+
+  self.addEventListener("message", function (event) {
+    const d = event && event.data;
+    if (d && (d === "AB_WARM_OFFLINE" || d.type === "AB_WARM_OFFLINE")) {
+      event.waitUntil((async function () {
+        if (self.navigator && self.navigator.onLine === false) return;
+        const cache = await caches.open(V6_CACHE);
+        await v6CacheUrl(cache, "/");
+        await v6CacheUrl(cache, "/index.html");
+        await v6WarmMedia();
+      })());
+    }
+  });
+
+  self.addEventListener("fetch", function (event) {
+    const req = event.request;
+    if (!req) return;
+    let url;
+    try { url = new URL(req.url); } catch (e) { return; }
+
+    const sameOrigin = url.origin === self.location.origin;
+    const p = url.pathname || "/";
+    const isOffline = Boolean(self.navigator && self.navigator.onLine === false);
+
+    // عدم اعتراض sw.js نفسه
+    if (sameOrigin && p === "/sw.js") return;
+
+    // منع تداخل أي مستمع fetch قديم أسفل هذا الملف
+    if (typeof event.stopImmediatePropagation === "function") {
+      event.stopImmediatePropagation();
+    }
+
+    // طلبات POST/PUT/DELETE (مثل إرسال الطلب أو اشتراك OneSignal)
+    if (req.method !== "GET") {
+      if (isOffline) {
+        event.respondWith(new Response('{"offline":true}', {
+          status: 503,
+          headers: { "Content-Type": "application/json" }
+        }));
+      }
+      return;
+    }
+
+    // 1) مسارات OneSignal والـ API: عند الأوفلاين رد فوري 503 خلال 1ms لمنع التجمّد، وعند الأونلاين تمرير مباشر
+    if (sameOrigin && (p.indexOf("/_os/") === 0 || p.indexOf("/api/") === 0 || p.indexOf("/push/") === 0)) {
+      if (isOffline) {
+        event.respondWith(new Response('{"offline":true}', {
+          status: 503,
+          headers: { "Content-Type": "application/json" }
+        }));
+      }
+      return;
+    }
+
+    // 2) الموارد الخارجية (خطوط/روابط خارجية): رد فوري بدون تعليق عند الأوفلاين
+    if (!sameOrigin) {
+      event.respondWith((async function () {
+        const cachedExt = await v6Match(req);
+        if (cachedExt) return cachedExt;
+        if (isOffline) return new Response("", { status: 504, statusText: "Offline" });
+        try {
+          const netExt = await v6TimeoutFetch(req, 2500);
+          const cleanExt = await v6CleanRes(netExt);
+          if (cleanExt) {
+            const cache = await caches.open(V6_CACHE);
+            cache.put(req, cleanExt.clone()).catch(function () {});
+            return cleanExt;
+          }
+          return netExt;
+        } catch (e) {
+          return new Response("", { status: 504, statusText: "Offline" });
+        }
+      })());
+      return;
+    }
+
+    // 3) صفحات المتجر (Navigation): Cache-First فوري خلال 0ms + تحديث صامت بالخلفية عند توفر الإنترنت
+    const accept = (req.headers && req.headers.get("accept")) || "";
+    const isNav = req.mode === "navigate" || accept.indexOf("text/html") !== -1 || p === "/" || p === "/index.html" || p === "/wholesale.html";
+
+    if (isNav) {
+      event.respondWith((async function () {
+        const cachedShell = await v6MatchShell(p);
+        if (cachedShell) {
+          if (!isOffline) {
+            event.waitUntil((async function () {
+              try {
+                const netRes = await v6TimeoutFetch(new Request(p, { credentials: "same-origin", cache: "no-cache" }), 4000);
+                const clean = await v6CleanRes(netRes);
+                if (clean) {
+                  const cache = await caches.open(V6_CACHE);
+                  await cache.put(p, clean.clone());
+                  if (p === "/" || p === "/index.html") {
+                    await cache.put("/", clean.clone());
+                    await cache.put("/index.html", clean.clone());
+                  }
+                }
+              } catch (e) {}
+            })());
+          }
+          return cachedShell;
+        }
+
+        if (!isOffline) {
+          try {
+            const netRes = await v6TimeoutFetch(new Request(p, { credentials: "same-origin", cache: "no-cache" }), 5000);
+            const clean = await v6CleanRes(netRes);
+            if (clean) {
+              const cache = await caches.open(V6_CACHE);
+              await cache.put(p, clean.clone());
+              if (p === "/" || p === "/index.html") {
+                await cache.put("/", clean.clone());
+                await cache.put("/index.html", clean.clone());
+              }
+              return clean;
+            }
+          } catch (e) {}
+        }
+
+        return new Response(
+          '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ابوسيف للتجارة</title></head><body style="font-family:Tahoma,Arial,sans-serif;text-align:center;padding:42px 20px;background:#f8fafc;color:#0f172a"><h2>ابوسيف للتجارة</h2><p>افتح التطبيق مرة واحدة مع توفر الإنترنت لثوانٍ لحفظ النسخة على جهازك، وبعدها يفتح فوراً بدون إنترنت.</p><button onclick="location.reload()" style="padding:12px 26px;border:none;border-radius:10px;background:#059669;color:#fff;font-size:15px;font-weight:bold">إعادة المحاولة</button></body></html>',
+          { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } }
+        );
+      })());
+      return;
+    }
+
+    // 4) ملفات وصور المتجر المحلية: Cache-First فوري
+    event.respondWith((async function () {
+      const cached = (await v6Match(req)) || (await v6Match(p));
+      if (cached) {
+        if (!isOffline) {
+          event.waitUntil((async function () {
+            try {
+              const netRes = await v6TimeoutFetch(req, 3500);
+              const clean = await v6CleanRes(netRes);
+              if (clean) {
+                const cache = await caches.open(V6_CACHE);
+                await cache.put(p, clean.clone());
+              }
+            } catch (e) {}
+          })());
+        }
+        return cached;
+      }
+      if (isOffline) return new Response("", { status: 504, statusText: "Offline" });
+      try {
+        const netRes = await v6TimeoutFetch(req, 4000);
+        const clean = await v6CleanRes(netRes);
+        if (clean) {
+          const cache = await caches.open(V6_CACHE);
+          await cache.put(p, clean.clone());
+          return clean;
+        }
+        return netRes;
+      } catch (e) {
+        return new Response("", { status: 504, statusText: "Offline" });
+      }
+    })());
+  });
+})();
+/* ABUDHIYA_OFFLINE_UNFREEZE_V6_END */
+
 /* ABUDHIYA_ONESIGNAL_SW_PROXY_START */
 (function () {
   if (self.__abOsSwProxyV1) return;
@@ -43,6 +335,7 @@
   }
 })();
 /* ABUDHIYA_ONESIGNAL_SW_PROXY_END */
+
 
 /* ABUDHIYA_ROCKSOLID_OFFLINE_START */
 (function () {

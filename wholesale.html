@@ -1,6 +1,124 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<!-- ABUDHIYA_OFFLINE_UNFREEZE_PAGE_START -->
+<script data-ab-offline-unfreeze="6">
+(function () {
+  if (window.__abOfflineUnfreezePageV6) return;
+  window.__abOfflineUnfreezePageV6 = true;
+
+  function getUrlStr(input) {
+    if (typeof input === "string") return input;
+    if (typeof URL !== "undefined" && input instanceof URL) return input.href;
+    if (input && typeof input.url === "string") return input.url;
+    return "";
+  }
+
+  function isNetworkOnlyUrl(u) {
+    if (!u) return false;
+    var low = u.toLowerCase();
+    if (low.indexOf("onesignal.com") !== -1 || low.indexOf("/_os/") !== -1 || low.indexOf("/api/") !== -1 || low.indexOf("/push/") !== -1) {
+      return true;
+    }
+    try {
+      var parsed = new URL(u, window.location.origin);
+      if (parsed.origin !== window.location.origin) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  // 1) قاطع دوائر على fetch: يمنع حلقات إعادة المحاولة اللانهائية التي تجمد الشاشة عند فصل النت
+  if (typeof window.fetch === "function") {
+    var origFetch = window.fetch;
+    var offlineFailBurst = 0;
+    var lastBurstReset = Date.now();
+
+    window.fetch = function (input, init) {
+      var u = getUrlStr(input);
+      if (navigator.onLine === false && isNetworkOnlyUrl(u)) {
+        var now = Date.now();
+        if (now - lastBurstReset > 2000) {
+          offlineFailBurst = 0;
+          lastBurstReset = now;
+        }
+        offlineFailBurst++;
+        // إذا تكرر الطلب بسرعة أثناء الأوفلاين نؤخر الرفض قليلاً لكسر حلقة التجمّد تماماً
+        if (offlineFailBurst > 2) {
+          return new Promise(function (_, reject) {
+            setTimeout(function () { reject(new TypeError("Offline")); }, 1800);
+          });
+        }
+        return Promise.reject(new TypeError("Offline"));
+      }
+      return origFetch.apply(window, arguments);
+    };
+  }
+
+  // 2) حماية XMLHttpRequest من التعليق أثناء انقطاع الإنترنت
+  if (typeof XMLHttpRequest !== "undefined" && XMLHttpRequest.prototype) {
+    var origXhrOpen = XMLHttpRequest.prototype.open;
+    var origXhrSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function (method, url) {
+      try { this.__abReqUrl = typeof url === "string" ? url : (url && url.href ? url.href : ""); } catch (e) {}
+      return origXhrOpen.apply(this, arguments);
+    };
+    XMLHttpRequest.prototype.send = function () {
+      if (navigator.onLine === false && isNetworkOnlyUrl(this.__abReqUrl || "")) {
+        var selfXhr = this;
+        setTimeout(function () {
+          try { selfXhr.dispatchEvent(new Event("error")); } catch (e) {}
+          try { if (typeof selfXhr.onerror === "function") selfXhr.onerror(new Event("error")); } catch (e) {}
+        }, 250);
+        return;
+      }
+      return origXhrSend.apply(this, arguments);
+    };
+  }
+
+  // 3) فك أي قفل لمس أو تمرير أو شاشة تحميل عالقة لحظة انقطاع الإنترنت
+  function ensureUiInteractive() {
+    try {
+      if (document.documentElement) {
+        if (getComputedStyle(document.documentElement).pointerEvents === "none") {
+          document.documentElement.style.pointerEvents = "auto";
+        }
+      }
+      if (document.body) {
+        if (getComputedStyle(document.body).pointerEvents === "none") {
+          document.body.style.pointerEvents = "auto";
+        }
+        // لا نفك التمرير إذا كانت هناك نافذة منبثقة مفتوحة فعلاً (مثل نافذة الكميات أو التسجيل)
+        var openModal = document.querySelector("#qtyModal.open, #abInstallGateOverlay, #abAutoPushBanner");
+        if (!openModal && getComputedStyle(document.body).overflow === "hidden") {
+          document.body.style.overflow = "";
+          document.body.style.overflowY = "auto";
+        }
+      }
+      // إزالة شاشات التحميل العالقة فقط (إن وُجدت)
+      var loaders = document.querySelectorAll("#abSplash, #abLaunchSplash, .ab-splash-overlay, .ab-loading-mask");
+      for (var i = 0; i < loaders.length; i++) {
+        loaders[i].style.display = "none";
+        loaders[i].style.pointerEvents = "none";
+      }
+    } catch (e) {}
+  }
+
+  window.addEventListener("offline", function () {
+    ensureUiInteractive();
+    setTimeout(ensureUiInteractive, 200);
+    setTimeout(ensureUiInteractive, 800);
+  });
+
+  window.addEventListener("DOMContentLoaded", function () {
+    if (navigator.onLine === false) {
+      ensureUiInteractive();
+      setTimeout(ensureUiInteractive, 400);
+    }
+  });
+})();
+</script>
+<!-- ABUDHIYA_OFFLINE_UNFREEZE_PAGE_END -->
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -102,6 +220,7 @@
 })();
 </script>
 <!-- ABUDHIYA_ONESIGNAL_PROXY_END -->
+
 
 <!-- ABUDHIYA_NO_VIBRATE_HEAD_START -->
 <script data-ab-no-jitter="4">
