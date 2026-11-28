@@ -420,6 +420,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -4782,7 +4784,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   }
 
   // 5) رسم إيصال الطلب الرسمي الأبيض والأسود على Canvas بدقة عالية (يعمل بدون نت)
-  function renderOfficialReceipt(rec) {
+  function __abOrigCanvas_renderOfficialReceipt(rec) {
     if (!rec) return;
     var items = Array.isArray(rec.items) ? rec.items : [];
     var W = 800;
@@ -4945,6 +4947,278 @@ window.addEventListener("beforeinstallprompt", function(e) {
       }, "image/png");
     };
   }
+
+/* ABUDHIYA_CANVAS_UNIT_SPLIT_START */
+function renderOfficialReceipt(rec) {
+  try {
+    var rec = rec;
+    if (!rec || !Array.isArray(rec.items)) {
+      return __abOrigCanvas_renderOfficialReceipt(rec);
+    }
+
+    function __abResolveUnit(it) {
+      var u = String((it && it.unit) || "").trim();
+      if (!u) {
+        var list = (typeof PRODUCTS !== "undefined" && Array.isArray(PRODUCTS))
+          ? PRODUCTS
+          : (typeof window !== "undefined" && Array.isArray(window.PRODUCTS) ? window.PRODUCTS : []);
+        var itId = (it && it.id != null) ? String(it.id) : "";
+        var itName = String((it && it.name) || "").replace(/\s+/g, " ").trim();
+        for (var k = 0; k < list.length; k++) {
+          var p = list[k];
+          if (!p) continue;
+          if (itId && String(p.id) === itId) {
+            u = String(p.unit || "").trim();
+            break;
+          }
+          var pn = String(p.name || "").replace(/\s+/g, " ").trim();
+          if (pn && itName && (pn === itName || itName.indexOf(pn) !== -1 || pn.indexOf(itName) !== -1)) {
+            u = String(p.unit || "").trim();
+            break;
+          }
+        }
+      }
+      var nm = String((it && it.name) || "");
+      if (/كرتون|كراتين|carton|crt/i.test(u) || (!u && /كرتون|كراتين/.test(nm))) {
+        return { kind: "carton", label: u || "كرتون" };
+      }
+      if (/كيس|أكياس|اكياس|bag/i.test(u) || (!u && /كيس|أكياس|اكياس/.test(nm))) {
+        return { kind: "bag", label: u || "كيس" };
+      }
+      if (u) {
+        return { kind: "other", label: u };
+      }
+      return { kind: "bag", label: "كيس" };
+    }
+
+    function __abFmtNum(n) {
+      var v = Number(n || 0);
+      if (isNaN(v)) return "0";
+      return Math.abs(v - Math.round(v)) < 0.001 ? String(Math.round(v)) : String(Number(v.toFixed(2)));
+    }
+
+    var bags = [];
+    var cartons = [];
+    var others = [];
+    var bagsQty = 0;
+    var cartonsQty = 0;
+    var othersQty = 0;
+    var calcSubTotal = 0;
+
+    for (var idx = 0; idx < rec.items.length; idx++) {
+      var item = rec.items[idx];
+      if (!item) continue;
+      var uInfo = __abResolveUnit(item);
+      var qNum = Number(item.qty || 0);
+      if (isNaN(qNum)) qNum = 0;
+      var subVal = Number(item.sub != null ? item.sub : (qNum * Number(item.price || 0)));
+      if (!isNaN(subVal)) calcSubTotal += subVal;
+      var entry = { item: item, unitLabel: uInfo.label, qtyNum: qNum, subVal: subVal };
+
+      if (uInfo.kind === "carton") {
+        cartons.push(entry);
+        cartonsQty += qNum;
+      } else if (uInfo.kind === "other") {
+        others.push(entry);
+        othersQty += qNum;
+      } else {
+        bags.push(entry);
+        bagsQty += qNum;
+      }
+    }
+
+    var sections = [];
+    if (bags.length > 0) {
+      sections.push({
+        title: "قسم الأكياس (" + __abFmtNum(bagsQty) + " كيس)",
+        bg: "#ECFDF5",
+        border: "#A7F3D0",
+        fg: "#065F46",
+        rows: bags
+      });
+    }
+    if (cartons.length > 0) {
+      sections.push({
+        title: "قسم الكراتين (" + __abFmtNum(cartonsQty) + " كرتون)",
+        bg: "#FFFBEB",
+        border: "#FDE68A",
+        fg: "#92400E",
+        rows: cartons
+      });
+    }
+    if (others.length > 0) {
+      sections.push({
+        title: "أصناف أخرى (" + __abFmtNum(othersQty) + ")",
+        bg: "#F1F5F9",
+        border: "#CBD5E1",
+        fg: "#334155",
+        rows: others
+      });
+    }
+
+    var W = Math.max(800, 840);
+    var rowH = 44;
+    var secH = 38;
+    var headerBandH = 128;
+    var metaH = 128;
+    var tblHdrH = 44;
+    var bodyH = 0;
+
+    if (sections.length === 0) {
+      bodyH = 54;
+    } else {
+      for (var s0 = 0; s0 < sections.length; s0++) {
+        bodyH += secH + (sections[s0].rows.length * rowH);
+      }
+    }
+
+    var footerBarH = 58;
+    var H = 20 + headerBandH + 18 + metaH + 18 + tblHdrH + bodyH + 18 + footerBarH + 64;
+
+    var canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    var ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "#111111";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(20, 20, W - 40, H - 40);
+
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(20, 20, W - 40, headerBandH);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "center";
+    ctx.font = "bold 32px Tahoma, Arial, sans-serif";
+    ctx.fillText("أبوسيف للتجارة العامة — سيئون", W / 2, 72);
+    ctx.fillStyle = "#E2E8F0";
+    ctx.font = "18px Tahoma, Arial, sans-serif";
+    ctx.fillText("إيصال اعتماد طلب رسمي  •  تلفون: 05492417 • جوال: 772202525", W / 2, 110);
+
+    var y = 20 + headerBandH + 18;
+    ctx.fillStyle = "#F8FAFC";
+    ctx.fillRect(40, y, W - 80, metaH);
+    ctx.strokeStyle = "#CBD5E1";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(40, y, W - 80, metaH);
+
+    ctx.fillStyle = "#0F172A";
+    ctx.font = "bold 19px Tahoma, Arial, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("رقم الطلب: #" + (rec.orderId || ""), W - 60, y + 36);
+    ctx.fillText("العميل: " + (rec.customerName || "غير محدد"), W - 60, y + 74);
+    ctx.fillText("الجوال: " + (rec.customerPhone || "-"), W - 60, y + 110);
+
+    ctx.textAlign = "left";
+    ctx.font = "18px Tahoma, Arial, sans-serif";
+    ctx.fillText("التاريخ: " + (rec.date || ""), 60, y + 36);
+    ctx.fillText("الوقت: " + (rec.time || ""), 60, y + 74);
+    ctx.fillText(rec.withPrice ? "النوع: طلب بالسعر" : "النوع: أصناف بدون سعر", 60, y + 110);
+
+    y += metaH + 18;
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(40, y, W - 80, tblHdrH);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 19px Tahoma, Arial, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("الصنف", W - 58, y + 29);
+
+    var qtyX = rec.withPrice ? 360 : 150;
+    ctx.textAlign = "center";
+    ctx.fillText("الكمية", qtyX, y + 29);
+    if (rec.withPrice) {
+      ctx.fillText("السعر", 225, y + 29);
+      ctx.fillText("الإجمالي", 108, y + 29);
+    }
+
+    y += tblHdrH;
+
+    if (sections.length === 0) {
+      ctx.strokeStyle = "#E2E8F0";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(40, y, W - 80, 54);
+      ctx.fillStyle = "#64748B";
+      ctx.textAlign = "center";
+      ctx.font = "18px Tahoma, Arial, sans-serif";
+      ctx.fillText("تفاصيل الطلب محفوظة في السجل النصي", W / 2, y + 33);
+      y += 54;
+    } else {
+      for (var s = 0; s < sections.length; s++) {
+        var sec = sections[s];
+        ctx.fillStyle = sec.bg;
+        ctx.fillRect(40, y, W - 80, secH);
+        ctx.strokeStyle = sec.border;
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(40, y, W - 80, secH);
+        ctx.fillStyle = sec.fg;
+        ctx.textAlign = "right";
+        ctx.font = "bold 19px Tahoma, Arial, sans-serif";
+        ctx.fillText(sec.title, W - 58, y + 26);
+        y += secH;
+
+        for (var i = 0; i < sec.rows.length; i++) {
+          var row = sec.rows[i];
+          var it = row.item;
+          ctx.fillStyle = (i % 2 === 0) ? "#FFFFFF" : "#F8FAFC";
+          ctx.fillRect(40, y, W - 80, rowH);
+          ctx.strokeStyle = "#E2E8F0";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(40, y, W - 80, rowH);
+
+          ctx.fillStyle = "#0F172A";
+          ctx.textAlign = "right";
+          ctx.font = "18px Tahoma, Arial, sans-serif";
+          var nm = String(it.name || "").slice(0, 32);
+          ctx.fillText((i + 1) + ". " + nm, W - 56, y + 29);
+
+          ctx.textAlign = "center";
+          ctx.font = "bold 17px Tahoma, Arial, sans-serif";
+          var qTxt = __abFmtNum(row.qtyNum) + (Number(it.bon || 0) > 0 ? (" (+" + it.bon + ")") : "") + " " + row.unitLabel;
+          ctx.fillText(qTxt, qtyX, y + 29);
+
+          if (rec.withPrice) {
+            ctx.font = "18px Tahoma, Arial, sans-serif";
+            ctx.fillText(Number(it.price || 0).toLocaleString("en-US"), 225, y + 29);
+            ctx.font = "bold 18px Tahoma, Arial, sans-serif";
+            ctx.fillText(Number(row.subVal || 0).toLocaleString("en-US"), 108, y + 29);
+          }
+
+          y += rowH;
+        }
+      }
+    }
+
+    y += 18;
+    ctx.fillStyle = "#111111";
+    ctx.fillRect(40, y, W - 80, footerBarH);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 20px Tahoma, Arial, sans-serif";
+    ctx.textAlign = "right";
+    var unitsSummary = "الأكياس: " + __abFmtNum(bagsQty) + "  |  الكراتين: " + __abFmtNum(cartonsQty);
+    if (othersQty > 0) unitsSummary += "  |  أخرى: " + __abFmtNum(othersQty);
+    ctx.fillText(unitsSummary, W - 60, y + 36);
+
+    ctx.textAlign = "left";
+    if (rec.withPrice) {
+      var fmtTot = rec.fmtTotal || Number(calcSubTotal || 0).toLocaleString("en-US");
+      ctx.fillText("الإجمالي: " + fmtTot + " ر.ي", 60, y + 36);
+    } else {
+      ctx.fillText("إجمالي الأصناف: " + rec.items.length, 60, y + 36);
+    }
+
+    ctx.fillStyle = "#475569";
+    ctx.textAlign = "center";
+    ctx.font = "15px Tahoma, Arial, sans-serif";
+    ctx.fillText("شكراً لتعاملكم مع أبوسيف للتجارة العامة — تم الاعتماد إلكترونياً", W / 2, H - 36);
+
+    return canvas.toDataURL("image/png");
+  } catch (eSplit) {
+    return __abOrigCanvas_renderOfficialReceipt(rec);
+  }
+}
+/* ABUDHIYA_CANVAS_UNIT_SPLIT_END */
+
 
   // 6) إضافة كمية سريعة + محفّز البونص الذكي + نبض عدّاد السلة
   function showBonusNudge(msg) {
