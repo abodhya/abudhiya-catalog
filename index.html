@@ -442,6 +442,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -32223,12 +32225,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
 
 
+
 <!-- ABUDHIYA_VIP_POLISH_START -->
 <style id="abVipPolishStyle">
-  /* 1) إخفاء الشريط الكحلي الفارغ + شريط عرض الفاتورة العلوي + زر التكرار + فلتر المعتادة */
+  /* 1) إخفاء العناصر المكررة والفارغة (شريط التصنيفات المكرر + الشريط الكحلي + عرض الفاتورة العلوي) */
   [data-ab-vip-hollow-bar="1"],
   [data-ab-vip-top-inv-bar="1"],
   [data-ab-vip-dup-reorder="1"],
+  [data-ab-vip-dup-cat-row="1"],
   [data-ab-vip-usual-hide="1"] {
     display: none !important;
     visibility: hidden !important;
@@ -32299,13 +32303,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     transform: scale(0.95) !important;
   }
 
-  /* 4) تبويب «⭐ المعتادة» في شريط التصنيفات */
+  /* 4) تبويب «⭐ المعتادة» بتصميم متناسق مع شريط التصنيفات الموحّد */
   #abVipUsualPill {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 4px !important;
-    padding: 7px 13px !important;
+    gap: 5px !important;
+    padding: 8px 14px !important;
     border-radius: 999px !important;
     border: 1.5px solid #f59e0b !important;
     background: #fffbeb !important;
@@ -32316,6 +32320,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     font-family: inherit !important;
+    line-height: 1.2 !important;
     transition: all 0.15s ease !important;
   }
   #abVipUsualPill.ab-vip-active {
@@ -32336,10 +32341,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     animation: abVipDockPulseAnim 0.26s ease-out !important;
   }
 </style>
-<script data-ab-vip-polish="3">
+<script data-ab-vip-polish="4">
 (function () {
-  if (window.__abVipPolishBundleV3) return;
-  window.__abVipPolishBundleV3 = true;
+  if (window.__abVipPolishBundleV4) return;
+  window.__abVipPolishBundleV4 = true;
 
   var lastKnownSplit = { bags: 0, cartons: 0, ts: 0 };
   var usualFilterActive = false;
@@ -32490,7 +32495,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   // ---------------------------------------------------------------------------
-  // 2) إخفاء شريط «عرض الفاتورة ←» الأخضر فوق الأصناف + الشريط الكحلي الفارغ + زر التكرار
+  // 2) إخفاء شريط «عرض الفاتورة ←» العلوي + الشريط الكحلي الفارغ + زر التكرار
   // ---------------------------------------------------------------------------
   function hideTopViewInvoiceBar() {
     var winH = window.innerHeight || 800;
@@ -32765,7 +32770,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   // ---------------------------------------------------------------------------
-  // 5) تبويب «⭐ المعتادة» في شريط التصنيفات
+  // 5) توحيد شريط التصنيفات (إبقاء الشريط الأنيق + نقل ⭐ المعتادة داخله + إخفاء المكرر)
   // ---------------------------------------------------------------------------
   function getUsualProductNames() {
     var freq = {};
@@ -32839,43 +32844,94 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     }
   }
 
-  function injectUsualOrdersPill() {
-    var existing = document.getElementById("abVipUsualPill");
-    if (existing && document.body.contains(existing)) {
-      if (usualFilterActive) applyUsualFilter(true);
-      return;
-    }
+  function unifyCategoryBarsAndUsualPill() {
+    var btns = document.querySelectorAll("button, div[onclick], span[onclick], a");
+    var richAllBtn = null;
+    var legacyAllBtn = null;
 
-    var btns = document.querySelectorAll("button, div[onclick], span[onclick]");
-    var allBtn = null;
     for (var i = 0; i < btns.length; i++) {
       var b = btns[i];
-      if (!b || isInsideModal(b)) continue;
+      if (!b || b.id === "abVipUsualPill" || isInsideModal(b)) continue;
+      if (b.querySelector("button")) continue;
       var t = toEnDigits(norm(b.textContent));
-      if (/^الكل\s*(?:\(\s*\d+\s*\)|\d+)$/.test(t) && b.parentElement && b.parentElement.children.length >= 3) {
-        allBtn = b;
-        break;
+      if (!t || t.length > 26 || t.indexOf("الكل") === -1) continue;
+      if (!b.parentElement || b.parentElement.children.length < 2) continue;
+
+      // الشريط الثاني الكلاسيكي: «الكل (41)» بأقواس
+      if (!legacyAllBtn && /الكل\s*\(\s*\d+\s*\)$/.test(t)) {
+        legacyAllBtn = b;
+      }
+      // الشريط الأول الأنيق بالأيقونات والأعداد: «🏪 الكل 41» بدون أقواس
+      else if (!richAllBtn && /الكل\s+\d+$/.test(t) && t.indexOf("(") === -1) {
+        richAllBtn = b;
       }
     }
-    if (!allBtn || !allBtn.parentElement) return;
 
-    var pill = document.createElement("button");
-    pill.type = "button";
-    pill.id = "abVipUsualPill";
-    pill.textContent = "⭐ المعتادة";
-    pill.addEventListener("click", function (ev) {
-      ev.stopPropagation();
-      applyUsualFilter(!usualFilterActive);
-    });
+    // نختار الشريط الأنيق الأول كأساس، ونُخفي الشريط الثاني المكرر (مع حماية حالة وجود شريط واحد فقط)
+    var primaryAllBtn = richAllBtn || legacyAllBtn;
+    if (!primaryAllBtn || !primaryAllBtn.parentElement) return;
 
-    allBtn.parentElement.insertBefore(pill, allBtn.nextSibling);
+    var primaryRow = primaryAllBtn.parentElement;
 
-    if (!allBtn.parentElement.getAttribute("data-ab-vip-cat-hook")) {
-      allBtn.parentElement.setAttribute("data-ab-vip-cat-hook", "1");
-      allBtn.parentElement.addEventListener("click", function (ev) {
-        if (ev.target && ev.target.id === "abVipUsualPill") return;
+    var pill = document.getElementById("abVipUsualPill");
+    if (!pill) {
+      pill = document.createElement("button");
+      pill.type = "button";
+      pill.id = "abVipUsualPill";
+      pill.textContent = "⭐ المعتادة";
+      pill.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (!usualFilterActive) {
+          // تفعيل «الكل» أولاً لكي تشمل «المعتادة» جميع الأصناف وليس تصنيفاً واحداً فقط
+          var allTarget = primaryAllBtn;
+          if (allTarget && allTarget.isConnected) {
+            try { allTarget.click(); } catch (eClk) {}
+          }
+          setTimeout(function () { applyUsualFilter(true); }, 60);
+        } else {
+          applyUsualFilter(false);
+        }
+      });
+    }
+
+    if (pill.parentElement !== primaryRow) {
+      primaryRow.insertBefore(pill, primaryAllBtn.nextSibling);
+    }
+
+    if (!primaryRow.getAttribute("data-ab-vip-cat-hook")) {
+      primaryRow.setAttribute("data-ab-vip-cat-hook", "1");
+      primaryRow.addEventListener("click", function (ev) {
+        if (ev.target && (ev.target.id === "abVipUsualPill" || (ev.target.closest && ev.target.closest("#abVipUsualPill")))) return;
         if (usualFilterActive) applyUsualFilter(false);
       }, true);
+    }
+
+    // إخفاء شريط التصنيفات الثاني المكرر إذا كان الشريط الأنيق الأول ظاهراً ومستقلاً عنه
+    if (richAllBtn && legacyAllBtn && legacyAllBtn.parentElement && legacyAllBtn.parentElement !== primaryRow) {
+      var dupRow = legacyAllBtn.parentElement;
+      if (
+        !dupRow.contains(primaryRow) &&
+        !primaryRow.contains(dupRow) &&
+        !dupRow.querySelector("input, table, #prodGrid, .products-grid, .prod-grid") &&
+        norm(dupRow.textContent).indexOf("ابحث") === -1
+      ) {
+        dupRow.setAttribute("data-ab-vip-dup-cat-row", "1");
+        // إخفاء الغلاف الخارجي إذا كان يضم هذا الشريط المكرر وحده بلا عناصر أخرى
+        var dupWrap = dupRow.parentElement;
+        if (
+          dupWrap &&
+          dupWrap !== document.body &&
+          !dupWrap.contains(primaryRow) &&
+          !dupWrap.querySelector("input, table, #prodGrid, .products-grid, .prod-grid") &&
+          dupWrap.children.length === 1
+        ) {
+          dupWrap.setAttribute("data-ab-vip-dup-cat-row", "1");
+        }
+      }
+    }
+
+    if (usualFilterActive) {
+      applyUsualFilter(true);
     }
   }
 
@@ -32931,7 +32987,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       cleanCatalogClutter();
       patchSuccessModalUnits();
       injectRepContactButton();
-      injectUsualOrdersPill();
+      unifyCategoryBarsAndUsualPill();
     } catch (e) {}
   }
 
