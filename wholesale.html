@@ -440,6 +440,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -32220,10 +32222,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_PAY_ABOVE_TABLE_END -->
 
 
+
 <!-- ABUDHIYA_VIP_POLISH_START -->
 <style id="abVipPolishStyle">
-  /* 1) إخفاء الشريط الكحلي/الأسود الفارغ وزر إعادة آخر طلب المكرر وفلتر المعتادة */
+  /* 1) إخفاء الشريط الكحلي الفارغ + شريط عرض الفاتورة العلوي + زر التكرار + فلتر المعتادة */
   [data-ab-vip-hollow-bar="1"],
+  [data-ab-vip-top-inv-bar="1"],
   [data-ab-vip-dup-reorder="1"],
   [data-ab-vip-usual-hide="1"] {
     display: none !important;
@@ -32332,10 +32336,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     animation: abVipDockPulseAnim 0.26s ease-out !important;
   }
 </style>
-<script data-ab-vip-polish="2">
+<script data-ab-vip-polish="3">
 (function () {
-  if (window.__abVipPolishBundleV2) return;
-  window.__abVipPolishBundleV2 = true;
+  if (window.__abVipPolishBundleV3) return;
+  window.__abVipPolishBundleV3 = true;
 
   var lastKnownSplit = { bags: 0, cartons: 0, ts: 0 };
   var usualFilterActive = false;
@@ -32486,9 +32490,56 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   // ---------------------------------------------------------------------------
-  // 2) تنظيف الكتالوج والفاتورة (الشريط الكحلي/الأسود الفارغ + زر التكرار)
+  // 2) إخفاء شريط «عرض الفاتورة ←» الأخضر فوق الأصناف + الشريط الكحلي الفارغ + زر التكرار
   // ---------------------------------------------------------------------------
+  function hideTopViewInvoiceBar() {
+    var winH = window.innerHeight || 800;
+    var nodes = document.querySelectorAll("button, a, [role='button'], div, span");
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (!el || el.getAttribute("data-ab-vip-top-inv-bar") === "1" || isInsideModal(el)) continue;
+      if (el.children.length > 2) continue;
+      var t = norm(el.textContent);
+      if (!t || t.length > 45 || t.indexOf("عرض الفاتورة") === -1) continue;
+      if (t.indexOf("الأصناف") !== -1) continue;
+
+      var rect = null;
+      try { rect = el.getBoundingClientRect(); } catch (e1) {}
+      if (rect && rect.top > winH - 95) continue;
+
+      el.setAttribute("data-ab-vip-top-inv-bar", "1");
+
+      var cur = el.parentElement;
+      for (var step = 0; step < 3 && cur && cur !== document.body; step++) {
+        var cid = String(cur.id || "").toLowerCase();
+        if (cid === "app" || cid === "main" || cid === "prodgrid" || cid === "catalogview" || cid === "viewcatalog") break;
+        if (cur.querySelector("table, input, select, textarea, #prodGrid, .products-grid, .prod-grid")) break;
+        var st = null;
+        try { st = getComputedStyle(cur); } catch (e2) {}
+        if (st && st.position === "fixed") break;
+        if ((cur.offsetHeight || 0) > 105) break;
+
+        var ct = norm(cur.textContent);
+        if (
+          ct.length > 85 ||
+          ct.indexOf("الأصناف") !== -1 ||
+          ct.indexOf("الكل") !== -1 ||
+          ct.indexOf("المعتادة") !== -1 ||
+          ct.indexOf("آخر طلب") !== -1 ||
+          ct.indexOf("مندوبك") !== -1 ||
+          ct.indexOf("أبوضياء") !== -1
+        ) {
+          break;
+        }
+        cur.setAttribute("data-ab-vip-top-inv-bar", "1");
+        cur = cur.parentElement;
+      }
+    }
+  }
+
   function cleanCatalogClutter() {
+    hideTopViewInvoiceBar();
+
     var hasTopLastOrder = false;
     var reorderBtns = [];
     var btns = document.querySelectorAll("button, a, [role='button']");
@@ -32518,7 +32569,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     }
 
-    // إخفاء أي شريط كحلي/أسود فارغ مرئياً (باستخدام innerText لمنع خداع العناصر المخفية بداخله)
     var winH = window.innerHeight || 800;
     var divs = document.querySelectorAll("div, section");
     for (var d = 0; d < divs.length; d++) {
@@ -32660,7 +32710,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     var greeting = "السلام عليكم " + (rep.name || "") + "، أتواصل معك من تطبيق ابوسيف للتجارة" + (custName ? (" (" + custName + ")") : "");
     var waHref = "https://wa.me/" + waPhone + "?text=" + encodeURIComponent(greeting);
 
-    // إيجاد كتلة نص المندوب أولاً ثم الصعود للصف الأفقي الخارجي للبطاقة
     var candidates = document.querySelectorAll("div, section");
     var textBlock = null;
     for (var i = 0; i < candidates.length; i++) {
@@ -32676,7 +32725,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     }
     if (!textBlock) return;
 
-    // الصعود للصف الخارجي للبطاقة (الذي يجمع الأيقونة + النص + زر التغيير المخفي)
     var outerBanner = textBlock;
     var cur = textBlock.parentElement;
     for (var step = 0; step < 3 && cur && cur !== document.body; step++) {
