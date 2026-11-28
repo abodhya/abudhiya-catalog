@@ -426,6 +426,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -31209,5 +31211,193 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_ROLE_ONBOARD_END -->
+
+<!-- ABUDHIYA_INV_BTN_PAIR_START -->
+<style id="abInvBtnPairStyle">
+  /* إخفاء زر إرفاق موقع البقالة (GPS) والخطوط الفاصلة الفارغة */
+  [data-ab-hide-gps-btn="1"],
+  [data-ab-hide-trailing-sep="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* صف متناسق يجمع «حفظ كصورة» و«نسخ الطلب» جنباً إلى جنب */
+  #abSaveCopyPairRow {
+    grid-column: 1 / -1 !important;
+    flex: 1 0 100% !important;
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #abSaveCopyPairRow > button,
+  #abSaveCopyPairRow > a {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    min-height: 44px !important;
+    padding: 9px 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border-radius: 12px !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+  }
+</style>
+<script data-ab-inv-btn-pair="1">
+(function () {
+  if (window.__abInvBtnPairV1) return;
+  window.__abInvBtnPairV1 = true;
+
+  function norm(s) {
+    return String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+  }
+
+  function isVisibleEl(el) {
+    if (!el || el.nodeType !== 1) return false;
+    try {
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden") return false;
+      return el.offsetWidth > 0 || el.offsetHeight > 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function isInsideModal(el) {
+    if (!el || !el.closest) return false;
+    return !!el.closest("#qtyModal, #abRoleOnboardOverlay, #abInstallGateOverlay, #abPostInstallExitOverlay, .modal");
+  }
+
+  function hideGpsAttachButton() {
+    if (!document.body) return;
+    var btns = document.querySelectorAll("button, a, [role='button']");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || b.getAttribute("data-ab-hide-gps-btn") === "1") continue;
+      var t = norm(b.textContent);
+      if (!t || t.length > 75) continue;
+      var isGpsBtn = (
+        t.indexOf("إرفاق موقع") !== -1 ||
+        t.indexOf("ارفاق موقع") !== -1 ||
+        (t.indexOf("موقع البقالة") !== -1 && t.indexOf("GPS") !== -1)
+      );
+      if (!isGpsBtn) continue;
+
+      b.setAttribute("data-ab-hide-gps-btn", "1");
+
+      // إخفاء الحاوية المباشرة فقط إذا كانت مخصصة لهذا الزر وحده بدون أي أزرار أخرى
+      var par = b.parentElement;
+      if (
+        par &&
+        par !== document.body &&
+        par.querySelectorAll("button, a, input, select, textarea").length === 1 &&
+        norm(par.textContent).length <= t.length + 12
+      ) {
+        par.setAttribute("data-ab-hide-gps-btn", "1");
+      }
+    }
+  }
+
+  function pairSaveAndCopyButtons() {
+    if (!document.body) return;
+
+    var saveBtn = null;
+    var copyBtn = null;
+    var btns = document.querySelectorAll("button, a, [role='button']");
+
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || isInsideModal(b)) continue;
+      var t = norm(b.textContent);
+      if (!t || t.length > 45) continue;
+
+      if (!saveBtn && t.indexOf("حفظ كصورة") !== -1) {
+        saveBtn = b;
+      } else if (!copyBtn && t.indexOf("نسخ الطلب") !== -1) {
+        copyBtn = b;
+      }
+    }
+
+    if (!saveBtn || !copyBtn) return;
+
+    var pairRow = document.getElementById("abSaveCopyPairRow");
+    if (pairRow && pairRow.contains(saveBtn) && pairRow.contains(copyBtn)) {
+      return;
+    }
+
+    var saveParent = saveBtn.parentElement;
+    if (!saveParent || saveParent === document.body) return;
+
+    if (!pairRow) {
+      pairRow = document.createElement("div");
+      pairRow.id = "abSaveCopyPairRow";
+    }
+
+    if (!saveParent.contains(pairRow)) {
+      saveParent.insertBefore(pairRow, saveBtn);
+    }
+
+    // نقل الزرين الأصليين مع الحفاظ الكامل على أحداثهما البرمجية
+    if (saveBtn.parentElement !== pairRow) pairRow.appendChild(saveBtn);
+    if (copyBtn.parentElement !== pairRow) pairRow.appendChild(copyBtn);
+
+    // إخفاء أي خط فاصل منقّط أو فراغ فارغ أسفل الصف داخل نفس البطاقة البيضاء
+    var card = pairRow.parentElement;
+    if (card && card !== document.body) {
+      var sib = pairRow.nextElementSibling;
+      while (sib) {
+        var nextSib = sib.nextElementSibling;
+        var stxt = norm(sib.textContent);
+        var hasVisCtrl = false;
+        var ctrls = sib.querySelectorAll("button, a, input, select, textarea, img");
+        for (var c = 0; c < ctrls.length; c++) {
+          if (isVisibleEl(ctrls[c])) { hasVisCtrl = true; break; }
+        }
+        if (sib.tagName === "HR" || (!stxt && !hasVisCtrl)) {
+          sib.setAttribute("data-ab-hide-trailing-sep", "1");
+        }
+        sib = nextSib;
+      }
+    }
+  }
+
+  function applyLayout() {
+    try {
+      hideGpsAttachButton();
+      pairSaveAndCopyButtons();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyLayout, { once: true });
+  } else {
+    applyLayout();
+  }
+  window.addEventListener("load", function () {
+    applyLayout();
+    setTimeout(applyLayout, 350);
+    setTimeout(applyLayout, 1100);
+  });
+  setInterval(applyLayout, 1500);
+})();
+</script>
+<!-- ABUDHIYA_INV_BTN_PAIR_END -->
 </body>
 </html>
