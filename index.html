@@ -26990,6 +26990,140 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_NO_VIBRATE_JITTER_END -->
 
+
+<!-- ABUDHIYA_GUEST_FINAL_CLOAK_START -->
+<style id="abGuestFinalCloakCss" data-ab-guest-cloak="1">
+  html:not(.ab-role-admin):not(.ab-role-rep):not(.ab-role-staff) [data-ab-guest-hide="1"],
+  html.ab-role-guest [data-ab-guest-hide="1"],
+  html.ab-prices-hidden [data-ab-guest-hide="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  html:not(.ab-role-admin):not(.ab-role-rep):not(.ab-role-staff) .sub-tot,
+  html.ab-role-guest .sub-tot,
+  html.ab-prices-hidden .sub-tot {
+    display: none !important;
+  }
+</style>
+<script data-ab-guest-cloak="1">
+(function () {
+  if (window.__abGuestFinalCloakV1) return;
+  window.__abGuestFinalCloakV1 = true;
+
+  function isStaffMode() {
+    try {
+      var r = document.documentElement;
+      if (
+        r &&
+        (r.classList.contains("ab-role-admin") ||
+          r.classList.contains("ab-role-rep") ||
+          r.classList.contains("ab-role-staff")) &&
+        !r.classList.contains("ab-role-guest")
+      ) return true;
+      var role = String(localStorage.getItem("ab_app_role_v1") || "").trim().toLowerCase();
+      if (
+        role &&
+        (role.indexOf("admin") !== -1 ||
+          role.indexOf("rep") !== -1 ||
+          role.indexOf("staff") !== -1 ||
+          role.indexOf("مدير") !== -1 ||
+          role.indexOf("مندوب") !== -1)
+      ) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  var HIDE_BTN_RE = /(سعر\s*التجزئة|سعر\s*الجملة|دخول\s*للجملة)/;
+  var PRICE_LEAF_RE = /(?:^|\s)(?:ر\.ي|ريال|الإجمالي|الاجمالي|إجمالي\s*الفاتورة|السعر)(?:\s|:|：|$)/;
+  var OLD_BRAND_RE = /(?:أبوضياء|ابوضياء)(?:\s+للتوزيع)?/g;
+
+  function applyGuestCloak() {
+    if (!document.body) return;
+    var staff = isStaffMode();
+
+    // 1) إخفاء أزرار تبديل الأسعار ودخول الجملة عن العميل فقط + تهذيب زر نسخ الطلب
+    var btns = document.querySelectorAll("button, a");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || b.closest("#abInstallGateOverlay")) continue;
+      var origTxt = b.getAttribute("data-ab-orig-txt");
+      var curTxt = String(b.textContent || "").replace(/\s+/g, " ").trim();
+      if (!origTxt && curTxt) {
+        origTxt = curTxt;
+        b.setAttribute("data-ab-orig-txt", origTxt);
+      }
+      var refTxt = origTxt || curTxt;
+
+      if (HIDE_BTN_RE.test(refTxt)) {
+        if (staff) b.removeAttribute("data-ab-guest-hide");
+        else b.setAttribute("data-ab-guest-hide", "1");
+        continue;
+      }
+
+      if (refTxt.indexOf("نسخ الطلب") !== -1 && refTxt.indexOf("بدون سعر") !== -1) {
+        if (staff) {
+          if (b.textContent !== origTxt) b.textContent = origTxt;
+        } else {
+          if (b.textContent !== "📋 نسخ الطلب") b.textContent = "📋 نسخ الطلب";
+        }
+      }
+    }
+
+    // 2) إخفاء أي عنصر نصي صغير متبقٍّ يعرض عملة أو إجمالي للعميل فقط (دون لمس البطاقات أو الحقول)
+    var leaves = document.querySelectorAll("span, small, div, p, td, th, label");
+    for (var j = 0; j < leaves.length; j++) {
+      var el = leaves[j];
+      if (!el || el.children.length > 0) continue;
+      if (el.closest("#abInstallGateOverlay, [data-ab-pro-card='1'], .product-card, .prod-card, input, textarea, select")) continue;
+      var t = String(el.textContent || "").trim();
+      if (!t || t.length > 60) continue;
+      if (PRICE_LEAF_RE.test(t)) {
+        if (staff) el.removeAttribute("data-ab-guest-hide");
+        else el.setAttribute("data-ab-guest-hide", "1");
+      }
+    }
+
+    // 3) توحيد أي نص ظاهر متبقٍّ يحمل اسم أبوضياء إلى «ابوسيف للتجارة» في وضع العميل
+    if (!staff && typeof document.createTreeWalker === "function") {
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      var node;
+      while ((node = walker.nextNode())) {
+        var val = node.nodeValue;
+        if (!val || (val.indexOf("أبوضياء") === -1 && val.indexOf("ابوضياء") === -1)) continue;
+        var par = node.parentElement;
+        if (!par) continue;
+        var tag = par.tagName;
+        if (tag === "SCRIPT" || tag === "STYLE" || tag === "TEXTAREA" || tag === "INPUT") continue;
+        if (par.closest("[data-ab-pro-card='1'], .product-card, .prod-card")) continue;
+        node.nodeValue = val.replace(OLD_BRAND_RE, "ابوسيف للتجارة");
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyGuestCloak, { once: true });
+  } else {
+    applyGuestCloak();
+  }
+  window.addEventListener("load", function () {
+    applyGuestCloak();
+    setTimeout(applyGuestCloak, 450);
+  });
+
+  // مراقبة تغيّر الصلاحية فقط (على عنصر html) بدون مراقبة ضغطات الكميات لمنع أي اهتزاز
+  if (typeof MutationObserver !== "undefined" && document.documentElement) {
+    var roleTimer = null;
+    var roleObs = new MutationObserver(function () {
+      if (roleTimer) clearTimeout(roleTimer);
+      roleTimer = setTimeout(applyGuestCloak, 180);
+    });
+    roleObs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  }
+})();
+</script>
+<!-- ABUDHIYA_GUEST_FINAL_CLOAK_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -27033,7 +27167,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-839733";
+  var TARGET_CACHE = "abudhiya-offline-v4-840096";
 
   function forceReleaseSplash() {
     try {
