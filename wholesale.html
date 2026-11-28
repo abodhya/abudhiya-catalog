@@ -175,6 +175,7 @@
 
 
 
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -27615,129 +27616,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 <!-- ABUDHIYA_AUTO_PUSH_ONBOARD_END -->
 
 
-<!-- ABUDHIYA_INVOICE_UI_POLISH_START -->
-<style id="abInvoiceUiPolishCss" data-ab-inv-polish="1">
-  /* 1) توضيح النص باللون الأبيض الساطع داخل بطاقة بيانات العميل الداكنة */
-  html body [data-ab-dark-profile-card="1"],
-  html body [data-ab-dark-profile-card="1"] *:not(button):not(button *):not(a):not(a *) {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    text-shadow: none !important;
-  }
-  html body [data-ab-dark-profile-card="1"] button,
-  html body [data-ab-dark-profile-card="1"] button * {
-    background-color: #ffffff !important;
-    color: #042f22 !important;
-    -webkit-text-fill-color: #042f22 !important;
-  }
-
-  /* 2) هامش سفلي كافٍ لصفحة الفاتورة حتى لا يغطي الشريط السفلي العائم أزرار الإرسال والمشاركة */
-  html body {
-    padding-bottom: 130px !important;
-  }
-  #invoiceView,
-  #viewInvoice,
-  .invoice-view,
-  .view-invoice,
-  [data-ab-inv-pad="1"] {
-    padding-bottom: 145px !important;
-    box-sizing: border-box !important;
-  }
-</style>
-<script data-ab-inv-polish="1">
-(function () {
-  if (window.__abInvoiceUiPolishV1) return;
-  window.__abInvoiceUiPolishV1 = true;
-
-  function hasDarkBackground(el) {
-    try {
-      var cs = window.getComputedStyle(el);
-      var bg = String(cs.backgroundColor || "");
-      var m = bg.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?/i);
-      if (m) {
-        var alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
-        if (alpha > 0.4) {
-          var lum = 0.299 * Number(m[1]) + 0.587 * Number(m[2]) + 0.114 * Number(m[3]);
-          if (lum < 115) return true;
-        }
-      }
-      var bi = String(cs.backgroundImage || "");
-      if (bi && bi !== "none") {
-        var rgbs = bi.match(/rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+/gi);
-        if (rgbs && rgbs.length) {
-          var sum = 0;
-          for (var i = 0; i < rgbs.length; i++) {
-            var p = rgbs[i].match(/\d+/g);
-            if (p && p.length >= 3) {
-              sum += 0.299 * Number(p[0]) + 0.587 * Number(p[1]) + 0.114 * Number(p[2]);
-            }
-          }
-          if ((sum / rgbs.length) < 115) return true;
-        }
-      }
-    } catch (e) {}
-    return false;
-  }
-
-  function applyInvoicePolish() {
-    if (!document.body) return;
-
-    // أ) رصد بطاقة بيانات العميل الداكنة (تحتوي زر تعديل + GPS/تلقائي) وتثبيت النص الأبيض بداخلها
-    var blocks = document.querySelectorAll("div, section");
-    for (var i = 0; i < blocks.length; i++) {
-      var el = blocks[i];
-      if (!el || el.closest("#abInstallGateOverlay, #abAutoPushBanner")) continue;
-      if (el.getAttribute("data-ab-dark-profile-card") === "1") continue;
-      var h = el.offsetHeight || 0;
-      if (h < 42 || h > 230) continue;
-      var txt = String(el.textContent || "");
-      if (txt.length > 260) continue;
-      if (txt.indexOf("تعديل") === -1) continue;
-      if (txt.indexOf("GPS") === -1 && txt.indexOf("تلقائي") === -1 && txt.indexOf("👤") === -1) continue;
-      if (!el.querySelector("button")) continue;
-      if (hasDarkBackground(el)) {
-        el.setAttribute("data-ab-dark-profile-card", "1");
-      }
-    }
-
-    // ب) إضافة هامش سفلي للحاوية التي تضم تفصيل الكميات وأزرار الفاتورة السفلية
-    var allEls = document.querySelectorAll("div, section");
-    for (var j = 0; j < allEls.length; j++) {
-      var box = allEls[j];
-      if (!box || box.getAttribute("data-ab-inv-pad") === "1") continue;
-      var t = String(box.textContent || "");
-      if (t.indexOf("تفصيل الكميات الرسمي") !== -1 && box.offsetHeight > 220) {
-        var par = box.parentElement;
-        if (par && par !== document.body && par.offsetHeight > 300) {
-          par.setAttribute("data-ab-inv-pad", "1");
-        } else {
-          box.setAttribute("data-ab-inv-pad", "1");
-        }
-        break;
-      }
-    }
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyInvoicePolish, { once: true });
-  } else {
-    applyInvoicePolish();
-  }
-  window.addEventListener("load", function () {
-    applyInvoicePolish();
-    setTimeout(applyInvoicePolish, 450);
-  });
-  document.addEventListener("click", function (ev) {
-    var btn = ev && ev.target && ev.target.closest ? ev.target.closest("button, [role='button']") : null;
-    if (!btn) return;
-    var txt = String(btn.textContent || "");
-    if (txt.indexOf("الفاتورة") !== -1 || txt.indexOf("حفظ") !== -1 || txt.indexOf("تعديل") !== -1) {
-      setTimeout(applyInvoicePolish, 180);
-    }
-  }, true);
-})();
-</script>
-<!-- ABUDHIYA_INVOICE_UI_POLISH_END -->
 
 
 
@@ -28121,6 +27999,131 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_ROCKSOLID_SW_REG_END -->
 
+
+<!-- ABUDHIYA_INVOICE_UI_POLISH_START -->
+<style id="abInvoiceUiPolishCss" data-ab-inv-polish="1">
+  /* 1) توضيح النص باللون الأبيض الساطع داخل بطاقة بيانات العميل الداكنة */
+  html body [data-ab-dark-profile-card="1"],
+  html body [data-ab-dark-profile-card="1"] *:not(button):not(button *):not(a):not(a *) {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
+  }
+  html body [data-ab-dark-profile-card="1"] button,
+  html body [data-ab-dark-profile-card="1"] button * {
+    background-color: #ffffff !important;
+    color: #042f22 !important;
+    -webkit-text-fill-color: #042f22 !important;
+  }
+
+  /* هامش متوازن فوق الشريط العائم بدون فراغات داخل بطاقة الفاتورة */
+  html body {
+    padding-bottom: 92px !important;
+  }
+  html body #invoiceView,
+  html body #viewInvoice,
+  html body .invoice-view,
+  html body .view-invoice,
+  html body [data-ab-inv-pad="1"] {
+    padding-bottom: 14px !important;
+    box-sizing: border-box !important;
+  }
+</style>
+<script data-ab-inv-polish="1">
+(function () {
+  if (window.__abInvoiceUiPolishV1) return;
+  window.__abInvoiceUiPolishV1 = true;
+
+  function hasDarkBackground(el) {
+    try {
+      var cs = window.getComputedStyle(el);
+      var bg = String(cs.backgroundColor || "");
+      var m = bg.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?/i);
+      if (m) {
+        var alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
+        if (alpha > 0.4) {
+          var lum = 0.299 * Number(m[1]) + 0.587 * Number(m[2]) + 0.114 * Number(m[3]);
+          if (lum < 115) return true;
+        }
+      }
+      var bi = String(cs.backgroundImage || "");
+      if (bi && bi !== "none") {
+        var rgbs = bi.match(/rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+/gi);
+        if (rgbs && rgbs.length) {
+          var sum = 0;
+          for (var i = 0; i < rgbs.length; i++) {
+            var p = rgbs[i].match(/\d+/g);
+            if (p && p.length >= 3) {
+              sum += 0.299 * Number(p[0]) + 0.587 * Number(p[1]) + 0.114 * Number(p[2]);
+            }
+          }
+          if ((sum / rgbs.length) < 115) return true;
+        }
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function applyInvoicePolish() {
+    if (!document.body) return;
+
+    // أ) رصد بطاقة بيانات العميل الداكنة (تحتوي زر تعديل + GPS/تلقائي) وتثبيت النص الأبيض بداخلها
+    var blocks = document.querySelectorAll("div, section");
+    for (var i = 0; i < blocks.length; i++) {
+      var el = blocks[i];
+      if (!el || el.closest("#abInstallGateOverlay, #abAutoPushBanner")) continue;
+      if (el.getAttribute("data-ab-dark-profile-card") === "1") continue;
+      var h = el.offsetHeight || 0;
+      if (h < 42 || h > 230) continue;
+      var txt = String(el.textContent || "");
+      if (txt.length > 260) continue;
+      if (txt.indexOf("تعديل") === -1) continue;
+      if (txt.indexOf("GPS") === -1 && txt.indexOf("تلقائي") === -1 && txt.indexOf("👤") === -1) continue;
+      if (!el.querySelector("button")) continue;
+      if (hasDarkBackground(el)) {
+        el.setAttribute("data-ab-dark-profile-card", "1");
+      }
+    }
+
+    // ب) إضافة هامش سفلي للحاوية التي تضم تفصيل الكميات وأزرار الفاتورة السفلية
+    var allEls = document.querySelectorAll("div, section");
+    for (var j = 0; j < allEls.length; j++) {
+      var box = allEls[j];
+      if (!box || box.getAttribute("data-ab-inv-pad") === "1") continue;
+      var t = String(box.textContent || "");
+      if (t.indexOf("تفصيل الكميات الرسمي") !== -1 && box.offsetHeight > 220) {
+        var par = box.parentElement;
+        if (par && par !== document.body && par.offsetHeight > 300) {
+          par.setAttribute("data-ab-inv-pad", "1");
+        } else {
+          box.setAttribute("data-ab-inv-pad", "1");
+        }
+        break;
+      }
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyInvoicePolish, { once: true });
+  } else {
+    applyInvoicePolish();
+  }
+  window.addEventListener("load", function () {
+    applyInvoicePolish();
+    setTimeout(applyInvoicePolish, 450);
+  });
+  document.addEventListener("click", function (ev) {
+    var btn = ev && ev.target && ev.target.closest ? ev.target.closest("button, [role='button']") : null;
+    if (!btn) return;
+    var txt = String(btn.textContent || "");
+    if (txt.indexOf("الفاتورة") !== -1 || txt.indexOf("حفظ") !== -1 || txt.indexOf("تعديل") !== -1) {
+      setTimeout(applyInvoicePolish, 180);
+    }
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_INVOICE_UI_POLISH_END -->
+
 <!-- ABUDHIYA_CUSTOMER_ZERO_CLUTTER_START -->
 <style id="abCustomerZeroClutterCss" data-ab-zero-clutter="1">
   html, body {
@@ -28149,17 +28152,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     -webkit-text-fill-color: #042f22 !important;
   }
 
-  /* 3) رفع الصفحة فوق الشريط العائم بدون فراغات زائدة داخل بطاقة الفاتورة */
+  /* هامش متوازن فوق الشريط العائم بدون فراغات داخل بطاقة الفاتورة */
   html body {
-    padding-bottom: 110px !important;
+    padding-bottom: 92px !important;
   }
   html body #invoiceView,
   html body #viewInvoice,
   html body .invoice-view,
-  html body .view-invoice {
-    padding-bottom: 20px !important;
-    box-sizing: border-box !important;
-  }
+  html body .view-invoice,
   html body [data-ab-inv-pad="1"] {
     padding-bottom: 14px !important;
     box-sizing: border-box !important;
