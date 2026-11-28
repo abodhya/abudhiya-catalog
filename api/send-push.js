@@ -67,7 +67,7 @@ module.exports = async function handler(req, res) {
 
     const appId = String(body.app_id || "").trim();
     const restKey = String(body.rest_key || "").trim();
-    const title = String(body.title || "🔥 عروض جديدة من أبوضياء للتوزيع").trim();
+    const title = String(body.title || "🔥 عروض جديدة من ابوسيف للتجارة").trim();
     const msg = String(body.body || "افتح المتجر الآن وتصفح أحدث العروض.").trim();
     const url = String(body.url || "https://abudhiya-catalog.vercel.app/").trim();
     const image = String(body.image || "").trim();

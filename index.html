@@ -176,6 +176,7 @@
 
 
 
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -22625,8 +22626,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       return {
         id: "direct_" + (pid || "gen") + "_" + (t || "").slice(0, 18),
         kind: "offer",
-        tag: "📣 إعلان مباشر من أبوضياء للتوزيع",
-        title: t || (p ? ("✨ عرض خاص: " + p.name) : "🔥 عرض جديد من أبوضياء للتوزيع"),
+        tag: "📣 إعلان مباشر من ابوسيف للتجارة",
+        title: t || (p ? ("✨ عرض خاص: " + p.name) : "🔥 عرض جديد من ابوسيف للتجارة"),
         desc: d || (p ? ("الصنف متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ").") : "اطلب الآن بلمسة واحدة من المتجر."),
         img: p ? getProdImg(p) : "",
         pid: p ? String(p.id) : "",
@@ -22713,7 +22714,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
           kind: "new",
           tag: "✨ وصل حديثاً",
           title: String(np.name || "صنف جديد"),
-          desc: "صنف جديد أُضيف للتو إلى كتالوج أبوضياء للتوزيع (" + (np.unit || "كرتون") + ").",
+          desc: "صنف جديد أُضيف للتو إلى كتالوج ابوسيف للتجارة (" + (np.unit || "كرتون") + ").",
           img: getProdImg(np),
           pid: String(np.id)
         });
@@ -22894,7 +22895,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
     var pid = sel ? String(sel.value || "").trim() : "";
     var p = pid ? findProdById(pid) : null;
-    var title = (titleInp ? titleInp.value : "").trim() || (p ? ("✨ عرض جديد: " + p.name) : "🔥 عروض جديدة من أبوضياء للتوزيع");
+    var title = (titleInp ? titleInp.value : "").trim() || (p ? ("✨ عرض جديد: " + p.name) : "🔥 عروض جديدة من ابوسيف للتجارة");
     var desc = (descInp ? descInp.value : "").trim() || (p ? ("متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ").") : "اطلب الآن بلمسة واحدة من تطبيق المتجر.");
 
     var base = window.location.origin + window.location.pathname;
@@ -22911,7 +22912,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       desc + "\n\n" +
       "📲 *للطلب المباشر من التطبيق بلمسة واحدة:*\n" +
       link + "\n\n" +
-      "🏢 *أبوضياء للتوزيع* — سيئون\n" +
+      "🏢 *ابوسيف للتجارة* — سيئون\n" +
       "📞 771458609";
 
     return {
@@ -23727,7 +23728,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
     var pid = (document.getElementById("abPsProdSel") || {}).value || "";
     var p = pid ? findProd(pid) : null;
-    var title = ((document.getElementById("abPsTitleInp") || {}).value || "").trim() || (p ? ("✨ عرض جديد: " + p.name) : "🔥 عروض جديدة من أبوضياء للتوزيع");
+    var title = ((document.getElementById("abPsTitleInp") || {}).value || "").trim() || (p ? ("✨ عرض جديد: " + p.name) : "🔥 عروض جديدة من ابوسيف للتجارة");
     var body = ((document.getElementById("abPsDescInp") || {}).value || "").trim() || (p ? ("متوفر الآن للطلب الفوري (" + (p.unit || "كرتون") + ").") : "افتح التطبيق الآن وتصفح أحدث العروض.");
 
     var base = window.location.origin + window.location.pathname;
@@ -23834,7 +23835,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         '<input type="search" id="abPsSearchInp" class="ab-pm-inp" placeholder="ابحث باسم الصنف...">' +
         '<select id="abPsProdSel" class="ab-pm-sel"></select>' +
         '<label class="ab-pm-lbl">✏️ عنوان الإشعار (يظهر بخط عريض على شاشة القفل):</label>' +
-        '<input type="text" id="abPsTitleInp" class="ab-pm-inp" placeholder="مثال: 🔥 وصل حديثاً عرض خاص من أبوضياء">' +
+        '<input type="text" id="abPsTitleInp" class="ab-pm-inp" placeholder="مثال: 🔥 وصل حديثاً عرض خاص من ابوسيف للتجارة">' +
         '<label class="ab-pm-lbl">📝 نص الإشعار:</label>' +
         '<textarea id="abPsDescInp" class="ab-pm-txt" placeholder="اطلب الآن بلمسة واحدة قبل نفاد الكمية..."></textarea>' +
         '<button type="button" id="abPsSendBtn" class="ab-ps-send-btn">🚀 إرسال إشعار شاشة القفل للجميع الآن</button>' +
@@ -28354,5 +28355,124 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_CUSTOMER_ZERO_CLUTTER_END -->
+
+<!-- ABUDHIYA_PROMO_POPUP_POLISH_START -->
+<script data-ab-promo-polish="1">
+(function () {
+  if (window.__abPromoPopupPolishV1) return;
+  window.__abPromoPopupPolishV1 = true;
+
+  var BAD_AD_RE = /((?:[إا]علان\s*مباشر|عرض\s*جديد|عرض\s*خاص)\s*من\s*)(?:(?:مؤسسة|متجر)\s+)?[أاإ]بو\s*ضياء(?:\s+(?:للتوزيع|للتجارة|العالمي))?/g;
+
+  function hideEmptyFrame(img, frame) {
+    try {
+      if (img) img.style.display = "none";
+      if (frame) frame.style.display = "none";
+    } catch (e) {}
+  }
+
+  function showValidFrame(img, frame) {
+    try {
+      if (img) img.style.display = "";
+      if (frame) frame.style.display = "";
+    } catch (e) {}
+  }
+
+  function findEmptyWrapper(img, root) {
+    var p = img && img.parentElement;
+    if (!p || p === root || p === document.body) return null;
+    var txt = String(p.textContent || "").trim();
+    if (!txt && p.querySelectorAll("button, a, input").length === 0) {
+      return p;
+    }
+    return null;
+  }
+
+  function polishPromoModals() {
+    try {
+      if (!document.body) return;
+      var nodes = document.querySelectorAll("div, span, p, h1, h2, h3, h4, b, strong");
+      var promoRoots = [];
+
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (!el || el.children.length > 0) continue;
+        var t = String(el.textContent || "");
+        var isAd = t.indexOf("إعلان مباشر") !== -1 || t.indexOf("اعلان مباشر") !== -1 || t.indexOf("عرض جديد") !== -1 || t.indexOf("عرض خاص") !== -1;
+        if (!isAd) continue;
+
+        if (BAD_AD_RE.test(t)) {
+          BAD_AD_RE.lastIndex = 0;
+          el.textContent = t.replace(BAD_AD_RE, "$1ابوسيف للتجارة");
+        }
+        BAD_AD_RE.lastIndex = 0;
+
+        var box = el.parentElement;
+        for (var step = 0; step < 5 && box && box !== document.body; step++) {
+          var bt = String(box.textContent || "");
+          if (bt.indexOf("تصفح المتجر") !== -1 || bt.indexOf("لاحقاً") !== -1) {
+            if (promoRoots.indexOf(box) === -1) promoRoots.push(box);
+            break;
+          }
+          box = box.parentElement;
+        }
+      }
+
+      for (var r = 0; r < promoRoots.length; r++) {
+        var modal = promoRoots[r];
+        var imgs = modal.querySelectorAll("img");
+        for (var k = 0; k < imgs.length; k++) {
+          (function (img, root) {
+            var frame = findEmptyWrapper(img, root);
+            var rawSrc = String(img.getAttribute("src") || "").trim();
+            var isEmpty = !rawSrc || rawSrc === "#" || rawSrc === "null" || rawSrc === "undefined";
+            var isBroken = img.complete && img.naturalWidth === 0;
+
+            if (isEmpty || isBroken) {
+              hideEmptyFrame(img, frame);
+            } else if (img.complete && img.naturalWidth > 0) {
+              showValidFrame(img, frame);
+            }
+
+            if (!img.getAttribute("data-ab-promo-img-hook")) {
+              img.setAttribute("data-ab-promo-img-hook", "1");
+              img.addEventListener("error", function () { hideEmptyFrame(img, frame); });
+              img.addEventListener("load", function () {
+                if (img.naturalWidth > 0) showValidFrame(img, frame);
+                else hideEmptyFrame(img, frame);
+              });
+            }
+          })(imgs[k], modal);
+        }
+
+        var divs = modal.querySelectorAll("div");
+        for (var d = 0; d < divs.length; d++) {
+          var dv = divs[d];
+          if (!dv || dv.offsetHeight < 80) continue;
+          if (String(dv.textContent || "").trim()) continue;
+          if (dv.querySelector("button, a, input, video, canvas, svg")) continue;
+          var visImg = dv.querySelector("img");
+          if (!visImg || visImg.style.display === "none" || (visImg.complete && visImg.naturalWidth === 0)) {
+            dv.style.display = "none";
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", polishPromoModals, { once: true });
+  } else {
+    polishPromoModals();
+  }
+  window.addEventListener("load", function () {
+    polishPromoModals();
+    setTimeout(polishPromoModals, 500);
+    setTimeout(polishPromoModals, 1400);
+  });
+  setInterval(polishPromoModals, 1500);
+})();
+</script>
+<!-- ABUDHIYA_PROMO_POPUP_POLISH_END -->
 </body>
 </html>
