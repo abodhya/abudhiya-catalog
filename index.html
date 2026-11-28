@@ -412,6 +412,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -29581,5 +29583,237 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_POST_INSTALL_EXIT_END -->
+
+<!-- ABUDHIYA_CLEAR_DOCK_UNITS_START -->
+<style id="abClearDockUnitsStyle">
+  [data-ab-units-zero="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+</style>
+<script data-ab-clear-dock-units="1">
+(function () {
+  if (window.__abClearDockUnitsV1) return;
+  window.__abClearDockUnitsV1 = true;
+
+  var KNOWN_PILL_IDS = ["abUnifiedUnitsPill"];
+  var UNITS_MARKER_RE = /(?:📦|🛍|كرتون|كيس)/;
+  var PURE_NUM_RE = /^[0-9\u0660-\u0669]{1,4}$/;
+  var dockObserved = null;
+  var revealTimers = new WeakMap();
+
+  function norm(s) {
+    return String(s || "").replace(/\s+/g, " ").trim();
+  }
+
+  function toEnDigits(s) {
+    return String(s || "").replace(/[\u0660-\u0669]/g, function (d) {
+      return String(d.charCodeAt(0) - 0x0660);
+    });
+  }
+
+  function findInvoiceDockButton() {
+    var nodes = document.querySelectorAll("button, a, div");
+    var best = null;
+    var bestLen = 9999;
+    var winH = window.innerHeight || 800;
+
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      if (!el) continue;
+      var t = norm(el.textContent);
+      if (!t || t.length > 85 || t.indexOf("الفاتورة") === -1) continue;
+      if (t.indexOf("الأصناف") !== -1) continue;
+
+      var rect;
+      try { rect = el.getBoundingClientRect(); } catch (e) { continue; }
+      if (!rect || rect.width < 60 || rect.height < 24 || rect.height > 110) continue;
+      if (rect.bottom < winH - 160) continue;
+
+      if (t.length < bestLen) {
+        bestLen = t.length;
+        best = el;
+      }
+    }
+    return best;
+  }
+
+  function isInsideUnitsSubtree(leaf, stopAt) {
+    var cur = leaf && leaf.parentElement;
+    while (cur && cur !== stopAt && cur !== document.body) {
+      var t = norm(cur.textContent);
+      if (t.indexOf("الفاتورة") === -1 && (UNITS_MARKER_RE.test(t) || t.indexOf("•") !== -1)) {
+        return true;
+      }
+      cur = cur.parentElement;
+    }
+    return false;
+  }
+
+  function readInvoiceCount(invBtn) {
+    if (invBtn) {
+      var leaves = invBtn.querySelectorAll("span, div, b, strong, small");
+      for (var i = 0; i < leaves.length; i++) {
+        var lf = leaves[i];
+        if (!lf || lf.children.length > 0) continue;
+        var txt = norm(lf.textContent);
+        if (!PURE_NUM_RE.test(txt)) continue;
+        if (isInsideUnitsSubtree(lf, invBtn)) continue;
+        var n = parseInt(toEnDigits(txt), 10);
+        if (!isNaN(n)) return n;
+      }
+    }
+
+    // احتياطي: قراءة شارة «المختار (0)» إذا كانت ظاهرة
+    var btns = document.querySelectorAll("button, span, div");
+    for (var j = 0; j < btns.length; j++) {
+      var b = btns[j];
+      if (!b || b.children.length > 2) continue;
+      var bt = norm(b.textContent);
+      if (bt.length > 26 || bt.indexOf("المختار") === -1) continue;
+      var m = toEnDigits(bt).match(/المختار\s*\(\s*(\d+)\s*\)/);
+      if (m) return parseInt(m[1], 10);
+    }
+    return null;
+  }
+
+  function collectDockUnitsPills(invBtn) {
+    var result = [];
+    function addUnique(el) {
+      if (!el || el === invBtn || el === document.body) return;
+      var t = norm(el.textContent);
+      if (t.indexOf("الفاتورة") !== -1 || t.indexOf("الأصناف") !== -1) return;
+      if (result.indexOf(el) === -1) result.push(el);
+    }
+
+    // 1) المعرفات المكتشفة من syncUnitsIntoUnifiedPill
+    for (var k = 0; k < KNOWN_PILL_IDS.length; k++) {
+      var byId = document.getElementById(KNOWN_PILL_IDS[k]);
+      if (byId && invBtn && (invBtn.contains(byId) || (invBtn.parentElement && invBtn.parentElement.contains(byId)))) {
+        addUnique(byId);
+      }
+    }
+
+    if (!invBtn) return result;
+
+    // 2) البحث عن كبسولة الوحدات داخل زر الفاتورة أو بجانبه داخل الشريط السفلي
+    var scopes = [invBtn];
+    if (invBtn.parentElement && invBtn.parentElement !== document.body) {
+      scopes.push(invBtn.parentElement);
+    }
+
+    for (var s = 0; s < scopes.length; s++) {
+      var scope = scopes[s];
+      var nodes = scope.querySelectorAll("span, div, small, b, strong");
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (!el || el === invBtn) continue;
+        var t = norm(el.textContent);
+        if (!t || t.length > 55) continue;
+        if (t.indexOf("الفاتورة") !== -1 || t.indexOf("الأصناف") !== -1) continue;
+        if (!UNITS_MARKER_RE.test(t)) continue;
+
+        // الصعود لأعلى حاوية خاصة بكبسولة الكميات فقط دون شمل زر الفاتورة
+        var target = el;
+        var p = el.parentElement;
+        while (p && p !== invBtn && p !== scope && p !== document.body) {
+          var pt = norm(p.textContent);
+          if (pt.indexOf("الفاتورة") !== -1 || pt.indexOf("الأصناف") !== -1 || pt.length > 60) break;
+          target = p;
+          p = p.parentElement;
+        }
+        addUnique(target);
+      }
+    }
+    return result;
+  }
+
+  function syncDockEmptyState() {
+    try {
+      if (!document.body) return;
+      var invBtn = findInvoiceDockButton();
+      if (!invBtn) return;
+
+      // مراقبة خفيفة مقتصرة على زر الفاتورة فقط لاستجابة لحظية بدون ارتجاج
+      if (dockObserved !== invBtn && typeof MutationObserver === "function") {
+        dockObserved = invBtn;
+        try {
+          var obs = new MutationObserver(function () { syncDockEmptyState(); });
+          obs.observe(invBtn, { childList: true, subtree: true, characterData: true });
+        } catch (eObs) {}
+      }
+
+      var count = readInvoiceCount(invBtn);
+      if (count === null) return;
+
+      var pills = collectDockUnitsPills(invBtn);
+      for (var i = 0; i < pills.length; i++) {
+        var pill = pills[i];
+        if (count === 0) {
+          var curTxt = norm(pill.textContent);
+          if (curTxt) pill.setAttribute("data-ab-last-zero-txt", curTxt);
+          pill.setAttribute("data-ab-units-zero", "1");
+          var prevT = revealTimers.get(pill);
+          if (prevT) { clearTimeout(prevT); revealTimers.delete(pill); }
+        } else {
+          if (pill.getAttribute("data-ab-units-zero") === "1") {
+            var staleTxt = pill.getAttribute("data-ab-last-zero-txt") || "";
+            var nowTxt = norm(pill.textContent);
+            if (!staleTxt || nowTxt !== staleTxt) {
+              pill.removeAttribute("data-ab-units-zero");
+              pill.removeAttribute("data-ab-last-zero-txt");
+            } else if (!revealTimers.has(pill)) {
+              (function (targetPill) {
+                var tm = setTimeout(function () {
+                  revealTimers.delete(targetPill);
+                  var cNow = readInvoiceCount(findInvoiceDockButton());
+                  if (cNow !== null && cNow > 0) {
+                    targetPill.removeAttribute("data-ab-units-zero");
+                    targetPill.removeAttribute("data-ab-last-zero-txt");
+                  }
+                }, 450);
+                revealTimers.set(targetPill, tm);
+              })(pill);
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  function scheduleBurstSync() {
+    syncDockEmptyState();
+    setTimeout(syncDockEmptyState, 40);
+    setTimeout(syncDockEmptyState, 160);
+    setTimeout(syncDockEmptyState, 450);
+    setTimeout(syncDockEmptyState, 1000);
+  }
+
+  document.addEventListener("click", function (ev) {
+    try {
+      var btn = ev.target && ev.target.closest ? ev.target.closest("button, a, [role='button']") : null;
+      if (!btn) return;
+      var t = norm(btn.textContent);
+      if (t.indexOf("تفريغ") !== -1 || t.indexOf("مسح") !== -1 || t === "×" || t === "✕" || t.toUpperCase() === "X") {
+        scheduleBurstSync();
+      }
+    } catch (e) {}
+  }, true);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleBurstSync, { once: true });
+  } else {
+    scheduleBurstSync();
+  }
+  window.addEventListener("load", scheduleBurstSync);
+  setInterval(syncDockEmptyState, 1200);
+})();
+</script>
+<!-- ABUDHIYA_CLEAR_DOCK_UNITS_END -->
 </body>
 </html>
