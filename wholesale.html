@@ -434,6 +434,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -31584,21 +31586,38 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_PAY_CASH_CREDIT_ONLY_END -->
 
+
+
 <!-- ABUDHIYA_QTY_UNDER_ITEMS_START -->
 <style id="abQtyUnderItemsStyle">
-  /* بطاقة تفصيل الكميات الرسمي مباشرة تحت جدول الأصناف */
-  [data-ab-qty-under-items="1"] {
+  /* إخفاء أي نسخة أصلية مكررة داخل المربع الأخضر + إخفاء الشريط الأسود الفارغ */
+  [data-ab-qty-orig-hidden="1"],
+  [data-ab-hollow-dark-bar="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* البطاقة الموحّدة الواضحة لتفصيل الكميات تحت جدول الأصناف مباشرة */
+  #abOfficialQtyMirrorCard {
     margin: 10px 0 12px !important;
     padding: 11px 12px 12px !important;
     border-radius: 16px !important;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    background: #ffffff !important;
     border: 1.5px solid #a7f3d0 !important;
     border-top: 3px solid #059669 !important;
-    box-shadow: 0 8px 22px -8px rgba(6, 78, 59, 0.16), 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+    box-shadow: 0 8px 22px -10px rgba(6, 78, 59, 0.18), 0 2px 6px rgba(15, 23, 42, 0.05) !important;
     box-sizing: border-box !important;
+    direction: rtl !important;
+    text-align: right !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-hdr="1"] {
+  #abOfficialQtyMirrorCard .ab-qm-hdr {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -31608,82 +31627,99 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     border-bottom: 1px dashed #cbd5e1 !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-title="1"] {
+  #abOfficialQtyMirrorCard .ab-qm-title {
     font-size: 13.5px !important;
     font-weight: 800 !important;
     color: #064e3b !important;
-    letter-spacing: 0 !important;
+    opacity: 1 !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-badge="1"] {
+  #abOfficialQtyMirrorCard .ab-qm-badge {
     background: #ecfdf5 !important;
     color: #065f46 !important;
     border: 1px solid #6ee7b7 !important;
     border-radius: 999px !important;
-    padding: 3px 10px !important;
+    padding: 3px 11px !important;
     font-size: 12px !important;
     font-weight: 800 !important;
-    line-height: 1.3 !important;
     white-space: nowrap !important;
+    opacity: 1 !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-grid="1"] {
+  #abOfficialQtyMirrorCard .ab-qm-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 9px !important;
-    margin: 0 !important;
-    padding: 0 !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile="bags"] {
-    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
-    border: 1.5px solid #fcd34d !important;
+  #abOfficialQtyMirrorCard .ab-qm-tile {
     border-radius: 13px !important;
     padding: 9px 10px !important;
     text-align: center !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
     box-sizing: border-box !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile="cartons"] {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
-    border: 1.5px solid #7dd3fc !important;
-    border-radius: 13px !important;
-    padding: 9px 10px !important;
-    text-align: center !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
-    box-sizing: border-box !important;
+  #abOfficialQtyMirrorCard .ab-qm-tile-bags {
+    background: #fffbeb !important;
+    border: 1.5px solid #f59e0b !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile] > div:first-child,
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile] > span:first-child {
+  #abOfficialQtyMirrorCard .ab-qm-tile-cartons {
+    background: #f0f9ff !important;
+    border: 1.5px solid #38bdf8 !important;
+  }
+
+  #abOfficialQtyMirrorCard .ab-qm-lbl {
     font-size: 12px !important;
-    font-weight: 700 !important;
-    color: #334155 !important;
-    margin-bottom: 3px !important;
+    font-weight: 800 !important;
+    margin-bottom: 4px !important;
+    opacity: 1 !important;
   }
 
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile] > div:last-child,
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile] > strong:last-child,
-  [data-ab-qty-under-items="1"] [data-ab-qty-tile] > b:last-child {
-    font-size: 16.5px !important;
-    font-weight: 800 !important;
+  #abOfficialQtyMirrorCard .ab-qm-tile-bags .ab-qm-lbl {
+    color: #92400e !important;
+  }
+
+  #abOfficialQtyMirrorCard .ab-qm-tile-cartons .ab-qm-lbl {
+    color: #0369a1 !important;
+  }
+
+  #abOfficialQtyMirrorCard .ab-qm-val {
+    font-size: 18px !important;
+    font-weight: 900 !important;
     color: #0f172a !important;
     line-height: 1.25 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
   }
 </style>
-<script data-ab-qty-under-items-js="1">
+<script data-ab-qty-under-items-js="2">
 (function () {
-  if (window.__abQtyUnderItemsV1) return;
-  window.__abQtyUnderItemsV1 = true;
+  if (window.__abQtyUnderItemsV2) return;
+  window.__abQtyUnderItemsV2 = true;
 
   function norm(s) {
     return String(s == null ? "" : s).replace(/\s+/g, " ").trim();
   }
 
+  function toEnDigits(s) {
+    return String(s == null ? "" : s).replace(/[\u0660-\u0669]/g, function (d) {
+      return String(d.charCodeAt(0) - 0x0660);
+    });
+  }
+
   function isInsideModal(el) {
     if (!el || !el.closest) return false;
     return !!el.closest("#qtyModal, #abRoleOnboardOverlay, #abInstallGateOverlay, #abPostInstallExitOverlay, .modal");
+  }
+
+  function isAdminMode() {
+    try {
+      var r = String(localStorage.getItem("ab_app_role_v1") || "").toLowerCase();
+      return r === "admin" || r === "manager" || r === "owner";
+    } catch (e) {
+      return false;
+    }
   }
 
   function findInvoiceItemsAnchor() {
@@ -31693,7 +31729,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     for (var i = 0; i < tables.length; i++) {
       var tbl = tables[i];
       if (!tbl || isInsideModal(tbl)) continue;
-      // استبعاد جداول إيصالات المستودع
       var parTxt = norm(tbl.parentElement ? tbl.parentElement.textContent : "");
       if (parTxt.indexOf("الإيصال الرسمي للطلب") !== -1 || parTxt.indexOf("إيصال طلب إلكتروني") !== -1) continue;
 
@@ -31706,7 +31741,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     }
     if (!invTbl) return null;
 
-    // إذا كان الجدول داخل غلاف مباشر خاص بالجدول وحده نصعد إليه لوضع البطاقة بعده مباشرة
     var anchor = invTbl;
     var tblBtns = invTbl.querySelectorAll("button, a").length;
     var p = invTbl.parentElement;
@@ -31716,7 +31750,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         pt.indexOf("طريقة الدفع") !== -1 ||
         pt.indexOf("فاتورة طلب") !== -1 ||
         pt.indexOf("أرشيف الطلبات") !== -1 ||
-        pt.indexOf("بياناتك ومندوبك") !== -1
+        pt.indexOf("تفصيل الكميات") !== -1 ||
+        pt.indexOf("بياناتك ومندوبك") !== -1 ||
+        p.querySelector("#abOfficialQtyMirrorCard, #abPayAboveTableBox")
       ) {
         break;
       }
@@ -31727,22 +31763,25 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         break;
       }
     }
-    return anchor;
+    return { anchor: anchor, table: invTbl };
   }
 
-  function findQtySplitCard() {
+  function findOriginalQtyCards() {
+    var cards = [];
     var nodes = document.querySelectorAll("div, section, span, p, h3, h4, strong, b");
+
     for (var i = 0; i < nodes.length; i++) {
       var el = nodes[i];
       if (!el || isInsideModal(el)) continue;
+      if (el.closest && el.closest("#abOfficialQtyMirrorCard")) continue;
       if (el.children.length > 2) continue;
       var t = norm(el.textContent);
       if (!t || t.length > 45 || t.indexOf("تفصيل الكميات") === -1) continue;
 
-      // الصعود إلى بطاقة «تفصيل الكميات الرسمي» التي تجمع العنوان وبطاقتي الأكياس والكراتين فقط
       var cur = el.parentElement;
       var card = null;
       for (var step = 0; step < 5 && cur && cur !== document.body; step++) {
+        if (cur.id === "abOfficialQtyMirrorCard") { card = null; break; }
         var ct = norm(cur.textContent);
         if (
           ct.indexOf("أرشيف الطلبات") !== -1 ||
@@ -31758,103 +31797,196 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         cur = cur.parentElement;
       }
 
-      if (card) return card;
+      if (card && cards.indexOf(card) === -1) {
+        cards.push(card);
+      }
     }
-    return null;
+    return cards;
   }
 
-  function polishSplitCardStructure(card) {
-    if (!card) return;
-    card.setAttribute("data-ab-qty-under-items", "1");
+  function extractCountsFromCard(card, invTable) {
+    var raw = card ? toEnDigits(norm(card.textContent)) : "";
+    var mItems = raw.match(/(\d+)\s*صنف/);
+    var mBags = raw.match(/(\d+(?:\.\d+)?)\s*(?:كيس|أكياس|اكياس)/);
+    var mCartons = raw.match(/(\d+(?:\.\d+)?)\s*(?:كرتون|كراتين)/);
 
-    var divs = card.querySelectorAll("div, span, p");
-    var bagsTile = null;
-    var cartonsTile = null;
+    var itemsVal = mItems ? mItems[1] : null;
+    if (itemsVal === null && invTable) {
+      var rows = invTable.querySelectorAll("tbody tr");
+      var cnt = 0;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].querySelectorAll("td").length >= 2) cnt++;
+      }
+      itemsVal = String(cnt);
+    }
 
-    for (var i = 0; i < divs.length; i++) {
-      var el = divs[i];
-      if (!el || el === card) continue;
+    return {
+      items: itemsVal !== null ? itemsVal : "0",
+      bags: mBags ? mBags[1] : "0",
+      cartons: mCartons ? mCartons[1] : "0"
+    };
+  }
+
+  function isDarkRgb(bg) {
+    var m = String(bg || "").match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/i);
+    if (!m) return false;
+    var r = parseInt(m[1], 10), g = parseInt(m[2], 10), b = parseInt(m[3], 10);
+    var a = m[4] !== undefined ? parseFloat(m[4]) : 1;
+    if (a < 0.4) return false;
+    return r < 60 && g < 60 && b < 60;
+  }
+
+  function hideHollowDarkBarInActionBox() {
+    if (isAdminMode() || !document.body) return;
+    // تحديد زر «أرشيف الطلبات» ثم تنظيف الشريط الأسود الفارغ فوقه داخل نفس المربع الأخضر
+    var btns = document.querySelectorAll("button, a, div");
+    var archEl = null;
+    for (var i = 0; i < btns.length; i++) {
+      var el = btns[i];
+      if (!el || isInsideModal(el) || el.children.length > 2) continue;
       var t = norm(el.textContent);
-      if (!t || t.length > 70) continue;
-
-      // شارة عدد الأصناف (مثلاً: 2 صنف)
-      if (/^[0-9\u0660-\u0669]+\s*صنف$/.test(t) && el.children.length === 0) {
-        el.setAttribute("data-ab-qty-badge", "1");
-        if (el.parentElement && el.parentElement !== card) {
-          el.parentElement.setAttribute("data-ab-qty-hdr", "1");
-        }
-      }
-
-      // نص العنوان (تفصيل الكميات الرسمي)
-      if (t.indexOf("تفصيل الكميات") !== -1 && t.length < 36 && el.children.length <= 1) {
-        el.setAttribute("data-ab-qty-title", "1");
-        if (el.parentElement && el.parentElement !== card) {
-          el.parentElement.setAttribute("data-ab-qty-hdr", "1");
-        }
-      }
-
-      // بطاقة عدد الأكياس وبطاقة عدد الكراتين
-      if (t.indexOf("عدد الأكياس") !== -1 && t.indexOf("عدد الكراتين") === -1 && t.indexOf("تفصيل") === -1 && t.length < 40) {
-        if (!bagsTile || el.textContent.length >= bagsTile.textContent.length) {
-          bagsTile = el;
-        }
-      }
-      if (t.indexOf("عدد الكراتين") !== -1 && t.indexOf("عدد الأكياس") === -1 && t.indexOf("تفصيل") === -1 && t.length < 40) {
-        if (!cartonsTile || el.textContent.length >= cartonsTile.textContent.length) {
-          cartonsTile = el;
-        }
+      if (t.length <= 42 && t.indexOf("أرشيف الطلبات") !== -1) {
+        archEl = el;
+        break;
       }
     }
+    if (!archEl) return;
 
-    if (bagsTile) bagsTile.setAttribute("data-ab-qty-tile", "bags");
-    if (cartonsTile) cartonsTile.setAttribute("data-ab-qty-tile", "cartons");
+    var box = archEl.parentElement;
+    for (var s = 0; s < 5 && box && box !== document.body; s++) {
+      var bt = norm(box.textContent);
+      if (bt.indexOf("أرشيف الطلبات") !== -1 && (bt.indexOf("اعتماد الطلب") !== -1 || bt.indexOf("تفصيل الكميات") !== -1)) {
+        break;
+      }
+      box = box.parentElement;
+    }
+    if (!box || box === document.body) return;
 
-    if (bagsTile && cartonsTile && bagsTile.parentElement && bagsTile.parentElement === cartonsTile.parentElement && bagsTile.parentElement !== card) {
-      bagsTile.parentElement.setAttribute("data-ab-qty-grid", "1");
+    var items = box.querySelectorAll("div, button, span");
+    for (var k = 0; k < items.length; k++) {
+      var node = items[k];
+      if (!node || node.getAttribute("data-ab-hollow-dark-bar") === "1") continue;
+      if (node.contains(archEl)) continue;
+      var txt = norm(node.textContent);
+      if (txt.indexOf("أرشيف") !== -1 || txt.indexOf("اعتماد") !== -1 || txt.indexOf("مندوب") !== -1 || txt.indexOf("حفظ") !== -1 || txt.indexOf("نسخ") !== -1) continue;
+
+      var st = null;
+      try { st = getComputedStyle(node); } catch (e) {}
+      if (!st || st.display === "none") continue;
+
+      var onlyEmptyOrGear = (txt === "" || txt === "⚙" || txt === "⚙️");
+      if (!onlyEmptyOrGear) continue;
+
+      var w = node.offsetWidth || 0;
+      var h = node.offsetHeight || 0;
+      var isDarkBar = (isDarkRgb(st.backgroundColor) || String(st.backgroundImage || "").indexOf("gradient") !== -1) && w >= 120 && h >= 14 && h <= 75;
+      var isTinyGear = (txt === "⚙" || txt === "⚙️") && w <= 48 && h <= 48;
+
+      if (isDarkBar || isTinyGear) {
+        node.setAttribute("data-ab-hollow-dark-bar", "1");
+        // إخفاء الحاوية المباشرة إذا كانت مخصصة فقط للشريط الأسود والترس بلا أي نص آخر
+        var par = node.parentElement;
+        if (par && par !== box && !par.contains(archEl)) {
+          var pt = norm(par.textContent);
+          if (pt === "" || pt === "⚙" || pt === "⚙️") {
+            par.setAttribute("data-ab-hollow-dark-bar", "1");
+          }
+        }
+      }
     }
   }
 
-  function relocateQtyCardUnderItems() {
+  function syncQtyMirrorCard() {
     try {
       if (!document.body) return;
-      var anchor = findInvoiceItemsAnchor();
-      var card = findQtySplitCard();
-      if (!anchor || !card || !anchor.parentNode) return;
-      if (card.contains(anchor) || anchor.contains(card)) return;
+      hideHollowDarkBarInActionBox();
 
-      polishSplitCardStructure(card);
+      var info = findInvoiceItemsAnchor();
+      if (!info || !info.anchor || !info.anchor.parentNode) return;
 
-      // نقل البطاقة الحية مباشرةً بعد جدول الأصناف (مع إبقاء كل التحديثات الديناميكية شغّالة)
-      if (anchor.nextElementSibling !== card) {
-        anchor.parentNode.insertBefore(card, anchor.nextSibling);
+      // 1) إخفاء كل البطاقات الأصلية داخل المربع الأخضر (بدون نقلها حتى لا يعيد السكربت الأصلي توليدها)
+      var origCards = findOriginalQtyCards();
+      var sourceCard = null;
+      for (var i = 0; i < origCards.length; i++) {
+        origCards[i].setAttribute("data-ab-qty-orig-hidden", "1");
+        sourceCard = origCards[i];
       }
+
+      var counts = extractCountsFromCard(sourceCard, info.table);
+
+      // 2) إنشاء أو تحديث البطاقة الموحّدة الواضحة تحت جدول الأصناف مباشرة
+      var mirror = document.getElementById("abOfficialQtyMirrorCard");
+      if (!mirror) {
+        mirror = document.createElement("div");
+        mirror.id = "abOfficialQtyMirrorCard";
+        mirror.innerHTML =
+          '<div class="ab-qm-hdr">' +
+            '<span class="ab-qm-title">📊 تفصيل الكميات الرسمي</span>' +
+            '<span class="ab-qm-badge" id="abQmItemsCount">0 صنف</span>' +
+          '</div>' +
+          '<div class="ab-qm-grid">' +
+            '<div class="ab-qm-tile ab-qm-tile-bags">' +
+              '<div class="ab-qm-lbl">🛍️ عدد الأكياس</div>' +
+              '<div class="ab-qm-val" id="abQmBagsCount">0 كيس</div>' +
+            '</div>' +
+            '<div class="ab-qm-tile ab-qm-tile-cartons">' +
+              '<div class="ab-qm-lbl">📦 عدد الكراتين</div>' +
+              '<div class="ab-qm-val" id="abQmCartonsCount">0 كرتون</div>' +
+            '</div>' +
+          '</div>';
+      }
+
+      if (info.anchor.nextElementSibling !== mirror) {
+        info.anchor.parentNode.insertBefore(mirror, info.anchor.nextSibling);
+      }
+
+      var elItems = document.getElementById("abQmItemsCount");
+      var elBags = document.getElementById("abQmBagsCount");
+      var elCartons = document.getElementById("abQmCartonsCount");
+
+      var tItems = counts.items + " صنف";
+      var tBags = counts.bags + " كيس";
+      var tCartons = counts.cartons + " كرتون";
+
+      if (elItems && elItems.textContent !== tItems) elItems.textContent = tItems;
+      if (elBags && elBags.textContent !== tBags) elBags.textContent = tBags;
+      if (elCartons && elCartons.textContent !== tCartons) elCartons.textContent = tCartons;
     } catch (e) {}
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", relocateQtyCardUnderItems, { once: true });
-  } else {
-    relocateQtyCardUnderItems();
+  function scheduleBurst() {
+    syncQtyMirrorCard();
+    setTimeout(syncQtyMirrorCard, 60);
+    setTimeout(syncQtyMirrorCard, 250);
+    setTimeout(syncQtyMirrorCard, 700);
   }
-  window.addEventListener("load", function () {
-    relocateQtyCardUnderItems();
-    setTimeout(relocateQtyCardUnderItems, 300);
-    setTimeout(relocateQtyCardUnderItems, 1000);
-  });
-  setInterval(relocateQtyCardUnderItems, 1400);
+
+  document.addEventListener("click", function () {
+    setTimeout(syncQtyMirrorCard, 80);
+    setTimeout(syncQtyMirrorCard, 350);
+  }, false);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleBurst, { once: true });
+  } else {
+    scheduleBurst();
+  }
+  window.addEventListener("load", scheduleBurst);
+  setInterval(syncQtyMirrorCard, 1200);
 })();
 </script>
 <!-- ABUDHIYA_QTY_UNDER_ITEMS_END -->
 
 <!-- ABUDHIYA_PAY_ABOVE_TABLE_START -->
 <style id="abPayAboveTableStyle">
+  #abPayAboveTableBox,
   [data-ab-pay-above-tbl="1"] {
-    margin: 8px 0 11px !important;
+    margin: 6px 0 10px !important;
     padding: 9px 10px 10px !important;
     border-radius: 14px !important;
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;
-    border: 1.5px solid #d1fae5 !important;
-    box-shadow: 0 4px 14px -6px rgba(6, 78, 59, 0.12) !important;
+    background: #f8fafc !important;
+    border: 1.5px solid #cbd5e1 !important;
+    box-shadow: 0 3px 10px -6px rgba(15, 23, 42, 0.14) !important;
     box-sizing: border-box !important;
   }
 
@@ -31867,7 +31999,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     text-align: right !important;
   }
 
-  [data-ab-pay-above-tbl="1"] [data-ab-pay-row-2col="1"],
   [data-ab-pay-above-tbl="1"] [data-ab-pay-btns-row="1"] {
     margin: 0 !important;
     padding: 0 !important;
@@ -31877,10 +32008,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     align-items: stretch !important;
   }
 </style>
-<script data-ab-pay-above-table-js="1">
+<script data-ab-pay-above-table-js="2">
 (function () {
-  if (window.__abPayAboveTableV1) return;
-  window.__abPayAboveTableV1 = true;
+  if (window.__abPayAboveTableV2) return;
+  window.__abPayAboveTableV2 = true;
 
   var CREDIT_RE = /[آاأ]جل/;
   var CASH_RE = /نقد/;
@@ -31923,7 +32054,8 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         pt.indexOf("فاتورة طلب") !== -1 ||
         pt.indexOf("أرشيف الطلبات") !== -1 ||
         pt.indexOf("تفصيل الكميات") !== -1 ||
-        pt.indexOf("بياناتك ومندوبك") !== -1
+        pt.indexOf("بياناتك ومندوبك") !== -1 ||
+        p.querySelector("#abOfficialQtyMirrorCard, #abPayAboveTableBox")
       ) {
         break;
       }
@@ -31937,8 +32069,21 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return anchor;
   }
 
+  function hasVisibleTextInput(el) {
+    var inps = el.querySelectorAll("input, textarea, select");
+    for (var i = 0; i < inps.length; i++) {
+      var tp = String(inps[i].type || "text").toLowerCase();
+      if (tp === "hidden" || tp === "radio" || tp === "checkbox") continue;
+      if (inps[i].getAttribute("data-ab-locked-hidden") === "1") continue;
+      try {
+        if (getComputedStyle(inps[i]).display !== "none") return true;
+      } catch (e) {}
+    }
+    return false;
+  }
+
   function findPaymentRow() {
-    var btns = document.querySelectorAll("button, a, [role='button']");
+    var btns = document.querySelectorAll("button, a, [role='button'], div[onclick]");
     for (var i = 0; i < btns.length; i++) {
       var b = btns[i];
       if (!b || isInsideModal(b)) continue;
@@ -31946,9 +32091,9 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       if (!t || t.length > 26 || !CREDIT_RE.test(t)) continue;
 
       var par = b.parentElement;
-      if (!par || par === document.body || par.querySelector("table, input, textarea, select")) continue;
+      if (!par || par === document.body || par.querySelector("table") || hasVisibleTextInput(par)) continue;
 
-      var sibs = par.querySelectorAll("button, a, [role='button']");
+      var sibs = par.querySelectorAll("button, a, [role='button'], div[onclick]");
       var hasCash = false;
       for (var j = 0; j < sibs.length; j++) {
         if (sibs[j] !== b && CASH_RE.test(norm(sibs[j].textContent))) {
@@ -31961,12 +32106,38 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return null;
   }
 
+  function findPayLabelElement(payRow) {
+    // 1) البحث في الأشقاء السابقين مباشرة
+    var prev = payRow && payRow.previousElementSibling;
+    for (var step = 0; step < 3 && prev; step++) {
+      var pt = norm(prev.textContent);
+      if (pt && pt.length <= 42 && pt.indexOf("طريقة الدفع") !== -1 && !prev.querySelector("button, a, table")) {
+        return prev;
+      }
+      prev = prev.previousElementSibling;
+    }
+    // 2) البحث داخل نفس الحاوية الأب لصف الدفع
+    var parent = payRow && payRow.parentElement;
+    if (parent && parent !== document.body) {
+      var kids = parent.querySelectorAll("div, span, p, label, strong, b");
+      for (var k = 0; k < kids.length; k++) {
+        var el = kids[k];
+        if (!el || payRow.contains(el) || el.contains(payRow)) continue;
+        var kt = norm(el.textContent);
+        if (kt && kt.length <= 42 && kt.indexOf("طريقة الدفع") !== -1 && !el.querySelector("button, a, table")) {
+          return el;
+        }
+      }
+    }
+    return null;
+  }
+
   function isDedicatedPayWrapper(el) {
     if (!el || el === document.body || el === document.documentElement) return false;
     var id = String(el.id || "").toLowerCase();
     if (id === "invoiceview" || id === "viewinvoice" || id === "app" || id === "main") return false;
     if (el.tagName === "FORM" || el.tagName === "MAIN" || el.tagName === "SECTION") return false;
-    if (el.querySelector("table, input, textarea, select")) return false;
+    if (el.querySelector("table") || hasVisibleTextInput(el)) return false;
     var t = norm(el.textContent);
     if (!t || t.length > 110) return false;
     if (
@@ -31982,18 +32153,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return t.indexOf("طريقة الدفع") !== -1;
   }
 
-  function findPayLabelSibling(payRow) {
-    var prev = payRow && payRow.previousElementSibling;
-    for (var step = 0; step < 2 && prev; step++) {
-      var pt = norm(prev.textContent);
-      if (pt && pt.length <= 40 && pt.indexOf("طريقة الدفع") !== -1 && !prev.querySelector("button, a, input, table")) {
-        return prev;
-      }
-      prev = prev.previousElementSibling;
-    }
-    return null;
-  }
-
   function relocatePaymentAboveTable() {
     try {
       if (!document.body) return;
@@ -32004,10 +32163,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
       payRow.setAttribute("data-ab-pay-btns-row", "1");
 
-      // حالة 1: «طريقة الدفع» موجودة أصلاً داخل حاوية مخصصة لها وحدها
       var existingBox = document.getElementById("abPayAboveTableBox");
-      var dedicatedParent = payRow.parentElement;
-
       if (existingBox && existingBox.contains(payRow)) {
         existingBox.setAttribute("data-ab-pay-above-tbl", "1");
         if (existingBox.nextElementSibling !== anchor) {
@@ -32016,24 +32172,18 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
         return;
       }
 
+      var dedicatedParent = payRow.parentElement;
       if (isDedicatedPayWrapper(dedicatedParent)) {
         dedicatedParent.setAttribute("data-ab-pay-above-tbl", "1");
-        var lbls = dedicatedParent.querySelectorAll("div, span, p, label, strong, b");
-        for (var l = 0; l < lbls.length; l++) {
-          var lt = norm(lbls[l].textContent);
-          if (lt.indexOf("طريقة الدفع") !== -1 && lt.length <= 40 && !lbls[l].querySelector("button, a")) {
-            lbls[l].setAttribute("data-ab-pay-label", "1");
-            break;
-          }
-        }
+        var lbl = findPayLabelElement(payRow);
+        if (lbl) lbl.setAttribute("data-ab-pay-label", "1");
         if (dedicatedParent.nextElementSibling !== anchor) {
           anchor.parentNode.insertBefore(dedicatedParent, anchor);
         }
         return;
       }
 
-      // حالة 2: العنوان وصف الأزرار شقيقان مباشران داخل الفاتورة -> نجمعهما في بطاقة واحدة فوق الجدول
-      var payLabel = findPayLabelSibling(payRow);
+      var payLabel = findPayLabelElement(payRow);
       var box = existingBox || document.createElement("div");
       box.id = "abPayAboveTableBox";
       box.setAttribute("data-ab-pay-above-tbl", "1");
@@ -32057,10 +32207,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   window.addEventListener("load", function () {
     relocatePaymentAboveTable();
-    setTimeout(relocatePaymentAboveTable, 300);
-    setTimeout(relocatePaymentAboveTable, 1000);
+    setTimeout(relocatePaymentAboveTable, 250);
+    setTimeout(relocatePaymentAboveTable, 900);
   });
-  setInterval(relocatePaymentAboveTable, 1400);
+  setInterval(relocatePaymentAboveTable, 1200);
 })();
 </script>
 <!-- ABUDHIYA_PAY_ABOVE_TABLE_END -->
