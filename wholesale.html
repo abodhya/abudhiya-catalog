@@ -180,6 +180,7 @@
 
 
 
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -28715,8 +28716,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_COPY_ORDER_CUST_NAME_END -->
 
+
 <!-- ABUDHIYA_HIDE_LOAD_AND_HINT_START -->
 <style id="abHideLoadAndHintStyle">
+  #abQuantumLoadBox,
+
   [data-ab-hide-car-load="1"],
   [data-ab-hide-silent-hint="1"] {
     display: none !important;
@@ -28729,14 +28733,14 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     overflow: hidden !important;
   }
 </style>
-<script data-ab-hide-load-hint="1">
+<script data-ab-hide-load-hint="2">
 (function () {
-  if (window.__abHideLoadAndHintV1) return;
-  window.__abHideLoadAndHintV1 = true;
+  if (window.__abHideLoadAndHintV2) return;
+  window.__abHideLoadAndHintV2 = true;
 
-  var LOAD_RE = /(?:حمول(?:ة|ه)?\s*(?:السيار(?:ة|ه)|الشاحن(?:ة|ه)|الدين(?:ا|ة)|المركب(?:ة|ه)|الباص|الشحن)|وزن\s*الحمول(?:ة|ه)|سع(?:ة|ه)\s*السيار(?:ة|ه))/;
-  var HINT_RE = /(?:[إاأ]رسال\s+فوري\s+مباشر[^\n]{0,55}(?:للتجهيز|واتس\s*[أا]?ب)|(?:مباشر\s+)?للتجهيز\s+بدون\s+فتح\s+واتس\s*[أا]?ب|بدون\s+فتح\s+واتس\s*[أا]?ب)/;
-  var HINT_STRIP_RE = /\s*[•\-—–|⚡🚀✅]*\s*(?:[إاأ]رسال\s+فوري\s+مباشر[^\n]{0,55}(?:للتجهيز|واتس\s*[أا]?ب)|(?:مباشر\s+)?للتجهيز\s+بدون\s+فتح\s+واتس\s*[أا]?ب|بدون\s+فتح\s+واتس\s*[أا]?ب)\s*[•\-—–|⚡🚀✅]*/g;
+  var LOAD_RE = /(?:حمول(?:ة|ه)?\s*(?:ال)?(?:سيار(?:ة|ه)|شاحن(?:ة|ه)|دين(?:ا|ة)|مركب(?:ة|ه)|باص)(?:\s*التوزيع)?|من\s+الحمول(?:ة|ه)|وزن\s*الحمول(?:ة|ه)|سع(?:ة|ه)\s*(?:ال)?سيار(?:ة|ه))/;
+  var HINT_RE = /(?:[إاأ]رسال\s+فوري\s+مباشر[^\n]{0,55}(?:للتجهيز|واتس\s*[أا]?ب)|مباشر\s+بدون\s+(?:فتح\s+)?واتس\s*[أا]?ب|(?:مباشر\s+)?للتجهيز\s+بدون\s+فتح\s+واتس\s*[أا]?ب|بدون\s+فتح\s+واتس\s*[أا]?ب)/;
+  var HINT_STRIP_RE = /\s*[•\-—–|⚡🚀✅]*\s*(?:[إاأ]رسال\s+فوري\s+مباشر[^\n]{0,55}(?:للتجهيز|واتس\s*[أا]?ب)|مباشر\s+بدون\s+(?:فتح\s+)?واتس\s*[أا]?ب|(?:مباشر\s+)?للتجهيز\s+بدون\s+فتح\s+واتس\s*[أا]?ب|بدون\s+فتح\s+واتس\s*[أا]?ب)\s*[•\-—–|⚡🚀✅]*/g;
 
   function norm(s) {
     return String(s || "").replace(/\s+/g, " ").trim();
@@ -28747,14 +28751,19 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     var id = String(el.id || "").toLowerCase();
     if (id === "invoiceview" || id === "viewinvoice" || id === "prodgrid" || id === "app" || id === "main") return true;
     if (el.tagName === "FORM" || el.tagName === "MAIN" || el.tagName === "SECTION") return true;
-    // لا نخفي أي حاوية تحتوي حقول بيانات العميل أو أزرار الإرسال/النسخ/الحفظ
     if (el.querySelector("input, textarea, select")) return true;
-    var btns = el.querySelectorAll("button, a");
-    for (var i = 0; i < btns.length; i++) {
-      var bt = norm(btns[i].textContent);
-      if (bt.indexOf("إرسال") !== -1 || bt.indexOf("ارسال") !== -1 || bt.indexOf("نسخ الطلب") !== -1 || bt.indexOf("حفظ كصورة") !== -1 || bt.indexOf("المشقاص") !== -1) {
-        return true;
-      }
+    var txt = norm(el.textContent);
+    if (
+      txt.indexOf("أرشيف الطلبات") !== -1 ||
+      txt.indexOf("تفصيل الكميات") !== -1 ||
+      txt.indexOf("اعتماد الطلب") !== -1 ||
+      txt.indexOf("تغيير المندوب") !== -1 ||
+      txt.indexOf("مندوبك المعتمد") !== -1 ||
+      txt.indexOf("نسخ الطلب") !== -1 ||
+      txt.indexOf("حفظ كصورة") !== -1 ||
+      txt.indexOf("المشقاص") !== -1
+    ) {
+      return true;
     }
     return false;
   }
@@ -28768,7 +28777,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       var t = norm(el.textContent);
       if (!t || t.length > 260 || !LOAD_RE.test(t)) continue;
 
-      // نبدأ من أصغر عنصر يحتوي العبارة ثم نصعد لبطاقة «حمولة السيارة» فقط
       var hasChildMatch = false;
       for (var c = 0; c < el.children.length; c++) {
         if (LOAD_RE.test(norm(el.children[c].textContent))) {
@@ -28780,21 +28788,13 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
       var target = el;
       var cur = el.parentElement;
-      for (var step = 0; step < 5 && cur; step++) {
+      for (var step = 0; step < 6 && cur; step++) {
         if (isProtectedContainer(cur)) break;
         var ct = norm(cur.textContent);
-        if (ct.length > 340) break;
+        if (ct.length > 260) break;
         var h = cur.offsetHeight || 0;
-        if (h > 260) break;
+        if (h > 240) break;
         target = cur;
-        // التوقف عند أول بطاقة واضحة (خلفية/حدود/نسبة حمولة)
-        var st = null;
-        try { st = getComputedStyle(cur); } catch (e) {}
-        if (st && ((st.borderRadius && st.borderRadius !== "0px") || (st.borderWidth && st.borderWidth !== "0px"))) {
-          if (ct.indexOf("%") !== -1 || ct.indexOf("كرتون") !== -1 || ct.indexOf("كجم") !== -1 || ct.indexOf("حمول") !== -1) {
-            break;
-          }
-        }
         cur = cur.parentElement;
       }
 
@@ -28816,7 +28816,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       var t = norm(el.textContent);
       if (!t || t.length > 180 || !HINT_RE.test(t)) continue;
 
-      // تجاهل الآباء إذا كان هناك عنصر ابن أدق يحتوي نفس الجملة
       var childHit = false;
       for (var c = 0; c < el.children.length; c++) {
         if (HINT_RE.test(norm(el.children[c].textContent))) {
@@ -28830,27 +28829,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       if (!remainder || remainder.length <= 4) {
         el.setAttribute("data-ab-hide-silent-hint", "1");
       } else {
-        // لو الجملة مدمجة مع نص آخر مهم داخل نفس العنصر نحذف الجملة فقط دون المساس بباقي النص
         for (var n = 0; n < el.childNodes.length; n++) {
           var node = el.childNodes[n];
           if (node.nodeType === 3 && HINT_RE.test(node.nodeValue || "")) {
             node.nodeValue = String(node.nodeValue || "").replace(HINT_STRIP_RE, " ").replace(/\s+/g, " ").trim();
           }
-        }
-      }
-    }
-
-    // حالة إضافية: إذا كانت الجملة مكتوبة مباشرة كعقدة نصية داخل زر الإرسال نفسه
-    var btns = document.querySelectorAll("button, a, [role='button']");
-    for (var b = 0; b < btns.length; b++) {
-      var btn = btns[b];
-      if (!HINT_RE.test(norm(btn.textContent))) continue;
-      for (var k = 0; k < btn.childNodes.length; k++) {
-        var cn = btn.childNodes[k];
-        if (cn.nodeType === 3 && HINT_RE.test(cn.nodeValue || "")) {
-          var cleaned = String(cn.nodeValue || "").replace(HINT_STRIP_RE, " ").replace(/\s+/g, " ").trim();
-          if (cleaned) cn.nodeValue = cleaned;
-          else cn.nodeValue = "";
         }
       }
     }
@@ -28870,10 +28853,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
   window.addEventListener("load", function () {
     runCleanup();
-    setTimeout(runCleanup, 400);
-    setTimeout(runCleanup, 1300);
+    setTimeout(runCleanup, 350);
+    setTimeout(runCleanup, 1200);
   });
-  setInterval(runCleanup, 1200);
+  setInterval(runCleanup, 1000);
 })();
 </script>
 <!-- ABUDHIYA_HIDE_LOAD_AND_HINT_END -->
