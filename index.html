@@ -414,6 +414,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -29815,5 +29817,742 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_CLEAR_DOCK_UNITS_END -->
+
+<!-- ABUDHIYA_ROLE_ONBOARD_START -->
+<style id="abRoleOnboardStyle">
+  /* إخفاء نوافذ التسجيل الإجبارية القديمة في التطبيق المثبّت لصالح شاشة (عميل / زائر) */
+  html.ab-ro-suppress-legacy #abInstallGateOverlay,
+  html.ab-ro-suppress-legacy #abGuestCardOverlay,
+  html.ab-ro-suppress-legacy #abGcOverlay,
+  html.ab-ro-suppress-legacy .ab-gc-overlay {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* تثبيت حقول بيانات العميل ومنع تعديلها بعد الاعتماد */
+  input[data-ab-locked-field="1"] {
+    background-color: #f0fdf4 !important;
+    border-color: #86efac !important;
+    color: #064e3b !important;
+    font-weight: 700 !important;
+    cursor: default !important;
+  }
+  [data-ab-locked-rep-hide="1"] {
+    display: none !important;
+  }
+
+  #abRoleOnboardOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483645;
+    background: linear-gradient(165deg, rgba(6, 78, 59, 0.96) 0%, rgba(4, 120, 87, 0.96) 55%, rgba(2, 44, 34, 0.98) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+  }
+  #abRoleOnboardOverlay .ab-ro-card {
+    width: 100%;
+    max-width: 410px;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 20px 18px 18px;
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.36);
+    border: 2px solid #bbf7d0;
+    color: #0f172a;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  #abRoleOnboardOverlay .ab-ro-brand {
+    display: inline-block;
+    background: #065f46;
+    color: #fde68a;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  #abRoleOnboardOverlay .ab-ro-title {
+    margin: 0 0 6px;
+    font-size: 19px;
+    font-weight: bold;
+    color: #064e3b;
+  }
+  #abRoleOnboardOverlay .ab-ro-sub {
+    margin: 0 0 16px;
+    font-size: 13.5px;
+    color: #475569;
+    line-height: 1.6;
+  }
+  #abRoleOnboardOverlay .ab-ro-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  #abRoleOnboardOverlay .ab-ro-choice-btn {
+    width: 100%;
+    padding: 14px 14px;
+    border-radius: 16px;
+    border: 2px solid #d1fae5;
+    background: #f8fafc;
+    color: #0f172a;
+    cursor: pointer;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    transition: transform 0.12s ease;
+  }
+  #abRoleOnboardOverlay .ab-ro-choice-btn:active {
+    transform: scale(0.985);
+  }
+  #abRoleOnboardOverlay .ab-ro-choice-btn.primary {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    border-color: #059669;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28);
+  }
+  #abRoleOnboardOverlay .ab-ro-ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  #abRoleOnboardOverlay .ab-ro-choice-btn:not(.primary) .ab-ro-ico {
+    background: #ecfdf5;
+  }
+  #abRoleOnboardOverlay .ab-ro-ctitle {
+    font-size: 15.5px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+  #abRoleOnboardOverlay .ab-ro-cdesc {
+    font-size: 12px;
+    opacity: 0.9;
+    line-height: 1.45;
+  }
+  #abRoleOnboardOverlay .ab-ro-form {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #abRoleOnboardOverlay .ab-ro-lbl {
+    display: block;
+    font-size: 12.5px;
+    font-weight: bold;
+    color: #065f46;
+    margin: 0 0 4px;
+  }
+  #abRoleOnboardOverlay .ab-ro-inp,
+  #abRoleOnboardOverlay .ab-ro-sel {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 12px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 14px;
+    font-family: inherit;
+    background: #ffffff;
+    color: #0f172a;
+    box-sizing: border-box;
+    outline: none;
+  }
+  #abRoleOnboardOverlay .ab-ro-inp:focus,
+  #abRoleOnboardOverlay .ab-ro-sel:focus {
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.14);
+  }
+  #abRoleOnboardOverlay .ab-ro-reps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 155px;
+    overflow-y: auto;
+  }
+  #abRoleOnboardOverlay .ab-ro-rep-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1.5px solid #cbd5e1;
+    background: #f8fafc;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: bold;
+    color: #0f172a;
+    box-sizing: border-box;
+  }
+  #abRoleOnboardOverlay .ab-ro-rep-item.selected {
+    border-color: #059669;
+    background: #ecfdf5;
+    color: #065f46;
+    box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.16);
+  }
+  #abRoleOnboardOverlay .ab-ro-rep-check {
+    font-size: 15px;
+    color: #059669;
+  }
+  #abRoleOnboardOverlay .ab-ro-err {
+    display: none;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    font-weight: bold;
+    text-align: center;
+  }
+  #abRoleOnboardOverlay .ab-ro-submit {
+    width: 100%;
+    padding: 13px 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #059669, #047857);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 4px;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28);
+  }
+  #abRoleOnboardOverlay .ab-ro-back {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #abCustomerLockedBadge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 4px 0 6px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: #ecfdf5;
+    border: 1.5px solid #86efac;
+    color: #065f46;
+    font-size: 12.5px;
+    font-weight: bold;
+  }
+</style>
+<script data-ab-role-onboard="1">
+(function () {
+  if (window.__abRoleOnboardV1) return;
+  window.__abRoleOnboardV1 = true;
+
+  var VAULT_REPS = [{"id": "rep_sami", "code": "772496171", "name": "سامي محمد باجبير", "phone": "967772496171"}, {"id": "rep_akram", "code": "771507215", "name": "اكرم محمد بن جبير", "phone": "967771507215"}, {"id": "rep_amin", "code": "771435329", "name": "امين عريض", "phone": "967771435329"}, {"id": "rep_mohammed", "code": "771458609", "name": "محمد كرامة علي حيمد", "phone": "967771458609"}];
+  var CHOICE_KEY = "ab_onboard_choice_v1";
+  var LOCKED_CUST_KEY = "ab_customer_locked_v1";
+  var LOCKED_REP_KEY = "ab_secret_locked_rep_v2";
+  var IMP_REPS_KEY = "ab_imp_reps_list_v3";
+  var IMP_ACTIVE_KEY = "ab_imp_active_rep_v3";
+  var ROLE_KEY = "ab_app_role_v1";
+  var PROFILE_KEY = "ab_customer_profile_v1";
+
+  function norm(s) {
+    return String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+  }
+
+  function toEnDigits(s) {
+    return String(s == null ? "" : s).replace(/[\u0660-\u0669]/g, function (d) {
+      return String(d.charCodeAt(0) - 0x0660);
+    });
+  }
+
+  function isStandaloneApp() {
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia) {
+        if (window.matchMedia("(display-mode: standalone)").matches) return true;
+        if (window.matchMedia("(display-mode: fullscreen)").matches) return true;
+        if (window.matchMedia("(display-mode: minimal-ui)").matches) return true;
+      }
+      if (localStorage.getItem("ab_native_apk_ok") === "1") return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function isAdminMode() {
+    try {
+      var r = String(localStorage.getItem(ROLE_KEY) || "").toLowerCase();
+      if (r === "admin" || r === "manager" || r === "owner") return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function isBrowserInstallLockActive() {
+    if (isStandaloneApp()) return false;
+    try {
+      var gate = document.getElementById("abInstallGateOverlay");
+      if (gate) {
+        var st = getComputedStyle(gate);
+        if (st.display !== "none" && st.visibility !== "hidden") {
+          var t = norm(gate.textContent);
+          if (t.indexOf("مقفل داخل المتصفح") !== -1 || t.indexOf("تثبيت التطبيق") !== -1) {
+            return true;
+          }
+        }
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function getAllAvailableReps() {
+    var list = [];
+    var seen = {};
+    function pushRep(r) {
+      if (!r || typeof r !== "object") return;
+      var name = norm(r.name);
+      var phone = norm(r.phone || r.code);
+      var code = norm(r.code || phone);
+      var id = norm(r.id || code || phone || name);
+      if (!name || !phone) return;
+      var key = toEnDigits(phone).replace(/\D+/g, "") || name;
+      if (seen[key]) return;
+      seen[key] = true;
+      list.push({ id: id, code: code, name: name, phone: phone });
+    }
+
+    for (var i = 0; i < VAULT_REPS.length; i++) pushRep(VAULT_REPS[i]);
+
+    try {
+      var stored = JSON.parse(localStorage.getItem(IMP_REPS_KEY) || "[]");
+      if (Array.isArray(stored)) {
+        for (var j = 0; j < stored.length; j++) pushRep(stored[j]);
+      }
+    } catch (e1) {}
+
+    try {
+      var locked = JSON.parse(localStorage.getItem(LOCKED_REP_KEY) || "null");
+      if (locked) pushRep(locked);
+    } catch (e2) {}
+
+    return list;
+  }
+
+  function readSavedCustomer() {
+    var prof = {};
+    try { prof = JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}") || {}; } catch (e) {}
+    var name = norm(prof.name || localStorage.getItem("ab_cust_name") || localStorage.getItem("ab_customer_name") || localStorage.getItem("abudhiya_cust_name") || "");
+    var phone = norm(prof.phone || localStorage.getItem("ab_cust_phone") || localStorage.getItem("ab_customer_phone") || localStorage.getItem("abudhiya_cust_phone") || "");
+    var addr = norm(prof.address || prof.addr || prof.loc || prof.area || localStorage.getItem("ab_cust_addr") || localStorage.getItem("ab_customer_address") || localStorage.getItem("ab_cust_note") || "");
+    var rep = null;
+    try { rep = JSON.parse(localStorage.getItem(LOCKED_REP_KEY) || "null"); } catch (e2) {}
+    return { name: name, phone: phone, addr: addr, rep: rep };
+  }
+
+  function saveLockedCustomerAndRep(name, phone, addr, rep) {
+    try {
+      var profObj = {
+        name: name,
+        phone: phone,
+        address: addr,
+        addr: addr,
+        loc: addr,
+        area: addr,
+        repId: rep.id,
+        repName: rep.name,
+        repPhone: rep.phone,
+        repCode: rep.code,
+        locked: true,
+        savedAt: Date.now()
+      };
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profObj));
+      localStorage.setItem("ab_cust_name", name);
+      localStorage.setItem("ab_customer_name", name);
+      localStorage.setItem("abudhiya_cust_name", name);
+      localStorage.setItem("customerName", name);
+      localStorage.setItem("ab_sv3_name", name);
+
+      localStorage.setItem("ab_cust_phone", phone);
+      localStorage.setItem("ab_customer_phone", phone);
+      localStorage.setItem("abudhiya_cust_phone", phone);
+
+      localStorage.setItem("ab_cust_addr", addr);
+      localStorage.setItem("ab_customer_address", addr);
+      localStorage.setItem("ab_cust_note", addr);
+
+      localStorage.setItem(LOCKED_REP_KEY, JSON.stringify({
+        id: rep.id,
+        code: rep.code,
+        name: rep.name,
+        phone: rep.phone
+      }));
+      localStorage.setItem(IMP_REPS_KEY, JSON.stringify([{
+        id: rep.id,
+        name: rep.name,
+        phone: rep.phone
+      }]));
+      localStorage.setItem(IMP_ACTIVE_KEY, String(rep.id));
+
+      localStorage.setItem(ROLE_KEY, "customer");
+      localStorage.setItem("ab_role", "customer");
+      localStorage.setItem("user_role", "customer");
+      localStorage.setItem(LOCKED_CUST_KEY, "1");
+      localStorage.setItem(CHOICE_KEY, "customer");
+    } catch (e) {}
+  }
+
+  function syncValue(el, val) {
+    if (!el || val == null) return;
+    if (String(el.value || "") !== String(val)) {
+      el.value = String(val);
+      try { el.dispatchEvent(new Event("input", { bubbles: true })); } catch (e1) {}
+      try { el.dispatchEvent(new Event("change", { bubbles: true })); } catch (e2) {}
+    }
+  }
+
+  function applyLockedCustomerState() {
+    if (localStorage.getItem(CHOICE_KEY) !== "customer") return;
+    if (isAdminMode()) return;
+
+    var data = readSavedCustomer();
+    if (!data.name) return;
+
+    var nameEl = document.getElementById("custNameInp");
+    var phoneEl = document.getElementById("custPhoneInp");
+    var noteEl = document.getElementById("custNoteInp");
+
+    var pairs = [
+      [nameEl, data.name],
+      [phoneEl, data.phone],
+      [noteEl, data.addr],
+      [document.getElementById("abGateNameInp"), data.name],
+      [document.getElementById("abGatePhoneInp"), data.phone],
+      [document.getElementById("abGateAddrInp"), data.addr]
+    ];
+
+    for (var i = 0; i < pairs.length; i++) {
+      if (pairs[i][0] && pairs[i][1]) {
+        syncValue(pairs[i][0], pairs[i][1]);
+      }
+    }
+
+    // تثبيت الحقول الثلاثة في الفاتورة (تُقرأ في الإرسال والنسخ وتُمنع من التعديل)
+    var lockInputs = [nameEl, phoneEl, noteEl];
+    for (var j = 0; j < lockInputs.length; j++) {
+      var inp = lockInputs[j];
+      if (!inp) continue;
+      inp.readOnly = true;
+      inp.setAttribute("readonly", "readonly");
+      inp.setAttribute("data-ab-locked-field", "1");
+    }
+
+    // شارة تثبيت خفيفة فوق اسم العميل في الفاتورة
+    if (nameEl && nameEl.parentElement && !document.getElementById("abCustomerLockedBadge")) {
+      var badge = document.createElement("div");
+      badge.id = "abCustomerLockedBadge";
+      var repLabel = (data.rep && data.rep.name) ? (" • المندوب: " + data.rep.name) : "";
+      badge.textContent = "🔒 بياناتك ومندوبك مثبّتة تلقائياً" + repLabel;
+      nameEl.parentElement.insertBefore(badge, nameEl);
+    }
+
+    // إخفاء زر «تغيير / تغيير المندوب» للعميل بعد تثبيت مندوبه (يبقى ظاهراً للمدير فقط)
+    var btns = document.querySelectorAll("button, a");
+    for (var b = 0; b < btns.length; b++) {
+      var btn = btns[b];
+      if (!btn || btn.getAttribute("data-ab-locked-rep-hide") === "1") continue;
+      var bt = norm(btn.textContent);
+      if (bt === "تغيير" || bt === "🔄 تغيير" || bt.indexOf("تغيير المندوب") !== -1) {
+        var parTxt = norm(btn.parentElement ? btn.parentElement.textContent : "");
+        var grandTxt = norm(btn.parentElement && btn.parentElement.parentElement ? btn.parentElement.parentElement.textContent : "");
+        if (parTxt.indexOf("مندوب") !== -1 || grandTxt.indexOf("مندوب") !== -1) {
+          btn.setAttribute("data-ab-locked-rep-hide", "1");
+        }
+      }
+    }
+
+    // التأكد من بقاء المندوب المثبّت نشطاً في مفاتيح النظام
+    if (data.rep && data.rep.name && data.rep.phone) {
+      try {
+        if (localStorage.getItem(IMP_ACTIVE_KEY) !== String(data.rep.id)) {
+          localStorage.setItem(IMP_REPS_KEY, JSON.stringify([{ id: data.rep.id, name: data.rep.name, phone: data.rep.phone }]));
+          localStorage.setItem(IMP_ACTIVE_KEY, String(data.rep.id));
+        }
+      } catch (eRep) {}
+    }
+  }
+
+  function applyGuestState() {
+    if (localStorage.getItem(CHOICE_KEY) !== "guest") return;
+    if (isAdminMode()) return;
+    try {
+      if (localStorage.getItem(ROLE_KEY) !== "guest") {
+        localStorage.setItem(ROLE_KEY, "guest");
+      }
+    } catch (e) {}
+  }
+
+  function updateLegacySuppression() {
+    if (!document.documentElement) return;
+    if (isBrowserInstallLockActive()) {
+      document.documentElement.classList.remove("ab-ro-suppress-legacy");
+      return;
+    }
+    var choice = localStorage.getItem(CHOICE_KEY);
+    // في التطبيق المثبّت (أو عند غياب قفل التثبيت بالمتصفح): نوقف نوافذ التسجيل القديمة ليحل محلها نظام (عميل / زائر)
+    if (isStandaloneApp() || choice === "customer" || choice === "guest") {
+      document.documentElement.classList.add("ab-ro-suppress-legacy");
+    }
+  }
+
+  function closeOnboardOverlay() {
+    var ov = document.getElementById("abRoleOnboardOverlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    try { if (document.body) document.body.style.overflow = ""; } catch (e) {}
+  }
+
+  function openRoleOnboardModal() {
+    if (document.getElementById("abRoleOnboardOverlay")) return;
+    if (!document.body) {
+      document.addEventListener("DOMContentLoaded", openRoleOnboardModal, { once: true });
+      return;
+    }
+
+    updateLegacySuppression();
+    var reps = getAllAvailableReps();
+    var prev = readSavedCustomer();
+    var selectedRep = null;
+    if (prev.rep && prev.rep.phone) {
+      for (var r = 0; r < reps.length; r++) {
+        if (toEnDigits(reps[r].phone).replace(/\D+/g, "") === toEnDigits(prev.rep.phone).replace(/\D+/g, "")) {
+          selectedRep = reps[r];
+          break;
+        }
+      }
+    }
+    if (!selectedRep && reps.length === 1) {
+      selectedRep = reps[0];
+    }
+
+    var ov = document.createElement("div");
+    ov.id = "abRoleOnboardOverlay";
+    ov.innerHTML = '<div class="ab-ro-card" id="abRoCard"></div>';
+    document.body.appendChild(ov);
+    try { document.body.style.overflow = "hidden"; } catch (e) {}
+
+    var card = document.getElementById("abRoCard");
+
+    function renderStepChoice() {
+      card.innerHTML =
+        '<div class="ab-ro-brand">ابوسيف للتجارة</div>' +
+        '<h2 class="ab-ro-title">مرحباً بك في التطبيق</h2>' +
+        '<p class="ab-ro-sub">اختر طريقة الدخول المناسبة لك:</p>' +
+        '<div class="ab-ro-choices">' +
+          '<button type="button" class="ab-ro-choice-btn primary" id="abRoBtnCustomer">' +
+            '<div class="ab-ro-ico">🏪</div>' +
+            '<div>' +
+              '<div class="ab-ro-ctitle">أنا عميل</div>' +
+              '<div class="ab-ro-cdesc">اختر مندوبك وثبّت بيانات محلك مرة واحدة لتجهيز طلباتك فوراً</div>' +
+            '</div>' +
+          '</button>' +
+          '<button type="button" class="ab-ro-choice-btn" id="abRoBtnGuest">' +
+            '<div class="ab-ro-ico">👀</div>' +
+            '<div>' +
+              '<div class="ab-ro-ctitle">دخول كزائر</div>' +
+              '<div class="ab-ro-cdesc">تصفح الأصناف والتطبيق مباشرة بشكل طبيعي بدون تسجيل</div>' +
+            '</div>' +
+          '</button>' +
+        '</div>';
+
+      document.getElementById("abRoBtnCustomer").addEventListener("click", renderStepCustomerForm);
+      document.getElementById("abRoBtnGuest").addEventListener("click", function () {
+        try {
+          localStorage.setItem(CHOICE_KEY, "guest");
+          localStorage.setItem(ROLE_KEY, "guest");
+          localStorage.setItem("ab_role", "guest");
+          localStorage.setItem("user_role", "guest");
+        } catch (e) {}
+        updateLegacySuppression();
+        closeOnboardOverlay();
+        try {
+          if (typeof window.showToast === "function") {
+            window.showToast("👋 مرحباً بك في ابوسيف للتجارة");
+          }
+        } catch (e2) {}
+      });
+    }
+
+    function renderStepCustomerForm() {
+      var repsHtml = "";
+      if (reps.length > 0) {
+        repsHtml = '<div class="ab-ro-reps-list" id="abRoRepsList">';
+        for (var i = 0; i < reps.length; i++) {
+          var isSel = selectedRep && selectedRep.phone === reps[i].phone;
+          repsHtml +=
+            '<div class="ab-ro-rep-item' + (isSel ? ' selected' : '') + '" data-rep-idx="' + i + '">' +
+              '<span>🚚 ' + reps[i].name + '</span>' +
+              '<span class="ab-ro-rep-check">' + (isSel ? '✅' : '○') + '</span>' +
+            '</div>';
+        }
+        repsHtml += '</div>';
+      } else {
+        repsHtml = '<input id="abRoRepCodeInp" class="ab-ro-inp" type="tel" placeholder="أدخل رقم أو كود المندوب">';
+      }
+
+      card.innerHTML =
+        '<div class="ab-ro-brand">ابوسيف للتجارة</div>' +
+        '<h2 class="ab-ro-title">تثبيت بيانات العميل</h2>' +
+        '<p class="ab-ro-sub">أدخل بياناتك واختر مندوبك مرة واحدة وسيتم تثبيتها تلقائياً في التطبيق</p>' +
+        '<form class="ab-ro-form" id="abRoCustForm" novalidate>' +
+          '<div>' +
+            '<label class="ab-ro-lbl">🚚 اختر مندوبك المعتمد</label>' +
+            repsHtml +
+          '</div>' +
+          '<div>' +
+            '<label class="ab-ro-lbl" for="abRoName">👤 اسم العميل أو البقالة</label>' +
+            '<input id="abRoName" class="ab-ro-inp" type="text" autocomplete="name" placeholder="مثال: بقالة الأمانة - محمد" value="' + prev.name.replace(/"/g, "&quot;") + '">' +
+          '</div>' +
+          '<div>' +
+            '<label class="ab-ro-lbl" for="abRoPhone">📱 رقم الجوال / الواتساب</label>' +
+            '<input id="abRoPhone" class="ab-ro-inp" type="tel" inputmode="tel" autocomplete="tel" style="direction:ltr;text-align:right" placeholder="77XXXXXXX" value="' + prev.phone.replace(/"/g, "&quot;") + '">' +
+          '</div>' +
+          '<div>' +
+            '<label class="ab-ro-lbl" for="abRoAddr">📍 المنطقة / العنوان</label>' +
+            '<input id="abRoAddr" class="ab-ro-inp" type="text" autocomplete="street-address" placeholder="مثال: سيئون - السوق العام" value="' + prev.addr.replace(/"/g, "&quot;") + '">' +
+          '</div>' +
+          '<div class="ab-ro-err" id="abRoErr"></div>' +
+          '<button type="submit" class="ab-ro-submit">✅ تثبيت البيانات والدخول للتطبيق</button>' +
+          '<button type="button" class="ab-ro-back" id="abRoBackBtn">↩️ رجوع</button>' +
+        '</form>';
+
+      var repItems = card.querySelectorAll(".ab-ro-rep-item");
+      for (var k = 0; k < repItems.length; k++) {
+        repItems[k].addEventListener("click", function () {
+          var idx = parseInt(this.getAttribute("data-rep-idx"), 10);
+          selectedRep = reps[idx] || null;
+          for (var m = 0; m < repItems.length; m++) {
+            var active = (m === idx);
+            repItems[m].classList.toggle("selected", active);
+            var chk = repItems[m].querySelector(".ab-ro-rep-check");
+            if (chk) chk.textContent = active ? "✅" : "○";
+          }
+        });
+      }
+
+      document.getElementById("abRoBackBtn").addEventListener("click", renderStepChoice);
+
+      document.getElementById("abRoCustForm").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var errBox = document.getElementById("abRoErr");
+        function showErr(msg) {
+          errBox.textContent = msg;
+          errBox.style.display = "block";
+        }
+
+        var nameVal = norm(document.getElementById("abRoName").value);
+        var phoneRaw = toEnDigits(norm(document.getElementById("abRoPhone").value));
+        var phoneDigits = phoneRaw.replace(/\D+/g, "");
+        var addrVal = norm(document.getElementById("abRoAddr").value);
+
+        var chosenRep = selectedRep;
+        if (!chosenRep && reps.length === 0) {
+          var codeInp = document.getElementById("abRoRepCodeInp");
+          var rawCode = toEnDigits(norm(codeInp ? codeInp.value : "")).replace(/\D+/g, "");
+          if (rawCode.length >= 7) {
+            chosenRep = { id: "rep_" + rawCode, code: rawCode, name: "مندوب " + rawCode, phone: rawCode };
+          }
+        }
+
+        if (!chosenRep) {
+          showErr("⚠️ يرجى اختيار المندوب المعتمد أولاً");
+          return;
+        }
+        if (nameVal.length < 2) {
+          showErr("⚠️ يرجى كتابة اسم العميل أو البقالة");
+          return;
+        }
+        if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+          showErr("⚠️ يرجى إدخال رقم جوال صحيح");
+          return;
+        }
+        if (addrVal.length < 2) {
+          showErr("⚠️ يرجى كتابة المنطقة أو العنوان");
+          return;
+        }
+
+        errBox.style.display = "none";
+        saveLockedCustomerAndRep(nameVal, phoneDigits, addrVal, chosenRep);
+        updateLegacySuppression();
+        closeOnboardOverlay();
+        applyLockedCustomerState();
+
+        // إشعار النظام بإتمام تسجيل العميل وتحديث واجهة المندوبين والإشعارات
+        try { window.dispatchEvent(new CustomEvent("ab:customer-registered", { detail: { name: nameVal, phone: phoneDigits, addr: addrVal, rep: chosenRep } })); } catch (e1) {}
+        try { if (typeof window.renderAllRepVaultUI === "function") window.renderAllRepVaultUI(); } catch (e2) {}
+        try {
+          if (typeof window.showToast === "function") {
+            window.showToast("✅ تم تثبيت بياناتك ومندوبك بنجاح");
+          }
+        } catch (e3) {}
+      });
+    }
+
+    renderStepChoice();
+  }
+
+  function initRoleOnboard() {
+    updateLegacySuppression();
+    var choice = "";
+    try { choice = String(localStorage.getItem(CHOICE_KEY) || ""); } catch (e) {}
+
+    if (choice === "customer") {
+      applyLockedCustomerState();
+      return;
+    }
+    if (choice === "guest") {
+      applyGuestState();
+      return;
+    }
+
+    // لا نفتح شاشة (عميل / زائر) فوق شاشة قفل المتصفح للتثبيت — تفتح داخل التطبيق المثبّت أو بعد زوال قفل التثبيت
+    if (isBrowserInstallLockActive()) return;
+    openRoleOnboardModal();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(initRoleOnboard, 120);
+    }, { once: true });
+  } else {
+    setTimeout(initRoleOnboard, 120);
+  }
+
+  window.addEventListener("load", function () {
+    setTimeout(initRoleOnboard, 220);
+  });
+
+  setInterval(function () {
+    updateLegacySuppression();
+    var c = "";
+    try { c = String(localStorage.getItem(CHOICE_KEY) || ""); } catch (e) {}
+    if (c === "customer") applyLockedCustomerState();
+    else if (c === "guest") applyGuestState();
+  }, 2000);
+})();
+</script>
+<!-- ABUDHIYA_ROLE_ONBOARD_END -->
 </body>
 </html>
