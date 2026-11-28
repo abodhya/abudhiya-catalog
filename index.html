@@ -432,6 +432,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -31843,5 +31845,224 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_QTY_UNDER_ITEMS_END -->
+
+<!-- ABUDHIYA_PAY_ABOVE_TABLE_START -->
+<style id="abPayAboveTableStyle">
+  [data-ab-pay-above-tbl="1"] {
+    margin: 8px 0 11px !important;
+    padding: 9px 10px 10px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;
+    border: 1.5px solid #d1fae5 !important;
+    box-shadow: 0 4px 14px -6px rgba(6, 78, 59, 0.12) !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-ab-pay-above-tbl="1"] [data-ab-pay-label="1"] {
+    margin: 0 2px 7px !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #065f46 !important;
+    text-align: right !important;
+  }
+
+  [data-ab-pay-above-tbl="1"] [data-ab-pay-row-2col="1"],
+  [data-ab-pay-above-tbl="1"] [data-ab-pay-btns-row="1"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+  }
+</style>
+<script data-ab-pay-above-table-js="1">
+(function () {
+  if (window.__abPayAboveTableV1) return;
+  window.__abPayAboveTableV1 = true;
+
+  var CREDIT_RE = /[آاأ]جل/;
+  var CASH_RE = /نقد/;
+
+  function norm(s) {
+    return String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+  }
+
+  function isInsideModal(el) {
+    if (!el || !el.closest) return false;
+    return !!el.closest("#qtyModal, #abRoleOnboardOverlay, #abInstallGateOverlay, #abPostInstallExitOverlay, .modal");
+  }
+
+  function findInvoiceItemsAnchor() {
+    var tables = document.querySelectorAll("table");
+    var invTbl = null;
+
+    for (var i = 0; i < tables.length; i++) {
+      var tbl = tables[i];
+      if (!tbl || isInsideModal(tbl)) continue;
+      var parTxt = norm(tbl.parentElement ? tbl.parentElement.textContent : "");
+      if (parTxt.indexOf("الإيصال الرسمي للطلب") !== -1 || parTxt.indexOf("إيصال طلب إلكتروني") !== -1) continue;
+
+      var firstRow = tbl.querySelector("thead tr") || tbl.querySelector("tr");
+      var hdrTxt = norm(firstRow ? firstRow.textContent : "");
+      if (hdrTxt.indexOf("الصنف") !== -1 && hdrTxt.indexOf("الكمية") !== -1) {
+        invTbl = tbl;
+        break;
+      }
+    }
+    if (!invTbl) return null;
+
+    var anchor = invTbl;
+    var tblBtns = invTbl.querySelectorAll("button, a").length;
+    var p = invTbl.parentElement;
+    for (var step = 0; step < 2 && p && p !== document.body; step++) {
+      var pt = norm(p.textContent);
+      if (
+        pt.indexOf("طريقة الدفع") !== -1 ||
+        pt.indexOf("فاتورة طلب") !== -1 ||
+        pt.indexOf("أرشيف الطلبات") !== -1 ||
+        pt.indexOf("تفصيل الكميات") !== -1 ||
+        pt.indexOf("بياناتك ومندوبك") !== -1
+      ) {
+        break;
+      }
+      if (p.querySelectorAll("table").length === 1 && p.querySelectorAll("button, a").length === tblBtns) {
+        anchor = p;
+        p = p.parentElement;
+      } else {
+        break;
+      }
+    }
+    return anchor;
+  }
+
+  function findPaymentRow() {
+    var btns = document.querySelectorAll("button, a, [role='button']");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || isInsideModal(b)) continue;
+      var t = norm(b.textContent);
+      if (!t || t.length > 26 || !CREDIT_RE.test(t)) continue;
+
+      var par = b.parentElement;
+      if (!par || par === document.body || par.querySelector("table, input, textarea, select")) continue;
+
+      var sibs = par.querySelectorAll("button, a, [role='button']");
+      var hasCash = false;
+      for (var j = 0; j < sibs.length; j++) {
+        if (sibs[j] !== b && CASH_RE.test(norm(sibs[j].textContent))) {
+          hasCash = true;
+          break;
+        }
+      }
+      if (hasCash) return par;
+    }
+    return null;
+  }
+
+  function isDedicatedPayWrapper(el) {
+    if (!el || el === document.body || el === document.documentElement) return false;
+    var id = String(el.id || "").toLowerCase();
+    if (id === "invoiceview" || id === "viewinvoice" || id === "app" || id === "main") return false;
+    if (el.tagName === "FORM" || el.tagName === "MAIN" || el.tagName === "SECTION") return false;
+    if (el.querySelector("table, input, textarea, select")) return false;
+    var t = norm(el.textContent);
+    if (!t || t.length > 110) return false;
+    if (
+      t.indexOf("تفصيل الكميات") !== -1 ||
+      t.indexOf("بياناتك ومندوبك") !== -1 ||
+      t.indexOf("أرشيف الطلبات") !== -1 ||
+      t.indexOf("اعتماد الطلب") !== -1 ||
+      t.indexOf("حفظ كصورة") !== -1 ||
+      t.indexOf("فاتورة طلب") !== -1
+    ) {
+      return false;
+    }
+    return t.indexOf("طريقة الدفع") !== -1;
+  }
+
+  function findPayLabelSibling(payRow) {
+    var prev = payRow && payRow.previousElementSibling;
+    for (var step = 0; step < 2 && prev; step++) {
+      var pt = norm(prev.textContent);
+      if (pt && pt.length <= 40 && pt.indexOf("طريقة الدفع") !== -1 && !prev.querySelector("button, a, input, table")) {
+        return prev;
+      }
+      prev = prev.previousElementSibling;
+    }
+    return null;
+  }
+
+  function relocatePaymentAboveTable() {
+    try {
+      if (!document.body) return;
+      var anchor = findInvoiceItemsAnchor();
+      var payRow = findPaymentRow();
+      if (!anchor || !payRow || !anchor.parentNode) return;
+      if (anchor.contains(payRow) || payRow.contains(anchor)) return;
+
+      payRow.setAttribute("data-ab-pay-btns-row", "1");
+
+      // حالة 1: «طريقة الدفع» موجودة أصلاً داخل حاوية مخصصة لها وحدها
+      var existingBox = document.getElementById("abPayAboveTableBox");
+      var dedicatedParent = payRow.parentElement;
+
+      if (existingBox && existingBox.contains(payRow)) {
+        existingBox.setAttribute("data-ab-pay-above-tbl", "1");
+        if (existingBox.nextElementSibling !== anchor) {
+          anchor.parentNode.insertBefore(existingBox, anchor);
+        }
+        return;
+      }
+
+      if (isDedicatedPayWrapper(dedicatedParent)) {
+        dedicatedParent.setAttribute("data-ab-pay-above-tbl", "1");
+        var lbls = dedicatedParent.querySelectorAll("div, span, p, label, strong, b");
+        for (var l = 0; l < lbls.length; l++) {
+          var lt = norm(lbls[l].textContent);
+          if (lt.indexOf("طريقة الدفع") !== -1 && lt.length <= 40 && !lbls[l].querySelector("button, a")) {
+            lbls[l].setAttribute("data-ab-pay-label", "1");
+            break;
+          }
+        }
+        if (dedicatedParent.nextElementSibling !== anchor) {
+          anchor.parentNode.insertBefore(dedicatedParent, anchor);
+        }
+        return;
+      }
+
+      // حالة 2: العنوان وصف الأزرار شقيقان مباشران داخل الفاتورة -> نجمعهما في بطاقة واحدة فوق الجدول
+      var payLabel = findPayLabelSibling(payRow);
+      var box = existingBox || document.createElement("div");
+      box.id = "abPayAboveTableBox";
+      box.setAttribute("data-ab-pay-above-tbl", "1");
+
+      anchor.parentNode.insertBefore(box, anchor);
+
+      if (payLabel && payLabel.parentElement !== box) {
+        payLabel.setAttribute("data-ab-pay-label", "1");
+        box.appendChild(payLabel);
+      }
+      if (payRow.parentElement !== box) {
+        box.appendChild(payRow);
+      }
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", relocatePaymentAboveTable, { once: true });
+  } else {
+    relocatePaymentAboveTable();
+  }
+  window.addEventListener("load", function () {
+    relocatePaymentAboveTable();
+    setTimeout(relocatePaymentAboveTable, 300);
+    setTimeout(relocatePaymentAboveTable, 1000);
+  });
+  setInterval(relocatePaymentAboveTable, 1400);
+})();
+</script>
+<!-- ABUDHIYA_PAY_ABOVE_TABLE_END -->
 </body>
 </html>
