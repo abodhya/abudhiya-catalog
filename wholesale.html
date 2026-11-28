@@ -1,6 +1,231 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<!-- ABUDHIYA_FAST_INSTALL_PUSH_HEAD_START -->
+<style id="abZeroJitterStyle">
+  html, body {
+    overflow-anchor: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+</style>
+<script data-ab-fast-install-push="1">
+(function () {
+  if (window.__abFastInstallPushV1) return;
+  window.__abFastInstallPushV1 = true;
+
+  // 1) التقاط مبكّر جداً لحدث التثبيت (beforeinstallprompt) حتى لا يضيع أو يتأخر أبداً
+  window.__abDeferredInstallPrompt = window.__abDeferredInstallPrompt || null;
+  window.__abInstallPromptUsedTs = 0;
+
+  window.addEventListener("beforeinstallprompt", function (ev) {
+    try { ev.preventDefault(); } catch (e) {}
+    window.__abDeferredInstallPrompt = ev;
+    try { window.deferredPrompt = ev; } catch (e2) {}
+    try { window.dispatchEvent(new CustomEvent("ab:install-ready", { detail: ev })); } catch (e3) {}
+  });
+
+  window.addEventListener("appinstalled", function () {
+    window.__abDeferredInstallPrompt = null;
+    try { window.deferredPrompt = null; } catch (e) {}
+  });
+
+  // 2) توحيد تسجيلات /sw.js المكررة (4 تسجيلات -> تسجيل واحد نظيف) دون لمس OneSignal
+  try {
+    if (navigator.serviceWorker && typeof navigator.serviceWorker.register === "function" && !navigator.serviceWorker.register.__abDedupV1) {
+      var origSwReg = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+      var swPromises = {};
+      var wrappedSwReg = function (scriptURL, options) {
+        try {
+          var s = String(scriptURL || "");
+          if (s.toLowerCase().indexOf("onesignal") !== -1) {
+            return origSwReg(scriptURL, options);
+          }
+          var p = new URL(s, window.location.origin).pathname;
+          if (p === "/sw.js") {
+            if (!swPromises[p]) {
+              swPromises[p] = origSwReg("/sw.js", { scope: "/", updateViaCache: "none" }).catch(function (err) {
+                delete swPromises[p];
+                throw err;
+              });
+            }
+            return swPromises[p];
+          }
+        } catch (e) {}
+        return origSwReg(scriptURL, options);
+      };
+      wrappedSwReg.__abDedupV1 = true;
+      try { navigator.serviceWorker.register = wrappedSwReg; } catch (eA) {}
+    }
+  } catch (eSw) {}
+
+  // 3) مانع الارتجاج وعزل الأخطاء: تهدئة المؤقّتات الدورية وإيقافها لحظة اللمس والتمرير
+  var lastInteractTs = 0;
+  function markInteract() { lastInteractTs = Date.now(); }
+  try {
+    window.addEventListener("touchstart", markInteract, { passive: true, capture: true });
+    window.addEventListener("touchmove", markInteract, { passive: true, capture: true });
+    window.addEventListener("scroll", markInteract, { passive: true, capture: true });
+    window.addEventListener("pointerdown", markInteract, { passive: true, capture: true });
+  } catch (eEv) {}
+
+  window.__abCaughtErrors = window.__abCaughtErrors || [];
+  if (typeof window.setInterval === "function" && !window.setInterval.__abSmoothV1) {
+    var origSetInterval = window.setInterval;
+    var staggerStep = 0;
+
+    var smoothSetInterval = function (fn, delay) {
+      var args = Array.prototype.slice.call(arguments, 2);
+      var ms = Number(delay) || 0;
+
+      // استثناء المؤقّتات السريعة جداً أو ماسح الباركود بالكاميرا
+      var isScanner = false;
+      try {
+        if (typeof fn === "function") {
+          var src = Function.prototype.toString.call(fn);
+          if (src.indexOf("detect(") !== -1 || src.indexOf("readyState") !== -1) isScanner = true;
+        }
+      } catch (eSrc) {}
+
+      if (typeof fn !== "function" || isScanner || ms < 450 || ms > 6000) {
+        return origSetInterval.apply(window, arguments);
+      }
+
+      // رفع الحد الأدنى للمؤقّتات المتكررة إلى ~2.5 ثانية مع توزيع زمني يمنع تزامنها
+      var safeMs = ms < 2400 ? (2400 + ((staggerStep++ % 7) * 190)) : ms;
+      return origSetInterval.call(window, function () {
+        if (document.hidden) return;
+        if (Date.now() - lastInteractTs < 650) return;
+        try {
+          fn.apply(this, args);
+        } catch (err) {
+          if (window.__abCaughtErrors.length < 30) {
+            window.__abCaughtErrors.push(String(err && err.message ? err.message : err));
+          }
+        }
+      }, safeMs);
+    };
+
+    smoothSetInterval.__abSmoothV1 = true;
+    try { window.setInterval = smoothSetInterval; } catch (eSi) {}
+  }
+
+  // 4) مسرّع التثبيت وتفعيل الإشعارات من أول ضغطة
+  function showQuickMsg(msg) {
+    try {
+      if (typeof window.showToast === "function") {
+        window.showToast(msg);
+        return;
+      }
+      var t = document.getElementById("toastEl");
+      if (t) {
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(function () { t.classList.remove("show"); }, 3000);
+      }
+    } catch (e) {}
+  }
+
+  function completeOneSignalOptIn(attempt) {
+    var tries = attempt || 1;
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(function (OneSignal) {
+      try {
+        var sub = OneSignal && OneSignal.User && OneSignal.User.PushSubscription;
+        if (sub && sub.optedIn) {
+          showQuickMsg("🔔 تم تفعيل إشعارات ابوسيف للتجارة بنجاح");
+          return;
+        }
+        var p = (sub && typeof sub.optIn === "function")
+          ? sub.optIn()
+          : (OneSignal && OneSignal.Notifications && typeof OneSignal.Notifications.requestPermission === "function"
+            ? OneSignal.Notifications.requestPermission()
+            : null);
+        if (p && typeof p.then === "function") {
+          p.then(function () {
+            setTimeout(function () {
+              try {
+                var ok = OneSignal && OneSignal.User && OneSignal.User.PushSubscription && OneSignal.User.PushSubscription.optedIn;
+                if (ok) {
+                  showQuickMsg("🔔 تم تفعيل إشعارات ابوسيف للتجارة بنجاح");
+                } else if (tries < 3) {
+                  setTimeout(function () { completeOneSignalOptIn(tries + 1); }, 1800);
+                }
+              } catch (eChk) {}
+            }, 700);
+          }).catch(function () {
+            if (tries < 3) setTimeout(function () { completeOneSignalOptIn(tries + 1); }, 2000);
+          });
+        }
+      } catch (eOs) {
+        if (tries < 3) setTimeout(function () { completeOneSignalOptIn(tries + 1); }, 2000);
+      }
+    });
+  }
+
+  document.addEventListener("click", function (ev) {
+    try {
+      var btn = ev.target && ev.target.closest ? ev.target.closest("button, a, [role='button']") : null;
+      if (!btn) return;
+      var id = String(btn.id || "").toLowerCase();
+      var txt = String(btn.textContent || "").replace(/\s+/g, " ").trim();
+
+      // أ) مساعدة زر التثبيت إذا تأخّر الزر الأصلي في استدعاء نافذة التثبيت
+      var isInstallBtn = (
+        txt.indexOf("تثبيت التطبيق") !== -1 ||
+        txt.indexOf("تثبيت المتجر") !== -1 ||
+        id.indexOf("install") !== -1
+      ) && txt.indexOf("إلغاء") === -1 && txt.indexOf("لاحق") === -1;
+
+      if (isInstallBtn && window.__abDeferredInstallPrompt) {
+        var snap = window.__abDeferredInstallPrompt;
+        setTimeout(function () {
+          if (window.__abDeferredInstallPrompt === snap && Date.now() - window.__abInstallPromptUsedTs > 1500) {
+            window.__abInstallPromptUsedTs = Date.now();
+            window.__abDeferredInstallPrompt = null;
+            try {
+              snap.prompt();
+            } catch (ePr) {}
+          }
+        }, 260);
+      }
+
+      // ب) إطلاق إذن الإشعارات مباشرة داخل نفس النقرة (يمنع رفض Chrome لإذن الإشعارات)
+      var isPushAllowBtn = (
+        txt.indexOf("تفعيل الإشعارات") !== -1 ||
+        txt.indexOf("تفعيل الاشعارات") !== -1 ||
+        txt.indexOf("تفعيل التنبيهات") !== -1 ||
+        txt.indexOf("تفعيل الآن") !== -1 ||
+        txt.indexOf("تفعيل الان") !== -1 ||
+        id === "abautopushallowbtn" ||
+        id === "abenablepushbtn" ||
+        id === "enablepushbtn"
+      );
+
+      if (isPushAllowBtn && typeof Notification !== "undefined") {
+        if (Notification.permission === "denied") {
+          showQuickMsg("⚠️ الإشعارات محظورة من المتصفح — افتح إعدادات الموقع واضغط سماح");
+          return;
+        }
+        if (Notification.permission === "default") {
+          var reqP = Notification.requestPermission();
+          if (reqP && typeof reqP.then === "function") {
+            reqP.then(function (perm) {
+              if (perm === "granted") {
+                showQuickMsg("⏳ جاري ربط جهازك بإشعارات ابوسيف للتجارة...");
+                setTimeout(function () { completeOneSignalOptIn(1); }, 450);
+              }
+            }).catch(function () {});
+          }
+        } else if (Notification.permission === "granted") {
+          setTimeout(function () { completeOneSignalOptIn(1); }, 350);
+        }
+      }
+    } catch (eClick) {}
+  }, true);
+})();
+</script>
+<!-- ABUDHIYA_FAST_INSTALL_PUSH_HEAD_END -->
+
 <!-- ABUDHIYA_OFFLINE_UNFREEZE_PAGE_START -->
 <script data-ab-offline-unfreeze="7">
 (function () {
@@ -172,6 +397,7 @@
 })();
 </script>
 <!-- ABUDHIYA_OFFLINE_UNFREEZE_PAGE_END -->
+
 
 
 
