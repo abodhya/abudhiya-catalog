@@ -39,12 +39,37 @@
           "value": "/"
         }
       ]
+    },
+    {
+      "source": "/push/onesignal/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
       "source": "/.well-known/assetlinks.json",
       "destination": "/assetlinks.json"
+    },
+    {
+      "source": "/_os/cdn/:path*",
+      "destination": "https://cdn.onesignal.com/:path*"
+    },
+    {
+      "source": "/_os/api/:path*",
+      "destination": "https://api.onesignal.com/:path*"
+    },
+    {
+      "source": "/_os/main/:path*",
+      "destination": "https://onesignal.com/:path*"
     }
   ]
 }

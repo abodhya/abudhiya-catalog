@@ -1,6 +1,108 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
+<script data-ab-os-proxy="1">
+(function () {
+  if (window.__abOsProxyV1) return;
+  window.__abOsProxyV1 = true;
+
+  function rewriteOsUrl(u) {
+    if (typeof u !== "string" || u.indexOf("onesignal.com") === -1) return u;
+    var orig = window.location && window.location.origin ? window.location.origin : "";
+    if (!orig) return u;
+    return u
+      .replace(/^(?:https?:)?\/\/cdn\.onesignal\.com\//i, orig + "/_os/cdn/")
+      .replace(/^(?:https?:)?\/\/api\.onesignal\.com\//i, orig + "/_os/api/")
+      .replace(/^(?:https?:)?\/\/onesignal\.com\//i, orig + "/_os/main/");
+  }
+  window.__abRewriteOsUrl = rewriteOsUrl;
+
+  // 1) اعتراض fetch
+  if (typeof window.fetch === "function") {
+    var origFetch = window.fetch;
+    window.fetch = function (input, init) {
+      try {
+        if (typeof input === "string") {
+          var nu = rewriteOsUrl(input);
+          if (nu !== input) return origFetch.call(window, nu, init);
+        } else if (typeof URL !== "undefined" && input instanceof URL) {
+          var nuU = rewriteOsUrl(input.href);
+          if (nuU !== input.href) return origFetch.call(window, nuU, init);
+        } else if (input && typeof input === "object" && typeof input.url === "string") {
+          var nuR = rewriteOsUrl(input.url);
+          if (nuR !== input.url) {
+            return origFetch.call(window, new Request(nuR, input), init);
+          }
+        }
+      } catch (e) {}
+      return origFetch.apply(window, arguments);
+    };
+  }
+
+  // 2) اعتراض XMLHttpRequest
+  if (typeof XMLHttpRequest !== "undefined" && XMLHttpRequest.prototype && XMLHttpRequest.prototype.open) {
+    var origOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (method, url) {
+      try {
+        var args = Array.prototype.slice.call(arguments);
+        if (typeof url === "string") {
+          args[1] = rewriteOsUrl(url);
+        } else if (url && typeof url.href === "string") {
+          args[1] = rewriteOsUrl(url.href);
+        }
+        return origOpen.apply(this, args);
+      } catch (e) {}
+      return origOpen.apply(this, arguments);
+    };
+  }
+
+  // 3) اعتراض navigator.sendBeacon
+  if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+    var origBeacon = navigator.sendBeacon.bind(navigator);
+    try {
+      navigator.sendBeacon = function (url, data) {
+        return origBeacon(typeof url === "string" ? rewriteOsUrl(url) : url, data);
+      };
+    } catch (e) {}
+  }
+
+  // 4) اعتراض تحميل السكربتات والملفات الديناميكية لـ OneSignal (script.src / link.href / setAttribute)
+  function wrapProp(Proto, prop) {
+    try {
+      if (!Proto) return;
+      var desc = Object.getOwnPropertyDescriptor(Proto, prop);
+      if (!desc || !desc.set || !desc.configurable) return;
+      Object.defineProperty(Proto, prop, {
+        configurable: true,
+        enumerable: desc.enumerable,
+        get: desc.get,
+        set: function (val) {
+          return desc.set.call(this, typeof val === "string" ? rewriteOsUrl(val) : val);
+        }
+      });
+    } catch (e) {}
+  }
+  wrapProp(typeof HTMLScriptElement !== "undefined" ? HTMLScriptElement.prototype : null, "src");
+  wrapProp(typeof HTMLLinkElement !== "undefined" ? HTMLLinkElement.prototype : null, "href");
+  wrapProp(typeof HTMLImageElement !== "undefined" ? HTMLImageElement.prototype : null, "src");
+
+  if (typeof Element !== "undefined" && Element.prototype && Element.prototype.setAttribute) {
+    var origSetAttr = Element.prototype.setAttribute;
+    Element.prototype.setAttribute = function (name, val) {
+      if (typeof name === "string" && typeof val === "string") {
+        var ln = name.toLowerCase();
+        if (ln === "src" || ln === "href") {
+          val = rewriteOsUrl(val);
+        }
+      }
+      return origSetAttr.call(this, name, val);
+    };
+  }
+})();
+</script>
+<!-- ABUDHIYA_ONESIGNAL_PROXY_END -->
+
 <!-- ABUDHIYA_NO_VIBRATE_HEAD_START -->
 <script data-ab-no-jitter="4">
 (function () {
@@ -28048,6 +28150,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_FULL_OFFLINE_END -->
+
 
 <!-- ABUDHIYA_ROCKSOLID_SW_REG_START -->
 <script data-ab-rocksolid-offline="5">

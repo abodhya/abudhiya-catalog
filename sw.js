@@ -1,3 +1,49 @@
+/* ABUDHIYA_ONESIGNAL_SW_PROXY_START */
+(function () {
+  if (self.__abOsSwProxyV1) return;
+  self.__abOsSwProxyV1 = true;
+
+  function rewriteOsUrl(u) {
+    if (typeof u !== "string" || u.indexOf("onesignal.com") === -1) return u;
+    var orig = self.location && self.location.origin ? self.location.origin : "";
+    if (!orig) return u;
+    return u
+      .replace(/^(?:https?:)?\/\/cdn\.onesignal\.com\//i, orig + "/_os/cdn/")
+      .replace(/^(?:https?:)?\/\/api\.onesignal\.com\//i, orig + "/_os/api/")
+      .replace(/^(?:https?:)?\/\/onesignal\.com\//i, orig + "/_os/main/");
+  }
+
+  if (typeof self.importScripts === "function") {
+    var origImport = self.importScripts;
+    self.importScripts = function () {
+      var args = [];
+      for (var i = 0; i < arguments.length; i++) {
+        args.push(rewriteOsUrl(arguments[i]));
+      }
+      return origImport.apply(self, args);
+    };
+  }
+
+  if (typeof self.fetch === "function") {
+    var origFetch = self.fetch;
+    self.fetch = function (input, init) {
+      try {
+        if (typeof input === "string") {
+          var nu = rewriteOsUrl(input);
+          if (nu !== input) return origFetch.call(self, nu, init);
+        } else if (input && typeof input === "object" && typeof input.url === "string") {
+          var nu2 = rewriteOsUrl(input.url);
+          if (nu2 !== input.url) {
+            return origFetch.call(self, new Request(nu2, input), init);
+          }
+        }
+      } catch (e) {}
+      return origFetch.apply(self, arguments);
+    };
+  }
+})();
+/* ABUDHIYA_ONESIGNAL_SW_PROXY_END */
+
 /* ABUDHIYA_ROCKSOLID_OFFLINE_START */
 (function () {
   const RS_CACHE = "abudhiya-offline-v4-847720";
@@ -136,7 +182,7 @@
     try { url = new URL(req.url); } catch (e) { return; }
     if (url.origin !== self.location.origin) return;
     const p = url.pathname || "/";
-    if (p === "/sw.js" || p.indexOf("/api/") === 0) return;
+    if (p === "/sw.js" || p.indexOf("/api/") === 0 || p.indexOf("/_os/") === 0 || p.indexOf("/push/") === 0) return;
 
     const accept = (req.headers && req.headers.get("accept")) || "";
     const isNav = req.mode === "navigate" || accept.indexOf("text/html") !== -1 || p === "/" || p === "/index.html" || p === "/wholesale.html";
@@ -197,6 +243,7 @@
   });
 })();
 /* ABUDHIYA_ROCKSOLID_OFFLINE_END */
+
 
 /* Abudhiya / Abu Saif Clean Offline PWA Engine v4 */
 const CACHE_NAME = "abudhiya-offline-v4-847720";
