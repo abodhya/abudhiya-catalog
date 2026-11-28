@@ -418,6 +418,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -30557,5 +30559,307 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_ROLE_ONBOARD_END -->
+
+<!-- ABUDHIYA_RECEIPT_CLEAN_FOOTER_START -->
+<style id="abReceiptCleanFooterStyle">
+  [data-ab-rcpt-bogus="1"],
+  [data-ab-rcpt-empty-sec="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+</style>
+<script data-ab-receipt-clean="1">
+(function () {
+  if (window.__abReceiptCleanFooterV1) return;
+  window.__abReceiptCleanFooterV1 = true;
+
+  var META_NAME_RE = /^[\s❖◆◇🔹🔸•▪\-—–📞📱👤📍🚚💳📅🕒🧾✅📦🛍]*?(?:رقم\s*)?(?:الجوال|الهاتف|الموبايل|الواتس(?:اب)?|التلفون|[إاأ]جمالي\s*(?:الوحدات|الأصناف|الاصناف|الكمية|الكميات|الطلب|الفاتورة|السعر|المبلغ)|عدد\s*(?:الأصناف|الاصناف|الوحدات)|اسم\s*العميل|العميل(?:\s*\/?\s*المحل)?|الموقع(?:\s*\/?\s*العنوان)?|العنوان|المنطقة|المندوب(?:\s*المختص)?|التاريخ(?:\s*والوقت)?|الوقت|طريقة\s*الدفع|الدفع|ملاحظ(?:ة|ات)|الملاحظات|رقم\s*الطلب|رقم\s*الفاتورة)\s*:?$/;
+  var PHONE_QTY_RE = /^(?:00967|967|0)?7\d{8}$/;
+  var observedCards = new WeakSet();
+
+  function norm(s) {
+    return String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+  }
+
+  function toEnDigits(s) {
+    return String(s == null ? "" : s).replace(/[\u0660-\u0669]/g, function (d) {
+      return String(d.charCodeAt(0) - 0x0660);
+    });
+  }
+
+  function parseQtyNumber(txt) {
+    var clean = toEnDigits(norm(txt)).replace(/,/g, "");
+    var m = clean.match(/(\d+(?:\.\d+)?)/);
+    if (!m) return 0;
+    var v = parseFloat(m[1]);
+    return isNaN(v) ? 0 : v;
+  }
+
+  function formatCount(n) {
+    if (!n || isNaN(n)) return "0";
+    return Math.abs(n - Math.round(n)) < 0.001 ? String(Math.round(n)) : String(Number(n.toFixed(2)));
+  }
+
+  function isBogusRow(nameText, qtyText) {
+    var n = norm(nameText);
+    var q = toEnDigits(norm(qtyText)).replace(/[\s\-+()]/g, "");
+    if (!n) return true;
+    if (META_NAME_RE.test(n)) return true;
+    if (n.indexOf("إجمالي الوحدات") !== -1 || n.indexOf("اجمالي الوحدات") !== -1) return true;
+    if (n.indexOf("إجمالي الأصناف") !== -1 || n.indexOf("اجمالي الاصناف") !== -1) return true;
+    if (n.charAt(0) === "❖" && (n.indexOf("الجوال") !== -1 || n.indexOf("الوحدات") !== -1 || n.indexOf("المندوب") !== -1 || n.indexOf("العميل") !== -1 || n.indexOf("العنوان") !== -1)) {
+      return true;
+    }
+    if (PHONE_QTY_RE.test(q) && q.length >= 9 && (n.indexOf("جوال") !== -1 || n.indexOf("هاتف") !== -1 || n.indexOf("رقم") !== -1 || n.charAt(0) === "❖")) {
+      return true;
+    }
+    return false;
+  }
+
+  function isMetadataTable(tbl) {
+    var t = norm(tbl.textContent);
+    if (t.indexOf("العميل / المحل") !== -1 || t.indexOf("المندوب المختص") !== -1 || t.indexOf("التاريخ والوقت") !== -1) {
+      return true;
+    }
+    return false;
+  }
+
+  function findSectionHeaderForTable(tbl, card) {
+    var prev = tbl.previousElementSibling;
+    if (prev && prev !== card) {
+      var pt = norm(prev.textContent);
+      if (pt.length > 0 && pt.length < 70 && (pt.indexOf("قسم") !== -1 || pt.indexOf("الأصناف") !== -1 || pt.indexOf("الاصناف") !== -1 || pt.indexOf("كراتين") !== -1 || pt.indexOf("أكياس") !== -1 || pt.indexOf("اكياس") !== -1)) {
+        return prev;
+      }
+    }
+    if (tbl.parentElement && tbl.parentElement !== card) {
+      var pPrev = tbl.parentElement.previousElementSibling;
+      if (pPrev && pPrev !== card) {
+        var ppt = norm(pPrev.textContent);
+        if (ppt.length > 0 && ppt.length < 70 && (ppt.indexOf("قسم") !== -1 || ppt.indexOf("الأصناف") !== -1 || ppt.indexOf("الاصناف") !== -1)) {
+          return pPrev;
+        }
+      }
+    }
+    return null;
+  }
+
+  function findReceiptCards() {
+    var cards = [];
+    if (!document.body) return cards;
+    var candidates = document.querySelectorAll("div, section, article");
+    for (var i = 0; i < candidates.length; i++) {
+      var el = candidates[i];
+      if (!el) continue;
+      var t = norm(el.textContent);
+      if (t.length < 40 || t.length > 8000) continue;
+      var hasMarker = (
+        t.indexOf("الإيصال الرسمي للطلب") !== -1 ||
+        t.indexOf("إيصال طلب إلكتروني معتمد") !== -1 ||
+        t.indexOf("ايصال طلب إلكتروني معتمد") !== -1
+      );
+      if (!hasMarker) continue;
+      if (!el.querySelector("table") && t.indexOf("قسم الأكياس") === -1 && t.indexOf("قسم الكراتين") === -1 && t.indexOf("الأصناف المطلوبة") === -1) {
+        continue;
+      }
+      // استبعاد الحاويات الخارجية التي تضم أزرار واتساب أسفل بطاقة الإيصال إذا وجد ابن أدق يمثل البطاقة نفسها
+      var hasTighterChild = false;
+      var sub = el.querySelectorAll("div, section, article");
+      for (var j = 0; j < sub.length; j++) {
+        var st = norm(sub[j].textContent);
+        if (
+          (st.indexOf("الإيصال الرسمي للطلب") !== -1 || st.indexOf("إيصال طلب إلكتروني معتمد") !== -1) &&
+          (sub[j].querySelector("table") || st.indexOf("قسم الأكياس") !== -1 || st.indexOf("قسم الكراتين") !== -1)
+        ) {
+          hasTighterChild = true;
+          break;
+        }
+      }
+      if (!hasTighterChild && cards.indexOf(el) === -1) {
+        cards.push(el);
+      }
+    }
+    return cards;
+  }
+
+  function cleanSingleReceiptCard(card) {
+    if (!card) return;
+
+    // مراقب خفيف مقتصر على بطاقة الإيصال فقط لإعادة التنظيف فور أي تحديث من syncAllOfficialReceipts
+    if (!observedCards.has(card) && typeof MutationObserver === "function") {
+      observedCards.add(card);
+      try {
+        var obs = new MutationObserver(function () {
+          cleanSingleReceiptCard(card);
+        });
+        obs.observe(card, { childList: true, subtree: true, characterData: true });
+      } catch (eObs) {}
+    }
+
+    var bagsTotal = 0;
+    var cartonsTotal = 0;
+    var tables = card.querySelectorAll("table");
+
+    for (var i = 0; i < tables.length; i++) {
+      var tbl = tables[i];
+      if (!tbl || isMetadataTable(tbl)) continue;
+
+      var secHdr = findSectionHeaderForTable(tbl, card);
+      var secTitle = secHdr ? norm(secHdr.textContent) : "";
+      var isBagSection = secTitle.indexOf("أكياس") !== -1 || secTitle.indexOf("اكياس") !== -1 || secTitle.indexOf("كيس") !== -1;
+      var isCartonSection = secTitle.indexOf("كراتين") !== -1 || secTitle.indexOf("كرتون") !== -1;
+
+      var allTrs = tbl.querySelectorAll("tr");
+      var validRows = [];
+
+      for (var r = 0; r < allTrs.length; r++) {
+        var tr = allTrs[r];
+        var tds = tr.querySelectorAll("td");
+        if (!tds || tds.length < 2) continue;
+
+        var nameCell = tds.length >= 3 ? tds[1] : tds[0];
+        var qtyCell = tds[tds.length - 1];
+        var nameTxt = norm(nameCell ? nameCell.textContent : "");
+        var qtyTxt = norm(qtyCell ? qtyCell.textContent : "");
+
+        if (isBogusRow(nameTxt, qtyTxt)) {
+          if (tr.getAttribute("data-ab-rcpt-bogus") !== "1") {
+            tr.setAttribute("data-ab-rcpt-bogus", "1");
+          }
+          continue;
+        }
+
+        if (tr.getAttribute("data-ab-rcpt-bogus") === "1") {
+          tr.removeAttribute("data-ab-rcpt-bogus");
+        }
+        validRows.push({ tr: tr, tds: tds, qtyTxt: qtyTxt });
+      }
+
+      if (validRows.length === 0) {
+        if (tbl.getAttribute("data-ab-rcpt-empty-sec") !== "1") {
+          tbl.setAttribute("data-ab-rcpt-empty-sec", "1");
+        }
+        if (secHdr && secHdr.getAttribute("data-ab-rcpt-empty-sec") !== "1") {
+          secHdr.setAttribute("data-ab-rcpt-empty-sec", "1");
+        }
+        // إخفاء الحاوية المغلّفة للقسم الفارغ إن كانت مقتصرة على هذا العنوان وهذا الجدول فقط
+        var wrap = tbl.parentElement;
+        if (wrap && wrap !== card && secHdr && wrap.contains(secHdr) && wrap.querySelectorAll("table").length === 1) {
+          if (wrap.getAttribute("data-ab-rcpt-empty-sec") !== "1") {
+            wrap.setAttribute("data-ab-rcpt-empty-sec", "1");
+          }
+        }
+      } else {
+        if (tbl.getAttribute("data-ab-rcpt-empty-sec") === "1") tbl.removeAttribute("data-ab-rcpt-empty-sec");
+        if (secHdr && secHdr.getAttribute("data-ab-rcpt-empty-sec") === "1") secHdr.removeAttribute("data-ab-rcpt-empty-sec");
+        if (tbl.parentElement && tbl.parentElement.getAttribute("data-ab-rcpt-empty-sec") === "1") {
+          tbl.parentElement.removeAttribute("data-ab-rcpt-empty-sec");
+        }
+
+        for (var v = 0; v < validRows.length; v++) {
+          var rowObj = validRows[v];
+          if (rowObj.tds.length >= 3) {
+            var idxStr = String(v + 1);
+            if (norm(rowObj.tds[0].textContent) !== idxStr) {
+              rowObj.tds[0].textContent = idxStr;
+            }
+          }
+          var qtyNum = parseQtyNumber(rowObj.qtyTxt);
+          var qHasCarton = rowObj.qtyTxt.indexOf("كرتون") !== -1 || rowObj.qtyTxt.indexOf("كراتين") !== -1 || rowObj.qtyTxt.indexOf("📦") !== -1;
+          var qHasBag = rowObj.qtyTxt.indexOf("كيس") !== -1 || rowObj.qtyTxt.indexOf("أكياس") !== -1 || rowObj.qtyTxt.indexOf("اكياس") !== -1 || rowObj.qtyTxt.indexOf("🛍") !== -1;
+
+          if (qHasCarton && !qHasBag) {
+            cartonsTotal += qtyNum;
+          } else if (qHasBag) {
+            bagsTotal += qtyNum;
+          } else if (isCartonSection) {
+            cartonsTotal += qtyNum;
+          } else if (isBagSection) {
+            bagsTotal += qtyNum;
+          }
+        }
+      }
+    }
+
+    // تحديث شريط الهامش السفلي الأخضر ليعرض: عدد الأكياس و عدد الكراتين فقط
+    var desiredFooter = "عدد الأكياس: " + formatCount(bagsTotal) + "  |  عدد الكراتين: " + formatCount(cartonsTotal);
+    var blocks = card.querySelectorAll("div, p, span");
+    var footerEl = null;
+
+    for (var b = 0; b < blocks.length; b++) {
+      var el = blocks[b];
+      if (!el || el.closest("table")) continue;
+      if (el.querySelector("table, button")) continue;
+      var bt = norm(el.textContent);
+      if (!bt || bt.length > 110) continue;
+      var isSummaryBar = (
+        el.getAttribute("data-ab-rcpt-footer") === "1" ||
+        bt.indexOf("إجمالي الأصناف") !== -1 ||
+        bt.indexOf("اجمالي الاصناف") !== -1 ||
+        ((bt.indexOf("الأكياس:") !== -1 || bt.indexOf("الكراتين:") !== -1 || bt.indexOf("عدد الأكياس:") !== -1) && bt.indexOf("قسم") === -1)
+      );
+      if (!isSummaryBar) continue;
+
+      // نأخذ العنصر الأعمق المناسب الذي لا يحتوي ابناً مطابقاً
+      var childMatch = false;
+      for (var c = 0; c < el.children.length; c++) {
+        var ct = norm(el.children[c].textContent);
+        if (ct.indexOf("إجمالي الأصناف") !== -1 || ct.indexOf("الأكياس:") !== -1 || ct.indexOf("عدد الأكياس:") !== -1) {
+          childMatch = true;
+          break;
+        }
+      }
+      if (!childMatch) {
+        footerEl = el;
+      }
+    }
+
+    if (footerEl) {
+      footerEl.setAttribute("data-ab-rcpt-footer", "1");
+      if (norm(footerEl.textContent) !== norm(desiredFooter)) {
+        footerEl.textContent = desiredFooter;
+      }
+    }
+  }
+
+  function cleanAllReceipts() {
+    try {
+      var cards = findReceiptCards();
+      for (var i = 0; i < cards.length; i++) {
+        cleanSingleReceiptCard(cards[i]);
+      }
+    } catch (e) {}
+  }
+
+  // تنظيف فوري لحظة الضغط على أزرار فتح الإيصال أو تصدير/إرسال صورة الإيصال
+  document.addEventListener("click", function (ev) {
+    try {
+      var btn = ev.target && ev.target.closest ? ev.target.closest("button, a, [role='button']") : null;
+      if (!btn) return;
+      var t = norm(btn.textContent);
+      if (t.indexOf("إيصال") !== -1 || t.indexOf("ايصال") !== -1 || t.indexOf("صورة") !== -1 || t.indexOf("المستودع") !== -1) {
+        cleanAllReceipts();
+        setTimeout(cleanAllReceipts, 60);
+        setTimeout(cleanAllReceipts, 260);
+        setTimeout(cleanAllReceipts, 700);
+      }
+    } catch (e) {}
+  }, true);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", cleanAllReceipts, { once: true });
+  } else {
+    cleanAllReceipts();
+  }
+  window.addEventListener("load", cleanAllReceipts);
+  setInterval(cleanAllReceipts, 1200);
+})();
+</script>
+<!-- ABUDHIYA_RECEIPT_CLEAN_FOOTER_END -->
 </body>
 </html>
