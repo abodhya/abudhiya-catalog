@@ -2,11 +2,73 @@
 <html lang="ar" dir="rtl">
 <head>
 <!-- ABUDHIYA_OFFLINE_UNFREEZE_PAGE_START -->
-<script data-ab-offline-unfreeze="6">
+<script data-ab-offline-unfreeze="7">
 (function () {
-  if (window.__abOfflineUnfreezePageV6) return;
-  window.__abOfflineUnfreezePageV6 = true;
+  if (window.__abOfflineUnfreezePageV7) return;
+  window.__abOfflineUnfreezePageV7 = true;
 
+  // 1) كاسر حلقات MutationObserver اللانهائية (يعالج تجمّد updateOfflineUI وبقية الـ 21 مراقباً)
+  if (typeof window.MutationObserver === "function" && !window.MutationObserver.__abSafeV7) {
+    var OrigMO = window.MutationObserver;
+    var SafeMutationObserver = function (callback) {
+      if (typeof callback !== "function") return new OrigMO(callback);
+      var pending = [];
+      var timer = null;
+      var running = false;
+      var winStart = 0;
+      var winHits = 0;
+      var selfObs = null;
+
+      function flush() {
+        timer = null;
+        if (running) return;
+        var batch = pending.splice(0, pending.length);
+        if (!batch.length) return;
+        running = true;
+        try {
+          callback.call(selfObs, batch, selfObs);
+        } catch (e) {
+        } finally {
+          try { if (selfObs && typeof selfObs.takeRecords === "function") selfObs.takeRecords(); } catch (e2) {}
+          running = false;
+        }
+      }
+
+      selfObs = new OrigMO(function (records) {
+        if (running) return;
+        if (records && records.length) {
+          for (var i = 0; i < records.length && pending.length < 150; i++) {
+            pending.push(records[i]);
+          }
+        }
+        if (timer) return;
+        var now = Date.now();
+        if (now - winStart > 1200) {
+          winStart = now;
+          winHits = 0;
+        }
+        winHits++;
+        var delay = winHits > 4 ? 450 : (navigator.onLine === false ? 180 : 90);
+        timer = setTimeout(flush, delay);
+      });
+
+      try {
+        var origDisc = selfObs.disconnect;
+        selfObs.disconnect = function () {
+          if (timer) { clearTimeout(timer); timer = null; }
+          pending.length = 0;
+          return origDisc.call(this);
+        };
+      } catch (e3) {}
+
+      return selfObs;
+    };
+    SafeMutationObserver.prototype = OrigMO.prototype;
+    SafeMutationObserver.__abSafeV7 = true;
+    window.MutationObserver = SafeMutationObserver;
+  }
+
+  // 2) قاطع دوائر لطلبات الشبكة أثناء الأوفلاين (OneSignal / API / روابط خارجية)
   function getUrlStr(input) {
     if (typeof input === "string") return input;
     if (typeof URL !== "undefined" && input instanceof URL) return input.href;
@@ -27,7 +89,6 @@
     return false;
   }
 
-  // 1) قاطع دوائر على fetch: يمنع حلقات إعادة المحاولة اللانهائية التي تجمد الشاشة عند فصل النت
   if (typeof window.fetch === "function") {
     var origFetch = window.fetch;
     var offlineFailBurst = 0;
@@ -42,7 +103,6 @@
           lastBurstReset = now;
         }
         offlineFailBurst++;
-        // إذا تكرر الطلب بسرعة أثناء الأوفلاين نؤخر الرفض قليلاً لكسر حلقة التجمّد تماماً
         if (offlineFailBurst > 2) {
           return new Promise(function (_, reject) {
             setTimeout(function () { reject(new TypeError("Offline")); }, 1800);
@@ -54,7 +114,6 @@
     };
   }
 
-  // 2) حماية XMLHttpRequest من التعليق أثناء انقطاع الإنترنت
   if (typeof XMLHttpRequest !== "undefined" && XMLHttpRequest.prototype) {
     var origXhrOpen = XMLHttpRequest.prototype.open;
     var origXhrSend = XMLHttpRequest.prototype.send;
@@ -75,26 +134,22 @@
     };
   }
 
-  // 3) فك أي قفل لمس أو تمرير أو شاشة تحميل عالقة لحظة انقطاع الإنترنت
+  // 3) ضمان بقاء اللمس والتمرير حرّين عند انقطاع الإنترنت
   function ensureUiInteractive() {
     try {
-      if (document.documentElement) {
-        if (getComputedStyle(document.documentElement).pointerEvents === "none") {
-          document.documentElement.style.pointerEvents = "auto";
-        }
+      if (document.documentElement && getComputedStyle(document.documentElement).pointerEvents === "none") {
+        document.documentElement.style.pointerEvents = "auto";
       }
       if (document.body) {
         if (getComputedStyle(document.body).pointerEvents === "none") {
           document.body.style.pointerEvents = "auto";
         }
-        // لا نفك التمرير إذا كانت هناك نافذة منبثقة مفتوحة فعلاً (مثل نافذة الكميات أو التسجيل)
         var openModal = document.querySelector("#qtyModal.open, #abInstallGateOverlay, #abAutoPushBanner");
         if (!openModal && getComputedStyle(document.body).overflow === "hidden") {
           document.body.style.overflow = "";
           document.body.style.overflowY = "auto";
         }
       }
-      // إزالة شاشات التحميل العالقة فقط (إن وُجدت)
       var loaders = document.querySelectorAll("#abSplash, #abLaunchSplash, .ab-splash-overlay, .ab-loading-mask");
       for (var i = 0; i < loaders.length; i++) {
         loaders[i].style.display = "none";
@@ -105,19 +160,19 @@
 
   window.addEventListener("offline", function () {
     ensureUiInteractive();
-    setTimeout(ensureUiInteractive, 200);
-    setTimeout(ensureUiInteractive, 800);
+    setTimeout(ensureUiInteractive, 250);
   });
 
   window.addEventListener("DOMContentLoaded", function () {
     if (navigator.onLine === false) {
       ensureUiInteractive();
-      setTimeout(ensureUiInteractive, 400);
+      setTimeout(ensureUiInteractive, 350);
     }
   });
 })();
 </script>
 <!-- ABUDHIYA_OFFLINE_UNFREEZE_PAGE_END -->
+
 
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
