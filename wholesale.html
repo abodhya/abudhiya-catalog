@@ -177,6 +177,7 @@
 
 
 
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -28474,5 +28475,241 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_PROMO_POPUP_POLISH_END -->
+
+<!-- ABUDHIYA_COPY_ORDER_CUST_NAME_START -->
+<script data-ab-copy-cust="1">
+(function () {
+  if (window.__abCopyOrderCustNameV1) return;
+  window.__abCopyOrderCustNameV1 = true;
+
+  var lastCopyIntentTs = 0;
+
+  function cleanText(v) {
+    return String(v == null ? "" : v).replace(/\s+/g, " ").trim();
+  }
+
+  function looksLikePhone(v) {
+    var s = cleanText(v);
+    if (!s || /[A-Za-z\u0600-\u06FF]/.test(s)) return false;
+    var digits = s.replace(/\D/g, "");
+    return digits.length >= 7 && digits.length <= 15;
+  }
+
+  function isVisible(el) {
+    if (!el) return false;
+    try {
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden") return false;
+      return el.offsetWidth > 0 || el.offsetHeight > 0;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function readFirstSelector(selectors, filterFn) {
+    for (var i = 0; i < selectors.length; i++) {
+      var list = document.querySelectorAll(selectors[i]);
+      for (var j = 0; j < list.length; j++) {
+        var val = cleanText(list[j].value);
+        if (!val) continue;
+        if (filterFn && !filterFn(val, list[j])) continue;
+        return val;
+      }
+    }
+    return "";
+  }
+
+  function extractCustomerInfo() {
+    var name = readFirstSelector([
+      "#custName", "#customerName", "#clientName", "#buyerName",
+      "#orderName", "#orderCustName", "#cName", "#shopName",
+      'input[name*="name" i]',
+      'input[placeholder*="الاسم"]',
+      'input[placeholder*="اسم"]',
+      'input[placeholder*="العميل"]',
+      'input[placeholder*="البقالة"]',
+      'input[placeholder*="المحل"]'
+    ], function (v, el) {
+      var t = String(el.type || "text").toLowerCase();
+      if (t === "search" || t === "password" || t === "number" || t === "hidden") return false;
+      if ((el.id || "").toLowerCase().indexOf("search") !== -1) return false;
+      return !looksLikePhone(v);
+    });
+
+    var phone = readFirstSelector([
+      "#custPhone", "#customerPhone", "#clientPhone", "#buyerPhone",
+      "#orderPhone", "#cPhone", 'input[type="tel"]',
+      'input[name*="phone" i]', 'input[name*="mobile" i]',
+      'input[placeholder*="جوال"]', 'input[placeholder*="هاتف"]', 'input[placeholder*="رقم"]'
+    ], function (v) {
+      return v.replace(/\D/g, "").length >= 7;
+    });
+
+    var area = readFirstSelector([
+      "#custArea", "#customerArea", "#clientArea", "#custAddress", "#customerAddress",
+      "#orderArea", "#cArea",
+      'input[name*="area" i]', 'input[name*="addr" i]', 'input[name*="city" i]',
+      'input[placeholder*="منطقة"]', 'input[placeholder*="المنطقة"]',
+      'input[placeholder*="عنوان"]', 'input[placeholder*="العنوان"]',
+      'input[placeholder*="الحي"]', 'input[placeholder*="المدينة"]'
+    ], function (v) {
+      return !looksLikePhone(v);
+    });
+
+    // احتياطي 1: قراءة حقول نموذج الفاتورة الظاهرة بالترتيب (الاسم / الرقم / المنطقة)
+    if (!name || !phone || !area) {
+      var scope = document.querySelector("#invoiceView, #viewInvoice, .invoice-view, .view-invoice") || document.body;
+      if (scope) {
+        var inputs = scope.querySelectorAll("input");
+        var textVals = [];
+        for (var i = 0; i < inputs.length; i++) {
+          var inp = inputs[i];
+          var tp = String(inp.type || "text").toLowerCase();
+          if (tp === "hidden" || tp === "search" || tp === "checkbox" || tp === "radio" || tp === "password" || tp === "number") continue;
+          if ((inp.id || "").toLowerCase().indexOf("search") !== -1) continue;
+          if (!isVisible(inp)) continue;
+          var val = cleanText(inp.value);
+          if (!val) continue;
+          if (looksLikePhone(val)) {
+            if (!phone) phone = val;
+          } else if (val.length >= 2 && textVals.indexOf(val) === -1) {
+            textVals.push(val);
+          }
+        }
+        if (!name && textVals.length > 0) name = textVals[0];
+        if (!area && textVals.length > 1) area = textVals[1];
+      }
+    }
+
+    // احتياطي 2: قراءة بيانات العميل من localStorage
+    if (!name || !phone || !area) {
+      try {
+        for (var k = 0; k < localStorage.length; k++) {
+          var key = String(localStorage.key(k) || "");
+          if (!/(?:cust|client|profile|buyer|user|order|shop|abudhiya|abusaif)/i.test(key)) continue;
+          var raw = localStorage.getItem(key);
+          if (!raw || raw.charAt(0) !== "{") continue;
+          var obj = JSON.parse(raw);
+          if (!obj || typeof obj !== "object") continue;
+          if (!name) name = cleanText(obj.name || obj.customerName || obj.custName || obj.clientName || obj.shopName || "");
+          if (!phone) phone = cleanText(obj.phone || obj.mobile || obj.customerPhone || obj.custPhone || "");
+          if (!area) area = cleanText(obj.area || obj.address || obj.location || obj.city || obj.region || "");
+        }
+      } catch (e) {}
+    }
+
+    // احتياطي 3: قراءة بطاقة البيانات المحفوظة الظاهرة في شاشة الفاتورة
+    if (!name) {
+      try {
+        var els = document.querySelectorAll("div, span, p");
+        for (var m = 0; m < els.length; m++) {
+          var txt = cleanText(els[m].textContent);
+          if (txt.indexOf("تلقائي") === -1 || txt.length > 140) continue;
+          var match = txt.match(/👤?\s*([^\(•|]+?)\s*\(تلقائي/);
+          if (match && match[1]) {
+            var cand = cleanText(match[1].replace(/👤/g, ""));
+            if (cand && !looksLikePhone(cand)) {
+              name = cand;
+              break;
+            }
+          }
+        }
+      } catch (e2) {}
+    }
+
+    return { name: name, phone: phone, area: area };
+  }
+
+  function enrichOrderText(rawText) {
+    if (typeof rawText !== "string") return rawText;
+    var trimmed = rawText.trim();
+    if (!trimmed) return rawText;
+
+    var fromBtn = (Date.now() - lastCopyIntentTs) < 3500;
+    var looksOrder = /(?:كرتون|كيس|شدة|باكت|فاتورة|طلب\s+جديد|إجمالي\s+الأصناف|طريقة\s+الدفع)/.test(trimmed);
+    if (!fromBtn && !looksOrder) return rawText;
+
+    var info = extractCustomerInfo();
+    if (!info.name) return rawText;
+
+    var header = [];
+    if (trimmed.indexOf(info.name) === -1) {
+      header.push("👤 العميل: " + info.name);
+    }
+    if (info.phone && trimmed.indexOf(info.phone) === -1) {
+      header.push("📞 الجوال: " + info.phone);
+    }
+    if (info.area && trimmed.indexOf(info.area) === -1) {
+      header.push("📍 المنطقة: " + info.area);
+    }
+    if (!header.length) return rawText;
+
+    var lines = rawText.split("\n");
+    var first = cleanText(lines[0] || "");
+    var firstIsTitle = /(?:طلب|فاتورة|ابوسيف|متجر|📦|🧾)/.test(first) && !/^\d+[\.\-\)]/.test(first);
+
+    if (firstIsTitle) {
+      return [lines[0]].concat(header, lines.slice(1)).join("\n");
+    }
+    return header.concat(lines).join("\n");
+  }
+
+  // 1) رصد الضغط على زر «نسخ الطلب»
+  document.addEventListener("click", function (ev) {
+    try {
+      var node = ev.target && ev.target.closest ? ev.target.closest("button, a, [role='button']") : ev.target;
+      if (!node) return;
+      var label = cleanText(node.textContent || "");
+      if (label.indexOf("نسخ الطلب") !== -1 || label.indexOf("نسخ الفاتورة") !== -1) {
+        lastCopyIntentTs = Date.now();
+      }
+    } catch (e) {}
+  }, true);
+
+  // 2) تمرير نص النسخ عبر Clipboard API الحديث
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function" && !navigator.clipboard.writeText.__abCustWrapped) {
+      var origWriteText = navigator.clipboard.writeText.bind(navigator.clipboard);
+      var wrappedWriteText = function (text) {
+        return origWriteText(enrichOrderText(text));
+      };
+      wrappedWriteText.__abCustWrapped = true;
+      try {
+        navigator.clipboard.writeText = wrappedWriteText;
+      } catch (eAssign) {
+        Object.defineProperty(navigator.clipboard, "writeText", {
+          configurable: true,
+          value: wrappedWriteText
+        });
+      }
+    }
+  } catch (eClip) {}
+
+  // 3) تمرير نص النسخ عبر الطريقة الاحتياطية (document.execCommand('copy'))
+  try {
+    if (typeof document.execCommand === "function" && !document.execCommand.__abCustWrapped) {
+      var origExec = document.execCommand.bind(document);
+      var wrappedExec = function (cmd) {
+        if (String(cmd || "").toLowerCase() === "copy") {
+          try {
+            var active = document.activeElement;
+            if (active && (active.tagName === "TEXTAREA" || active.tagName === "INPUT") && typeof active.value === "string") {
+              var updated = enrichOrderText(active.value);
+              if (updated !== active.value) {
+                active.value = updated;
+                if (typeof active.select === "function") active.select();
+              }
+            }
+          } catch (eEx) {}
+        }
+        return origExec.apply(document, arguments);
+      };
+      wrappedExec.__abCustWrapped = true;
+      document.execCommand = wrappedExec;
+    }
+  } catch (eExec) {}
+})();
+</script>
+<!-- ABUDHIYA_COPY_ORDER_CUST_NAME_END -->
 </body>
 </html>
