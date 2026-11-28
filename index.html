@@ -27124,6 +27124,351 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_GUEST_FINAL_CLOAK_END -->
 
+
+<!-- ABUDHIYA_AUTO_PUSH_ONBOARD_START -->
+<style id="abAutoPushCss" data-ab-auto-push="1">
+  #abAutoPushBanner {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483640 !important;
+    background: rgba(2, 28, 20, 0.72) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+    direction: rtl !important;
+    font-family: Tahoma, Arial, sans-serif !important;
+    color-scheme: light !important;
+  }
+  .ab-ap-card {
+    width: 100% !important;
+    max-width: 375px !important;
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    border: 2px solid #f5c542 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+    overflow: hidden !important;
+    text-align: center !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+  }
+  .ab-ap-head {
+    background: linear-gradient(135deg, #042f22 0%, #059669 100%) !important;
+    padding: 18px 16px 14px !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border-bottom: 2px solid #f5c542 !important;
+  }
+  .ab-ap-ico { font-size: 36px !important; line-height: 1.1 !important; margin-bottom: 6px !important; }
+  .ab-ap-title { margin: 0 !important; font-size: 17px !important; font-weight: 900 !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+  .ab-ap-body { padding: 16px !important; background: #ffffff !important; }
+  .ab-ap-desc { margin: 0 0 14px !important; font-size: 13.5px !important; line-height: 1.75 !important; color: #1e293b !important; -webkit-text-fill-color: #1e293b !important; }
+  .ab-ap-btn-ok {
+    width: 100% !important;
+    min-height: 48px !important;
+    border: none !important;
+    border-radius: 13px !important;
+    background: linear-gradient(135deg, #042f22 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+  }
+  .ab-ap-btn-later {
+    width: 100% !important;
+    min-height: 40px !important;
+    margin-top: 8px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 11px !important;
+    background: #f1f5f9 !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+  }
+  .ab-ap-gate-note {
+    margin: 0 0 10px 0 !important;
+    padding: 8px 10px !important;
+    border-radius: 10px !important;
+    background: #ecfdf5 !important;
+    border: 1px solid #059669 !important;
+    font-size: 12.2px !important;
+    font-weight: 800 !important;
+    color: #065f46 !important;
+    -webkit-text-fill-color: #065f46 !important;
+    text-align: center !important;
+  }
+</style>
+<script data-ab-auto-push="1">
+(function () {
+  if (window.__abAutoPushOnboardV1) return;
+  window.__abAutoPushOnboardV1 = true;
+
+  var CFG = {"vapidKey": "", "subscribeUrls": [], "btnIds": ["abWebPushCss", "abCustPushSub", "abCustPushBtn", "abCustPushDiag", "abSmartAlertsCss", "abAlertPopupCard", "abAlertsDrawerSheet", "abAlertsListWrap", "abBellBadge"]};
+  var SESS_DISMISS_KEY = "ab_autopush_dismiss_sess_v1";
+  var DONE_KEY = "ab_autopush_done_v1";
+  var subRunning = false;
+
+  function isStandaloneApp() {
+    if (typeof window.__abIsStandaloneApp === "function") return window.__abIsStandaloneApp();
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia && (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
+        window.matchMedia("(display-mode: minimal-ui)").matches
+      )) return true;
+      if (document.referrer && document.referrer.indexOf("android-app://") === 0) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function toEnDigits(str) {
+    return String(str || "")
+      .replace(/[\u0660-\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); })
+      .replace(/[\u06F0-\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); });
+  }
+
+  function urlBase64ToUint8Array(base64String) {
+    var pad = "=".repeat((4 - (base64String.length % 4)) % 4);
+    var base64 = (base64String + pad).replace(/-/g, "+").replace(/_/g, "/");
+    var raw = window.atob(base64);
+    var out = new Uint8Array(raw.length);
+    for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+    return out;
+  }
+
+  function findEnablePushButton() {
+    var btns = document.querySelectorAll("button, a, [role='button']");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      if (!b || b.closest("#abAutoPushBanner, #abInstallGateOverlay")) continue;
+      var txt = String(b.textContent || "").replace(/\s+/g, " ").trim();
+      if (
+        txt.indexOf("تفعيل الآن") !== -1 ||
+        txt.indexOf("تفعيل الان") !== -1 ||
+        txt.indexOf("تفعيل الإشعارات") !== -1 ||
+        txt.indexOf("تفعيل الاشعارات") !== -1
+      ) {
+        return b;
+      }
+    }
+    return null;
+  }
+
+  function findBellButton() {
+    var ids = Array.isArray(CFG.btnIds) ? CFG.btnIds : [];
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (el && !el.closest("#abAutoPushBanner, #abInstallGateOverlay")) {
+        var tag = el.tagName;
+        if (tag === "BUTTON" || tag === "A" || el.getAttribute("role") === "button" || typeof el.onclick === "function") {
+          return el;
+        }
+      }
+    }
+    var btns = document.querySelectorAll("button, [role='button']");
+    for (var j = 0; j < btns.length; j++) {
+      var b = btns[j];
+      if (!b || b.closest("#abAutoPushBanner, #abInstallGateOverlay")) continue;
+      var t = String(b.textContent || "");
+      if (t.indexOf("🔔") !== -1) return b;
+    }
+    return null;
+  }
+
+  function fallbackDirectSubscribe() {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+    navigator.serviceWorker.ready.then(function (reg) {
+      if (!reg || !reg.pushManager) return;
+      return reg.pushManager.getSubscription().then(function (existing) {
+        if (existing) {
+          try { localStorage.setItem(DONE_KEY, "1"); } catch (e) {}
+          return;
+        }
+        if (!CFG.vapidKey) return;
+        return reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(CFG.vapidKey)
+        }).then(function (sub) {
+          try { localStorage.setItem(DONE_KEY, "1"); } catch (e) {}
+          var urls = Array.isArray(CFG.subscribeUrls) ? CFG.subscribeUrls : [];
+          if (!urls.length) return;
+          var prof = null;
+          try { prof = JSON.parse(localStorage.getItem("ab_customer_profile_v1") || "null"); } catch (e) {}
+          var payload = {
+            subscription: sub,
+            name: (prof && prof.name) || localStorage.getItem("ab_cust_name") || "",
+            phone: (prof && prof.phone) || localStorage.getItem("ab_cust_phone") || "",
+            address: (prof && prof.address) || localStorage.getItem("ab_cust_addr") || "",
+            source: "abusaif_auto_onboard"
+          };
+          return fetch(urls[0], {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }).catch(function () {});
+        });
+      });
+    }).catch(function () {});
+  }
+
+  function completeServerPushSubscription() {
+    if (subRunning) return;
+    subRunning = true;
+    setTimeout(function () { subRunning = false; }, 5000);
+
+    // 1) إذا وُجدت دالة اشتراك مباشرة في النظام فاستدعِها
+    var fnNames = ["abSubscribeWebPush", "subscribeWebPush", "enableWebPush", "abEnablePushNow"];
+    for (var i = 0; i < fnNames.length; i++) {
+      if (typeof window[fnNames[i]] === "function") {
+        try { window[fnNames[i]](); } catch (e) {}
+        try { localStorage.setItem(DONE_KEY, "1"); } catch (e) {}
+        return;
+      }
+    }
+
+    // 2) البحث عن زر «تفعيل الآن» في الواجهة أو فتح الجرس ثم ضغطه تلقائياً
+    var enBtn = findEnablePushButton();
+    if (enBtn) {
+      try { enBtn.click(); } catch (e) {}
+      try { localStorage.setItem(DONE_KEY, "1"); } catch (e) {}
+      setTimeout(fallbackDirectSubscribe, 2200);
+      return;
+    }
+
+    var bellBtn = findBellButton();
+    if (bellBtn) {
+      try { bellBtn.click(); } catch (e) {}
+      setTimeout(function () {
+        var enBtn2 = findEnablePushButton();
+        if (enBtn2) {
+          try { enBtn2.click(); } catch (e) {}
+          try { localStorage.setItem(DONE_KEY, "1"); } catch (e) {}
+        } else {
+          fallbackDirectSubscribe();
+        }
+      }, 240);
+      setTimeout(fallbackDirectSubscribe, 2400);
+      return;
+    }
+
+    // 3) خط الأمان المباشر عبر Service Worker + VAPID
+    fallbackDirectSubscribe();
+  }
+
+  function requestPermissionInGesture(afterGrantDelayMs) {
+    if (typeof window.Notification === "undefined") return;
+    if (Notification.permission === "granted") {
+      setTimeout(completeServerPushSubscription, afterGrantDelayMs || 350);
+      return;
+    }
+    if (Notification.permission !== "default") return;
+
+    try {
+      var res = Notification.requestPermission(function (legacyPerm) {
+        if (legacyPerm === "granted") {
+          setTimeout(completeServerPushSubscription, afterGrantDelayMs || 400);
+        }
+      });
+      if (res && typeof res.then === "function") {
+        res.then(function (perm) {
+          if (perm === "granted") {
+            setTimeout(completeServerPushSubscription, afterGrantDelayMs || 400);
+          }
+        }).catch(function () {});
+      }
+    } catch (e) {}
+  }
+
+  // إضافة تنبيه واضح داخل شاشة تسجيل العميل (قبل زر الحفظ) عندما لم تُفعّل الإشعارات بعد
+  function decorateOnboardingForm() {
+    if (typeof window.Notification === "undefined" || Notification.permission !== "default") return;
+    var form = document.getElementById("abIgProfileForm");
+    if (!form || form.querySelector(".ab-ap-gate-note")) return;
+    var submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) return;
+    var note = document.createElement("div");
+    note.className = "ab-ap-gate-note";
+    note.textContent = "🔔 بالضغط على حفظ، اضغط «سماح» لتصلك العروض والأصناف الجديدة تلقائياً";
+    submitBtn.parentNode.insertBefore(note, submitBtn);
+  }
+
+  // ربط ضغطة «حفظ البيانات والدخول للمتجر» مباشرة بطلب الإشعارات (بدون تعارض مع التحقق)
+  document.addEventListener("submit", function (ev) {
+    var form = ev && ev.target;
+    if (!form || form.id !== "abIgProfileForm") return;
+    if (!isStandaloneApp()) return;
+    var nameVal = String((document.getElementById("abGateNameInp") || {}).value || "").trim();
+    var phoneDigits = toEnDigits((document.getElementById("abGatePhoneInp") || {}).value || "").replace(/[^0-9]/g, "");
+    var addrVal = String((document.getElementById("abGateAddrInp") || {}).value || "").trim();
+    if (nameVal.length < 2 || phoneDigits.length < 9 || addrVal.length < 2) return;
+    requestPermissionInGesture(500);
+  }, true);
+
+  // بطاقة تفعيل سريعة لمرة واحدة للعميل الذي دخل التطبيق المثبّت ولم يفعّل الإشعارات بعد
+  function maybeShowStandalonePrompt() {
+    if (!isStandaloneApp()) return;
+    if (typeof window.Notification === "undefined") return;
+    if (Notification.permission === "granted") {
+      if (localStorage.getItem(DONE_KEY) !== "1") {
+        setTimeout(completeServerPushSubscription, 1200);
+      }
+      return;
+    }
+    if (Notification.permission !== "default") return;
+    if (document.getElementById("abInstallGateOverlay")) return;
+    if (document.getElementById("abAutoPushBanner")) return;
+    try { if (sessionStorage.getItem(SESS_DISMISS_KEY) === "1") return; } catch (e) {}
+
+    var wrap = document.createElement("div");
+    wrap.id = "abAutoPushBanner";
+    wrap.setAttribute("data-ab-auto-push", "1");
+    wrap.innerHTML =
+      '<div class="ab-ap-card">' +
+        '<div class="ab-ap-head">' +
+          '<div class="ab-ap-ico">🔔</div>' +
+          '<h3 class="ab-ap-title">تفعيل إشعارات ابوسيف للتجارة</h3>' +
+        '</div>' +
+        '<div class="ab-ap-body">' +
+          '<p class="ab-ap-desc">فعّل الإشعارات بضغطة واحدة لتصلك أحدث العروض والأصناف الجديدة فور نزولها على شاشة القفل.</p>' +
+          '<button type="button" id="abAutoPushAcceptBtn" class="ab-ap-btn-ok">✅ تفعيل الإشعارات الآن</button>' +
+          '<button type="button" id="abAutoPushLaterBtn" class="ab-ap-btn-later">لاحقاً</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(wrap);
+
+    var okBtn = document.getElementById("abAutoPushAcceptBtn");
+    var laterBtn = document.getElementById("abAutoPushLaterBtn");
+    if (okBtn) {
+      okBtn.onclick = function () {
+        requestPermissionInGesture(250);
+        wrap.remove();
+      };
+    }
+    if (laterBtn) {
+      laterBtn.onclick = function () {
+        try { sessionStorage.setItem(SESS_DISMISS_KEY, "1"); } catch (e) {}
+        wrap.remove();
+      };
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", function () {
+    decorateOnboardingForm();
+    setTimeout(decorateOnboardingForm, 450);
+  });
+  window.addEventListener("load", function () {
+    decorateOnboardingForm();
+    setTimeout(maybeShowStandalonePrompt, 1800);
+  });
+})();
+</script>
+<!-- ABUDHIYA_AUTO_PUSH_ONBOARD_END -->
+
 <!-- ABUDHIYA_FULL_OFFLINE_START -->
 <style id="abFullOfflineStyle" data-full-offline="4">
   #abOfflinePill {
@@ -27167,7 +27512,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   if (window.__abFullOfflineV4) return;
   window.__abFullOfflineV4 = true;
 
-  var TARGET_CACHE = "abudhiya-offline-v4-840096";
+  var TARGET_CACHE = "abudhiya-offline-v4-842247";
 
   function forceReleaseSplash() {
     try {
