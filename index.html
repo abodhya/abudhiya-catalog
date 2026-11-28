@@ -410,6 +410,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -29337,5 +29339,247 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_INVOICE_COMPACT_CLEAN_END -->
+
+<!-- ABUDHIYA_POST_INSTALL_EXIT_START -->
+<style id="abPostInstallExitStyle">
+  #abPostInstallExitOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    background: linear-gradient(165deg, #064e3b 0%, #047857 52%, #022c22 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: center;
+  }
+  #abPostInstallExitOverlay .ab-pie-card {
+    width: 100%;
+    max-width: 390px;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 26px 20px 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    border: 2px solid #d1fae5;
+    color: #0f172a;
+  }
+  #abPostInstallExitOverlay .ab-pie-badge {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    border: 2px solid #10b981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+  }
+  #abPostInstallExitOverlay .ab-pie-brand {
+    display: inline-block;
+    background: #065f46;
+    color: #fde68a;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  #abPostInstallExitOverlay h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    color: #065f46;
+    line-height: 1.4;
+  }
+  #abPostInstallExitOverlay p {
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.7;
+  }
+  #abPostInstallExitOverlay .ab-pie-btn-main {
+    width: 100%;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #059669, #047857);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.32);
+  }
+  #abPostInstallExitOverlay .ab-pie-hint {
+    margin: 12px 0 0;
+    font-size: 12.5px;
+    color: #047857;
+    font-weight: bold;
+    min-height: 18px;
+  }
+  #abPostInstallExitOverlay .ab-pie-btn-sub {
+    margin-top: 12px;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 6px 10px;
+  }
+</style>
+<script data-ab-post-install-exit="1">
+(function () {
+  if (window.__abPostInstallExitV1) return;
+  window.__abPostInstallExitV1 = true;
+
+  var INSTALLED_KEY = "ab_abusaif_pwa_installed_v1";
+
+  function isStandaloneApp() {
+    try {
+      if (window.navigator && window.navigator.standalone === true) return true;
+      if (window.matchMedia) {
+        if (window.matchMedia("(display-mode: standalone)").matches) return true;
+        if (window.matchMedia("(display-mode: fullscreen)").matches) return true;
+        if (window.matchMedia("(display-mode: minimal-ui)").matches) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  // لا يعمل مطلقاً داخل التطبيق المثبّت — مخصص للمتصفح فقط
+  if (isStandaloneApp()) return;
+
+  function tryCloseBrowserTab() {
+    try { window.close(); } catch (e1) {}
+    try {
+      var w = window.open("", "_self");
+      if (w) w.close();
+    } catch (e2) {}
+  }
+
+  function removeExitOverlay() {
+    try {
+      var el = document.getElementById("abPostInstallExitOverlay");
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+      if (document.body) document.body.style.overflow = "";
+    } catch (e) {}
+  }
+
+  function showExitOverlay(mode) {
+    if (isStandaloneApp()) return;
+    if (!document.body) {
+      document.addEventListener("DOMContentLoaded", function () { showExitOverlay(mode); }, { once: true });
+      return;
+    }
+
+    var isInstalling = (mode === "installing");
+    var existing = document.getElementById("abPostInstallExitOverlay");
+    if (!existing) {
+      existing = document.createElement("div");
+      existing.id = "abPostInstallExitOverlay";
+      existing.innerHTML =
+        '<div class="ab-pie-card">' +
+          '<div class="ab-pie-badge" id="abPieBadge"></div>' +
+          '<div class="ab-pie-brand">ابوسيف للتجارة</div>' +
+          '<h2 id="abPieTitle"></h2>' +
+          '<p id="abPieDesc"></p>' +
+          '<button type="button" class="ab-pie-btn-main" id="abPieCloseBtn">✖️ إغلاق المتصفح الآن</button>' +
+          '<div class="ab-pie-hint" id="abPieHint"></div>' +
+          '<button type="button" class="ab-pie-btn-sub" id="abPieStayBtn">المتابعة في المتصفح مؤقتاً</button>' +
+        '</div>';
+      document.body.appendChild(existing);
+
+      var closeBtn = document.getElementById("abPieCloseBtn");
+      var stayBtn = document.getElementById("abPieStayBtn");
+      var hintEl = document.getElementById("abPieHint");
+
+      if (closeBtn) {
+        closeBtn.addEventListener("click", function () {
+          tryCloseBrowserTab();
+          setTimeout(function () {
+            if (!document.hidden && hintEl) {
+              hintEl.textContent = "اسحب لإغلاق المتصفح وافتح أيقونة «ابوسيف للتجارة» من شاشتك الرئيسية";
+            }
+          }, 260);
+        });
+      }
+
+      if (stayBtn) {
+        stayBtn.addEventListener("click", function () {
+          removeExitOverlay();
+        });
+      }
+    }
+
+    var badge = document.getElementById("abPieBadge");
+    var title = document.getElementById("abPieTitle");
+    var desc = document.getElementById("abPieDesc");
+    var closeBtn2 = document.getElementById("abPieCloseBtn");
+    var hint2 = document.getElementById("abPieHint");
+
+    if (isInstalling) {
+      if (badge) badge.textContent = "⏳";
+      if (title) title.textContent = "جاري تثبيت التطبيق على جهازك...";
+      if (desc) desc.textContent = "انتظر لحظات قليلة حتى تظهر أيقونة «ابوسيف للتجارة» على شاشتك الرئيسية.";
+      if (closeBtn2) closeBtn2.style.display = "none";
+      if (hint2) hint2.textContent = "";
+    } else {
+      if (badge) badge.textContent = "✅";
+      if (title) title.textContent = "تم تثبيت التطبيق بنجاح";
+      if (desc) desc.textContent = "تمت إضافة «ابوسيف للتجارة» إلى شاشتك الرئيسية. أغلق المتصفح الآن وافتح التطبيق من الأيقونة مباشرة.";
+      if (closeBtn2) closeBtn2.style.display = "block";
+      if (hint2) hint2.textContent = "";
+    }
+
+    try { document.body.style.overflow = "hidden"; } catch (e) {}
+  }
+
+  function handleInstallDone() {
+    try { localStorage.setItem(INSTALLED_KEY, String(Date.now())); } catch (e) {}
+    tryCloseBrowserTab();
+    showExitOverlay("done");
+    setTimeout(tryCloseBrowserTab, 450);
+  }
+
+  // 1) عند اكتمال التثبيت الفعلي: محاولة الخروج الفوري من المتصفح + قفل التبويب بشاشة النجاح
+  window.addEventListener("appinstalled", function () {
+    handleInstallDone();
+  });
+
+  // 2) مراقبة قبول العميل للتثبيت + إلغاء شاشة الخروج تلقائياً لو أُعيد فتح التثبيت بعد حذف التطبيق
+  function hookInstallEvent(ev) {
+    if (!ev) return;
+    // ظهور حدث التثبيت يعني أن التطبيق غير مثبّت حالياً -> نظّف العلامة القديمة فوراً
+    try { localStorage.removeItem(INSTALLED_KEY); } catch (e) {}
+    removeExitOverlay();
+
+    if (ev.userChoice && typeof ev.userChoice.then === "function" && !ev.__abPieHooked) {
+      ev.__abPieHooked = true;
+      ev.userChoice.then(function (choice) {
+        if (choice && choice.outcome === "accepted") {
+          showExitOverlay("installing");
+          setTimeout(function () {
+            if (!isStandaloneApp()) handleInstallDone();
+          }, 4200);
+        }
+      }).catch(function () {});
+    }
+  }
+
+  window.addEventListener("beforeinstallprompt", hookInstallEvent);
+  window.addEventListener("ab:install-ready", function (e) {
+    hookInstallEvent(e && e.detail);
+  });
+
+  // إذا كان الحدث التُقط مبكراً قبل تشغيل هذا السكربت
+  if (window.__abDeferredInstallPrompt) {
+    hookInstallEvent(window.__abDeferredInstallPrompt);
+  }
+})();
+</script>
+<!-- ABUDHIYA_POST_INSTALL_EXIT_END -->
 </body>
 </html>
