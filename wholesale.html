@@ -179,6 +179,7 @@
 
 
 
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -28713,5 +28714,168 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 })();
 </script>
 <!-- ABUDHIYA_COPY_ORDER_CUST_NAME_END -->
+
+<!-- ABUDHIYA_HIDE_LOAD_AND_HINT_START -->
+<style id="abHideLoadAndHintStyle">
+  [data-ab-hide-car-load="1"],
+  [data-ab-hide-silent-hint="1"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+</style>
+<script data-ab-hide-load-hint="1">
+(function () {
+  if (window.__abHideLoadAndHintV1) return;
+  window.__abHideLoadAndHintV1 = true;
+
+  var LOAD_RE = /(?:حمول(?:ة|ه)?\s*(?:السيار(?:ة|ه)|الشاحن(?:ة|ه)|الدين(?:ا|ة)|المركب(?:ة|ه)|الباص|الشحن)|وزن\s*الحمول(?:ة|ه)|سع(?:ة|ه)\s*السيار(?:ة|ه))/;
+  var HINT_RE = /(?:[إاأ]رسال\s+فوري\s+مباشر[^\n]{0,55}(?:للتجهيز|واتس\s*[أا]?ب)|(?:مباشر\s+)?للتجهيز\s+بدون\s+فتح\s+واتس\s*[أا]?ب|بدون\s+فتح\s+واتس\s*[أا]?ب)/;
+  var HINT_STRIP_RE = /\s*[•\-—–|⚡🚀✅]*\s*(?:[إاأ]رسال\s+فوري\s+مباشر[^\n]{0,55}(?:للتجهيز|واتس\s*[أا]?ب)|(?:مباشر\s+)?للتجهيز\s+بدون\s+فتح\s+واتس\s*[أا]?ب|بدون\s+فتح\s+واتس\s*[أا]?ب)\s*[•\-—–|⚡🚀✅]*/g;
+
+  function norm(s) {
+    return String(s || "").replace(/\s+/g, " ").trim();
+  }
+
+  function isProtectedContainer(el) {
+    if (!el || el === document.body || el === document.documentElement) return true;
+    var id = String(el.id || "").toLowerCase();
+    if (id === "invoiceview" || id === "viewinvoice" || id === "prodgrid" || id === "app" || id === "main") return true;
+    if (el.tagName === "FORM" || el.tagName === "MAIN" || el.tagName === "SECTION") return true;
+    // لا نخفي أي حاوية تحتوي حقول بيانات العميل أو أزرار الإرسال/النسخ/الحفظ
+    if (el.querySelector("input, textarea, select")) return true;
+    var btns = el.querySelectorAll("button, a");
+    for (var i = 0; i < btns.length; i++) {
+      var bt = norm(btns[i].textContent);
+      if (bt.indexOf("إرسال") !== -1 || bt.indexOf("ارسال") !== -1 || bt.indexOf("نسخ الطلب") !== -1 || bt.indexOf("حفظ كصورة") !== -1 || bt.indexOf("المشقاص") !== -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function hideCarLoadCards() {
+    if (!document.body) return;
+    var all = document.querySelectorAll("div, span, p, small, strong, b, label, h3, h4");
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (!el || el.getAttribute("data-ab-hide-car-load") === "1") continue;
+      var t = norm(el.textContent);
+      if (!t || t.length > 260 || !LOAD_RE.test(t)) continue;
+
+      // نبدأ من أصغر عنصر يحتوي العبارة ثم نصعد لبطاقة «حمولة السيارة» فقط
+      var hasChildMatch = false;
+      for (var c = 0; c < el.children.length; c++) {
+        if (LOAD_RE.test(norm(el.children[c].textContent))) {
+          hasChildMatch = true;
+          break;
+        }
+      }
+      if (hasChildMatch) continue;
+
+      var target = el;
+      var cur = el.parentElement;
+      for (var step = 0; step < 5 && cur; step++) {
+        if (isProtectedContainer(cur)) break;
+        var ct = norm(cur.textContent);
+        if (ct.length > 340) break;
+        var h = cur.offsetHeight || 0;
+        if (h > 260) break;
+        target = cur;
+        // التوقف عند أول بطاقة واضحة (خلفية/حدود/نسبة حمولة)
+        var st = null;
+        try { st = getComputedStyle(cur); } catch (e) {}
+        if (st && ((st.borderRadius && st.borderRadius !== "0px") || (st.borderWidth && st.borderWidth !== "0px"))) {
+          if (ct.indexOf("%") !== -1 || ct.indexOf("كرتون") !== -1 || ct.indexOf("كجم") !== -1 || ct.indexOf("حمول") !== -1) {
+            break;
+          }
+        }
+        cur = cur.parentElement;
+      }
+
+      if (target && !isProtectedContainer(target) && target.getAttribute("data-ab-hide-car-load") !== "1") {
+        target.setAttribute("data-ab-hide-car-load", "1");
+      }
+    }
+  }
+
+  function hideSilentOrderHint() {
+    if (!document.body) return;
+    var all = document.querySelectorAll("div, span, p, small, strong, b, em, label");
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (!el || el.getAttribute("data-ab-hide-silent-hint") === "1") continue;
+      if (el.tagName === "BUTTON" || el.tagName === "A") continue;
+      if (el.querySelector("button, a, input, textarea")) continue;
+
+      var t = norm(el.textContent);
+      if (!t || t.length > 180 || !HINT_RE.test(t)) continue;
+
+      // تجاهل الآباء إذا كان هناك عنصر ابن أدق يحتوي نفس الجملة
+      var childHit = false;
+      for (var c = 0; c < el.children.length; c++) {
+        if (HINT_RE.test(norm(el.children[c].textContent))) {
+          childHit = true;
+          break;
+        }
+      }
+      if (childHit) continue;
+
+      var remainder = norm(t.replace(HINT_STRIP_RE, " "));
+      if (!remainder || remainder.length <= 4) {
+        el.setAttribute("data-ab-hide-silent-hint", "1");
+      } else {
+        // لو الجملة مدمجة مع نص آخر مهم داخل نفس العنصر نحذف الجملة فقط دون المساس بباقي النص
+        for (var n = 0; n < el.childNodes.length; n++) {
+          var node = el.childNodes[n];
+          if (node.nodeType === 3 && HINT_RE.test(node.nodeValue || "")) {
+            node.nodeValue = String(node.nodeValue || "").replace(HINT_STRIP_RE, " ").replace(/\s+/g, " ").trim();
+          }
+        }
+      }
+    }
+
+    // حالة إضافية: إذا كانت الجملة مكتوبة مباشرة كعقدة نصية داخل زر الإرسال نفسه
+    var btns = document.querySelectorAll("button, a, [role='button']");
+    for (var b = 0; b < btns.length; b++) {
+      var btn = btns[b];
+      if (!HINT_RE.test(norm(btn.textContent))) continue;
+      for (var k = 0; k < btn.childNodes.length; k++) {
+        var cn = btn.childNodes[k];
+        if (cn.nodeType === 3 && HINT_RE.test(cn.nodeValue || "")) {
+          var cleaned = String(cn.nodeValue || "").replace(HINT_STRIP_RE, " ").replace(/\s+/g, " ").trim();
+          if (cleaned) cn.nodeValue = cleaned;
+          else cn.nodeValue = "";
+        }
+      }
+    }
+  }
+
+  function runCleanup() {
+    try {
+      hideCarLoadCards();
+      hideSilentOrderHint();
+    } catch (e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runCleanup, { once: true });
+  } else {
+    runCleanup();
+  }
+  window.addEventListener("load", function () {
+    runCleanup();
+    setTimeout(runCleanup, 400);
+    setTimeout(runCleanup, 1300);
+  });
+  setInterval(runCleanup, 1200);
+})();
+</script>
+<!-- ABUDHIYA_HIDE_LOAD_AND_HINT_END -->
 </body>
 </html>
