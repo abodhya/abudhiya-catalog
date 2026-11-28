@@ -438,6 +438,8 @@
 
 
 
+
+
 <!-- ABUDHIYA_ONESIGNAL_PROXY_START -->
 <script data-ab-os-proxy="1">
 (function () {
@@ -32217,9 +32219,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 </script>
 <!-- ABUDHIYA_PAY_ABOVE_TABLE_END -->
 
+
 <!-- ABUDHIYA_VIP_POLISH_START -->
 <style id="abVipPolishStyle">
-  /* 1) إخفاء الشريط الأسود الفارغ في الكتالوج وزر إعادة آخر طلب المكرر */
+  /* 1) إخفاء الشريط الكحلي/الأسود الفارغ وزر إعادة آخر طلب المكرر وفلتر المعتادة */
   [data-ab-vip-hollow-bar="1"],
   [data-ab-vip-dup-reorder="1"],
   [data-ab-vip-usual-hide="1"] {
@@ -32233,7 +32236,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     overflow: hidden !important;
   }
 
-  /* 2) توضيح وتفخيم عنوان الفاتورة (بدل الأصفر الباهت على خلفية بيضاء) */
+  /* 2) توضيح وتفخيم عنوان الفاتورة */
   [data-ab-vip-inv-title="1"] {
     color: #064e3b !important;
     font-weight: 900 !important;
@@ -32247,26 +32250,48 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     opacity: 1 !important;
   }
 
-  /* 3) زر التواصل الفوري مع المندوب داخل شريط «مندوبك المعتمد» */
-  #abVipRepWaBtn {
+  /* 3) ترتيب بطاقة «مندوبك المعتمد» في صف أفقي واحد + زر «💬 تواصل» بنص أبيض ناصع */
+  [data-ab-vip-rep-banner="1"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+  }
+  [data-ab-vip-rep-text="1"] {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    text-align: right !important;
+  }
+  a#abVipRepWaBtn,
+  a#abVipRepWaBtn:link,
+  a#abVipRepWaBtn:visited,
+  a#abVipRepWaBtn:hover,
+  a#abVipRepWaBtn:active {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 4px !important;
-    padding: 6px 11px !important;
-    border-radius: 10px !important;
+    gap: 5px !important;
+    padding: 7px 12px !important;
+    border-radius: 11px !important;
     background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
     color: #ffffff !important;
-    font-size: 12px !important;
+    -webkit-text-fill-color: #ffffff !important;
+    font-size: 12.5px !important;
     font-weight: 800 !important;
+    line-height: 1.2 !important;
     text-decoration: none !important;
     white-space: nowrap !important;
     box-shadow: 0 3px 10px rgba(22, 163, 74, 0.28) !important;
     border: 1px solid #86efac !important;
     flex-shrink: 0 !important;
-    margin-inline-start: 6px !important;
+    margin: 0 !important;
   }
-  #abVipRepWaBtn:active {
+  a#abVipRepWaBtn span {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+  a#abVipRepWaBtn:active {
     transform: scale(0.95) !important;
   }
 
@@ -32292,11 +32317,12 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   #abVipUsualPill.ab-vip-active {
     background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
     color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
     border-color: #b45309 !important;
     box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3) !important;
   }
 
-  /* 5) نبضة ناعمة لشريط الفاتورة السفلي عند الإضافة (Native Feel) */
+  /* 5) نبضة ناعمة لشريط الفاتورة السفلي عند الإضافة */
   @keyframes abVipDockPulseAnim {
     0% { transform: scale(1); }
     45% { transform: scale(1.06); }
@@ -32306,10 +32332,10 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     animation: abVipDockPulseAnim 0.26s ease-out !important;
   }
 </style>
-<script data-ab-vip-polish="1">
+<script data-ab-vip-polish="2">
 (function () {
-  if (window.__abVipPolishBundleV1) return;
-  window.__abVipPolishBundleV1 = true;
+  if (window.__abVipPolishBundleV2) return;
+  window.__abVipPolishBundleV2 = true;
 
   var lastKnownSplit = { bags: 0, cartons: 0, ts: 0 };
   var usualFilterActive = false;
@@ -32329,13 +32355,40 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     return !!el.closest("#qtyModal, #abRoleOnboardOverlay, #abInstallGateOverlay, #abPostInstallExitOverlay, .modal");
   }
 
-  function isDarkRgb(bg) {
-    var m = String(bg || "").match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/i);
+  function isDarkColorStr(s) {
+    var m = String(s || "").match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)/i);
     if (!m) return false;
     var r = parseInt(m[1], 10), g = parseInt(m[2], 10), b = parseInt(m[3], 10);
     var a = m[4] !== undefined ? parseFloat(m[4]) : 1;
     if (a < 0.45) return false;
-    return r < 55 && g < 55 && b < 55;
+    return r < 85 && g < 95 && b < 115;
+  }
+
+  function hasDarkFill(st) {
+    if (!st) return false;
+    if (isDarkColorStr(st.backgroundColor)) return true;
+    var bgImg = String(st.backgroundImage || "");
+    if (bgImg.indexOf("gradient") !== -1) {
+      var parts = bgImg.match(/rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+(?:\s*,\s*[\d.]+)?\s*\)/gi) || [];
+      for (var i = 0; i < parts.length; i++) {
+        if (isDarkColorStr(parts[i])) return true;
+      }
+    }
+    return false;
+  }
+
+  function hasVisibleInteractiveChild(el) {
+    var kids = el.querySelectorAll("button, a, input, select, textarea, img, svg, canvas, video");
+    for (var i = 0; i < kids.length; i++) {
+      var k = kids[i];
+      if (!k) continue;
+      try {
+        var ks = getComputedStyle(k);
+        if (ks.display === "none" || ks.visibility === "hidden" || ks.opacity === "0") continue;
+        if (k.offsetWidth > 0 || k.offsetHeight > 0) return true;
+      } catch (e) {}
+    }
+    return false;
   }
 
   function showMsg(msg) {
@@ -32433,7 +32486,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   // ---------------------------------------------------------------------------
-  // 2) تنظيف الكتالوج (إخفاء الشريط الأسود الفارغ + زر إعادة آخر طلب المكرر)
+  // 2) تنظيف الكتالوج والفاتورة (الشريط الكحلي/الأسود الفارغ + زر التكرار)
   // ---------------------------------------------------------------------------
   function cleanCatalogClutter() {
     var hasTopLastOrder = false;
@@ -32465,26 +32518,39 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     }
 
-    // إخفاء الشريط الأسود الفارغ تحت تصنيفات الأصناف
+    // إخفاء أي شريط كحلي/أسود فارغ مرئياً (باستخدام innerText لمنع خداع العناصر المخفية بداخله)
     var winH = window.innerHeight || 800;
-    var divs = document.querySelectorAll("div");
+    var divs = document.querySelectorAll("div, section");
     for (var d = 0; d < divs.length; d++) {
       var dv = divs[d];
       if (!dv || dv.getAttribute("data-ab-vip-hollow-bar") === "1" || isInsideModal(dv)) continue;
-      if (norm(dv.textContent) !== "") continue;
-      if (dv.querySelector("button, a, input, img, svg, canvas, video, select, textarea")) continue;
+      var idLow = String(dv.id || "").toLowerCase();
+      if (idLow === "abdevstamp" || idLow === "prodgrid" || idLow === "app" || idLow === "main") continue;
+
+      var visTxt = norm(dv.innerText || "");
+      var onlyEmptyOrGear = (visTxt === "" || visTxt === "⚙" || visTxt === "⚙️");
+      if (!onlyEmptyOrGear) continue;
+      if (hasVisibleInteractiveChild(dv)) continue;
 
       var st = null;
       try { st = getComputedStyle(dv); } catch (e) {}
       if (!st || st.display === "none" || st.visibility === "hidden") continue;
+      if (st.position === "fixed") continue;
 
       var rect = null;
       try { rect = dv.getBoundingClientRect(); } catch (e2) {}
-      if (!rect || rect.width < 150 || rect.height < 12 || rect.height > 58) continue;
-      if (rect.bottom > winH - 95) continue; // حماية الشريط السفلي العائم
+      if (!rect || rect.width < 130 || rect.height < 10 || rect.height > 68) continue;
+      if (rect.top > winH - 95) continue;
 
-      if (isDarkRgb(st.backgroundColor) || (String(st.backgroundImage || "").indexOf("gradient") !== -1 && String(st.backgroundImage || "").indexOf("0, 0, 0") !== -1)) {
+      if (hasDarkFill(st)) {
         dv.setAttribute("data-ab-vip-hollow-bar", "1");
+        var parentBox = dv.parentElement;
+        if (parentBox && parentBox !== document.body && parentBox.offsetHeight <= 90) {
+          var pVis = norm(parentBox.innerText || "");
+          if ((pVis === "" || pVis === "⚙" || pVis === "⚙️") && !hasVisibleInteractiveChild(parentBox)) {
+            parentBox.setAttribute("data-ab-vip-hollow-bar", "1");
+          }
+        }
       }
     }
   }
@@ -32507,7 +32573,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   function resolveSplitForOrderId(orderId) {
-    // 1) البحث في أرشيف الطلبات برقم الطلب
     try {
       var arch = JSON.parse(localStorage.getItem("ab_orders_archive_v1") || "[]");
       if (Array.isArray(arch) && arch.length) {
@@ -32519,16 +32584,11 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
             if (sp) return sp;
           }
         }
-        // أحدث طلب في الأرشيف خلال آخر دقيقتين
-        var latest = arch[0];
-        if (latest) {
-          var spLatest = sumItemsSplit(latest.items);
-          if (spLatest) return spLatest;
-        }
+        var spLatest = sumItemsSplit(arch[0] && arch[0].items);
+        if (spLatest) return spLatest;
       }
     } catch (e1) {}
 
-    // 2) البحث في آخر لقطة تأكيد
     try {
       var snap = JSON.parse(localStorage.getItem("ab_last_confirm_order_v1") || "null");
       if (snap) {
@@ -32540,7 +32600,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       }
     } catch (e2) {}
 
-    // 3) آخر قيمة حية مرصودة من بطاقة تفصيل الكميات قبل الإرسال
     if (lastKnownSplit.bags > 0 || lastKnownSplit.cartons > 0) {
       return { bags: lastKnownSplit.bags, cartons: lastKnownSplit.cartons };
     }
@@ -32577,7 +32636,7 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
   }
 
   // ---------------------------------------------------------------------------
-  // 4) زر تواصل فوري مع المندوب داخل شريط «مندوبك المعتمد»
+  // 4) زر «💬 تواصل» في الصف الأفقي على يسار بطاقة «مندوبك المعتمد»
   // ---------------------------------------------------------------------------
   function getActiveRepInfo() {
     try {
@@ -32597,42 +32656,68 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
     var waPhone = formatWaPhone(rep.phone);
     if (waPhone.length < 9) return;
 
-    var existing = document.getElementById("abVipRepWaBtn");
     var custName = norm(localStorage.getItem("ab_cust_name") || localStorage.getItem("ab_customer_name") || "");
     var greeting = "السلام عليكم " + (rep.name || "") + "، أتواصل معك من تطبيق ابوسيف للتجارة" + (custName ? (" (" + custName + ")") : "");
     var waHref = "https://wa.me/" + waPhone + "?text=" + encodeURIComponent(greeting);
 
-    if (existing && document.body.contains(existing)) {
-      if (existing.getAttribute("href") !== waHref) existing.setAttribute("href", waHref);
-      return;
-    }
-
+    // إيجاد كتلة نص المندوب أولاً ثم الصعود للصف الأفقي الخارجي للبطاقة
     var candidates = document.querySelectorAll("div, section");
-    var repBanner = null;
+    var textBlock = null;
     for (var i = 0; i < candidates.length; i++) {
       var el = candidates[i];
       if (!el || isInsideModal(el)) continue;
       var t = norm(el.textContent);
-      if (t.length < 20 || t.length > 160) continue;
+      if (t.length < 20 || t.length > 180) continue;
       if (t.indexOf("مندوبك المعتمد") !== -1 && t.indexOf("تصل إلى مندوبك") !== -1) {
-        if (!repBanner || t.length < norm(repBanner.textContent).length) {
-          repBanner = el;
+        if (!textBlock || t.length < norm(textBlock.textContent).length) {
+          textBlock = el;
         }
       }
     }
-    if (!repBanner) return;
+    if (!textBlock) return;
 
-    var btn = document.createElement("a");
-    btn.id = "abVipRepWaBtn";
-    btn.href = waHref;
-    btn.target = "_blank";
-    btn.rel = "noopener noreferrer";
-    btn.textContent = "💬 تواصل";
-    repBanner.appendChild(btn);
+    // الصعود للصف الخارجي للبطاقة (الذي يجمع الأيقونة + النص + زر التغيير المخفي)
+    var outerBanner = textBlock;
+    var cur = textBlock.parentElement;
+    for (var step = 0; step < 3 && cur && cur !== document.body; step++) {
+      var ct = norm(cur.textContent);
+      if (ct.length > 220 || ct.indexOf("أدوات سريعة") !== -1 || ct.indexOf("العروض") !== -1 || ct.indexOf("آخر طلب") !== -1 || ct.indexOf("للتجارة العامة") !== -1) {
+        break;
+      }
+      var st = null;
+      try { st = getComputedStyle(cur); } catch (e) {}
+      if (st && (st.display === "flex" || st.display === "inline-flex")) {
+        outerBanner = cur;
+        if (st.flexDirection !== "column") break;
+      } else if (cur.offsetHeight > 0 && cur.offsetHeight <= 130) {
+        outerBanner = cur;
+      }
+      cur = cur.parentElement;
+    }
+
+    outerBanner.setAttribute("data-ab-vip-rep-banner", "1");
+    if (textBlock !== outerBanner) {
+      textBlock.setAttribute("data-ab-vip-rep-text", "1");
+    }
+
+    var btn = document.getElementById("abVipRepWaBtn");
+    if (!btn) {
+      btn = document.createElement("a");
+      btn.id = "abVipRepWaBtn";
+      btn.target = "_blank";
+      btn.rel = "noopener noreferrer";
+      btn.innerHTML = '<span>💬 تواصل</span>';
+    }
+    if (btn.getAttribute("href") !== waHref) {
+      btn.setAttribute("href", waHref);
+    }
+    if (btn.parentElement !== outerBanner) {
+      outerBanner.appendChild(btn);
+    }
   }
 
   // ---------------------------------------------------------------------------
-  // 5) تبويب «⭐ المعتادة» في شريط التصنيفات (أكثر الأصناف طلباً للعميل)
+  // 5) تبويب «⭐ المعتادة» في شريط التصنيفات
   // ---------------------------------------------------------------------------
   function getUsualProductNames() {
     var freq = {};
@@ -32713,7 +32798,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       return;
     }
 
-    // إيجاد صف التصنيفات الرئيسي (الذي يحتوي زر «الكل»)
     var btns = document.querySelectorAll("button, div[onclick], span[onclick]");
     var allBtn = null;
     for (var i = 0; i < btns.length; i++) {
@@ -32738,7 +32822,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
 
     allBtn.parentElement.insertBefore(pill, allBtn.nextSibling);
 
-    // إلغاء فلتر المعتادة تلقائياً عند الضغط على أي تصنيف آخر في نفس الصف
     if (!allBtn.parentElement.getAttribute("data-ab-vip-cat-hook")) {
       allBtn.parentElement.setAttribute("data-ab-vip-cat-hook", "1");
       allBtn.parentElement.addEventListener("click", function (ev) {
@@ -32781,7 +32864,6 @@ try { if (typeof updateCartBadge === "function") updateCartBadge(); } catch (e) 
       var btn = ev.target && ev.target.closest ? ev.target.closest("button, [role='button']") : null;
       if (!btn) return;
       var t = toEnDigits(norm(btn.textContent));
-      // نقرة إضافة كمية سريعة (10، 20، 30، 40، 50، 100، 200، 300 أو +)
       var isQtyTap = (/^(?:5|10|15|20|25|30|40|50|100|150|200|250|300|500|\+)$/.test(t) && !btn.closest("table"));
       if (isQtyTap) {
         pulseBottomInvoiceDock();
